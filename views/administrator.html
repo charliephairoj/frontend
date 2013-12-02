@@ -1,0 +1,21 @@
+<div>
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Administrator</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ng-show="currentUser.hasPermission('add_user')">
+                    <a href="#/administrator/user">Users</a>
+                </li>
+                <li ng-show="currentUser.hasPermission('add_group')">
+                    <a href="#/administrator/group">Groups</a>
+                </li>
+                
+            </ul>
+        </nav>
+        
+    </div>
+</div>
