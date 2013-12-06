@@ -1,0 +1,104 @@
+<div class="project-details-page">
+    
+    <!--
+        Modals
+    -->
+    <div modal="" class="add-room" ng-model="showAddRoom">
+        <div class="title">Add a New Room</div>
+        <div class="container" ng-switch="" on="addSelector" ng-init="addSelector='image'">
+            <table class="details">
+               
+                <tr>
+                    <td>Room Type</td>
+                    <td>
+                        <input type="text" list="roomType" ng-model="room.description" beautify="">
+                        <datalist id="roomType">
+                            <option value="Kitchen" value="">
+                            <option value="Family Room" value="">
+                            <option value="Living Room" value="">
+                            <option value="Pantry" value="">
+                            <option value="Closet" value="">
+                            <option value="Walk-in Closet" value="">
+                            <option value="Bathroom" value="">
+                            <option value="Hallway" value="">
+                            <option value="Dining Room" value="">
+                            <option value="Master Bedroom">
+                            <option value="Bedroom">
+                        </option></option></option></option></option></option></option></option></option></option></option></datalist>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td><input type="text" ng-model="room.reference"></td>
+                </tr>
+                 <tr>
+                    <td colspan="2" class="image"><img ng-src="{{room.image.url}}"></td>
+                </tr>
+            </table>
+            <div class="selector">
+                <ul>
+                    <li ng-click="addSelector='image'">Add Image</li>
+                    <li ng-click="addSelector='schematic'">Add Schematic</li>
+                </ul>
+            </div>
+            <div class="media-container image" ng-switch-default="">
+                <div file-cropper=""></div>
+                <div class="bottom-bar">
+                    <button ng-click="addImage(cropper.getImage())">Save Image</button>
+                </div>
+            </div>
+            <div class="media-container files" ng-switch-when="schematic">
+                <div file-handler="files"></div>
+                <div class="bottom-bar">
+                    <button ng-click="addSchematic(files)">Save Image</button>
+                </div>
+            </div>
+            
+        </div>
+        <div class="bottom-bar">
+            <button ng-click="addRoom()">Add Room</button>
+        </div>
+    </div> 
+     
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Project: {{project.name}}</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li>
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom=true">Add a Room</button>
+                    <button ng-click="addImage=true">Upload Image</button>
+                    <button ng="">View Build-Ins</button>
+                    <button>View Lose Items</button>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <div class="workspace">
+        <div class="details">
+            <table>
+                <tr>
+                    <td>Project: </td>
+                    <td>{{project.name}}</td>
+                </tr>
+                <tr>
+                    <td>Customer: </td>
+                    <td>{{project.customer.name}}</td>
+                </tr>
+                <tr>
+                    <td>Due Date: </td>
+                    <td>{{project.due_date | date:"MMMM d, yyyy"}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="rooms-container">
+            <a class="room" ng-repeat="room in project.rooms" ng-href="#/project/room/{{room.id}}">{{room.description}}</a>
+        </div>
+    </div>
+    
+</div>

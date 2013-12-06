@@ -1,0 +1,63 @@
+<form name="form" class="add-supplier" modal="">
+		<div class="title">Add Supplier</div>
+		<div class="container">
+			<table class="details">
+				<tr>
+					<td><input ng-model="supplier.name" required="" placeholder="Name(English)" size="60"></td>
+				</tr>
+				<tr>
+					<td><input ng-model="supply.name_th" placeholder="Name(Thai)"></td>
+				</tr>
+				<tr>
+                    <td><input placeholder="Address 1" beautify="" ec-blur="getLocation()" size="40" type="text" required="" ng-model="supplier.address.address1"></td>
+                </tr>
+                
+                
+                <tr>
+                    <td><input beautify="" placeholder="Address 2" ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="City" beautify="" ec-blur="getLocation()" type="text" required="" ng-model="supplier.address.city"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Territory/Chaengwat" beautify="" ec-blur="getLocation()" type="text" required="" ng-model="supplier.address.territory"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Country" placeholder="required" beautify="" ec-blur="getLocation()" type="text" required="" ng-model="supplier.address.country"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Zipcode" ec-blur="getLocation()" type="text" required="" ng-model="supplier.address.zipcode"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Email" size="30" type="email" ng-model="supplier.email"></td>
+                </tr>
+                <tr>
+                    <td><input telephone="" placeholder="Telephone" type="text" ng-pattern="/\d+/" ng-model="supplier.telephone"></td>
+                </tr>
+                <tr>
+                    <td><input telephone="" placeholder="Fax" type="text" ng-pattern="/\d+/" ng-model="supplier.fax"></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Discount" type="text" size="7" required="" ng-pattern="/\d{1,2}/" ng-model="supplier.discount"> %</td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" required=""> Days</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select ng-model="supplier.currency" required="">
+                            <option value="THB">Thai Baht</option>
+                            <option value="USD">US Dollar</option>
+                            <option value="EUR">Euro</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                	<td>
+                		<textarea ng-model="supplier.notes" cols="30" rows="6"></textarea>
+                	</td>
+                </tr>
+			</table>
+		</div>
+		<div class="bottom-bar"><button ng-disabled="form.$invalid" ng-click="add()">Add</button></div>
+	</form>

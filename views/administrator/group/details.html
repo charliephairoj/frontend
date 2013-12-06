@@ -1,0 +1,59 @@
+<div class="groupDetailsPage">
+    
+    <!--SideBar Section-->
+    
+    <div class="sidebar">
+        <header>
+            <h1><span>{{group.name}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <div ng-click="remove()">Delete</div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    <div class="searchBar">
+        <input size="40" placeholder="Search" ng-model="query">
+    </div>
+    
+    
+    <div class="workspace">
+        
+        <div class="details">
+            <div class="table">
+                <div class="cell">Name:</div>
+                <div class="cell">{{group.name}}</div>
+            </div>
+            
+        </div>
+        <div class="permissions">
+            <div class="table">
+                <!--
+                <div class="row header">
+                    <div class="cell">Has Permission</div>
+                    <div class="cell">Application</div>
+                    <div class="cell">Permission</div>
+                </div>-->
+                <div class="row" ng-repeat="perm in permissionList | filter:query">
+                    <div class="cell">
+                        <input type="checkbox" ng-model="perm.$checked" ng-click="updatePermission(perm)">                    
+                    </div>
+                    <div class="cell">  
+                        {{perm.app}}
+                    </div>
+                    <div class="cell">
+                        {{perm.name}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
