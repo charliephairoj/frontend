@@ -9,7 +9,7 @@
             Suppliers
         </div>
         <div class="container">
-            <search -bar="" data-ng-model="querySupplier"></search>
+            <div search-bar="" data-ng-model="querySupplier"></div>
             <ul class="list">
                 <li class="item" ng-click="addSupplier(supplier)" ng-repeat="supplier in suppliers | filter:querySupplier | orderBy:'name'">{{supplier.name}}</li>
             </ul>
@@ -21,7 +21,7 @@
             Supplies
         </div>
         <div class="container">
-            <search -bar="" data-ng-model="querySupply"></search>
+            <div search-bar="" data-ng-model="querySupply"></div>
             <ul class="list">
                 <li class="item" ng-click="addItem(supply)" ng-repeat="supply in supplies | filter:querySupply | orderBy:'name'">{{supply.description}}</li>
             </ul>

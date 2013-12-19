@@ -1602,6 +1602,78 @@ select {
   padding-left: 0.4em;
 }
 
+/*Add Customer*/
+
+/*
+ * Add Customer Modal
+ */
+
+.add-customer {
+  top: 10%;
+  right: 10%;
+  bottom: 10%;
+  left: 10%;
+  width: 650px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  background-color: #313131;
+}
+
+.add-customer .title {
+  text-align: center;
+}
+
+.add-customer .container table {
+  position: absolute;
+  top: 20px;
+  left: 15px;
+}
+
+.add-customer .container table td {
+  padding: 0.2em 0;
+  font-family: proxima;
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  color: #CCC;
+}
+
+.add-customer .container table td input {
+  width: 20em;
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  color: #CCC;
+  background-color: #282828;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  -webkit-transition: all 250ms ease;
+     -moz-transition: all 250ms ease;
+      -ms-transition: all 250ms ease;
+       -o-transition: all 250ms ease;
+          transition: all 250ms ease;
+}
+
+.add-customer .container table td:first-child {
+  padding-right: 5px;
+  color: #FFFFFF;
+}
+
+.add-customer .container .map_container {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  bottom: 1em;
+  left: 50%;
+}
+
+.add-customer .container .map_container #map_canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: grey;
+}
+
 /*Customer List*/
 
 .customer-list {
@@ -8583,148 +8655,6 @@ select {
   bottom: 0;
   left: 200px;
   font-family: Helvetica, Tahoma, sans-serif;
-}
-
-.viewCustomerPage .add-modal {
-  top: 10%;
-  right: 10%;
-  bottom: 10%;
-  left: 10%;
-  width: 650px;
-  width: auto;
-  height: auto;
-  margin: 0;
-  background-color: #313131;
-}
-
-.viewCustomerPage .add-modal .title {
-  text-align: center;
-}
-
-.viewCustomerPage .add-modal .container table {
-  position: absolute;
-  top: 20px;
-  left: 15px;
-}
-
-.viewCustomerPage .add-modal .container table td {
-  padding: 0.2em 0;
-  font-family: proxima;
-  font-size: 0.85em;
-  letter-spacing: 0.08em;
-  color: #CCC;
-}
-
-.viewCustomerPage .add-modal .container table td input {
-  width: 20em;
-  font-size: 0.85em;
-  letter-spacing: 0.08em;
-  color: #CCC;
-  background-color: #282828;
-  border: none;
-  border-radius: 2px;
-  outline: none;
-  -webkit-transition: all 250ms ease;
-     -moz-transition: all 250ms ease;
-      -ms-transition: all 250ms ease;
-       -o-transition: all 250ms ease;
-          transition: all 250ms ease;
-}
-
-.viewCustomerPage .add-modal .container table td input:focus {
-  color: #000000;
-  background-color: #FFFFFF;
-}
-
-.viewCustomerPage .add-modal .container table td:first-child {
-  padding-right: 5px;
-  color: #FFFFFF;
-}
-
-.viewCustomerPage .add-modal .container .map_container {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  bottom: 1em;
-  left: 50%;
-}
-
-.viewCustomerPage .add-modal .container .map_container #map_canvas {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: red;
-}
-
-.viewCustomerPage .modal.add {
-  top: 10%;
-  right: 10%;
-  bottom: 10%;
-  left: 10%;
-  width: 650px;
-  width: auto;
-  height: auto;
-  margin: 0;
-  background-color: #313131;
-}
-
-.viewCustomerPage .modal.add .title {
-  text-align: center;
-}
-
-.viewCustomerPage .modal.add .container table {
-  position: absolute;
-  top: 20px;
-  left: 15px;
-}
-
-.viewCustomerPage .modal.add .container table td {
-  padding: 0.2em 0;
-  font-family: proxima;
-  font-size: 0.85em;
-  letter-spacing: 0.08em;
-  color: #CCC;
-}
-
-.viewCustomerPage .modal.add .container table td input {
-  width: 20em;
-  font-size: 0.85em;
-  letter-spacing: 0.08em;
-  color: #CCC;
-  background-color: #282828;
-  border: none;
-  border-radius: 2px;
-  outline: none;
-  -webkit-transition: all 250ms ease;
-     -moz-transition: all 250ms ease;
-      -ms-transition: all 250ms ease;
-       -o-transition: all 250ms ease;
-          transition: all 250ms ease;
-}
-
-.viewCustomerPage .modal.add .container table td input:focus {
-  color: #000000;
-  background-color: #FFFFFF;
-}
-
-.viewCustomerPage .modal.add .container table td:first-child {
-  padding-right: 5px;
-  color: #FFFFFF;
-}
-
-.viewCustomerPage .modal.add .container .map_container {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  bottom: 1em;
-  left: 50%;
-}
-
-.viewCustomerPage .modal.add .container .map_container #map_canvas {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: red;
 }
 
 .viewCustomerPage .workspace .cell .details {

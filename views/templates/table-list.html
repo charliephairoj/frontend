@@ -1,9 +1,9 @@
 <div class="table-list">
     
-    <search -bar="" data-ng-model="query"></search>
 
         
     <div class="container" on-scroll-end="loadNext()">
+    	<div search-bar="" data-ng-model="query"></div>
         <ul class="table-container">
             <li class="table" data-ng-repeat="table in tables| filter:query" data-ng-click="select(table)">
             	<div class="image-container">

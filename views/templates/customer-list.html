@@ -2,9 +2,10 @@
     <div class="title">
         Customers
     </div>
-    <search -bar="" data-ng-model="query"></search>
+    
 
     <div class="container" on-scroll-end="loadNext()">
+    	<div search-bar="" data-ng-model="query"></div>
         <ul class="customer-container">
             <li class="customer" ng-click="select(customer)" ng-repeat="customer in customers | filter:query | orderBy:'name'">{{customer.name}}</li>
         </ul>

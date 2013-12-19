@@ -1,4 +1,3 @@
-'use strict';
 angular.module('employeeApp.services', ['ngResource']);
 angular.module('employeeApp.directives', []);
 angular.module('employeeApp.filters', []);
@@ -9,11 +8,15 @@ angular.module('employeeApp', [
   'employeeApp.directives',
   'employeeApp.filters',
   'employeeApp.services',
-  'ngGrid'
+  'ngGrid',
+  'pascalprecht.translate'
 ]).config([
   '$routeProvider',
   function ($routeProvider) {
-    $routeProvider.when('/', { templateUrl: 'views/main.html' }).when('/contact/customer/add', {
+    $routeProvider.when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
+    }).when('/contact/customer/add', {
       templateUrl: 'views/contact/customer/add.html',
       controller: 'ContactCustomerAddCtrl'
     }).when('/contact/customer/:id', {
@@ -227,7 +230,6 @@ angular.module('employeeApp').config([
     $httpProvider.defaults.transformResponse.push(function (data, headers) {
       if (typeof data == 'object') {
         if (data.hasOwnProperty('meta') && data.hasOwnProperty('objects')) {
-          console.log(data);
           return data.objects;
         }
       }
@@ -273,7 +275,6 @@ angular.module('employeeApp').run([
     scanner.enable();
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
   '$scope',
   'Customer',
@@ -306,13 +307,12 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
           $scope.customer.address.lat = $scope.marker.lat;
           $scope.customer.address.lng = $scope.marker.lng;
         }, function (status) {
-          console.log(status);
+          console.error(status);
         });
       }
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
   '$scope',
   'Customer',
@@ -322,18 +322,19 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
   'Geocoder',
   function ($scope, Customer, $routeParams, $location, Notification, Geocoder) {
     $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
-      try {
+      if ($scope.customer.address.lat && $scope.customer.address.lng) {
         $scope.marker = $scope.map.createMarker({
           lat: $scope.customer.address.lat,
-          lng: $scope.customer.adress.lng
+          lng: $scope.customer.address.lng
         });
-      } catch (e) {
+      } else if (!$scope.customer.address.user_defined_latlng) {
         try {
-          var promise = Geocoder.geocode($scope.customer.addresses[0]);
+          var promise = Geocoder.geocode($scope.customer.address);
           promise.then(function (results) {
             updatePosition(results);
           });
-        } catch (e) {
+        } catch (err) {
+          console.warn(err);
         }
       }
     });
@@ -343,8 +344,10 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
       } else {
         $scope.marker = $scope.map.createMarker(results[0].geometry.location);
         $scope.marker.onchange = function (latLng) {
-          $scope.customer.address[0].lat = $scope.marker.lat;
-          $scope.customer.address[0].lng = $scope.marker.lng;
+          $scope.customer.address.lat = $scope.marker.lat;
+          $scope.customer.address.lng = $scope.marker.lng;
+          $scope.customer.address.user_defined_latlng = true;
+          $scope.customer.$update();
         };
       }
       $scope.map.setPosition(results[0].geometry.location);
@@ -372,7 +375,6 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactCustomerViewCtrl', [
   '$scope',
   'Customer',
@@ -411,42 +413,8 @@ angular.module('employeeApp').controller('ContactCustomerViewCtrl', [
         });
       }
     };
-    $scope.customer = new Customer();
-    $scope.address = {};
-    $scope.getLocation = function () {
-      if ($scope.customer.address.address1 && $scope.customer.address.city && $scope.customer.address.territory && $scope.customer.address.country && $scope.customer.address.zipcode) {
-        var promise = Geocoder.geocode($scope.customer.address);
-        promise.then(function (results) {
-          if ($scope.marker) {
-            $scope.marker.setPosition(results[0].geometry.location);
-          } else {
-            $scope.marker = $scope.map.createMarker(results[0].geometry.location);
-            $scope.marker.onchange = function (latLng) {
-              $scope.customer.address.lat = $scope.marker.lat;
-              $scope.customer.address.lng = $scope.marker.lng;
-            };
-          }
-          $scope.map.setPosition(results[0].geometry.location);
-          $scope.customer.address.lat = $scope.marker.lat;
-          $scope.customer.address.lng = $scope.marker.lng;
-        }, function (status) {
-          console.log(status);
-        });
-      }
-    };
-    $scope.save = function () {
-      Notification.display('Saving customer...');
-      $scope.customer.$save(function () {
-        $scope.addCustomer = false;
-        $scope.customers.push(angular.copy($scope.customer));
-        $scope.customer = new Customer();
-      }, function () {
-        Notification.display('Unable to save customer', false);
-      });
-    };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactSupplierAddCtrl', [
   '$scope',
   'Supplier',
@@ -482,7 +450,6 @@ angular.module('employeeApp').controller('ContactSupplierAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactSupplierViewCtrl', [
   '$scope',
   'Supplier',
@@ -516,7 +483,6 @@ angular.module('employeeApp').controller('ContactSupplierViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
   '$scope',
   'Supplier',
@@ -554,7 +520,6 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('ecResource', [
   '$storage',
   '$rootScope',
@@ -747,19 +712,18 @@ angular.module('employeeApp.services').factory('ecResource', [
     return ResourceFactory;
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('$storage', [function () {
     function storageFactory(key) {
       function StorageEngine(key) {
         this.key = key;
-        if ('localStorage' in window && window['localStorage'] !== null) {
+        if ('localStorage' in window && window.localStorage !== null) {
           this.storage = window.localStorage;
           this.getKeys();
         }
       }
       StorageEngine.prototype.isSupported = function () {
         try {
-          return 'localStorage' in window && window['localStorage'] !== null;
+          return 'localStorage' in window && window.localStorage !== null;
         } catch (e) {
           return false;
         }
@@ -808,8 +772,9 @@ angular.module('employeeApp.services').factory('$storage', [function () {
         this.storage.setItem(this.key, JSON.stringify(this.keys));
         if (JSON.parse(this.storage.getItem(this.key)).length === 0) {
           return true;
-        } else
+        } else {
           return false;
+        }
       };
       StorageEngine.prototype.getKey = function (arg) {
         return this.key + arg;
@@ -894,7 +859,6 @@ angular.module('employeeApp.services').factory('$storage', [function () {
     }
     return storageFactory;
   }]);
-'use strict';
 angular.module('employeeApp.services').factory('Customer', [
   '$resource',
   function ($resource) {
@@ -904,7 +868,6 @@ angular.module('employeeApp.services').factory('Customer', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Supplier', [
   '$resource',
   function ($resource) {
@@ -914,18 +877,19 @@ angular.module('employeeApp.services').factory('Supplier', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('CurrentUser', [
   '$http',
   function ($http) {
     function User() {
-      console.log('ok');
+      this.ready = false;
+      this._onready = [];
       var promise = $http.get('/api/v1/current_user');
       promise.then(function (response) {
-        console.log(response);
-        angular.copy(response.data || {}, this);
-        console.log(this);
-        console.log(this.hasModule('orders'));
+        angular.extend(this, response.data || {});
+        this.ready = true;
+        for (var i = 0; i < this._onready.length; i++) {
+          this._onready[i](response.data);
+        }
       }.bind(this));
     }
     User.prototype.hasPermission = function (permStr) {
@@ -934,10 +898,18 @@ angular.module('employeeApp.services').factory('CurrentUser', [
     User.prototype.hasModule = function (moduleStr) {
       return this.modules ? this.modules.indexOf(moduleStr) !== -1 ? true : false : false;
     };
+    Object.defineProperties(User.prototype, {
+      onready: {
+        set: function (fn) {
+          if (typeof fn == 'function') {
+            this._onready.push(fn);
+          }
+        }
+      }
+    });
     return User;
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Notification', [
   '$timeout',
   '$rootScope',
@@ -945,7 +917,7 @@ angular.module('employeeApp.services').factory('Notification', [
     function center(target) {
       var width = $(window).width();
       var tWidth = $(target).width();
-      if ($(target).css('left') == 0) {
+      if ($(target).css('left') === 0) {
         $(target).css('left', width - tWidth);
       } else {
         $(target).css('margin-left', -(tWidth / 2));
@@ -964,7 +936,7 @@ angular.module('employeeApp.services').factory('Notification', [
       if (this.promise) {
         $timeout.cancel(this.promise);
       }
-      if (autoHide != false) {
+      if (autoHide !== false) {
         this.promise = $timeout(function () {
           this.hide();
         }.bind(this), 1000);
@@ -976,14 +948,12 @@ angular.module('employeeApp.services').factory('Notification', [
     return new Notifier();
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('SupplierContact', [
   'eaResource',
   function (eaResource) {
     return eaResource('supplier_contact/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp.filters').filter('dateRange', [function () {
     function filter(date, start, end, success) {
       if (start.getTime() <= date.getTime() && date.getTime() <= end.getTime()) {
@@ -994,20 +964,16 @@ angular.module('employeeApp.filters').filter('dateRange', [function () {
       switch (typeof arg) {
       case 'object':
         return arg;
-        break;
       case 'string':
         return new Date(arg);
-        break;
       case 'number':
         return new Date(arg);
-        break;
       default:
         return new Date(arg);
-        break;
       }
     }
     return function (array, key, arg1, arg2) {
-      var predicates = [], start = convertToDateObject(arg1), end = convertToDateObject(arg2);
+      var predicates = [], start = convertToDateObject(arg1), end = convertToDateObject(arg2), testDate = null;
       angular.forEach(array, function (item) {
         if (item.hasOwnProperty(key)) {
           if (typeof item[key] == 'object') {
@@ -1015,12 +981,12 @@ angular.module('employeeApp.filters').filter('dateRange', [function () {
               predicates.push(item);
             });
           } else if (typeof item[key] == 'string') {
-            var testDate = new Date(item[key]);
+            testDate = new Date(item[key]);
             filter(testDate, start, end, function () {
               predicates.push(item);
             });
           } else if (typeof item[key] == 'number') {
-            var testDate = new Date(item[key]);
+            testDate = new Date(item[key]);
             filter(testDate, start, end, function () {
               predicates.push(item);
             });
@@ -1030,7 +996,6 @@ angular.module('employeeApp.filters').filter('dateRange', [function () {
       return predicates;
     };
   }]);
-'use strict';
 angular.module('employeeApp.filters').filter('dateFilter', [function () {
     function filter(item, target, comparison, success) {
       switch (comparison) {
@@ -1076,7 +1041,6 @@ angular.module('employeeApp.filters').filter('dateFilter', [function () {
       return predicates;
     };
   }]);
-'use strict';
 angular.module('employeeApp.filters').filter('beautify', [function () {
     return function (input) {
       var newStrArray = [], newStr, upperLetter, newWord, words = input.split(/\s+/);
@@ -1090,13 +1054,11 @@ angular.module('employeeApp.filters').filter('beautify', [function () {
       return newStr;
     };
   }]);
-'use strict';
 angular.module('employeeApp.filters').filter('exclude', [function () {
     return function (array, key, value) {
       if (!(array instanceof Array)) {
         return [];
       }
-      ;
       var filtered = [];
       for (var i in array) {
         if (array[i][key] != value) {
@@ -1106,14 +1068,12 @@ angular.module('employeeApp.filters').filter('exclude', [function () {
       return filtered;
     };
   }]);
-'use strict';
 angular.module('employeeApp.filters').filter('telephone', [function () {
     return function ($input) {
       var clean = $input.replace(/ /g, '').replace(/\-/g, '');
       return clean;
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
   '$scope',
   'Model',
@@ -1161,7 +1121,6 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductUpholsteryViewCtrl', [
   '$scope',
   'Upholstery',
@@ -1204,7 +1163,6 @@ angular.module('employeeApp').controller('ProductUpholsteryViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
   '$scope',
   'Upholstery',
@@ -1252,7 +1210,6 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Upholstery', [
   '$resource',
   function ($resource) {
@@ -1262,7 +1219,6 @@ angular.module('employeeApp.services').factory('Upholstery', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Model', [
   '$resource',
   function ($resource) {
@@ -1272,7 +1228,6 @@ angular.module('employeeApp.services').factory('Model', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Configuration', [
   '$resource',
   function ($resource) {
@@ -1282,7 +1237,6 @@ angular.module('employeeApp.services').factory('Configuration', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductModelAddCtrl', [
   '$scope',
   'Model',
@@ -1321,7 +1275,6 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductModelViewCtrl', [
   '$scope',
   'Model',
@@ -1359,7 +1312,6 @@ angular.module('employeeApp').controller('ProductModelViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
   '$scope',
   'Model',
@@ -1388,7 +1340,6 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
           $scope.imagePreviews = null;
           $scope.images = null;
           $scope.$apply();
-          console.log($scope);
         }
       });
     };
@@ -1410,7 +1361,6 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Acknowledgement', [
   '$resource',
   '$http',
@@ -1421,7 +1371,6 @@ angular.module('employeeApp.services').factory('Acknowledgement', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   '$scope',
   'Acknowledgement',
@@ -1468,13 +1417,13 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             window.open(response.pdf.production);
             angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
           }, function (e) {
-            console.log(e);
+            console.error(e);
             Notification.display('There an error in creating the Acknowledgement', false);
           });
         }
       } catch (e) {
-        throw Error(e);
         Notification.display(e.message, false);
+        throw new Error(e);
       }
     };
     $scope.reset = function () {
@@ -1521,7 +1470,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   '$scope',
   'Acknowledgement',
@@ -1567,7 +1515,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Fabric', [
   '$resource',
   function ($resource) {
@@ -1585,7 +1532,6 @@ angular.module('employeeApp.services').factory('Fabric', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('fadeLoad', [function () {
     return {
       restrict: 'A',
@@ -1598,7 +1544,6 @@ angular.module('employeeApp.directives').directive('fadeLoad', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('fadeIn', [function () {
     return {
       restrict: 'A',
@@ -1608,7 +1553,6 @@ angular.module('employeeApp').directive('fadeIn', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('ecBlur', [function () {
     return {
       restrict: 'A',
@@ -1620,7 +1564,6 @@ angular.module('employeeApp').directive('ecBlur', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('dragOn', [function () {
     return {
       restrict: 'A',
@@ -1633,10 +1576,9 @@ angular.module('employeeApp').directive('dragOn', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('dropOn', [function () {
     function emptyStrFilter(element, index, array) {
-      return element != '';
+      return element !== '';
     }
     function getTarget(scope, targetString) {
       var preTarget = targetString.split(/\.\w*$/).shift(), targetObj = targetString.split(/\./).pop(), target;
@@ -1674,17 +1616,15 @@ angular.module('employeeApp').directive('dropOn', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('imageDropTarget', [
   '$parse',
   function ($parse) {
     return {
-      restrict: 'EA',
+      restrict: 'A',
       replace: false,
       link: function ($scope, element, attrs) {
         var fileReader = new FileReader();
         fileReader.onload = function (evt) {
-          console.log(evt);
           var image = { 'url': evt.target.result };
           $scope.imagePreviews = $scope.imagePreviews || [];
           $scope.$apply(function () {
@@ -1725,7 +1665,6 @@ angular.module('employeeApp').directive('imageDropTarget', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('beautify', [
   '$filter',
   '$parse',
@@ -1742,7 +1681,6 @@ angular.module('employeeApp').directive('beautify', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('telephone', [
   '$filter',
   '$parse',
@@ -1759,7 +1697,6 @@ angular.module('employeeApp.directives').directive('telephone', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('map', [
   'mapMarker',
   function (mapMarker) {
@@ -1772,7 +1709,6 @@ angular.module('employeeApp.directives').directive('map', [
       restrict: 'A',
       replace: false,
       link: function (scope, element, attrs) {
-        console.log(element);
         scope.map = {
           Marker: mapMarker,
           LatLng: google.maps.LatLng
@@ -1786,11 +1722,11 @@ angular.module('employeeApp.directives').directive('map', [
         };
         scope.map.createMarker = function (obj) {
           if (obj instanceof google.maps.LatLng) {
-            var latLng = obj;
+            latLng = obj;
           } else if (obj.hasOwnProperty('lat') && obj.hasOwnProperty('lng')) {
-            var latLng = new google.maps.LatLng(obj.lat, obj.lng);
+            latLng = new google.maps.LatLng(obj.lat, obj.lng);
           } else {
-            var latLng = null;
+            latLng = null;
           }
           return new scope.map.Marker({
             map: this.map,
@@ -1799,9 +1735,9 @@ angular.module('employeeApp.directives').directive('map', [
         };
         scope.map.setPosition = function (obj) {
           if (obj instanceof google.maps.LatLng) {
-            var latLng = obj;
+            latLng = obj;
           } else {
-            var latLng = new google.maps.LatLng(obj.lat, obj.lng);
+            latLng = new google.maps.LatLng(obj.lat, obj.lng);
           }
           this.map.panTo(latLng);
           this.map.setZoom(14);
@@ -1810,13 +1746,11 @@ angular.module('employeeApp.directives').directive('map', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('clickUrl', [function () {
     return {
       restrict: 'A',
       link: function (scope, element, attr) {
         element.bind('click', function () {
-          console.log(scope.category);
           scope.category = 'fabric';
           $location.path(attr.clickUrl);
           scope.$apply();
@@ -1824,7 +1758,6 @@ angular.module('employeeApp').directive('clickUrl', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp.directives').directive('modal', [function () {
     var backdrop;
     function create_backdrop() {
@@ -1876,7 +1809,6 @@ angular.module('employeeApp.directives').directive('modal', [function () {
         });
         if (attr.ngModel) {
           scope.$watch(attr.ngModel, function (value) {
-            console.log(value);
             if (value) {
               show(scope, element);
             } else {
@@ -1901,7 +1833,6 @@ angular.module('employeeApp.directives').directive('modal', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
   '$scope',
   'Acknowledgement',
@@ -1929,7 +1860,7 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
           $scope.shipping.products = ack.products;
           $scope.shipping.delivery_date = new Date(ack.delivery_date);
         }, function () {
-          Notifcation.display('Unable to locate Acknowledgement#' + code.split('-')[1]);
+          Notification.display('Unable to locate Acknowledgement#' + code.split('-')[1]);
         });
       }
     };
@@ -2041,7 +1972,6 @@ angular.module('employeeApp').controller('OrderShippingViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderShippingTodayCtrl', [
   '$scope',
   'Acknowledgement',
@@ -2057,7 +1987,6 @@ angular.module('employeeApp').controller('OrderShippingTodayCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderShippingWeekCtrl', [
   '$scope',
   'Acknowledgement',
@@ -2071,7 +2000,6 @@ angular.module('employeeApp').controller('OrderShippingWeekCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Shipping', [
   '$resource',
   function ($resource) {
@@ -2081,7 +2009,6 @@ angular.module('employeeApp.services').factory('Shipping', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorGroupAddCtrl', [
   '$scope',
   'Group',
@@ -2103,7 +2030,6 @@ angular.module('employeeApp').controller('AdministratorGroupAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorGroupViewCtrl', [
   '$scope',
   'Group',
@@ -2111,7 +2037,6 @@ angular.module('employeeApp').controller('AdministratorGroupViewCtrl', [
     $scope.groups = Group.query({ limit: 0 });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
   '$scope',
   'Group',
@@ -2163,7 +2088,6 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
         }
       }
       $scope.group.$update(function (response) {
-        console.log(response);
       });
     };
     $scope.remove = function () {
@@ -2176,7 +2100,6 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
   '$scope',
   'Group',
@@ -2224,18 +2147,18 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
         Notification.display('Password successfully changed');
         $scope.password = {};
         $scope.showChangePassword = false;
-      }).error(function (e) {
-        console.log(e);
+      }).error(function (err) {
+        console.error(err);
       });
     };
     $scope.updateGroup = function (group) {
       if (group.$checked) {
-        if (indexById($scope.user.groups, group) == -1) {
+        if ($scope.user.groups.indexOfById(group.id) == -1) {
           $scope.user.groups.push(angular.copy(group));
         }
       } else {
-        var index = indexById($scope.user.groups, group);
-        if (index > -1) {
+        var index = $scope.user.groups.indexOfById(group.id);
+        if (index != -1) {
           $scope.user.groups.splice(index, 1);
         }
       }
@@ -2257,7 +2180,6 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorUserAddCtrl', [
   '$scope',
   'User',
@@ -2281,7 +2203,6 @@ angular.module('employeeApp').controller('AdministratorUserAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AdministratorUserViewCtrl', [
   '$scope',
   'User',
@@ -2289,7 +2210,6 @@ angular.module('employeeApp').controller('AdministratorUserViewCtrl', [
     $scope.users = User.query({ limit: 0 });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Group', [
   '$resource',
   function ($resource) {
@@ -2299,7 +2219,6 @@ angular.module('employeeApp.services').factory('Group', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('User', [
   '$resource',
   function ($resource) {
@@ -2309,7 +2228,6 @@ angular.module('employeeApp.services').factory('User', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
   '$scope',
   'Fabric',
@@ -2353,7 +2271,6 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
   '$scope',
   'Supplier',
@@ -2399,7 +2316,6 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
   '$scope',
   'Fabric',
@@ -2422,7 +2338,6 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
         contentType: false,
         success: function (responseData) {
           Notification.display('Image Updated');
-          console.log(responseData);
           $scope.fabric.image = {};
           angular.copy(responseData, $scope.fabric.image);
           $scope.fabric.$save();
@@ -2475,7 +2390,6 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFoamDetailsCtrl', [
   '$scope',
   'Foam',
@@ -2521,7 +2435,6 @@ angular.module('employeeApp').controller('SupplyFoamDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFoamAddCtrl', [
   '$scope',
   'Foam',
@@ -2557,25 +2470,19 @@ angular.module('employeeApp').controller('SupplyFoamAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyFoamViewCtrl', [
   '$scope',
   'Foam',
   function ($scope, Foam) {
-    $scope.foamList = Foam.poll().query();
-    $scope.$on('$destroy', function () {
-      Foam.stopPolling();
-    });
+    $scope.foamList = Foam.query();
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Foam', [
   'eaResource',
   function (eaResource) {
     return eaResource('foam/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AccountingTransactionViewCtrl', [
   '$scope',
   'Transaction',
@@ -2586,7 +2493,6 @@ angular.module('employeeApp').controller('AccountingTransactionViewCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AccountingTransactionAddCtrl', [
   '$scope',
   'Transaction',
@@ -2605,25 +2511,17 @@ angular.module('employeeApp').controller('AccountingTransactionAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('AccountingTransactionDetailsCtrl', [
   '$scope',
   function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Transaction', [
   'eaResource',
   function (eaResource) {
     return eaResource('transaction/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('eaStorage', [function () {
     function factory(namespace) {
       function compare(item, arg) {
@@ -2656,7 +2554,6 @@ angular.module('employeeApp.services').factory('eaStorage', [function () {
         this.collection = this.__loadFromStorage__(this.namespace) || {};
       }
       storage.__defineGetter__('length', function () {
-        console.log('test');
         return 'ok';
       });
       storage.prototype.__save__ = function (obj) {
@@ -2718,7 +2615,6 @@ angular.module('employeeApp.services').factory('eaStorage', [function () {
     }
     return factory;
   }]);
-'use strict';
 angular.module('employeeApp.services').factory('eaResource', [
   'eaStorage',
   '$rootScope',
@@ -2769,8 +2665,8 @@ angular.module('employeeApp.services').factory('eaResource', [
       function Resource(value) {
         angular.extend(this, value || {});
         this.$$poll = false;
-        this.$$last_checked;
-        this.$$timeout;
+        this.$$last_checked = null;
+        this.$$timeout = null;
         this.$$date = true;
       }
       Resource.disableLastChecked = function () {
@@ -2928,7 +2824,7 @@ angular.module('employeeApp.services').factory('eaResource', [
               }
             }
           }
-          if (this.$$last_checked != undefined && action.method == 'GET') {
+          if (this.$$last_checked !== undefined && action.method == 'GET') {
             angular.extend(params, { last_modified: this.$$last_checked.toISOString() });
           }
           var oPromise = oResource[name](params, data, function (response) {
@@ -2945,7 +2841,7 @@ angular.module('employeeApp.services').factory('eaResource', [
                         angular.extend(value[index], new Resource(response[i]));
                         if (value[index].deleted) {
                           value.splice(index, 1);
-                          var item = new Array();
+                          var item = [];
                           item.splice(index);
                         }
                       }
@@ -2982,7 +2878,6 @@ angular.module('employeeApp.services').factory('eaResource', [
               }
               success(response);
             }.bind(this), function (e) {
-              console.log(e);
             });
           previousAction = name;
           previousParams = params;
@@ -3005,6 +2900,7 @@ angular.module('employeeApp.services').factory('eaResource', [
               params = a1;
               success = a2 || angular.noop;
             }
+            break;
           case 0:
             break;
           default:
@@ -3019,7 +2915,6 @@ angular.module('employeeApp.services').factory('eaResource', [
     return ResourceFactory;
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('scanner', [
   '$location',
   '$rootScope',
@@ -3027,10 +2922,10 @@ angular.module('employeeApp.services').factory('scanner', [
     var code = '';
     function Scanner() {
       this._activeParse = false;
-      this._onscan;
+      this._onscan = null;
     }
     Scanner.prototype._check = function (evt, customFn) {
-      if (evt.keyCode == 76 && evt.altKey) {
+      if (evt.keyCode === 76 && evt.altKey) {
         this._activeParse = true;
       }
       if (this._activeParse) {
@@ -3048,14 +2943,12 @@ angular.module('employeeApp.services').factory('scanner', [
       } else if (96 <= key && key <= 105 || 48 <= key && key <= 90) {
         var letter = String.fromCharCode(96 <= key && key <= 105 ? key - 48 : key);
         code += letter;
-      } else if (key == 189) {
+      } else if (key === 189) {
         code += '-';
       }
     };
     Scanner.prototype._dispatch = function (code) {
       var codes = code.split('-');
-      console.log(code);
-      console.log(codes);
       if (codes.length > 1) {
         switch (codes[0]) {
         case 'A':
@@ -3092,7 +2985,6 @@ angular.module('employeeApp.services').factory('scanner', [
     return new Scanner();
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$scope',
   'Acknowledgement',
@@ -3122,7 +3014,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       } catch (e) {
         var message = 'Missing ' + type + ' pdf for Acknowledgement #' + $scope.acknowledgement.id;
         Notification.display(message);
-        throw Error(message);
+        throw new Error(message);
       }
     };
     $scope.viewLog = function () {
@@ -3144,7 +3036,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('scanner', [
   '$location',
   '$rootScope',
@@ -3152,8 +3043,6 @@ angular.module('employeeApp').directive('scanner', [
     var code = '';
     function dispatch(code) {
       var codes = code.split('-');
-      console.log(code);
-      console.log(codes);
       if (codes.length > 1) {
         switch (codes[0]) {
         case 'A':
@@ -3197,7 +3086,6 @@ angular.module('employeeApp').directive('scanner', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('dateParser', [function () {
     return function (promise) {
       function formatter(obj) {
@@ -3229,7 +3117,6 @@ angular.module('employeeApp.services').factory('dateParser', [function () {
   }]).config(function ($httpProvider) {
   $httpProvider.responseInterceptors.push('dateParser');
 });
-'use strict';
 angular.module('employeeApp.services').factory('Permission', [
   '$resource',
   function ($resource) {
@@ -3239,7 +3126,6 @@ angular.module('employeeApp.services').factory('Permission', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementWeeklyCtrl', [
   '$scope',
   'Acknowledgement',
@@ -3253,7 +3139,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementWeeklyCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementDailyCtrl', [
   '$scope',
   'Acknowledgement',
@@ -3262,7 +3147,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementDailyCtrl', [
     $scope.ackList = Acknowledgement.query({ date: $scope.today.toISOString() });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
   '$scope',
   'Shipping',
@@ -3293,16 +3177,13 @@ angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('tooltip', [function () {
     function getText(scope, attrs) {
       switch (attrs.tooltip) {
       case 'price':
         return 'Enter a price in the format of 100 or 123.45';
-        break;
       default:
         return scope.$eval(attrs.tooltip);
-        break;
       }
     }
     return {
@@ -3330,7 +3211,6 @@ angular.module('employeeApp.directives').directive('tooltip', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('OrderAcknowledgementItemDetailsCtrl', [
   '$scope',
   '$routeParams',
@@ -3358,7 +3238,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementItemDetailsCtrl', 
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('AcknowledgementItem', [
   '$resource',
   function ($resource) {
@@ -3368,7 +3247,6 @@ angular.module('employeeApp').factory('AcknowledgementItem', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyPropViewCtrl', [
   '$scope',
   'Supply',
@@ -3377,7 +3255,7 @@ angular.module('employeeApp').controller('SupplyPropViewCtrl', [
   'Notification',
   '$location',
   function ($scope, Supply, $filter, $q, Notification, $location) {
-    $scope.supplyList = Supply.poll().query({ type: 'prop' });
+    $scope.supplyList = Supply.query({ type: 'prop' });
     $scope.add = function () {
       $scope.safeApply(function () {
         $location.path('/supply/prop/add');
@@ -3414,12 +3292,8 @@ angular.module('employeeApp').controller('SupplyPropViewCtrl', [
         }
       });
     };
-    $scope.$on('$destroy', function () {
-      Supply.stopPolling();
-    });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyPropAddCtrl', [
   '$scope',
   'Supplier',
@@ -3494,7 +3368,6 @@ angular.module('employeeApp').controller('SupplyPropAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('Supply', [
   '$resource',
   function ($resource) {
@@ -3512,29 +3385,23 @@ angular.module('employeeApp').factory('Supply', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyPropDetailsCtrl', [
   '$scope',
   function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('searchBar', [
   '$compile',
   function ($compile) {
+    'use strict';
     return {
-      restrict: 'EA',
+      restrict: 'A',
       scope: { query: '=ngModel' },
       link: function postLink(scope, element, attrs) {
-        var input;
+        var input = null;
         var model = attrs.ngModel || 'query';
         element.addClass('search-bar');
-        if (attrs.searchBarDate != undefined) {
+        if (attrs.searchBarDate !== undefined) {
           input = angular.element('<div data-ng-model="' + model + '" class="datepicker" ui-date></div>');
           element.addClass('date');
         } else {
@@ -3562,7 +3429,6 @@ angular.module('employeeApp').directive('searchBar', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('eaSave', [function () {
     return {
       restrict: 'A',
@@ -3571,7 +3437,6 @@ angular.module('employeeApp').directive('eaSave', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('eaAdd', [function () {
     return {
       restrict: 'A',
@@ -3589,7 +3454,6 @@ angular.module('employeeApp').directive('eaAdd', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp.directives').directive('imageCropper', [
   'Notification',
   '$compile',
@@ -3603,12 +3467,12 @@ angular.module('employeeApp.directives').directive('imageCropper', [
       this.bY = 0;
       this.bH = this.img.height;
       this.bW = this.img.width;
-      this.cropX;
-      this.cropY;
-      this.cropW;
-      this.cropH;
-      this.mouseX;
-      this.mouseY;
+      this.cropX = null;
+      this.cropY = null;
+      this.cropW = null;
+      this.cropH = null;
+      this.mouseX = null;
+      this.mouseY = null;
       this.corners = [];
       this.xProportion = this.canvas.width / this.img.width;
       this.yProportion = this.canvas.height / this.img.height;
@@ -3656,19 +3520,19 @@ angular.module('employeeApp.directives').directive('imageCropper', [
       }
     });
     Scene.prototype.repositionCorners = function () {
-      this.corners['topLeft'] = {
+      this.corners.topLeft = {
         x: this.bX * this.xProportion,
         y: this.bY * this.yProportion
       };
-      this.corners['topRight'] = {
+      this.corners.topRight = {
         x: (this.bX + this.bW) * this.xProportion,
         y: this.bY * this.yProportion
       };
-      this.corners['bottomRight'] = {
+      this.corners.bottomRight = {
         x: (this.bX + this.bW) * this.xProportion,
         y: (this.bY + this.bH) * this.yProportion
       };
-      this.corners['bottomLeft'] = {
+      this.corners.bottomLeft = {
         x: this.bX * this.xProportion,
         y: (this.bY + this.bH) * this.yProportion
       };
@@ -3746,7 +3610,7 @@ angular.module('employeeApp.directives').directive('imageCropper', [
     };
     return {
       restrict: 'A',
-      template: '<div class="cropper">                            <div class="cropper-message" ng-show="!cropper.image.loaded"><h3>Drop Image Here</h3></div>                            <div class="cropper-controller" ng-show="cropper.image.loaded">                                <button ng-click="cropper.crop()" ng-show="!cropper.cropping">Crop</button>                                <button ng-click="cropper.save()" ng-show="cropper.cropping">Done Cropping</button>                                <button ng-click="save()" ng-show="!cropper.cropping">Save</button>                                <button data-ng-click="preview(cropper.getImageAsURL())">Preview</button>                                <table class="cropper-scale">                                    <tr>                                        <td>Scale:</td>                                        <td><input class="scale" type="number" data-ng-model="cropper.scale" min="0" max="100">%</td>                                    </tr>                                    <tr>                                        <td>Width</td>                                        <td>{{cropper.image.scaled_width | number:0}}px</td>                                    </tr>                                    <tr>                                        <td>Height</td>                                        <td>{{cropper.image.scaled_height | number:0}}px</td>                                    </tr>                                </table>                            </div>                            <div class="canvas-container" ng-show="cropper.image.loaded">                                <canvas class="cropper-canvas"></canvas>                            </div>                        </div>',
+      template: '<div class="cropper">                        <div class="cropper-message" ng-show="!cropper.image.loaded"><h3>Drop Image Here</h3></div>                        <div class="cropper-controller" ng-show="cropper.image.loaded">                            <button ng-click="cropper.crop()" ng-show="!cropper.cropping">Crop</button>                            <button ng-click="cropper.save()" ng-show="cropper.cropping">Done Cropping</button>                            <button ng-click="save()" ng-show="!cropper.cropping">Save</button>                            <button data-ng-click="preview(cropper.getImageAsURL())">Preview</button>                            <table class="cropper-scale">                                <tr>                                    <td>Scale:</td>                                    <td><input class="scale" type="number" data-ng-model="cropper.scale" min="0" max="100">%</td>                                </tr>                                <tr>                                    <td>Width</td>                                    <td>{{cropper.image.scaled_width | number:0}}px</td>                                </tr>                                <tr>                                    <td>Height</td>                                    <td>{{cropper.image.scaled_height | number:0}}px</td>                                </tr>                            </table>                        </div>                        <div class="canvas-container" ng-show="cropper.image.loaded">                            <canvas class="cropper-canvas"></canvas>                        </div>                    </div>',
       replace: true,
       scope: {
         onSave: '&',
@@ -3790,8 +3654,8 @@ angular.module('employeeApp.directives').directive('imageCropper', [
             scene.drawImage();
             try {
               scope.onLoad();
-            } catch (e) {
-              console.log(e);
+            } catch (evt) {
+              console.warn(evt);
             }
             scope.$apply();
           };
@@ -3852,7 +3716,7 @@ angular.module('employeeApp.directives').directive('imageCropper', [
                 break;
               }
             } else {
-              var topLeft = scene.corners['topLeft'], bottomRight = scene.corners['bottomRight'];
+              var topLeft = scene.corners.topLeft, bottomRight = scene.corners.bottomRight;
               if (topLeft.y - (mouseY - e.offsetY) > 0 && bottomRight.y - (mouseY - e.offsetY) < scene.img.height * scene.yProportion) {
                 scene.y = scene.y - (mouseY - e.offsetY) / scene.yProportion;
               } else {
@@ -3970,7 +3834,6 @@ angular.module('employeeApp.directives').directive('imageCropper', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('indexOfId', [
   '$q',
   function ($q) {
@@ -3990,25 +3853,17 @@ angular.module('employeeApp.services').factory('indexOfId', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyLumberViewCtrl', [
   '$scope',
   function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Contact', [
   'eaResource',
   function (eaResource) {
     return eaResource('contact/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('eaIndexedDB', [
   '$q',
   '$timeout',
@@ -4083,8 +3938,8 @@ angular.module('employeeApp.services').factory('eaIndexedDB', [
     });
     request.onupgradeneeded = function (event) {
       var namespaces = getNamespaces();
-      DBVehicle['db'] = request.result;
-      var db = DBVehicle['db'];
+      DBVehicle.db = request.result;
+      var db = DBVehicle.db;
       for (var key in namespaces) {
         if (!db.objectStoreNames.contains(namespaces[key])) {
           var objectStore = db.createObjectStore(namespaces[key], { keyPath: 'id' });
@@ -4092,7 +3947,7 @@ angular.module('employeeApp.services').factory('eaIndexedDB', [
       }
     };
     request.onsuccess = function (e) {
-      DBVehicle['db'] = request.result;
+      DBVehicle.db = request.result;
       DBVehicle.onready();
     };
     request.onerror = function (e) {
@@ -4112,12 +3967,12 @@ angular.module('employeeApp.services').factory('eaIndexedDB', [
         Object.defineProperties(this, {
           db: {
             get: function () {
-              return this.DBVehicle['db'];
+              return this.DBVehicle.db;
             }
           },
           ready: {
             get: function () {
-              return this.DBVehicle['db'] ? true : false;
+              return this.DBVehicle.db ? true : false;
             }
           },
           onready: {
@@ -4213,7 +4068,7 @@ angular.module('employeeApp.services').factory('eaIndexedDB', [
             success = arg1;
             error = arg2;
           } else {
-            params = arg1;
+            param = arg1;
             success = arg2;
           }
           break;
@@ -4279,7 +4134,6 @@ angular.module('employeeApp.services').factory('eaIndexedDB', [
     return factory;
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductInventoryCtrl', [
   '$scope',
   'AcknowledgementItem',
@@ -4303,7 +4157,6 @@ angular.module('employeeApp').controller('ProductInventoryCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Geocoder', [
   '$q',
   '$rootScope',
@@ -4311,79 +4164,63 @@ angular.module('employeeApp.services').factory('Geocoder', [
     function prepareAddress(obj) {
       var addrStr = '';
       if (obj.hasOwnProperty('address') || obj.hasOwnProperty('address1')) {
-        addrStr += obj['address'] || obj['address1'];
+        addrStr += obj.address || obj.address1;
       } else {
         throw new TypeError('Missing \'address\' or \'address1\' argument');
       }
       if (obj.hasOwnProperty('city')) {
-        addrStr += ', ' + obj['city'];
+        addrStr += ', ' + obj.city;
       } else {
         throw new TypeError('Missing \'city\' argument');
       }
       if (obj.hasOwnProperty('territory')) {
-        addrStr += ', ' + obj['territory'];
+        addrStr += ', ' + obj.territory;
       } else {
         throw new TypeError('Missing \'territory\' argument');
       }
       if (obj.hasOwnProperty('country')) {
-        addrStr += ', ' + obj['country'];
+        addrStr += ', ' + obj.country;
       } else {
         throw new TypeError('Missing \'country\' argument');
       }
       if (obj.hasOwnProperty('zipcode')) {
-        addrStr += ', ' + obj['zipcode'];
+        addrStr += ', ' + obj.zipcode;
       } else {
         throw new TypeError('Missing \'zipcode\' argument');
       }
       return addrStr;
     }
-    var Geocoder = {};
-    Geocoder.init = function () {
-      var google = google || undefined;
-      if (google) {
-        this.geocoder = new google.maps.Geocoder();
-      } else {
-        this.geocoder = {};
-      }
-    };
-    Geocoder._getRegion = function (country) {
+    function Geocoder() {
+      this.google = google;
+      this.geocoder = new google.maps.Geocoder();
+    }
+    Geocoder.prototype._getRegion = function (country) {
       switch (country.toLocaleLowerCase()) {
       case 'thailand':
         return 'TH';
-        break;
       case 'usa':
         return 'US';
-        break;
       case 'us':
         return 'US';
-        break;
       case 'italy':
         return 'IT';
-        break;
       case 'spain':
         return 'ES';
-        break;
       case 'germany':
         return 'DE';
-        break;
       case 'china':
         return 'CN';
-        break;
       case 'india':
         return 'IN';
-        break;
       case 'new zealand':
         return 'NZ';
-        break;
       case 'australia':
         return 'AU';
-        break;
       default:
         return false;
-        break;
       }
     };
-    Geocoder._lookup = function (addr, callback, errback) {
+    Geocoder.prototype._lookup = function (addr, callback, errback) {
       var addrStr = prepareAddress(addr);
       this.geocoder.geocode({
         'address': addrStr,
@@ -4397,7 +4234,7 @@ angular.module('employeeApp.services').factory('Geocoder', [
         }
       });
     };
-    Geocoder.geocode = function (arg) {
+    Geocoder.prototype.geocode = function (arg) {
       if (angular.isObject(arg)) {
         var deferred = $q.defer();
         this._lookup(arg, function (results) {
@@ -4414,11 +4251,9 @@ angular.module('employeeApp.services').factory('Geocoder', [
         throw new TypeError('Arguments must be in the form of an object.');
       }
     };
-    Geocoder.init();
-    return Geocoder;
+    return new Geocoder();
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('mapMarker', [function () {
     function MarkerFactory(configs) {
       function Marker(configs) {
@@ -4431,45 +4266,50 @@ angular.module('employeeApp.services').factory('mapMarker', [function () {
           if (!configs.position instanceof google.maps.LatLng) {
             throw new TypeError('Is not an instance of google.maps.LatLng');
           }
-          this._marker = new google.maps.Marker({
+          this.prototype = new google.maps.Marker({
             position: configs.position,
             map: this._map,
             draggable: true,
             animation: google.maps.Animation.DROP
           });
-          google.maps.event.addListener(this._marker, 'dragend', function (e) {
-            (this.onchange || angular.noop)(e.latLng);
+          google.maps.event.addListener(this, 'dragend', function (e) {
+            (this.onchange || angular.noop)({
+              lat: this.lat,
+              lng: this.lng
+            });
           }.bind(this));
         }
       }
       Object.defineProperties(Marker.prototype, {
         lat: {
           get: function () {
-            return this._marker.getPosition().lat() || null;
+            return this.getPosition().lat() || null;
           }
         },
         lng: {
           get: function () {
-            return this._marker.getPosition().lng() || null;
+            return this.getPosition().lng() || null;
           }
         }
       });
       Marker.prototype.setPosition = function (latLng) {
         if (latLng instanceof google.maps.LatLng) {
-          this._marker.setPosition(latLng);
+          this.setPosition(latLng);
         }
       };
       Marker.prototype.hide = function () {
-        this._marker.setMap(null);
+        this.setMap(null);
       };
       Marker.prototype.show = function () {
-        this._marker.setMap(this._map);
+        this.setMap(this._map);
+      };
+      Marker.prototype.focus = function () {
+        this.setCenter(this._marker.getPosition());
       };
       return new Marker(configs);
     }
     return MarkerFactory;
   }]);
-'use strict';
 angular.module('employeeApp').controller('OrderShippingDeliveryCtrl', [
   '$scope',
   'Delivery',
@@ -4477,14 +4317,12 @@ angular.module('employeeApp').controller('OrderShippingDeliveryCtrl', [
     $scope.deliveryList = Delivery.query();
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('Delivery', [
   'eaResource',
   function (eaResource) {
     return eaResource('delivery/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductTableViewCtrl', [
   '$scope',
   'Table',
@@ -4524,7 +4362,6 @@ angular.module('employeeApp').controller('ProductTableViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Table', [
   '$resource',
   function ($resource) {
@@ -4534,29 +4371,16 @@ angular.module('employeeApp.services').factory('Table', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductRugViewCtrl', [
   '$scope',
   function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductRugAddCtrl', [
   '$scope',
   function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('background', [function () {
     return {
       restrict: 'E',
@@ -4568,7 +4392,6 @@ angular.module('employeeApp').directive('background', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('ProductTableDetailsCtrl', [
   '$scope',
   'Table',
@@ -4616,7 +4439,6 @@ angular.module('employeeApp').controller('ProductTableDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProductTableAddCtrl', [
   '$scope',
   'Table',
@@ -4644,7 +4466,6 @@ angular.module('employeeApp').controller('ProductTableAddCtrl', [
         processData: false,
         contentType: false,
         success: function (responseData) {
-          console.log(responseData);
           Notification.display('Image Uploaded');
           $scope.table.image = $scope.table.image || {};
           angular.copy(responseData, $scope.table.image);
@@ -4661,7 +4482,6 @@ angular.module('employeeApp').controller('ProductTableAddCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProjectViewCtrl', [
   '$scope',
   'Project',
@@ -4670,8 +4490,8 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
   '$location',
   function ($scope, Project, Notification, Customer, $location) {
     $scope.showAddProject = false;
-    $scope.projectList = Project.poll().query();
-    $scope.customerList = Customer.poll().query();
+    $scope.projectList = Project.query();
+    $scope.customerList = Customer.query();
     $scope.gridOptions = {
       data: 'projectList',
       columnDefs: [
@@ -4709,13 +4529,8 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
         $scope.showAddProject = false;
       });
     };
-    $scope.$on('$destroy', function () {
-      Project.stopPolling();
-      Customer.stopPolling();
-    });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   '$scope',
   'Project',
@@ -4726,7 +4541,7 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   function ($scope, Project, $routeParams, Room, Notification, FileUploader) {
     $scope.showAddRoom = false;
     $scope.flag = false;
-    $scope.project = Project.poll().get({ id: $routeParams.id });
+    $scope.project = Project.get({ id: $routeParams.id });
     $scope.room = {};
     $scope.addImage = function (image) {
       var promise = FileUploader.upload(image, 'project/room/image');
@@ -4753,29 +4568,22 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
         $scope.project.rooms.push(room);
       }, function (e) {
         $scope.flag = true;
-        console.log(e);
       });
     };
-    $scope.$on('$destroy', function () {
-      Project.stopPolling();
-    });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Project', [
   'eaResource',
   function (eaResource) {
     return eaResource('project/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp.services').factory('Room', [
   'eaResource',
   function (eaResource) {
     return eaResource('project/room/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('checkmark', [function () {
     return {
       restrict: 'A',
@@ -4794,7 +4602,6 @@ angular.module('employeeApp.directives').directive('checkmark', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp.directives').directive('x', [function () {
     return {
       restrict: 'A',
@@ -4813,25 +4620,19 @@ angular.module('employeeApp.directives').directive('x', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('HrEmployeeViewCtrl', [
   '$scope',
   'User',
   function ($scope, User) {
-    $scope.employeeList = User.poll().query();
-    $scope.$on('$destroy', function () {
-      User.stopPolling();
-    });
+    $scope.employeeList = User.query();
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('ProjectItem', [
   'eaResource',
   function (eaResource) {
     return eaResource('project/item/:id', { id: '@id' });
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('productSelector', [
   'Upholstery',
   'Fabric',
@@ -4873,7 +4674,6 @@ angular.module('employeeApp').directive('productSelector', [
           Notification.display('Uploading Image', false);
           var fd = new FormData();
           fd.append('image', image);
-          console.log(scope.url);
           jQuery.ajax(scope.url || 'upload/images', {
             type: 'POST',
             data: fd,
@@ -4885,13 +4685,11 @@ angular.module('employeeApp').directive('productSelector', [
             }
           });
         }
-        ;
         function add() {
           var newProduct = angular.copy(scope.product);
           scope.add({ product: newProduct });
         }
         scope.addImage = function (data) {
-          console.log(data);
           scope.product.image = data;
         };
         scope.addUpholstery = function (upholstery) {
@@ -4949,20 +4747,17 @@ angular.module('employeeApp').directive('productSelector', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('fileHandler', [
   '$rootScope',
   function ($rootScope) {
     return {
-      template: '<div class="file-handler">                            <div class="file-handler-message" ng-hide="files.length>0">                                <h3>Drop File Here</h3>                            </div>                            <div class="file-handler-list">                                <ul>                                    <li ng-repeat="file in files">{{file.name}}</li>                                </ul>                            </div>                       </div>',
+      template: '<div class="file-handler">                        <div class="file-handler-message" ng-hide="files.length>0">                            <h3>Drop File Here</h3>                        </div>                        <div class="file-handler-list">                            <ul>                                <li ng-repeat="file in files">{{file.name}}</li>                            </ul>                        </div>                   </div>',
       restrict: 'A',
       scope: { files: '=fileHandler' },
       replace: true,
       link: function postLink(scope, element, attrs) {
         var reader = new FileReader();
-        console.log('test');
         element.bind('dragenter', function (evt) {
-          console.log('enter');
           evt.preventDefault();
           element.addClass('drag-drop-active');
           element.addClass('drag-over');
@@ -4984,14 +4779,12 @@ angular.module('employeeApp').directive('fileHandler', [
           element.removeClass('drag-over');
           var e = evt.originalEvent;
           var files = e.dataTransfer.files;
-          console.log(files);
           scope.files = files;
         });
       }
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   '$scope',
   'Room',
@@ -4999,7 +4792,7 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   'ProjectItem',
   'Notification',
   function ($scope, Room, $routeParams, ProjectItem, Notification) {
-    $scope.room = Room.poll().get({ id: $routeParams.id });
+    $scope.room = Room.get({ id: $routeParams.id });
     $scope.gridOptions = {
       data: 'room.items',
       columnDefs: [
@@ -5035,12 +4828,8 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
         $scope.room.items.push(item);
       });
     };
-    $scope.$on('$destroy', function () {
-      Room.stopPolling();
-    });
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('s3', [function () {
     var meaningOfLife = 42;
     return {
@@ -5049,7 +4838,6 @@ angular.module('employeeApp').factory('s3', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').factory('FileUploader', [
   '$q',
   'Notification',
@@ -5085,13 +4873,11 @@ angular.module('employeeApp').factory('FileUploader', [
     return uploader;
   }
 ]);
-'use strict';
 angular.module('employeeApp').filter('available', [function () {
     return function (input) {
       return 'available filter: ' + input;
     };
   }]);
-'use strict';
 angular.module('employeeApp').controller('SupplyViewCtrl', [
   '$scope',
   'Supply',
@@ -5133,8 +4919,6 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
     };
   }
 ]);
-'use strict';
-'use strict';
 angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   '$scope',
   'PurchaseOrder',
@@ -5179,7 +4963,6 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('PurchaseOrder', [
   '$resource',
   function ($resource) {
@@ -5189,7 +4972,6 @@ angular.module('employeeApp').factory('PurchaseOrder', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   '$scope',
   'PurchaseOrder',
@@ -5247,7 +5029,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           try {
             window.open(response.pdf.url);
           } catch (e) {
-            console.log(e);
+            console.warn(e);
           }
           Notification.display('Purchase order created.');
         }, function () {
@@ -5261,7 +5043,6 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('addSupply', [
   '$rootScope',
   'Supplier',
@@ -5277,7 +5058,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.$watch('visible', function (val) {
           if (val) {
             scope.modal.onhide = function () {
-              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase == '$apply') {
+              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase === '$apply') {
                 scope.visible = false;
               } else {
                 $rootScope.$apply(function () {
@@ -5299,16 +5080,16 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.showWidth = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
-          return units == 'm' || units == 'pc' || units == 'pack' || units == 'yd' || units == 'kg' && type == 'packaging' ? true : false;
+          return units === 'm' || units === 'pc' || units === 'pack' || units === 'yd' || units === 'kg' && type === 'packaging' ? true : false;
         };
         scope.showDepth = function () {
           var units = scope.supply.units;
-          return units == 'pc' || units == 'pack' ? true : false;
+          return units === 'pc' || units === 'pack' ? true : false;
         };
         scope.showHeight = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
-          return units == 'pc' || units == 'pack' || units == 'kg' && type == 'packaging' ? true : false;
+          return units === 'pc' || units === 'pack' || units === 'kg' && type === 'packaging' ? true : false;
         };
         scope.supply = new Supply();
         scope.supply.units = 'piece';
@@ -5321,7 +5102,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
               scope.visible = false;
               scope.supply = new Supply();
             }, function (reason) {
-              console.log(reason);
+              console.error(reason);
             });
           } else {
             Notification.display('Please fill out the form properly');
@@ -5334,7 +5115,6 @@ angular.module('employeeApp.directives').directive('addSupply', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp.directives').directive('addSupplier', [
   '$rootScope',
   'Supplier',
@@ -5364,7 +5144,6 @@ angular.module('employeeApp.directives').directive('addSupplier', [
         });
         scope.supplier = new Supplier();
         scope.add = function () {
-          console.log(scope.supplier);
           if (scope.form.$valid) {
             Notification.display('Adding supplier...', false);
             scope.supplier.$save(function (response) {
@@ -5372,7 +5151,7 @@ angular.module('employeeApp.directives').directive('addSupplier', [
               scope.visible = false;
               scope.supplier = new Supplier();
             }, function (reason) {
-              console.log(reason);
+              console.error(reason);
             });
           } else {
             Notification.display('Please fill out the form properly');
@@ -5382,7 +5161,6 @@ angular.module('employeeApp.directives').directive('addSupplier', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('inventory', [function () {
     var meaningOfLife = 42;
     return {
@@ -5391,7 +5169,6 @@ angular.module('employeeApp').factory('inventory', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('onScrollEnd', [function () {
     return {
       restrict: 'A',
@@ -5403,7 +5180,7 @@ angular.module('employeeApp').directive('onScrollEnd', [function () {
             if (element.scrollTop() + elHeight >= childHeight - 10) {
               try {
                 scope.$eval(attrs.onScrollEnd);
-              } catch (e) {
+              } catch (err) {
                 console.error('Missing a function for \'on-scroll-end\'');
               }
             }
@@ -5412,7 +5189,6 @@ angular.module('employeeApp').directive('onScrollEnd', [function () {
       }
     };
   }]);
-'use strict';
 angular.module('employeeApp').directive('customerList', [
   'Customer',
   'Notification',
@@ -5431,7 +5207,7 @@ angular.module('employeeApp').directive('customerList', [
         scope.$watch('visible', function (val) {
           if (val) {
             scope.modal.onhide = function () {
-              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase == '$apply') {
+              if ($rootScope.$$phase === '$digest' || $rootScope.$$phase === '$apply') {
                 scope.visible = false;
               } else {
                 $rootScope.$apply(function () {
@@ -5443,13 +5219,11 @@ angular.module('employeeApp').directive('customerList', [
               scope.modal.show();
             } catch (e) {
             }
-            ;
           } else {
             try {
               scope.modal.hide();
             } catch (e) {
             }
-            ;
           }
         });
         scope.customers = Customer.query({ limit: 20 }, function (response) {
@@ -5492,7 +5266,6 @@ angular.module('employeeApp').directive('customerList', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('upholsteryList', [
   'Upholstery',
   'Notification',
@@ -5544,7 +5317,6 @@ angular.module('employeeApp').directive('upholsteryList', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('tableList', [
   'Table',
   'Notification',
@@ -5596,7 +5368,6 @@ angular.module('employeeApp').directive('tableList', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('fabricSelector', [
   'Fabric',
   'Notification',
@@ -5652,7 +5423,6 @@ angular.module('employeeApp').directive('fabricSelector', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$scope',
   '$routeParams',
@@ -5711,15 +5481,14 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
       $scope.po.status = 'Cancelled';
       for (var i = 0; i < $scope.po.items.length; i++) {
         $scope.po.items[i].status = 'Cancelled';
-        $scope.po.$update(function () {
-          Notification.display('Purchase order ' + $scope.po.id + ' cancelled.');
-          $location.path('order/purchase_order');
-        });
       }
+      $scope.po.$update(function () {
+        Notification.display('Purchase order ' + $scope.po.id + ' cancelled.');
+        $location.path('order/purchase_order');
+      });
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   '$scope',
   '$routeParams',
@@ -5766,7 +5535,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.add = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
-        var quantity = $scope.quantity;
+        quantity = $scope.quantity;
       }
       $scope.supply.$add({ quantity: quantity }, function () {
       });
@@ -5774,7 +5543,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.subtract = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
-        var quantity = $scope.quantity;
+        quantity = $scope.quantity;
       }
       $scope.supply.$subtract({ quantity: quantity }, function () {
       });
@@ -5790,7 +5559,6 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').directive('imageUploader', [
   'Notification',
   'FileUploader',
@@ -5815,11 +5583,95 @@ angular.module('employeeApp').directive('imageUploader', [
         scope.upload = function ($image) {
           var promise = FileUploader.upload($image, scope.url);
           promise.then(function (data) {
-            console.log(data);
             scope.onUpload({ data: data });
           });
         };
       }
     };
+  }
+]);
+angular.module('employeeApp.directives').directive('addCustomer', [
+  'Customer',
+  'Notification',
+  'Geocoder',
+  function (Customer, Notification, Geocoder) {
+    return {
+      templateUrl: 'views/templates/add-customer.html',
+      replace: true,
+      restrict: 'A',
+      scope: { visible: '=addCustomer' },
+      link: function postLink(scope, element, attrs) {
+        scope.$watch('visible', function (val) {
+          if (val) {
+            scope.modal.onhide = function () {
+              if (scope.$$phase == '$digest' || scope.$$phase == '$apply') {
+                scope.visible = false;
+              } else {
+                scope.$apply(function () {
+                  scope.visible = false;
+                });
+              }
+            };
+            scope.modal.show();
+          } else {
+            scope.modal.hide();
+          }
+        });
+        scope.customer = new Customer();
+        scope.getLocation = function () {
+          if (scope.customer.address.address1 && scope.customer.address.city && scope.customer.address.territory && scope.customer.address.country && scope.customer.address.zipcode && !scope.customer.address.user_defined_latlng) {
+            var promise = Geocoder.geocode(scope.customer.address);
+            promise.then(function (results) {
+              if (scope.marker) {
+                scope.marker.setPosition(results[0].geometry.location);
+              } else {
+                scope.marker = scope.map.createMarker(results[0].geometry.location);
+                scope.marker.onchange = function (latLng) {
+                  scope.customer.address.lat = scope.marker.lat;
+                  scope.customer.address.lng = scope.marker.lng;
+                  scope.customer.address.user_defined_latlng = true;
+                };
+              }
+              scope.map.setPosition(results[0].geometry.location);
+              scope.customer.address.lat = scope.marker.lat;
+              scope.customer.address.lng = scope.marker.lng;
+            }, function (status) {
+              console.error(status);
+            });
+          }
+        };
+        scope.add = function () {
+          if (scope.form.$valid) {
+            Notification.display('Adding customer:+ ' + scope.customer.first_name + '...', false);
+            scope.customer.$save(function (response) {
+              Notification.display(scope.customer.first_name + ' added');
+              scope.visible = false;
+              scope.customer = new Customer();
+            }, function (reason) {
+              console.error(reason);
+            });
+          } else {
+            Notification.display('Please fill out the form properly');
+          }
+        };
+      }
+    };
+  }
+]);
+angular.module('employeeApp').controller('MainCtrl', [
+  '$scope',
+  '$location',
+  function ($scope, $location) {
+    var user = $scope.currentUser;
+    var changePage = function () {
+      if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
+        $location.path('/supply');
+      }
+    };
+    if (!$scope.currentUser.ready) {
+      user.onready = changePage;
+    } else {
+      changePage();
+    }
   }
 ]);
