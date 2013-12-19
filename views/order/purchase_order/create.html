@@ -1,193 +1,170 @@
-<div class="create-po-page add-page" fade-in="">
-    
-    
-    <!--
+<div class="create-po-page add-page" fade-in>
+	<!--
         Forms
     -->
-    <div class="suppliers" data-modal="" ng-model="showSuppliers">
-        <div class="title">
-            Suppliers
-        </div>
-        <div class="container">
-            <div search-bar="" data-ng-model="querySupplier"></div>
-            <ul class="list">
-                <li class="item" ng-click="addSupplier(supplier)" ng-repeat="supplier in suppliers | filter:querySupplier | orderBy:'name'">{{supplier.name}}</li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="supplies" data-modal="" ng-model="showSupplies">
-        <div class="title">
-            Supplies
-        </div>
-        <div class="container">
-            <div search-bar="" data-ng-model="querySupply"></div>
-            <ul class="list">
-                <li class="item" ng-click="addItem(supply)" ng-repeat="supply in supplies | filter:querySupply | orderBy:'name'">{{supply.description}}</li>
-            </ul>
-        </div>
-    </div>
-    
-    <form name="quantityForm" class="modal quantity_modal" novalidate="" data-modal="" ng-model="showQuantity">
-        <div class="title">Quantity</div>
-        <input ng-model="po.items[po.items.length-1].quantity" required="" ng-pattern="/^\d{1,2}$/"><span>%</span>
-        <div class="bottom_bar">
-            <button ng-disabled="quantityForm.$invalid" ng-click="showQuantity=false">Submit</button>
-        </div>
-    </form>
-    
-    <form name="vatForm" class="vat_modal" novalidate="" data-modal="" ng-model="showVat">
-        <div class="title">Vat</div>
-        <input ng-model="po.vat" required="" ng-pattern="/^\d{1,2}$/"><span>%</span>
-        <div class="bottom_bar">
-            <button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
-        </div>
-    </form>
-    
-   
-    
-    
-    
-    <form class="po" name="form" novalidate="">
-        <!--
+	<div class="suppliers" data-modal ng-model="showSuppliers">
+		<div class="title">
+			Suppliers
+		</div>
+		<div class="container">
+			<div search-bar data-ng-model="querySupplier"></div>
+			<ul class="list">
+				<li class="item" ng-click="addSupplier(supplier)" ng-repeat="supplier in suppliers | filter:querySupplier | orderBy:'name'">{{supplier.name}}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="supplies" data-modal ng-model="showSupplies">
+		<div class="title">
+			Supplies
+		</div>
+		<div class="container">
+			<div search-bar data-ng-model="querySupply"></div>
+			<ul class="list">
+				<li class="item" ng-click="addItem(supply)" ng-repeat="supply in supplies | filter:querySupply | orderBy:'name'">{{supply.description}}</li>
+			</ul>
+		</div>
+	</div>
+	<form name="quantityForm" class="modal quantity_modal" novalidate data-modal ng-model="showQuantity">
+		<div class="title">Quantity</div>
+		<input ng-model="po.items[po.items.length-1].quantity" required ng-pattern="/^\d{1,2}$/" /><span>%</span>
+		<div class="bottom_bar">
+			<button ng-disabled="quantityForm.$invalid" ng-click="showQuantity=false">Submit</button>
+		</div>
+	</form>
+	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat">
+		<div class="title">Vat</div>
+		<input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" /><span>%</span>
+		<div class="bottom_bar">
+			<button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
+		</div>
+	</form>
+	<form class="po" name="form" novalidate>
+		<!--
             Sidebar
         -->
-        
-        <div class="sidebar">
-            <header>
-                <h1>
+		<div class="sidebar">
+			<header>
+				<h1>
                     <span>Create Purchase Order</span>
                 </h1>
-            </header>
-            <nav>
-                <ul class="list">
-                    <li><div ng-click="save()">Create</div></li>
-                    <li><div class="supplier" checkmark="po.supplier" x="!po.supplier" ng-click="showSuppliers=true">Add Supplier</div></li>
-                    <li><div class="supply" checkmark="po.items.length>0" x="po.items.length==0" ng-click="showSupplies=true">Add Supply</div></li>
-                   
-                    <li><div class="vat" checkmark="po.vat" x="!po.vat" ng-click="showVat=!showVat">Set Vat</div></li>
-                    <li><div ng-click="reset()">Reset</div></li>
-                </ul>
-            </nav>
-            
-        </div>
-        
-        <!--
+			</header>
+			<nav>
+				<ul class="list">
+					<li>
+						<div ng-click="save()">Create</div>
+					</li>
+					<li>
+						<div class="supplier" checkmark="po.supplier" x="!po.supplier" ng-click="showSuppliers=true">Add Supplier</div>
+					</li>
+					<li>
+						<div class="supply" checkmark="po.items.length>0" x="po.items.length==0" ng-click="showSupplies=true">Add Supply</div>
+					</li>
+					<li>
+						<div class="vat" checkmark="po.vat" x="!po.vat" ng-click="showVat=!showVat">Set Vat</div>
+					</li>
+					<li>
+						<div ng-click="reset()">Reset</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!--
             Panels
         -->
-        
-        
-        
-        
-        
-        
-        
-       
-        <!--
+		<!--
             Workspace
         -->
-        <div class="workspace">
-                <div class="summary">
-                	<table>
-                		<tr>
-                			<td>Supplier: </td>
-                			<td>{{po.supplier.name}}</td>
-                		</tr>
-                		<tr>
-                			<td>Items:</td>
-                			<td></td>
-                		</tr>
-                		<tr ng-repeat="item in po.items">
-                			<td colspan="2">- {{item.description}}
-                				<br>Qty: {{item.quantity}}
-                			</td>
-                		</tr>
-                		<tr class="subtotal">
-                			<td>Subtotal:</td>
-                			<td>{{subtotal() | number:2}}{{po.supplier.currency}}</td>
-                		</tr>
-                		<tr>
-                			<td>Vat {{po.vat || 0}}%</td>
-                			<td>{{((po.vat || 0)/100) * subtotal() | number:2}}</td>
-                		</tr>
-                		<tr>
-                			<td>Total:</td>
-                			<td>{{total() || subtotal() | number:2}}{{po.supplier.currency}}</td>
-                		</tr>
-                	</table>
-                </div>
-                <div class="supplier">
-                    <span class="title">Supplier</span>
-                    <table class="details">
-                        <tr>
-                            <td>Name:</td>
-                            <td>{{po.supplier.name}}</td>
-                        </tr><tr>
-                            <td>Address:</td>
-                            <td>
-                                {{po.supplier.address.address1}}
-                                <br>
-                                {{po.supplier.address.city}}, {{po.supplier.address.territory}}
-                                <br>
-                                {{po.supplier.address.country}} {{po.supplier.address.zipcode}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Telephone:</td>
-                            <td>{{po.supplier.telephone}}</td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td>{{po.supplier.email}}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div class="order">
-                    <table class="details">
-                        
-        
-                        <tr>
-                            <td>Vat:</td>
-                            <td>{{po.vat}}%</td>
-                        </tr>
-                        <tr>
-                            <td>Currency:</td>
-                            <td>
-                                {{po.supplier.currency}}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                
-            
-            <div class="supplies" ng-show="po.items.length>0">
-                <div class="title">Supplies</div>
-                <div class="supply" ng-repeat="supply in po.items">
-                    {{supply.description}}
-                    <table class="details">
-                        <tr>
-                            <td>Qty:</td>
-                            <td><input ng-model="supply.quantity">{{supply.units}}s</td>
-                        </tr>
-                        <tr>
-                        	<td>Unit Cost:</td>
-                            <td>{{supply.cost | number:2}}{{po.supplier.currency}}</td>
-                        </tr>
-                        <tr>
-                        	<td>Total Cost:</td>
-                            <td>{{supply.cost*supply.quantity || 0 | number:2}}{{po.supplier.currency}}</td>
-                        </tr>
-                       
-                    </table>
-                    <img ng-src="{{supply.image.url}}">
-                    <div class="remove_btn" ng-click="removeItem($index)">Remove</div>
-                </div>
-                
-                
-            </div>
-            
-        </div>
-    </form>
-    
+		<div class="workspace">
+			<div class="summary">
+				<table>
+					<tr>
+						<td>Supplier:</td>
+						<td>{{po.supplier.name}}</td>
+					</tr>
+					<tr>
+						<td>Items:</td>
+						<td></td>
+					</tr>
+					<tr ng-repeat="item in po.items">
+						<td colspan="2">- {{item.description}}
+							<br />Qty: {{item.quantity}}
+						</td>
+					</tr>
+					<tr class="subtotal">
+						<td>Subtotal:</td>
+						<td>{{subtotal() | number:2}}{{po.supplier.currency}}</td>
+					</tr>
+					<tr>
+						<td>Vat {{po.vat || 0}}%</td>
+						<td>{{((po.vat || 0)/100) * subtotal() | number:2}}</td>
+					</tr>
+					<tr>
+						<td>Total:</td>
+						<td>{{total() || subtotal() | number:2}}{{po.supplier.currency}}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="supplier">
+				<span class="title">Supplier</span>
+				<table class="details">
+					<tr>
+						<td>Name:</td>
+						<td>{{po.supplier.name}}</td>
+						<tr>
+							<td>Address:</td>
+							<td>
+								{{po.supplier.address.address1}}
+								<br />{{po.supplier.address.city}}, {{po.supplier.address.territory}}
+								<br />{{po.supplier.address.country}} {{po.supplier.address.zipcode}}
+							</td>
+						</tr>
+						<tr>
+							<td>Telephone:</td>
+							<td>{{po.supplier.telephone}}</td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td>{{po.supplier.email}}</td>
+						</tr>
+				</table>
+			</div>
+			<div class="order">
+				<table class="details">
+					<tr>
+						<td>Vat:</td>
+						<td>{{po.vat}}%</td>
+					</tr>
+					<tr>
+						<td>Currency:</td>
+						<td>
+							{{po.supplier.currency}}
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="supplies" ng-show="po.items.length>0">
+				<div class="title">Supplies</div>
+				<div class="supply" ng-repeat="supply in po.items">
+					{{supply.description}}
+					<table class="details">
+						<tr>
+							<td>Qty:</td>
+							<td>
+								<input ng-model="supply.quantity" />{{supply.units}}s</td>
+						</tr>
+						<tr>
+							<td>Unit Cost:</td>
+							<td>{{supply.cost | number:2}}{{po.supplier.currency}}</td>
+						</tr>
+						<tr>
+							<td>Total Cost:</td>
+							<td>{{supply.cost*supply.quantity || 0 | number:2}}{{po.supplier.currency}}</td>
+						</tr>
+					</table>
+					<img ng-src="{{supply.image.url}}" />
+					<div class="remove_btn" ng-click="removeItem($index)">Remove</div>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>

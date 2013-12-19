@@ -1,14 +1,11 @@
-<div class="customer-list" data-modal="">
-    <div class="title">
-        Customers
-    </div>
-    
-
-    <div class="container" on-scroll-end="loadNext()">
-    	<div search-bar="" data-ng-model="query"></div>
-        <ul class="customer-container">
-            <li class="customer" ng-click="select(customer)" ng-repeat="customer in customers | filter:query | orderBy:'name'">{{customer.name}}</li>
-        </ul>
-    </div>
-    
+<div class="customer-list" data-modal>
+	<div class="title">
+		Customers
+	</div>
+	<div class="container" on-scroll-end="loadNext()">
+		<div search-bar data-ng-model="query"></div>
+		<ul class="customer-container">
+			<li class="customer" ng-click="select(customer)" ng-repeat="customer in customers | filter:query | orderBy:'name'">{{customer.name}}</li>
+		</ul>
+	</div>
 </div>

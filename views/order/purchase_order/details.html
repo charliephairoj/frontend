@@ -1,101 +1,88 @@
 <div class="po-details-page">
-    
-    
-    <div class="calendar-modal" data-modal="" ng-model="showCal">
-        <div ui-date="" ng-model="po.receive_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="receive()">Select</button>
-        </div>
-    </div>
-    
-   
-    <!--
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="po.receive_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="receive()">Select</button>
+		</div>
+	</div>
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Purchase Order</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
-                    <div ng-click="save()">Save</div>
-                </li>
-                 <li ng-show="currentUser.hasPermission('change_purchaseorder')">
-                    <div ng-click="order()">Order</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
-                    <div ng-click="receive()">Receive</div>
-                </li>
-                 <li ng-show="currentUser.hasPermission('change_purchaseorder')">
-                    <div ng-click="pay()">Pay</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
-                    <div ng-click="cancel()">Cancel</div>
-                </li>
-                <li>
-                    <div ng-click="viewPDF()">View PDF</div>
-                </li>
-                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="workspace">
-        <div class="details">
-            <div class="table">
-                <div class="row">
-                    <div class="cell">Purchase Order#:</div>
-                    <div class="cell">{{po.id}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Customer</div>
-                    <div class="cell">{{po.supplier.name}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Order Date</div>
-                    <div class="cell">{{po.created | date:"MMMM d, yyyy"}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Receive Date</div>
-                    <div class="cell" ng-click="showCal=true">{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Status</div>
-                    <div class="cell" ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">{{po.status}}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="products items">
-            <div class="table">
-                <div class="row" ng-repeat="item in po.items">
-                   
-                    <div class="cell">
-                        <div class="details">
-                            <div class="details-row">
-                                <div class="details-data">
-                                    {{item.description}}
-                                    
-                                </div>
-                                <div class="details-data">{{item.quantity}} {{item.units}}</div>
-                            </div>
-                            <div class="details-row">
-                                <div class="details-data">
-                                    Status: {{item.status}}
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    
+	<div class="sidebar">
+		<header>
+			<h1><span>Purchase Order</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('change_purchaseorder')">
+					<div ng-click="save()">Save</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_purchaseorder')">
+					<div ng-click="order()">Order</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_purchaseorder')">
+					<div ng-click="receive()">Receive</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_purchaseorder')">
+					<div ng-click="pay()">Pay</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_purchaseorder')">
+					<div ng-click="cancel()">Cancel</div>
+				</li>
+				<li>
+					<div ng-click="viewPDF()">View PDF</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<div class="details">
+			<div class="table">
+				<div class="row">
+					<div class="cell">Purchase Order#:</div>
+					<div class="cell">{{po.id}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Customer</div>
+					<div class="cell">{{po.supplier.name}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Order Date</div>
+					<div class="cell">{{po.created | date:"MMMM d, yyyy"}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Receive Date</div>
+					<div class="cell" ng-click="showCal=true">{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Status</div>
+					<div class="cell" ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">{{po.status}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="products items">
+			<div class="table">
+				<div class="row" ng-repeat="item in po.items">
+					<div class="cell">
+						<div class="details">
+							<div class="details-row">
+								<div class="details-data">
+									{{item.description}}
+								</div>
+								<div class="details-data">{{item.quantity}} {{item.units}}</div>
+							</div>
+							<div class="details-row">
+								<div class="details-data">
+									Status: {{item.status}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

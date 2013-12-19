@@ -1,59 +1,51 @@
 <div class="viewFabricPage">
-
-    <!--
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Fabric</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a ng-href="#/supply/fabric/add">Add Fabric</a>
-                </li>
-                
-            </ul>
-        </nav>
-    </div>
-    
-    <!--
+	<div class="sidebar">
+		<header>
+			<h1><span>Fabric</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a ng-href="#/supply/fabric/add">Add Fabric</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    <div data-search-bar="" ng-model="query"></div>
-    
-    
-    <!--
+	<div data-search-bar ng-model='query'></div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace grid" style="z-index:1">
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell id">ID</div>
-                <div class="cell supplier">Supplier</div>
-                <div class="cell pattern">Pattern</div>
-                <div class="cell color">Color</div>
-                <div class="cell quantity">Quantity</div>
-            </div>
-        </div>
-        <div class="listContainer" on-scroll-end="loadNext()">
-                <div class="body">
-                    <a ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/fabric/{{fabric.id}}">
-                        
-                        </a><div class="cell preview">
-                            <img ng-src="{{fabric.image.url}}">
-                        </div>
-                        
-                        <div class="cell id">{{fabric.id}}</div>
-                        <div class="cell supplier">{{fabric.supplier.name}}</div>
-                        <div class="cell pattern">{{fabric.pattern}}</div>
-                        <div class="cell color">{{fabric.color}}</div>
-                        <div class="cell quantity">{{fabric.quantity}}</div>
-                    
-                </div>
-            <!--
+	<div class="workspace grid" style="z-index:1;">
+		<div class="header">
+			<div class="row">
+				<div class="cell preview">Preview</div>
+				<div class="cell id">ID</div>
+				<div class="cell supplier">Supplier</div>
+				<div class="cell pattern">Pattern</div>
+				<div class="cell color">Color</div>
+				<div class="cell quantity">Quantity</div>
+			</div>
+		</div>
+		<div class="listContainer" on-scroll-end="loadNext()">
+			<div class="body">
+				<a ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/fabric/{{fabric.id}}">
+					<div class="cell preview">
+						<img ng-src="{{fabric.image.url}}" />
+					</div>
+					<div class="cell id">{{fabric.id}}</div>
+					<div class="cell supplier">{{fabric.supplier.name}}</div>
+					<div class="cell pattern">{{fabric.pattern}}</div>
+					<div class="cell color">{{fabric.color}}</div>
+					<div class="cell quantity">{{fabric.quantity}}</div>
+				</a>
+			</div>
+			<!--
             <div class="list">
                 
                     <a ng-repeat="fabric in fabricList | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/fabric/{{fabric.id}}">
@@ -97,7 +89,6 @@
                         </div>                      
                     </a>
             </div>-->
-        </div>
-    </div>
-    
+		</div>
+	</div>
 </div>

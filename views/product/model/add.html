@@ -1,40 +1,46 @@
-<form name="form" novalidate="" class="addPage" image-drop-target="uploadImage()">
-        
-        <div class="sidebar">
-            <header>
-                <div class="profilePic" ui-if="imagePreviews"><img ng-src="{{model.image.url}}"></div>
-                <h1 ui-if="!model.name && !model.model"><span>New Model</span></h1>
-                <h1 ui-if="model.name || model.model"><span>{{model.name}}<br>{{model.model}}</span></h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
-                    </li>
-                    
-                </ul>
-            </nav>
-        </div>
-        
-        
-        
-        <div class="workspace">
-            <table class="inputTable">
-                <tr>
-                    <td><label>Model Name</label></td>
-                    <td><input type="text" ng-model="model.name" required="" tooltip="nameText"></td>
-                </tr>
-                <tr>
-                    <td><label>Model Number</label></td>
-                    <td><input type="text" beautify="" ng-model="model.model" required="" tooltip="modelText"></td>
-                </tr>
-                <tr>
-                    <td><label>Collection</label></td>
-                    <td><input type="text" beautify="" ng-model="model.collection" value="Dellarobbiat Thailand" required="" tooltip="collectionText"></td>
-                </tr>
-            </table> 
-        </div>
-        
-        
-        
-    </form>
+<form name="form" novalidate class="addPage" image-drop-target="uploadImage()">
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="imagePreviews">
+				<img ng-src="{{model.image.url}}" />
+			</div>
+			<h1 ui-if="!model.name && !model.model"><span>New Model</span></h1>
+			<h1 ui-if="model.name || model.model"><span>{{model.name}}<br />{{model.model}}</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<table class="inputTable">
+			<tr>
+				<td>
+					<label>Model Name</label>
+				</td>
+				<td>
+					<input type="text" ng-model="model.name" required tooltip="nameText" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Model Number</label>
+				</td>
+				<td>
+					<input type="text" beautify ng-model="model.model" required tooltip="modelText" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Collection</label>
+				</td>
+				<td>
+					<input type="text" beautify ng-model="model.collection" value="Dellarobbiat Thailand" required tooltip="collectionText" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>

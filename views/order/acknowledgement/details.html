@@ -1,130 +1,118 @@
 <div class="acknowledgementDetailsPage">
-    
-    
-    <div class="calendar-modal" data-modal="" ng-model="showCal">
-        <div ui-date="" ng-model="acknowledgement.delivery_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="showCal=false">Select</button>
-        </div>
-            
-    </div>
-    
-    <div class="log-modal" data-modal="" ng-model="showLog">
-        <div class="container">
-            <div class="grid">
-                <div class="header" ui-scrollfix="0">
-                    <div class="row">
-                        <div class="cell">Event</div>
-                        <div class="cell">Employee</div>
-                        <div class="cell">Timestamp</div>
-                    </div>
-                </div>
-                <div class="body">
-                    <a data-ng-repeat="log in logs" class="row">
-                        </a><div class="cell">{{log.event}}</div>
-                        <div class="cell">{{log.employee}}</div>
-                        <div class="cell">{{log.timestamp | date: "MMM d, yyyy H:mm"}}</div>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="bottom_bar">
-            <button ng-click="showLog=false">Close</button>
-        </div>
-            
-    </div>
-    <!--
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="acknowledgement.delivery_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="showCal=false">Select</button>
+		</div>
+	</div>
+	<div class="log-modal" data-modal ng-model="showLog">
+		<div class="container">
+			<div class="grid">
+				<div class="header" ui-scrollfix="0">
+					<div class="row">
+						<div class="cell">Event</div>
+						<div class="cell">Employee</div>
+						<div class="cell">Timestamp</div>
+					</div>
+				</div>
+				<div class="body">
+					<a data-ng-repeat="log in logs" class="row">
+						<div class="cell">{{log.event}}</div>
+						<div class="cell">{{log.employee}}</div>
+						<div class="cell">{{log.timestamp | date: "MMM d, yyyy H:mm"}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="bottom_bar">
+			<button ng-click="showLog=false">Close</button>
+		</div>
+	</div>
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Acknowledgement</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="save()">Save</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="showCal=true">Change Delivery Date</div>
-                </li>
-                <li>
-                    <div ng-click="getPDF('acknowledgement')">View Acknowledgement</div>
-                </li>
-                <li>
-                    <div ng-click="getPDF('production')">View Production</div>
-                </li>
-                <li>
-                    <div ng-click="viewLog()">View Log</div>
-                </li>
-                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="workspace">
-        <div class="details">
-            <div class="table">
-                <div class="row">
-                    <div class="cell">Acknowledgement#:</div>
-                    <div class="cell">{{acknowledgement.id}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Customer</div>
-                    <div class="cell">{{acknowledgement.customer.name}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Order Time</div>
-                    <div class="cell">{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Delivery Date</div>
-                    <div class="cell">{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Status</div>
-                    <div class="cell" ng-class="{acknowledged:acknowledgement.status == 'ACKNOWLEDGED', shipped:acknowledgement.status == 'SHIPPED'}">{{acknowledgement.status}}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="products items">
-            <div class="table">
-                <a class="row" ng-repeat="product in acknowledgement.items" ng-href="#/order/acknowledgement/item/{{product.id}}">
-                    </a><div class="cell product-img">
-                        <img ng-show="product.image.url" ng-src="{{product.image.url}}">
-                    </div>
-                    <div class="cell">
-                        <div class="details">
-                            <div class="details-row">
-                                <div class="details-data">
-                                    {{product.description}}
-                                    
-                                </div>
-                                <div class="details-data">{{product.quantity}}</div>
-                            </div>
-                            <div class="details-row">
-                                <div class="details-data">
-                                    Status: {{product.status}}
-                                </div>
-                            </div>
-                            <div class="details-row" ng-show="product.fabric">
-                                <div class="details-data">Fabric: {{product.fabric.description}}</div>
-                            </div>
-                            <div class="details-row" ng-repeat="pillow in product.pillows">
-                                <div class="details-data">{{pillow.type | beautify}} Pillow: {{pillow.fabric.description}}</div>
-                                <div class="details-data">{{pillow.quantity}}</div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                
-            </div>
-        </div>
-    </div>
-    
-    
-    
+	<div class="sidebar">
+		<header>
+			<h1><span>Acknowledgement</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="save()">Save</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="showCal=true">Change Delivery Date</div>
+				</li>
+				<li>
+					<div ng-click="getPDF('acknowledgement')">View Acknowledgement</div>
+				</li>
+				<li>
+					<div ng-click="getPDF('production')">View Production</div>
+				</li>
+				<li>
+					<div ng-click="viewLog()">View Log</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<div class="details">
+			<div class="table">
+				<div class="row">
+					<div class="cell">Acknowledgement#:</div>
+					<div class="cell">{{acknowledgement.id}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Customer</div>
+					<div class="cell">{{acknowledgement.customer.name}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Order Time</div>
+					<div class="cell">{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Delivery Date</div>
+					<div class="cell">{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Status</div>
+					<div class="cell" ng-class="{acknowledged:acknowledgement.status == 'ACKNOWLEDGED', shipped:acknowledgement.status == 'SHIPPED'}">{{acknowledgement.status}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="products items">
+			<div class="table">
+				<a class="row" ng-repeat="product in acknowledgement.items" ng-href="#/order/acknowledgement/item/{{product.id}}">
+					<div class="cell product-img">
+						<img ng-show="product.image.url" ng-src="{{product.image.url}}" />
+					</div>
+					<div class="cell">
+						<div class="details">
+							<div class="details-row">
+								<div class="details-data">
+									{{product.description}}
+								</div>
+								<div class="details-data">{{product.quantity}}</div>
+							</div>
+							<div class="details-row">
+								<div class="details-data">
+									Status: {{product.status}}
+								</div>
+							</div>
+							<div class="details-row" ng-show="product.fabric">
+								<div class="details-data">Fabric: {{product.fabric.description}}</div>
+							</div>
+							<div class="details-row" ng-repeat="pillow in product.pillows">
+								<div class="details-data">{{pillow.type | beautify}} Pillow: {{pillow.fabric.description}}</div>
+								<div class="details-data">{{pillow.quantity}}</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
 </div>

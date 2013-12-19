@@ -1,54 +1,44 @@
 <div class="user-view-page">
-    
-    
-    
-    <!--
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Suppliers</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ui-if="currentUser.hasPermission('add_user')">
-                    <a href="#/administrator/user/add">
+	<div class="sidebar">
+		<header>
+			<h1><span>Suppliers</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ui-if="currentUser.hasPermission('add_user')">
+					<a href="#/administrator/user/add">
                         Create User
                     </a>
-                </li>
-            </ul>
-        </nav>
-    </div>  
-    
-    <div data-search-bar="" ng-model="query"></div>
-    
-    <div class="workspace grid">
-        <div class="header">
-            <div class="row">
-                <div class="cell id">ID</div>
-                <div class="cell name">Name</div>
-                <div class="cell email">Email</div>
-                <div class="cell last-login">Last Login</div>
-            </div>
-        </div>
-        <div class="listContainer">
-            <div class="grid">
-                <div class="body">
-                    <a ng-repeat="user in users | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-                        
-                       
-                        
-                        </a><div class="cell id">{{user.id}}</div>
-                        <div class="cell name">{{user.first_name+' '+user.last_name}}</div>
-                        <div class="cell email">{{user.email}}</div>
-                        <div class="cell last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-                        
-                    
-                </div>
-            </div>
-        </div>
-        
-        <!--
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div data-search-bar ng-model="query"></div>
+	<div class="workspace grid">
+		<div class="header">
+			<div class="row">
+				<div class="cell id">ID</div>
+				<div class="cell name">Name</div>
+				<div class="cell email">Email</div>
+				<div class="cell last-login">Last Login</div>
+			</div>
+		</div>
+		<div class="listContainer">
+			<div class="grid">
+				<div class="body">
+					<a ng-repeat="user in users | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
+						<div class="cell id">{{user.id}}</div>
+						<div class="cell name">{{user.first_name+' '+user.last_name}}</div>
+						<div class="cell email">{{user.email}}</div>
+						<div class="cell last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!--
         <div class="listContainer">
             <div class="list">
                     <a ng-repeat="user in userList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
@@ -75,6 +65,5 @@
                     </a>
             </div>
         </div>-->
-    </div>
-    
+	</div>
 </div>

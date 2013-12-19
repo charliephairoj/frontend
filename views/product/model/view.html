@@ -1,48 +1,39 @@
 <div class="model-view-page">
-    
-    
-    <div class="sidebar">
-        <header>
-            <h1><span>Models</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="#/product/model/add">Add New Model</a>
-                </li>
-                    
-            </ul>
-        </nav>
-    </div>
-        
-        
-    <div data-search-bar="" data-ng-model="query"></div>
-    
-    <div class="workspace grid">
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell model">Model</div>
-                <div class="cell name">Name</div>
-                <div class="cell collection">Collection</div>
-            </div>
-        </div>
-        <div class="listContainer">
-                <div class="body" on-scroll-end="loadNext()">
-                    <a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
-                        
-                        </a><div class="cell preview">
-                            <img ng-src="{{model.images[0].url}}">
-                        </div>
-                        
-                        <div class="cell model">{{model.model}}</div>
-                        <div class="cell name">{{model.name}}</div>
-                        <div class="cell collection">{{model.collection}}</div>
-                     
-                    
-                </div>
-        </div>
-        <!--
+	<div class="sidebar">
+		<header>
+			<h1><span>Models</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a href="#/product/model/add">Add New Model</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div data-search-bar data-ng-model="query"></div>
+	<div class="workspace grid">
+		<div class="header">
+			<div class="row">
+				<div class="cell preview">Preview</div>
+				<div class="cell model">Model</div>
+				<div class="cell name">Name</div>
+				<div class="cell collection">Collection</div>
+			</div>
+		</div>
+		<div class="listContainer">
+			<div class="body" on-scroll-end="loadNext()">
+				<a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
+					<div class="cell preview">
+						<img ng-src="{{model.images[0].url}}" />
+					</div>
+					<div class="cell model">{{model.model}}</div>
+					<div class="cell name">{{model.name}}</div>
+					<div class="cell collection">{{model.collection}}</div>
+				</a>
+			</div>
+		</div>
+		<!--
         <div class="listContainer">
             <div class="list">
                 
@@ -73,5 +64,5 @@
                 
             </div>
         </div>-->
-    </div>
+	</div>
 </div>

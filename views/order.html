@@ -1,17 +1,19 @@
 <div>
-    <div class="sidebar">
-        <header>
-            <h1>
+	<div class="sidebar">
+		<header>
+			<h1>
                 <span>Orders</span>
             </h1>
-        </header>
-        <nav>
-            <ul class="list">
-                <li ui-if="currentUser.hasPermission('add_purchaseorder')"><a href="#/order/purchase_order">Purchase Orders</a></li>
-                <li ui-if="currentUser.hasPermission('add_acknowledgement')"><a href="#/order/acknowledgement">Acknowledgements</a></li>
-                <li ui-if="currentUser.hasPermission('add_shipping')"><a href="#/order/shipping">Shipping</a></li>
-            </ul>
-        </nav>
-        
-    </div>
+		</header>
+		<nav>
+			<ul class="list">
+				<li ui-if="currentUser.hasPermission('add_purchaseorder')"><a href="#/order/purchase_order">Purchase Orders</a>
+				</li>
+				<li ui-if="currentUser.hasPermission('add_acknowledgement')"><a href="#/order/acknowledgement">Acknowledgements</a>
+				</li>
+				<li ui-if="currentUser.hasPermission('add_shipping')"><a href="#/order/shipping">Shipping</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
 </div>

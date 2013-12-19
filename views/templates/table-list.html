@@ -1,17 +1,13 @@
 <div class="table-list">
-    
-
-        
-    <div class="container" on-scroll-end="loadNext()">
-    	<div search-bar="" data-ng-model="query"></div>
-        <ul class="table-container">
-            <li class="table" data-ng-repeat="table in tables| filter:query" data-ng-click="select(table)">
-            	<div class="image-container">
-            		<img ng-src="{{table.image.url}}">
-            	</div>
-            	{{table.description}}
-            </li>
-        </ul>
-    </div>
-    
+	<div class="container" on-scroll-end="loadNext()">
+		<div search-bar data-ng-model="query"></div>
+		<ul class="table-container">
+			<li class="table" data-ng-repeat="table in tables| filter:query" data-ng-click="select(table)">
+				<div class="image-container">
+					<img ng-src="{{table.image.url}}" />
+				</div>
+				{{table.description}}
+			</li>
+		</ul>
+	</div>
 </div>

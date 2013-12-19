@@ -1,48 +1,37 @@
 <div class="viewCustomerPage" ng-init="addCustomer=false">
-    
-    
-	<div add-customer="addCustomer"></div>    
-    
-   
-    
-    <!-- 
-        Sidebar
+	<div add-customer="addCustomer"></div>
+
+	<!-- 
+	Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Customers</span></h1>
-        </header>
-        <nav>
-            <ul>
-                
-          
-                <li ng-show="currentUser.hasPermission('add_customer')">
-                    <a data-ng-click="addCustomer=true">Add Customer</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    
-    <!--
+	<div class="sidebar">
+		<header>
+			<h1><span>Customers</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('add_customer')">
+					<a data-ng-click="addCustomer=true">Add Customer</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    <div data-search-bar="" ng-model="query"></div>
-    
-    <!--
+	<div data-search-bar ng-model="query"></div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace list">
-    	<div class="outer-container" on-scroll-end="loadNext()">
-    		<ul class="inner-container">
-    			<li class="item-container" ng-repeat="customer in customers | filter:query">
-    				<a class="item" ng-href="#/contact/customer/{{customer.id}}">
-    					<span class="description">{{customer.name}}</span>
-    				</a>
-    			</li>
-    		</ul>
-    	</div>
-    </div>
-    
-    
+	<div class="workspace list">
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="customer in customers | filter:query">
+					<a class="item" ng-href="#/contact/customer/{{customer.id}}">
+						<span class="description">{{customer.name}}</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>

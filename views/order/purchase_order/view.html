@@ -1,52 +1,45 @@
 <div class="po-view-page view-page">
-    
-    <!--
+	<!--
         Sidebar
     -->
-    
-    <div class="sidebar">
-        <header>
-            <h1>
+	<div class="sidebar">
+		<header>
+			<h1>
                 <span>Purchase Order</span>
             </h1>
-        </header>
-        <nav>
-            <ul class="list">
-                <li ui-if="currentUser.hasPermission('add_acknowledgement')"><a ng-href="#/order/purchase_order/create">Create</a></li>
-            </ul>
-        </nav>
-        
-    </div>
-    
-    <!--
+		</header>
+		<nav>
+			<ul class="list">
+				<li ui-if="currentUser.hasPermission('add_acknowledgement')"><a ng-href="#/order/purchase_order/create">Create</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    
-    <div data-search-bar="" ng-model="query"></div>
-    
-    <!--
+	<div data-search-bar ng-model="query"></div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace">
-    	<div class="outer-container">
-    		<ul class="inner-container">
-    			<li class="item-container" ng-repeat="po in poList | filter:query">
-    				<a class="item" ng-href="#/order/purchase_order/{{po.id}}">
-    					<span class="description">{{po.id}}</span>
-	    				<span class="customer">{{po.supplier.name}}</span>
-	    				<span class="status" ng-class="{ordered:po.status == 'Ordered',
+	<div class="workspace">
+		<div class="outer-container">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="po in poList | filter:query">
+					<a class="item" ng-href="#/order/purchase_order/{{po.id}}">
+						<span class="description">{{po.id}}</span>
+						<span class="customer">{{po.supplier.name}}</span>
+						<span class="status" ng-class="{ordered:po.status == 'Ordered',
 	    							   paid:po.status == 'Paid',
 	    							   received:po.status == 'Received'}">
 	    					{{po.status}}
 	    				</span>
-	    				<span class="items">{{po.items.length}} Items</span>
-	    				<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
-	    				<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
-    				</a>
-    			</li>
-    		</ul>
-    	</div>
-    </div>
-    
+						<span class="items">{{po.items.length}} Items</span>
+						<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
+						<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>

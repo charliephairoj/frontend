@@ -1,182 +1,168 @@
-<div class="createShippingPage" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in="">
-    
-    
-    <form name="remarksForm" novalidate="" class="remarks_modal" data-modal="" ng-model="showRemarks">
-        <div class="title">Remarks</div>
-        <textarea ng-model="shipping.comments"></textarea>
-        <div class="bottom_bar">
-            <button ng-click="showRemarks=false">Submit</button>
-        </div>
-    </form>
-    
-    
-    
-    <form class="ack" name="form" ec-droppable="add()" novalidate="">
-        <!--
+<div class="createShippingPage" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in>
+	<form name="remarksForm" novalidate class="remarks_modal" data-modal ng-model="showRemarks">
+		<div class="title">Remarks</div>
+		<textarea ng-model="shipping.comments"></textarea>
+		<div class="bottom_bar">
+			<button ng-click="showRemarks=false">Submit</button>
+		</div>
+	</form>
+	<form class="ack" name="form" ec-droppable="add()" novalidate>
+		<!--
             Sidebar
         -->
-        
-        <div class="sidebar">
-            <header>
-                <h1>
+		<div class="sidebar">
+			<header>
+				<h1>
                     <span>Create Shipping</span>
                 </h1>
-            </header>
-            <nav>
-                <ul class="list">
-                    <li><div ng-class="{dirty:$scope.isValidated}" ng-click="create()">Create</div></li>
-                    <li><div ng-click="showAck=!showAck">Choose Acknowledgement</div></li>
-                    <li><div class="delivery_date" ng-class="{dirty:!ack.delivery_date}" ng-click="show_calendar=true">Set Delivery Date</div></li>
-                    <li><div ng-click="showRemarks=true">Add Comments</div></li>
-                    <li><div ng-click="reset()">Reset</div></li>
-                </ul>
-            </nav>
-            
-        </div>
-        
-        <!--
+			</header>
+			<nav>
+				<ul class="list">
+					<li>
+						<div ng-class="{dirty:$scope.isValidated}" ng-click="create()">Create</div>
+					</li>
+					<li>
+						<div ng-click="showAck=!showAck">Choose Acknowledgement</div>
+					</li>
+					<li>
+						<div class="delivery_date" ng-class="{dirty:!ack.delivery_date}" ng-click="show_calendar=true">Set Delivery Date</div>
+					</li>
+					<li>
+						<div ng-click="showRemarks=true">Add Comments</div>
+					</li>
+					<li>
+						<div ng-click="reset()">Reset</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!--
             Panels
         -->
-        
-        <div class="ack_modal" data-modal="" ng-model="showAck">
-            <div class="title">
-                Acknowledgements
-                <input type="text" class="search" ng-model="query">
-            </div>
-            <div class="container" on-scroll-end="loadNext()">
-                <ul class="acknowledgements">
-                    <li class="item" ng-click="addAcknowledgement(ack)" ng-repeat="ack in acknowledgements | filter:query | orderBy:'id':'true'">
-                        {{ack.id}}
-                        <br>
-                        {{ack.customer.name}}
-                    </li>
-                </ul>
-            </div>
-            
-        </div>
-        
-        
-        
-        
-        
-        
-        
-        <div class="calendar_modal" data-modal="" ng-model="show_calendar">
-            <div ui-date="" ng-model="shipping.delivery_date">
-            </div>
-            <div class="bottom_bar">
-                <button ng-disabled="!shipping.delivery_date" ng-click="show_calendar=!show_calendar">Select</button>
-            </div>
-            
-        </div>
-        
-        <!--
+		<div class="ack_modal" data-modal ng-model="showAck">
+			<div class="title">
+				Acknowledgements
+				<input type="text" class="search" ng-model="query" />
+			</div>
+			<div class="container" on-scroll-end="loadNext()">
+				<ul class="acknowledgements">
+					<li class="item" ng-click="addAcknowledgement(ack)" ng-repeat="ack in acknowledgements | filter:query | orderBy:'id':'true'">
+						{{ack.id}}
+						<br />{{ack.customer.name}}
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="calendar_modal" data-modal ng-model="show_calendar">
+			<div ui-date ng-model="shipping.delivery_date">
+			</div>
+			<div class="bottom_bar">
+				<button ng-disabled="!shipping.delivery_date" ng-click="show_calendar=!show_calendar">Select</button>
+			</div>
+		</div>
+		<!--
             Workspace
         -->
-        <div class="workspace">
-                <div class="acknowledgement">
-                    <span class="title">Acknowledgement</span>
-                    <table class="details">
-                        <tr>
-                            <td>ID:</td>
-                            <td>{{shipping.acknowledgement.id}}</td>
-                        </tr>
-                        <tr>
-                            <td>Status:</td>
-                            <td>{{shipping.acknowledgement.status}}</td>
-                        </tr>
-                            
-                    </table>
-                </div>
-                <div class="customer">
-                    <span class="title">Customer</span>
-                    <table class="details">
-                        <tr>
-                            <td>Name:</td>
-                            <td>{{shipping.customer.name}}</td>
-                        </tr><tr>
-                            <td>Address:</td>
-                            <td>
-                                {{shipping.customer.addresses[0].address1}}
-                                <br>
-                                {{shipping.customer.addresses[0].city}}, {{shipping.customer.addresses[0].territory}}
-                                <br>
-                                {{shipping.customer.addresses[0].territory}}, {{shipping.customer.addresses[0].country}} {{shipping.customer.addresses[0].zipcode}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Telephone:</td>
-                            <td>{{shipping.customer.telephone}}</td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td>{{shipping.customer.email}}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div class="order">
-                    <table class="details">
-                        <tr>
-                            <td>Delivery Date:</td>
-                            <td>{{shipping.delivery_date | date:"MMMM d, yyyy"}}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-            
-            <div class="products" ng-show="shipping.items">
-                <div class="title">Items to Ship</div>
-                <div class="product" ng-repeat="product in shipping.items">
-                    {{product.description}}
-                    <table class="details">
-                        <tr>
-                            <td>Qty:</td>
-                            <td>{{product.quantity}}</td>
-                        </tr>
-                        <tr>
-                            <td>Custom Size:</td>
-                            <td>{{product.is_custom_size}}</td>
-                        </tr>
-                        <tr>
-                            <td>Width:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.width">mm</td>
-                        </tr>
-                        <tr>
-                            <td>Depth:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.depth">mm</td>
-                        </tr>
-                        <tr>
-                            <td>Height:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.height">mm</td>
-                        </tr>
-                        <tr ui-if="product.fabric">
-                            <td>Fabric: </td>
-                            <td>
-                                {{product.fabric.description}}
-                                <img ng-src="{{product.fabric.image_url}}">
-                            </td>
-                            <td>
-                                
-                            </td>
-                            
-                        </tr>
-                        <tr ng-repeat="pillow in product.pillows">
-                            <td>{{pillow.type | beautify}} Pillow</td>
-                            <td>{{pillow.fabric.description}}<img ng-src="{{pillow.fabric.image_url}}"></td>
-                        </tr>
-                        <tr>
-                            <td>Comments:</td>
-                            <td><textarea cols="40" rows="4" ng-model="product.comments"></textarea></td>
-                        </tr>
-                    </table>
-                    <img ng-src="{{product.image.url}}">
-                    <div class="remove_btn" ng-click="removeProduct($index)">Remove</div>
-                </div>
-                
-                
-            </div>
-        </div>
-    </form>
-    
+		<div class="workspace">
+			<div class="acknowledgement">
+				<span class="title">Acknowledgement</span>
+				<table class="details">
+					<tr>
+						<td>ID:</td>
+						<td>{{shipping.acknowledgement.id}}</td>
+					</tr>
+					<tr>
+						<td>Status:</td>
+						<td>{{shipping.acknowledgement.status}}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="customer">
+				<span class="title">Customer</span>
+				<table class="details">
+					<tr>
+						<td>Name:</td>
+						<td>{{shipping.customer.name}}</td>
+						<tr>
+							<td>Address:</td>
+							<td>
+								{{shipping.customer.addresses[0].address1}}
+								<br />{{shipping.customer.addresses[0].city}}, {{shipping.customer.addresses[0].territory}}
+								<br />{{shipping.customer.addresses[0].territory}}, {{shipping.customer.addresses[0].country}} {{shipping.customer.addresses[0].zipcode}}
+							</td>
+						</tr>
+						<tr>
+							<td>Telephone:</td>
+							<td>{{shipping.customer.telephone}}</td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td>{{shipping.customer.email}}</td>
+						</tr>
+				</table>
+			</div>
+			<div class="order">
+				<table class="details">
+					<tr>
+						<td>Delivery Date:</td>
+						<td>{{shipping.delivery_date | date:"MMMM d, yyyy"}}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="products" ng-show="shipping.items">
+				<div class="title">Items to Ship</div>
+				<div class="product" ng-repeat="product in shipping.items">
+					{{product.description}}
+					<table class="details">
+						<tr>
+							<td>Qty:</td>
+							<td>{{product.quantity}}</td>
+						</tr>
+						<tr>
+							<td>Custom Size:</td>
+							<td>{{product.is_custom_size}}</td>
+						</tr>
+						<tr>
+							<td>Width:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.width" />mm</td>
+						</tr>
+						<tr>
+							<td>Depth:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.depth" />mm</td>
+						</tr>
+						<tr>
+							<td>Height:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.height" />mm</td>
+						</tr>
+						<tr ui-if="product.fabric">
+							<td>Fabric:</td>
+							<td>
+								{{product.fabric.description}}
+								<img ng-src="{{product.fabric.image_url}}" />
+							</td>
+							<td>
+							</td>
+						</tr>
+						<tr ng-repeat="pillow in product.pillows">
+							<td>{{pillow.type | beautify}} Pillow</td>
+							<td>{{pillow.fabric.description}}
+								<img ng-src="{{pillow.fabric.image_url}}" />
+							</td>
+						</tr>
+						<tr>
+							<td>Comments:</td>
+							<td>
+								<textarea cols="40" rows="4" ng-model="product.comments"></textarea>
+							</td>
+						</tr>
+					</table>
+					<img ng-src="{{product.image.url}}" />
+					<div class="remove_btn" ng-click="removeProduct($index)">Remove</div>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>
