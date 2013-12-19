@@ -8,8 +8,7 @@ angular.module('employeeApp', [
   'employeeApp.directives',
   'employeeApp.filters',
   'employeeApp.services',
-  'ngGrid',
-  'pascalprecht.translate'
+  'ngGrid'
 ]).config([
   '$routeProvider',
   function ($routeProvider) {
