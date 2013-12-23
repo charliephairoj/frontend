@@ -1,35 +1,34 @@
-<form name="form" novalidate class="add-customer" data-modal>
-	<div class="title">Add Customer</div>
+<form name="form" novalidate class="add-customer" modal="visible" title="Add a new Customer">
 	<div class="container">
 		<table>
 			<tr>
 				<td>First Name</td>
 				<td>
-					<input type="text" required beautify ng-model="customer.first_name" />
+					<input type="text" required beautify ng-model="customer.first_name" tooltip="{{firstNameTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
 				<td>Last Name</td>
 				<td>
-					<input type="text" beautify ng-model="customer.last_name" />
+					<input type="text" beautify ng-model="customer.last_name" tooltip="{{lastNameTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
 				<td>Email</td>
 				<td>
-					<input type="email" required beautify ng-model="customer.email" />
+					<input type="email" required ng-model="customer.email" tooltip="{{emailTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
 				<td>Telephone</td>
 				<td>
-					<input type="text" required beautify ng-model="customer.telephone" />
+					<input type="text" required beautify ng-model="customer.telephone" tooltip="{{telTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
 				<td>Customer Type</td>
 				<td>
-					<select required ng-model="customer.type">
+					<select required ng-model="customer.type" tooltip="{{typeTip}} tooltip-trigger=" focus "">
 						<option value="Dealer">Dealer</option>
 						<option value="Retail">Retail</option>
 					</select>
@@ -38,7 +37,7 @@
 			<tr>
 				<td>Currency</td>
 				<td>
-					<select required ng-model="customer.currency">
+					<select required ng-model="customer.currency" tooltip="{{currencyTip}} tooltip-trigger=" focus "">
 						<option value="USD">US Dollar</option>
 						<option value="EUR">Euro</option>
 						<option value="THB">Thai Baht</option>

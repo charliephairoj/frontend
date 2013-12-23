@@ -1,69 +1,94 @@
-<form name="form" class="add-supplier" modal>
-	<div class="title">Add Supplier</div>
+<form name="form" class="add-supplier" modal="visible" title="Add a new Supplier">
 	<div class="container">
 		<table class="details">
 			<tr>
+				<td><span>Name (English)</span>
+				</td>
 				<td>
-					<input ng-model="supplier.name" required placeholder="Name(English)" size="60" />
+					<input ng-model="supplier.name" required size="60" tooltip="{{nameTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Name (Thai)</span>
+				</td>
 				<td>
-					<input ng-model="supply.name_th" placeholder="Name(Thai)" />
+					<input ng-model="supply.name_th" size="60" tooltip="{{thaiNameTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Address 1</span>
+				</td>
 				<td>
-					<input placeholder="Address 1" beautify ec-blur="getLocation()" size="40" type="text" required ng-model="supplier.address.address1" />
+					<input beautify ec-blur="getLocation()" size="40" type="text" required ng-model="supplier.address.address1" tooltip="{{addrTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Address 2</span>
+				</td>
 				<td>
-					<input beautify placeholder="Address 2" ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2" />
+					<input beautify ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>City</span>
+				</td>
 				<td>
-					<input placeholder="City" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.city" />
+					<input beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.city" tooltip="{{cityTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Territory</span>
+				</td>
 				<td>
-					<input placeholder="Territory/Chaengwat" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.territory" />
+					<input beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.territory" tooltip="{{territoryTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Country</span>
+				</td>
 				<td>
-					<input placeholder="Country" placeholder="required" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.country" />
+					<input placeholder="Country" placeholder="required" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.country" tooltip="{{countryTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Zipcode</span>
+				</td>
 				<td>
-					<input placeholder="Zipcode" ec-blur="getLocation()" type="text" required ng-model="supplier.address.zipcode" />
+					<input ec-blur="getLocation()" type="text" required ng-model="supplier.address.zipcode" tooltip="{{zipcodetip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Email</span>
+				</td>
 				<td>
-					<input placeholder="Email" size="30" type="email" ng-model="supplier.email" />
+					<input required size="30" type="email" ng-model="supplier.email" tooltip="{{emailTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Telephone</span>
+				</td>
 				<td>
-					<input telephone placeholder="Telephone" type="text" ng-pattern="/\d+/" ng-model="supplier.telephone" />
+					<input telephone required type="text" ng-pattern="/\d+/" ng-model="supplier.telephone" tooltip="{{telTip}}" tooltip-trigger="focus" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Fax</span>
+				</td>
 				<td>
-					<input telephone placeholder="Fax" type="text" ng-pattern="/\d+/" ng-model="supplier.fax" />
+					<input telephone type="text" ng-pattern="/\d+/" ng-model="supplier.fax" />
 				</td>
 			</tr>
 			<tr>
+				<td><span>Discount</span>
+				</td>
 				<td>
-					<input placeholder="Discount" type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" />%</td>
+					<input type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" tooltip='{{discountTip}}' tooltip-trigger="focus" />%</td>
 			</tr>
 			<tr>
+				<td><span>Terms</span>
+				</td>
 				<td>
-					<input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" required/>Days</td>
+					<input size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" required tooltip="{{termsTip}}" tooltip-trigger="focus" />Days</td>
 			</tr>
 			<tr>
 				<td>

@@ -1,4 +1,4 @@
-<form name="form" class="add-supply" modal>
+<form name="form" class="add-supply" modal="visible" title="Add a new Supply">
 	<div class="title">Add Supply</div>
 	<div class="container">
 		<table class="details">
@@ -23,13 +23,13 @@
 			<tr>
 				<td>Reference</td>
 				<td>
-					<input ng-model="supply.reference" type="text" placeholder="Reference" />
+					<input ng-model="supply.reference" type="text" />
 				</td>
 			</tr>
 			<tr>
 				<td>Type</td>
 				<td>
-					<select ng-model="supply.type">
+					<select required ng-model="supply.type">
 						<option value="metal">Metal</option>
 						<option value="wood">Wood</option>
 						<option value="foam">Foam</option>
@@ -47,7 +47,7 @@
 			<tr>
 				<td>Purchasing Units</td>
 				<td>
-					<select ng-model="supply.units">
+					<select required ng-model="supply.units">
 						<option value="pc" selected>Piece</option>
 						<option value="container" selected>Container</option>
 						<option value="m">Meter</option>

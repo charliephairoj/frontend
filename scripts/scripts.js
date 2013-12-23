@@ -4,11 +4,10 @@ angular.module('employeeApp.filters', []);
 angular.module('employeeApp', [
   'ngRoute',
   'ngResource',
-  'ui',
   'employeeApp.directives',
   'employeeApp.filters',
   'employeeApp.services',
-  'ngGrid'
+  'ui.date'
 ]).config([
   '$routeProvider',
   function ($routeProvider) {
@@ -1759,76 +1758,103 @@ angular.module('employeeApp').directive('clickUrl', [function () {
   }]);
 angular.module('employeeApp.directives').directive('modal', [function () {
     var backdrop;
+    var closeButton;
     function create_backdrop() {
       return angular.element('<div id="backdrop"></div>');
+    }
+    function postLink(scope, element, attr) {
     }
     return {
       restrict: 'A',
       scope: false,
-      link: function (scope, element, attr) {
-        element.addClass('modal hide');
-        function show(scope, element) {
-          element.removeClass('hide');
-          backdrop = create_backdrop();
-          $(document.body).append(backdrop);
-          backdrop.on('click', function () {
-            hide(scope, element, backdrop);
-          });
-          backdrop.fadeTo(500, 0.7);
-          element.fadeTo(500, 1, function () {
-            scope.$broadcast('shown');
-          });
-        }
-        function hide(scope, element, backdrop, callback) {
-          element.fadeOut(400, function () {
-            element.addClass('hide');
-            scope.$broadcast('hidden');
-          });
-          if (backdrop) {
-            backdrop.fadeOut(500, function () {
-              backdrop.remove();
-              (callback || angular.noop)();
-              try {
-                (scope.modal._onhide || angular.noop)();
-              } catch (e) {
-                console.warn(e);
-              }
-              if (attr.ngModel) {
-                scope.$apply(function () {
-                  scope[attr.ngModel] = false;
+      compile: function () {
+        return {
+          pre: function (scope, tElement, tAttrs) {
+            tElement.addClass('modal hide');
+            if (tAttrs.title) {
+              closeButton = angular.element('<button type="button" class="close">&times;</button>');
+              var title = angular.element('<div class="title"><h4>' + tAttrs.title + '</h4></div>');
+              title.append(closeButton);
+              tElement.append(title);
+            } else {
+            }
+          },
+          post: function (scope, element, attrs) {
+            function show(scope, element) {
+              element.removeClass('hide');
+              backdrop = create_backdrop();
+              $(document.body).append(backdrop);
+              backdrop.on('click', function () {
+                hide(scope, element, backdrop);
+              });
+              backdrop.fadeTo(500, 0.7);
+              element.fadeTo(500, 1, function () {
+                scope.$broadcast('shown');
+              });
+            }
+            function hide(scope, element, backdrop, callback) {
+              element.fadeOut(400, function () {
+                element.addClass('hide');
+                scope.$broadcast('hidden');
+              });
+              if (backdrop) {
+                backdrop.fadeOut(500, function () {
+                  backdrop.remove();
+                  (callback || angular.noop)();
+                  try {
+                    (scope.modal._onhide && scope.modal || angular.noop)();
+                  } catch (e) {
+                    console.warn(e);
+                  }
+                  if (attrs.ngModel || attrs.modal) {
+                    scope.$apply(function () {
+                      scope[attrs.ngModel || attrs.modal] = false;
+                    });
+                  }
+                  console.log(attrs.onhide);
+                  if (attrs.onhide) {
+                    scope.$eval(attrs.onhide);
+                  }
                 });
               }
+            }
+            scope.$on('$destroy', function () {
+              if (backdrop) {
+                backdrop.remove();
+              }
             });
-          }
-        }
-        scope.$on('$destroy', function () {
-          if (backdrop) {
-            backdrop.remove();
-          }
-        });
-        if (attr.ngModel) {
-          scope.$watch(attr.ngModel, function (value) {
-            if (value) {
+            if (attrs.ngModel || attrs.modal) {
+              scope.$watch(attrs.ngModel || attrs.modal, function (value) {
+                if (value) {
+                  show(scope, element);
+                } else {
+                  hide(scope, element, backdrop);
+                }
+              });
+            }
+            scope.modal = { _onhide: undefined };
+            scope.modal.show = function () {
               show(scope, element);
-            } else {
-              hide(scope, element, backdrop);
-            }
-          });
-        }
-        scope.modal = { _onhide: [] };
-        scope.modal.show = function () {
-          show(scope, element);
-        };
-        scope.modal.hide = function (callback) {
-          hide(scope, element, backdrop, callback);
-        };
-        Object.defineProperties(scope.modal, {
-          onhide: {
-            set: function (fn) {
-              this._onhide = fn;
+            };
+            scope.modal.hide = function (callback) {
+              hide(scope, element, backdrop, callback);
+            };
+            Object.defineProperties(scope.modal, {
+              onhide: {
+                set: function (fn) {
+                  this._onhide = fn;
+                }
+              }
+            });
+            if (closeButton) {
+              closeButton.click(function () {
+                scope.$apply(function () {
+                  scope[attrs.ngModel || attrs.modal] = false;
+                });
+              });
             }
           }
-        });
+        };
       }
     };
   }]);
@@ -3176,40 +3202,120 @@ angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
     };
   }
 ]);
-angular.module('employeeApp.directives').directive('tooltip', [function () {
-    function getText(scope, attrs) {
-      switch (attrs.tooltip) {
-      case 'price':
-        return 'Enter a price in the format of 100 or 123.45';
-      default:
-        return scope.$eval(attrs.tooltip);
-      }
-    }
+angular.module('employeeApp.directives').directive('tooltipPopup', function () {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: {
+      tooltipTitle: '@',
+      placement: '@',
+      animation: '&',
+      isOpen: '&'
+    },
+    templateUrl: 'views/templates/tooltip-popup.html'
+  };
+}).directive('tooltip', [
+  '$compile',
+  '$timeout',
+  '$parse',
+  '$window',
+  function ($compile, $timeout, $parse, $window) {
+    var template = '<tooltip-popup ' + 'tooltip-title="{{tt_tooltip}}" ' + 'placement="{{tt_placement}}" ' + 'animation="tt_animation()" ' + 'is-open="tt_isOpen"' + '>' + '</tooltip-popup>';
     return {
-      restrict: 'A',
-      link: function postLink(scope, element, attrs) {
-        var text = getText(scope, attrs);
-        if (attrs.required) {
-          text += ' (Required)';
-        }
-        var tooltip = angular.element('<div class="tooltip right"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + text + '</div></div>');
-        var position = element.position();
-        element.bind('mouseenter', function () {
-          element.parent().append(tooltip);
-          tooltip.css({
-            left: position.left + element.outerWidth(),
-            top: position.top - (tooltip.outerHeight() - element.outerHeight()) / 2
-          });
-          tooltip.fadeTo(250, 0.8);
+      scope: true,
+      link: function (scope, element, attr) {
+        var tooltip = $compile(template)(scope), transitionTimeout, triggers = {
+            'focus': 'blur',
+            'mouseenter': 'mouseleave'
+          };
+        triggerChoice = (attr.tooltipTrigger || 'mouseenter').toLowerCase();
+        attr.$observe('tooltip', function (val) {
+          scope.tt_tooltip = val;
         });
-        element.bind('mouseleave', function () {
-          tooltip.fadeTo(250, 0, function () {
-            tooltip.remove();
+        attr.$observe('tooltipPlacement', function (val) {
+          scope.tt_placement = val || 'right';
+        });
+        attr.$observe('tooltipAnimation', function (val) {
+          scope.tt_animation = $parse(val);
+        });
+        scope.tt_isOpen = false;
+        function getPosition() {
+          var boundingClientRect = element[0].getBoundingClientRect();
+          return {
+            width: element.prop('offsetWidth'),
+            height: element.prop('offsetHeight'),
+            top: boundingClientRect.top + $window.pageYOffset,
+            left: boundingClientRect.left + $window.pageXOffset
+          };
+        }
+        function show() {
+          var position, ttWidth, ttHeight, ttPosition;
+          if (!scope.tt_tooltip) {
+            return;
+          }
+          if (transitionTimeout) {
+            $timeout.cancel(transitionTimeout);
+          }
+          tooltip.css({
+            top: 0,
+            left: 0,
+            display: 'block'
           });
+          element.after(tooltip);
+          position = getPosition();
+          console.log(position);
+          console.log(tooltip.offset());
+          ttWidth = tooltip.prop('offsetWidth');
+          ttHeight = tooltip.prop('offsetHeight');
+          switch (scope.tt_placement) {
+          case 'right':
+            ttPosition = {
+              top: position.top + position.height / 2 - ttHeight / 2 + 'px',
+              left: position.left + position.width + 'px'
+            };
+            break;
+          case 'bottom':
+            ttPosition = {
+              top: position.top + position.height + 'px',
+              left: position.left + position.width / 2 - ttWidth / 2 + 'px'
+            };
+            break;
+          case 'left':
+            ttPosition = {
+              top: position.top + position.height / 2 - ttHeight / 2 + 'px',
+              left: position.left - ttWidth + 'px'
+            };
+            break;
+          default:
+            ttPosition = {
+              top: position.top - ttHeight + 'px',
+              left: position.left + position.width / 2 - ttWidth / 2 + 'px'
+            };
+            break;
+          }
+          tooltip.css(ttPosition);
+          scope.tt_isOpen = true;
+        }
+        function hide() {
+          scope.tt_isOpen = false;
+          if (angular.isDefined(scope.tt_animation) && scope.tt_animation()) {
+            transitionTimeout = $timeout(function () {
+              tooltip.remove();
+            }, 500);
+          } else {
+            tooltip.remove();
+          }
+        }
+        element.bind(triggerChoice || 'mouseenter', function () {
+          scope.$apply(show);
+        });
+        element.bind(triggers[triggerChoice] || 'mouseleave', function () {
+          scope.$apply(hide);
         });
       }
     };
-  }]);
+  }
+]);
 angular.module('employeeApp').controller('OrderAcknowledgementItemDetailsCtrl', [
   '$scope',
   '$routeParams',
@@ -3406,8 +3512,10 @@ angular.module('employeeApp').directive('searchBar', [
         } else {
           input = angular.element('<input size="40" placeholder="Search" ng-model="query" />');
         }
+        var clearButton = angular.element('<span class=\'close-button\'>&times;</span>');
         $compile(input)(scope);
         element.append(input);
+        element.append(clearButton);
         function searchHandler(evt) {
           if (evt.which == '70' && (evt.metaKey || evt.ctrlKey)) {
             evt.preventDefault();
@@ -3421,6 +3529,11 @@ angular.module('employeeApp').directive('searchBar', [
           }
         }
         $(window).on('keydown', searchHandler);
+        clearButton.click(function () {
+          scope.$apply(function () {
+            scope.query = '';
+          });
+        });
         scope.$on('$destroy', function () {
           $(window).off('keydown', searchHandler);
         });
@@ -4650,22 +4763,6 @@ angular.module('employeeApp').directive('productSelector', [
         add: '&productSelectorAdd'
       },
       link: function postLink(scope, element, attrs) {
-        scope.$watch('visible', function (val) {
-          if (val) {
-            scope.modal.onhide = function () {
-              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase == '$apply') {
-                scope.visible = false;
-              } else {
-                $rootScope.$apply(function () {
-                  scope.visible = false;
-                });
-              }
-            };
-            scope.modal.show();
-          } else {
-            scope.modal.hide();
-          }
-        });
         scope.fabricList = Fabric.query();
         scope.tableList = Table.query();
         scope.product = {};
@@ -4722,20 +4819,20 @@ angular.module('employeeApp').directive('productSelector', [
           if (scope.product.type.toLowerCase() == 'upholstery') {
             scope.selection = 'fabric';
           } else {
+            console.log('1');
             scope.visible = false;
-            scope.modal.hide(function () {
-              scope.reset();
-            });
+            console.log('2');
             var newProduct = angular.copy(scope.product);
+            scope.reset();
+            console.log('3');
             scope.add({ product: newProduct });
+            console.log('4');
           }
         };
         scope.setFabric = function () {
           scope.visible = false;
-          scope.modal.hide(function () {
-            scope.reset();
-          });
           var newProduct = angular.copy(scope.product);
+          scope.reset();
           scope.add({ product: newProduct });
         };
         scope.reset = function () {
@@ -5054,28 +5151,6 @@ angular.module('employeeApp.directives').directive('addSupply', [
       restrict: 'EA',
       scope: { 'visible': '=addSupply' },
       link: function postLink(scope, element, attrs) {
-        scope.$watch('visible', function (val) {
-          if (val) {
-            scope.modal.onhide = function () {
-              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase === '$apply') {
-                scope.visible = false;
-              } else {
-                $rootScope.$apply(function () {
-                  scope.visible = false;
-                });
-              }
-            };
-            try {
-              scope.modal.show();
-            } catch (e) {
-            }
-          } else {
-            try {
-              scope.modal.hide();
-            } catch (e) {
-            }
-          }
-        });
         scope.showWidth = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
@@ -5125,23 +5200,19 @@ angular.module('employeeApp.directives').directive('addSupplier', [
       restrict: 'EA',
       scope: { 'visible': '=addSupplier' },
       link: function postLink(scope, element, attrs) {
-        scope.$watch('visible', function (val) {
-          if (val) {
-            scope.modal.onhide = function () {
-              if ($rootScope.$$phase == '$digest' || $rootScope.$$phase == '$apply') {
-                scope.visible = false;
-              } else {
-                $rootScope.$apply(function () {
-                  scope.visible = false;
-                });
-              }
-            };
-            scope.modal.show();
-          } else {
-            scope.modal.hide();
-          }
-        });
         scope.supplier = new Supplier();
+        scope.nameTip = 'What is the supplier\'s name (required)';
+        scope.thaiNameTip = 'Enter the supplier\'s name in Thai';
+        scope.emailTip = 'Enter a valid email address (required)';
+        scope.telTip = 'Enter a valid phone number (required)';
+        scope.currencyTip = 'What currency does this supplier deal in? (required)';
+        scope.discountTip = 'What discount do we get? (required)';
+        scope.termsTip = 'How many days of credit do we get? (required)';
+        scope.addrTip = 'What is the supplier\'s address (required)';
+        scope.cityTip = 'What city is the supplier in? (required)';
+        scope.territoryTip = 'What chaengwat/territory/state is the supplier in? (required)';
+        scope.countryTip = 'What country is the supplier in? (requied)';
+        scope.zipcodeTip = 'What zipcode is the supplier in? (required)';
         scope.add = function () {
           if (scope.form.$valid) {
             Notification.display('Adding supplier...', false);
@@ -5203,28 +5274,6 @@ angular.module('employeeApp').directive('customerList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true;
-        scope.$watch('visible', function (val) {
-          if (val) {
-            scope.modal.onhide = function () {
-              if ($rootScope.$$phase === '$digest' || $rootScope.$$phase === '$apply') {
-                scope.visible = false;
-              } else {
-                $rootScope.$apply(function () {
-                  scope.visible = false;
-                });
-              }
-            };
-            try {
-              scope.modal.show();
-            } catch (e) {
-            }
-          } else {
-            try {
-              scope.modal.hide();
-            } catch (e) {
-            }
-          }
-        });
         scope.customers = Customer.query({ limit: 20 }, function (response) {
           fetching = false;
         });
@@ -5309,6 +5358,10 @@ angular.module('employeeApp').directive('upholsteryList', [
             });
           }
         };
+        function parseKeypress(evt) {
+          console.log(evt);
+        }
+        $(window).keypress(parseKeypress);
         scope.select = function (upholstery) {
           scope.onSelect({ $upholstery: upholstery });
         };
@@ -5496,12 +5549,15 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   '$routeParams',
   'Notification',
   'Supply',
-  function ($scope, $routeParams, Notification, Supply) {
+  '$timeout',
+  function ($scope, $routeParams, Notification, Supply, $timeout) {
     Notification.display('Retrieving supply...', false);
     $scope.showQuantity = false;
     $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
       Notification.hide();
     });
+    var updateLoopActive = false;
+    var timeoutPromise = undefined;
     var validWidth = [
         'm',
         'yd',
@@ -5528,12 +5584,24 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.showHeight = function () {
       return validHeight.indexOf($scope.supply.units) > -1 || $scope.supply.units == 'kg' && $scope.supply.type == 'packaging' ? true : false;
     };
-    $scope.update = function () {
-      Notification.display('Updating ' + $scope.supply.description + '...', false);
-      $scope.supply.$update(function () {
-        Notification.display($scope.supply.description + ' updated.');
-      });
-    };
+    $scope.$watch(function () {
+      var supply = angular.copy($scope.supply);
+      delete supply.last_modified;
+      delete supply.image;
+      delete supply.supplier;
+      return supply;
+    }, function (old, newVal) {
+      if (!updateLoopActive) {
+        updateLoopActive = true;
+        timeoutPromise = $timeout(function () {
+          Notification.display('Updating ' + $scope.supply.description + '...', false);
+          $scope.supply.$update(function () {
+            updateLoopActive = false;
+            Notification.display($scope.supply.description + ' updated.');
+          });
+        }, 5000);
+      }
+    }, true);
     $scope.add = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
@@ -5557,7 +5625,11 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope[action]();
     };
     $scope.$on('$destroy', function () {
-      $scope.update();
+      $timeout.cancel(timeoutPromise);
+      Notification.display('Updating ' + $scope.supply.description + '...', false);
+      $scope.supply.$update(function () {
+        Notification.display($scope.supply.description + ' updated.');
+      });
     });
   }
 ]);
@@ -5603,23 +5675,13 @@ angular.module('employeeApp.directives').directive('addCustomer', [
       restrict: 'A',
       scope: { visible: '=addCustomer' },
       link: function postLink(scope, element, attrs) {
-        scope.$watch('visible', function (val) {
-          if (val) {
-            scope.modal.onhide = function () {
-              if (scope.$$phase == '$digest' || scope.$$phase == '$apply') {
-                scope.visible = false;
-              } else {
-                scope.$apply(function () {
-                  scope.visible = false;
-                });
-              }
-            };
-            scope.modal.show();
-          } else {
-            scope.modal.hide();
-          }
-        });
         scope.customer = new Customer();
+        scope.firstNameTip = 'Enter the customer\'s first name or name (required)';
+        scope.lastNameTip = 'Enter the customer\'s last name if applicable';
+        scope.emailTip = 'Enter a valid email address (required)';
+        scope.telTip = 'Enter a valid phone number (required)';
+        scope.typeTip = 'What type of customer is this? (required)';
+        scope.currencyTip = 'What currency does this customer deal in? (required)';
         scope.getLocation = function () {
           if (scope.customer.address.address1 && scope.customer.address.city && scope.customer.address.territory && scope.customer.address.country && scope.customer.address.zipcode && !scope.customer.address.user_defined_latlng) {
             var promise = Geocoder.geocode(scope.customer.address);
@@ -5643,6 +5705,7 @@ angular.module('employeeApp.directives').directive('addCustomer', [
           }
         };
         scope.add = function () {
+          console.log(scope.form);
           if (scope.form.$valid) {
             Notification.display('Adding customer:+ ' + scope.customer.first_name + '...', false);
             scope.customer.$save(function (response) {
@@ -5700,12 +5763,14 @@ angular.module('employeeApp').directive('img', [function () {
             var pWidth = parent.innerWidth();
             var pHeight = parent.innerWidth();
             element.one('load', function () {
-              position({
-                element: element,
-                width: true,
-                parentWidth: pWidth,
-                elementWidth: element.outerWidth()
-              });
+              if (iAttrs.center) {
+                position({
+                  element: element,
+                  width: true,
+                  parentWidth: pWidth,
+                  elementWidth: element.outerWidth()
+                });
+              }
               element.removeClass('preloaded');
             });
           }

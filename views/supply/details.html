@@ -31,8 +31,7 @@
 	<!--
     	Modals
     -->
-	<div name="quantity" modal ng-model="showQuantity">
-		<div class="title">{{action}}</div>
+	<div class="modal quantity" name="quantity" modal ng-model="showQuantity" title="Add">
 		<div class="container">
 			<table>
 				<tbody>
@@ -68,7 +67,7 @@
 						<label>Description</label>
 					</td>
 					<td>
-						<input size="40" type="text" ng-model="supply.description" ec-blur="update()" />
+						<input size="40" type="text" ng-model="supply.description" />
 					</td>
 				</tr>
 				<tr>
@@ -76,7 +75,7 @@
 						<label>Description (Thai)</label>
 					</td>
 					<td>
-						<input size="40" type="text" ng-model="supply.description_th" ec-blur="update()" />
+						<input size="40" type="text" ng-model="supply.description_th" />
 					</td>
 				</tr>
 				<tr>
@@ -84,7 +83,7 @@
 						<label>Reference Number</label>
 					</td>
 					<td>
-						<input type="text" ng-model="supply.reference" ec-blur="update()" />
+						<input type="text" ng-model="supply.reference" />
 					</td>
 				</tr>
 				<tr>
@@ -114,7 +113,7 @@
 					</td>
 					<td>
 						<input size="6" class="length" type="text" ng-model="supply.width" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-						<select ng-model="supply.width_units" ng-options="key as value for (key, value) in units" ng-change="update()"></select>
+						<select ng-model="supply.width_units" ng-options="key as value for (key, value) in units"></select>
 					</td>
 				</tr>
 				<tr ui-if="showDepth()">
@@ -123,7 +122,7 @@
 					</td>
 					<td>
 						<input size="6" class="length" type="text" ng-model="supply.depth" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-						<select ng-model="supply.depth_units" ng-options="key as value for (key, value) in units" ng-change="update()"></select>
+						<select ng-model="supply.depth_units" ng-options="key as value for (key, value) in units"></select>
 					</td>
 				</tr>
 				<tr ui-if="showHeight()">
@@ -132,7 +131,7 @@
 					</td>
 					<td>
 						<input size="6" class="length" type="text" ng-model="supply.height" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-						<select ng-model="supply.height_units" ng-options="key as value for (key, value) in units" ng-change="update()"></select>
+						<select ng-model="supply.height_units" ng-options="key as value for (key, value) in units"></select>
 					</td>
 				</tr>
 				<tr>
@@ -140,7 +139,7 @@
 						<label>Units</label>
 					</td>
 					<td>
-						<select ng-model="supply.units" ng-options="key as value for (key, value) in units" ng-change="update()">
+						<select ng-model="supply.units" ng-options="key as value for (key, value) in units">
 							<!--
                     		<option value="m">Meter</option>
                     		<option value="mm">Millimeter</option>
@@ -158,14 +157,14 @@
 						<label>Cost per {{units[supply.units]}}</label>
 					</td>
 					<td>
-						<input class="price" type="text" ng-model="supply.cost" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />{{supply.supplier.currency}}</td>
+						<input class="price" type="text" ng-model="supply.cost" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />{{supply.supplier.currency}}</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Discount</label>
 					</td>
 					<td>
-						<input class="price" size="3" maxlength="2" type="text" ng-model="supply.discount" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />%</td>
+						<input class="price" size="3" maxlength="2" type="text" ng-model="supply.discount" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />%</td>
 				</tr>
 				<tr>
 					<td>
