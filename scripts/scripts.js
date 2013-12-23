@@ -5359,10 +5359,6 @@ angular.module('employeeApp').directive('upholsteryList', [
         scope.select = function (upholstery) {
           scope.onSelect({ $upholstery: upholstery });
         };
-        scope.$destroy(function () {
-          console.log('bye');
-          $(window).off('keydown', parseKeydown);
-        });
       }
     };
   }
