@@ -21,6 +21,7 @@
 							<img ng-src="{{uphol.image.url}}" />
 						</div>
 						<span class="description">{{uphol.description}}</span>
+						<span ng-display="currentUser.hasPermission('can_view_wholesale_price')">{{uphol.wholesale_price}}</span>
 					</a>
 				</li>
 			</ul>

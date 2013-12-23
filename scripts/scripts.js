@@ -1097,7 +1097,7 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
       fd.append('image', $scope.images[0]);
       $scope.addLength = null;
       $scope.addRemark = null;
-      jQuery.ajax('upholstery/image', {
+      jQuery.ajax('/api/v1/upholstery/image', {
         type: 'POST',
         data: fd,
         processData: false,
@@ -1173,7 +1173,7 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
-      jQuery.ajax('upholstery/image', {
+      jQuery.ajax('/api/v1/upholstery/image', {
         type: 'POST',
         data: fd,
         cache: false,
@@ -1183,7 +1183,7 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
           Notification.display('Image Updated');
           $scope.uphol.image = {};
           angular.copy(responseData, $scope.uphol.image);
-          $scope.uphol.$save();
+          $scope.uphol.$update();
           $scope.imagePreviews = null;
           $scope.images = null;
           $scope.$apply();
@@ -1811,7 +1811,6 @@ angular.module('employeeApp.directives').directive('modal', [function () {
                       scope[attrs.ngModel || attrs.modal] = false;
                     });
                   }
-                  console.log(attrs.onhide);
                   if (attrs.onhide) {
                     scope.$eval(attrs.onhide);
                   }
@@ -3227,8 +3226,7 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
         var tooltip = $compile(template)(scope), transitionTimeout, triggers = {
             'focus': 'blur',
             'mouseenter': 'mouseleave'
-          };
-        triggerChoice = (attr.tooltipTrigger || 'mouseenter').toLowerCase();
+          }, triggerChoice = (attr.tooltipTrigger || 'mouseenter').toLowerCase();
         attr.$observe('tooltip', function (val) {
           scope.tt_tooltip = val;
         });
@@ -3263,8 +3261,6 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
           });
           element.after(tooltip);
           position = getPosition();
-          console.log(position);
-          console.log(tooltip.offset());
           ttWidth = tooltip.prop('offsetWidth');
           ttHeight = tooltip.prop('offsetHeight');
           switch (scope.tt_placement) {
@@ -3519,13 +3515,15 @@ angular.module('employeeApp').directive('searchBar', [
         function searchHandler(evt) {
           if (evt.which == '70' && (evt.metaKey || evt.ctrlKey)) {
             evt.preventDefault();
-            if (element.hasClass('focus')) {
-              input.blur();
-              element.removeClass('focus');
-            } else {
-              input.focus();
-              element.addClass('focus');
-            }
+            scope.$apply(function () {
+              if (element.hasClass('focus')) {
+                input.blur();
+                element.removeClass('focus');
+              } else {
+                input.focus();
+                element.addClass('focus');
+              }
+            });
           }
         }
         $(window).on('keydown', searchHandler);
@@ -4819,14 +4817,10 @@ angular.module('employeeApp').directive('productSelector', [
           if (scope.product.type.toLowerCase() == 'upholstery') {
             scope.selection = 'fabric';
           } else {
-            console.log('1');
             scope.visible = false;
-            console.log('2');
             var newProduct = angular.copy(scope.product);
             scope.reset();
-            console.log('3');
             scope.add({ product: newProduct });
-            console.log('4');
           }
         };
         scope.setFabric = function () {
@@ -5273,7 +5267,8 @@ angular.module('employeeApp').directive('customerList', [
         onSelect: '&'
       },
       link: function postLink(scope, element, attrs) {
-        var fetching = true;
+        var fetching = true, currentSelection;
+        scope.currentIndex = 0;
         scope.customers = Customer.query({ limit: 20 }, function (response) {
           fetching = false;
         });
@@ -5310,6 +5305,7 @@ angular.module('employeeApp').directive('customerList', [
         scope.select = function (customer) {
           scope.onSelect({ 'customer': customer });
         };
+        $(window).keydown(parseKeydown);
       }
     };
   }
@@ -5317,14 +5313,16 @@ angular.module('employeeApp').directive('customerList', [
 angular.module('employeeApp').directive('upholsteryList', [
   'Upholstery',
   'Notification',
-  function (Upholstery, Notification) {
+  '$filter',
+  function (Upholstery, Notification, $filter) {
     return {
       templateUrl: 'views/templates/upholstery-list.html',
       replace: true,
       restrict: 'A',
       scope: { onSelect: '&' },
       link: function postLink(scope, element, attrs) {
-        var fetching = true;
+        var fetching = true, currentSelection;
+        scope.currentIndex = 0;
         scope.upholsteries = Upholstery.query({ limit: 20 }, function (response) {
           fetching = false;
         });
@@ -5332,7 +5330,7 @@ angular.module('employeeApp').directive('upholsteryList', [
           if (q) {
             Upholstery.query({
               q: q,
-              limit: 10
+              limit: 10 + scope.query.length * 2
             }, function (resources) {
               for (var i = 0; i < resources.length; i++) {
                 if (scope.upholsteries.indexOfById(resources[i].id) == -1) {
@@ -5358,13 +5356,13 @@ angular.module('employeeApp').directive('upholsteryList', [
             });
           }
         };
-        function parseKeypress(evt) {
-          console.log(evt);
-        }
-        $(window).keypress(parseKeypress);
         scope.select = function (upholstery) {
           scope.onSelect({ $upholstery: upholstery });
         };
+        scope.$destroy(function () {
+          console.log('bye');
+          $(window).off('keydown', parseKeydown);
+        });
       }
     };
   }
@@ -5556,8 +5554,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
       Notification.hide();
     });
-    var updateLoopActive = false;
-    var timeoutPromise = undefined;
+    var updateLoopActive = false, timeoutPromise;
     var validWidth = [
         'm',
         'yd',
@@ -5705,7 +5702,6 @@ angular.module('employeeApp.directives').directive('addCustomer', [
           }
         };
         scope.add = function () {
-          console.log(scope.form);
           if (scope.form.$valid) {
             Notification.display('Adding customer:+ ' + scope.customer.first_name + '...', false);
             scope.customer.$save(function (response) {
