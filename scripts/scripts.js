@@ -4514,7 +4514,7 @@ angular.module('employeeApp').controller('ProductTableDetailsCtrl', [
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
-      jQuery.ajax('upholstery/image', {
+      jQuery.ajax('/api/v1/upholstery/image', {
         type: 'POST',
         data: fd,
         cache: false,
@@ -4570,7 +4570,7 @@ angular.module('employeeApp').controller('ProductTableAddCtrl', [
       fd.append('image', $scope.images[0]);
       $scope.addLength = null;
       $scope.addRemark = null;
-      jQuery.ajax('upholstery/image', {
+      jQuery.ajax('/api/v1/upholstery/image', {
         type: 'POST',
         data: fd,
         processData: false,
