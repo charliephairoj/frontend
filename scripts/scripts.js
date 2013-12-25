@@ -1258,7 +1258,7 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
       fd.append('image', $scope.images[0]);
       $scope.addLength = null;
       $scope.addRemark = null;
-      jQuery.ajax('model/image', {
+      jQuery.ajax('/api/v1/model/image', {
         type: 'POST',
         data: fd,
         processData: false,
@@ -1267,6 +1267,7 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
           Notification.display('Image Uploaded');
           $scope.model.image = $scope.model.image || {};
           angular.copy(responseData, $scope.model.image);
+          $scope.$update();
           $scope.$apply();
         }
       });
@@ -4523,8 +4524,8 @@ angular.module('employeeApp').controller('ProductTableDetailsCtrl', [
         success: function (responseData) {
           Notification.display('Image Updated');
           $scope.table.image = {};
-          angular.copy(responseData, $scope.uphol.image);
-          $scope.table.$save();
+          angular.copy(responseData, $scope.table.image);
+          $scope.table.$update();
           $scope.imagePreviews = null;
           $scope.images = null;
           $scope.$apply();
@@ -4580,6 +4581,7 @@ angular.module('employeeApp').controller('ProductTableAddCtrl', [
           $scope.table.image = $scope.table.image || {};
           angular.copy(responseData, $scope.table.image);
           $scope.$apply();
+          $scope.table.$update();
         }
       });
     };
