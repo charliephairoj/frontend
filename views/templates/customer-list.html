@@ -3,7 +3,7 @@
 		<div search-bar data-ng-model="query"></div>
 		<div class="inner-container" on-scroll-end="loadNext()">
 			<ul class="customer-container">
-				<li class="customer" ng-click="select(customer)" ng-repeat="customer in customers | filter:query | orderBy:'name'">
+				<li class="customer" ng-class="{'selected':customer.$selected}" ng-click="select(customer)" ng-repeat="customer in customers | filter:query | orderBy:'name'">
 					{{customer.name}}
 				</li>
 			</ul>

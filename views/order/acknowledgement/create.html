@@ -12,7 +12,7 @@
 	</form>
 	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat">
 		<div class="title">Vat</div>
-		<input ng-model="ack.vat" required ng-pattern="/^\d{1,2}$/" /><span>%</span>
+		<input ng-model="ack.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
 		<div class="bottom_bar">
 			<button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
 		</div>

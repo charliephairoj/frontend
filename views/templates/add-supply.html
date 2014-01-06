@@ -108,6 +108,12 @@
 					<input required ng-model="supply.unit_cost" />
 				</td>
 			</tr>
+			<tr ng-show="currentUser.hasModule('Administrator')">
+				<td>Administrator Only</td>
+				<td>
+					<input type="checkbox" ng-model="supply.admin_only" />
+				</td>
+			</tr>
 			<tr>
 				<td>Notes</td>
 				<td>

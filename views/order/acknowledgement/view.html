@@ -17,7 +17,7 @@
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" data-ng-repeat="ack in acknowledgements | filter:query">
-					<a class="item" ng-href="#/order/acknowledgement/{{ack.id}}">
+					<a class="item" ng-class="{'selected':ack.$selected}" ng-href="#/order/acknowledgement/{{ack.id}}">
 						<span class="description">{{ack.id}}</span>
 						<span class="customer">{{ack.customer.name}}</span>
 						<span class="status" ng-class="{acknowledged:ack.status == 'ACKNOWLEDGED', shipped:ack.status == 'SHIPPED'}">

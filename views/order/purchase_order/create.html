@@ -2,38 +2,44 @@
 	<!--
         Forms
     -->
-	<div class="suppliers" data-modal ng-model="showSuppliers">
-		<div class="title">
-			Suppliers
-		</div>
-		<div class="container">
-			<div search-bar data-ng-model="querySupplier"></div>
-			<ul class="list">
-				<li class="item" ng-click="addSupplier(supplier)" ng-repeat="supplier in suppliers | filter:querySupplier | orderBy:'name'">{{supplier.name}}</li>
-			</ul>
-		</div>
-	</div>
-	<div class="supplies" data-modal ng-model="showSupplies">
-		<div class="title">
-			Supplies
-		</div>
-		<div class="container">
-			<div search-bar data-ng-model="querySupply"></div>
-			<ul class="list">
-				<li class="item" ng-click="addItem(supply)" ng-repeat="supply in supplies | filter:querySupply | orderBy:'name'">{{supply.description}}</li>
-			</ul>
-		</div>
-	</div>
+	<div supplier-list="showSuppliers" on-select="addSupplier($supplier)"></div>
+	<!--
+    <div class="suppliers" data-modal ng-model="showSuppliers">
+        <div class="title">
+            Suppliers
+        </div>
+        <div class="container">
+            <div search-bar data-ng-model="querySupplier"></div>
+            <ul class="list">
+                <li class="item" ng-click="addSupplier(supplier)" ng-repeat="supplier in suppliers | filter:querySupplier | orderBy:'name'">{{supplier.name}}</li>
+            </ul>
+        </div>
+    </div>
+    -->
+	<!--
+    <div class="supplies" data-modal ng-model="showSupplies">
+        <div class="title">
+            Supplies
+        </div>
+        <div class="container">
+            <div search-bar data-ng-model="querySupply"></div>
+            <ul class="list">
+                <li class="item" ng-click="addItem(supply)" ng-repeat="supply in supplies | filter:querySupply | orderBy:'name'">{{supply.description}}</li>
+            </ul>
+        </div>
+    </div>
+    -->
+	<div supply-list="showSupplies" supplier="po.supplier" on-select="addItem($supply)"></div>
 	<form name="quantityForm" class="modal quantity_modal" novalidate data-modal ng-model="showQuantity">
 		<div class="title">Quantity</div>
-		<input ng-model="po.items[po.items.length-1].quantity" required ng-pattern="/^\d{1,2}$/" /><span>%</span>
+		<input ng-model="po.items[po.items.length-1].quantity" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
 		<div class="bottom_bar">
 			<button ng-disabled="quantityForm.$invalid" ng-click="showQuantity=false">Submit</button>
 		</div>
 	</form>
 	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat">
 		<div class="title">Vat</div>
-		<input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" /><span>%</span>
+		<input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
 		<div class="bottom_bar">
 			<button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
 		</div>

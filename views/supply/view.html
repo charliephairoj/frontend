@@ -55,7 +55,7 @@
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="supply in supplies | filter:query">
-					<a class="item" ng-href="#/supply/{{supply.id}}">
+					<a class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" ng-href="#/supply/{{supply.id}}">
 						<div class="img-container">
 							<img ng-src="{{supply.image.url}}" />
 						</div>

@@ -26,7 +26,7 @@
 		<div class="outer-container">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="po in poList | filter:query">
-					<a class="item" ng-href="#/order/purchase_order/{{po.id}}">
+					<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/order/purchase_order/{{po.id}}">
 						<span class="description">{{po.id}}</span>
 						<span class="customer">{{po.supplier.name}}</span>
 						<span class="status" ng-class="{ordered:po.status == 'Ordered',

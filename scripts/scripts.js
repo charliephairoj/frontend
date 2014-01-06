@@ -253,10 +253,13 @@ angular.module('employeeApp').run([
       return -1;
     };
     $rootScope.safeApply = function (fn) {
-      if (!this.$$phase) {
-        this.$apply(fn);
+      var phase = this.$root.$$phase;
+      if (phase == '$apply' || phase == '$digest') {
+        if (fn && typeof fn === 'function') {
+          fn();
+        }
       } else {
-        this.$eval(fn);
+        this.$apply(fn);
       }
     };
     $rootScope.units = {
@@ -317,53 +320,15 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
   '$routeParams',
   '$location',
   'Notification',
-  'Geocoder',
-  function ($scope, Customer, $routeParams, $location, Notification, Geocoder) {
+  function ($scope, Customer, $routeParams, $location, Notification) {
     $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
-      if ($scope.customer.address.lat && $scope.customer.address.lng) {
-        $scope.marker = $scope.map.createMarker({
-          lat: $scope.customer.address.lat,
-          lng: $scope.customer.address.lng
-        });
-      } else if (!$scope.customer.address.user_defined_latlng) {
-        try {
-          var promise = Geocoder.geocode($scope.customer.address);
-          promise.then(function (results) {
-            updatePosition(results);
-          });
-        } catch (err) {
-          console.warn(err);
-        }
-      }
     });
-    function updatePosition(results) {
-      if ($scope.marker) {
-        $scope.marker.setPosition(results[0].geometry.location);
-      } else {
-        $scope.marker = $scope.map.createMarker(results[0].geometry.location);
-        $scope.marker.onchange = function (latLng) {
-          $scope.customer.address.lat = $scope.marker.lat;
-          $scope.customer.address.lng = $scope.marker.lng;
-          $scope.customer.address.user_defined_latlng = true;
-          $scope.customer.$update();
-        };
-      }
-      $scope.map.setPosition(results[0].geometry.location);
-      $scope.customer.address[0].lat = $scope.marker.lat;
-      $scope.customer.address[0].lng = $scope.marker.lng;
-    }
     $scope.update = function () {
       Notification.display('Updating...', false);
       $scope.customer.$update(function () {
         Notification.display('Customer Save');
       }, function () {
         Notification.display('Unable to Update Customer');
-      });
-    };
-    $scope.updatePosition = function () {
-      var promise = Geocoder.geocode($scope.customer.address);
-      promise.then(function (results) {
-        updatePosition(results);
       });
     };
     $scope.remove = function () {
@@ -378,9 +343,8 @@ angular.module('employeeApp').controller('ContactCustomerViewCtrl', [
   'Customer',
   'Notification',
   '$location',
-  'Geocoder',
   '$filter',
-  function ($scope, Customer, Notification, $location, Geocoder, $filter) {
+  function ($scope, Customer, Notification, $location, $filter) {
     var fetching = false;
     Notification.display('Loading Customers...', false);
     $scope.customers = Customer.query(function () {
@@ -1168,7 +1132,12 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
   'Notification',
   '$location',
   function ($scope, Upholstery, $routeParams, Notification, $location) {
-    $scope.uphol = Upholstery.get({ 'id': $routeParams.id });
+    $scope.updateLoopActive = true;
+    $scope.uphol = Upholstery.get({ 'id': $routeParams.id }, function () {
+      $scope.safeApply(function () {
+        $scope.updateLoopActive = false;
+      });
+    });
     $scope.upload = function () {
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
@@ -1190,6 +1159,24 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
         }
       });
     };
+    $scope.$watch(function () {
+      var uphol = angular.copy($scope.uphol);
+      try {
+        delete uphol.last_modified;
+        delete uphol.image;
+      } catch (e) {
+      }
+      return uphol;
+    }, function (newVal, oldVal) {
+      if (!$scope.updateLoopActive && oldVal.hasOwnProperty('id')) {
+        $scope.updateLoopActive = true;
+        Notification.display('Updating ' + $scope.uphol.description + '...', false);
+        $scope.uphol.$update(function () {
+          $scope.updateLoopActive = false;
+          Notification.display($scope.uphol.description + ' updated.');
+        });
+      }
+    }, true);
     $scope.update = function () {
       Notification.display('Saving Upholsterty...', false);
       $scope.uphol.$update(function () {
@@ -1475,12 +1462,14 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   'Notification',
   '$location',
   '$filter',
-  function ($scope, Acknowledgement, Notification, $location, $filter) {
-    var fetching = true;
+  'KeyboardNavigation',
+  function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation) {
+    var fetching = true, index = 0, currentSelection;
     Notification.display('Loading Acknowledgements...', false);
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
       Notification.hide();
       fetching = false;
+      changeSelection(index);
     });
     $scope.$watch('query', function (q) {
       if (q) {
@@ -1493,6 +1482,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
               $scope.acknowledgements.push(resources[i]);
             }
           }
+          index = 0;
+          changeSelection(index);
         });
       }
     });
@@ -1512,6 +1503,51 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         });
       }
     };
+    function filter(array) {
+      return $filter('filter')(array, $scope.query);
+    }
+    function changeSelection(i) {
+      $scope.safeApply(function () {
+        if (currentSelection) {
+          currentSelection.$selected = false;
+        }
+        currentSelection = filter($scope.acknowledgements)[i];
+        if (currentSelection) {
+          currentSelection.$selected = true;
+        }
+      });
+      var selection = $('.item.selected');
+      var container = selection.parents('.outer-container');
+      var scrollTop = container.scrollTop();
+      var cHeight = container.innerHeight();
+      if (scrollTop > selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      }
+    }
+    var keyboardNav = new KeyboardNavigation();
+    keyboardNav.ondown = function () {
+      if (index < filter($scope.acknowledgements).length - 1) {
+        index += 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onup = function () {
+      if (index !== 0) {
+        index -= 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onenter = function () {
+      $scope.safeApply(function () {
+        $location.path('/order/acknowledgement/' + currentSelection.id);
+      });
+    };
+    keyboardNav.enable();
+    $scope.$on('$destroy', function () {
+      keyboardNav.disable();
+    });
   }
 ]);
 angular.module('employeeApp.services').factory('Fabric', [
@@ -2944,28 +2980,48 @@ angular.module('employeeApp.services').factory('scanner', [
   '$location',
   '$rootScope',
   function ($location, $rootScope) {
-    var code = '';
+    var code = '', codes = '', standardCodes = [
+        [
+          /^PO-\d+$/,
+          '/order/purchase_order/'
+        ],
+        [
+          /^A-\d+$/,
+          '/order/acknowledgement/'
+        ],
+        [
+          /^AI-\d+$/,
+          '/order/acknowledgement/item/'
+        ],
+        [
+          /^S-\d+$/,
+          '/order/shipping/'
+        ]
+      ], customeCodes = [], parseStandardCodes = true;
     function Scanner() {
       this._activeParse = false;
       this._onscan = null;
+      this._code = '';
     }
     Scanner.prototype._check = function (evt, customFn) {
       if (evt.keyCode === 76 && evt.altKey) {
+        evt.preventDefault();
         this._activeParse = true;
-      }
-      if (this._activeParse) {
-        this._parse(evt);
+      } else if (evt.altKey && evt.keyCode == 71) {
+        evt.preventDefault();
+        this._activeParse = false;
+        this._dispatch(code);
+        code = '';
+      } else {
+        if (this._activeParse) {
+          evt.preventDefault();
+          this._parse(evt);
+        }
       }
     };
     Scanner.prototype._parse = function (evt) {
       var key = evt.keyCode;
-      if (evt.altKey) {
-        if (key == 71) {
-          this._activeParse = false;
-          (this._onscan || this._dispatch)(code);
-          code = '';
-        }
-      } else if (96 <= key && key <= 105 || 48 <= key && key <= 90) {
+      if (96 <= key && key <= 105 || 48 <= key && key <= 90) {
         var letter = String.fromCharCode(96 <= key && key <= 105 ? key - 48 : key);
         code += letter;
       } else if (key === 189) {
@@ -2973,26 +3029,20 @@ angular.module('employeeApp.services').factory('scanner', [
       }
     };
     Scanner.prototype._dispatch = function (code) {
-      var codes = code.split('-');
-      if (codes.length > 1) {
-        switch (codes[0]) {
-        case 'A':
-          $rootScope.$apply(function () {
-            $location.path('/order/acknowledgement/' + codes[1]);
-          });
-          break;
-        case 'AI':
-          $rootScope.$apply(function () {
-            $location.path('/order/acknowledgement/item/' + codes[1]);
-          });
-          break;
-        case 'S':
-          $rootScope.$apply(function () {
-            $location.path('/order/shipping/' + codes[1]);
-          });
-          break;
-        default:
-          break;
+      codes = code.split('-');
+      if (parseStandardCodes) {
+        for (var i = 0; i < standardCodes.length; i++) {
+          if (standardCodes[i][0].test(code)) {
+            codes = code.split('-');
+            $rootScope.safeApply(function () {
+              $location.path(standardCodes[i][1] + codes[1]);
+            });
+          }
+        }
+      }
+      for (var h = 0; h < customCodes.length; h++) {
+        if (customCodes[h][0].test(code)) {
+          customcodes[h][1](code);
         }
       }
     };
@@ -3001,6 +3051,25 @@ angular.module('employeeApp.services').factory('scanner', [
     };
     Scanner.prototype.disable = function () {
       angular.element(document.body).unbind('keydown', this._check.bind(this));
+    };
+    Scanner.prototype.disableStandard = function () {
+      parseStandardCodes = false;
+    };
+    Scanner.prototype.enableStandard = function () {
+      parseStandardCodes = true;
+    };
+    Scanner.prototype.register = function (re, fn) {
+      customCodes.push([
+        re,
+        fn
+      ]);
+    };
+    Scanner.deregister = function (re) {
+      for (var i = 0; i < customCodes.length; i++) {
+        if (customCodes[i][0] == re) {
+          customCode.splice(i);
+        }
+      }
     };
     Object.defineProperty(Scanner.prototype, 'onscan', {
       set: function (fn) {
@@ -4302,7 +4371,7 @@ angular.module('employeeApp.services').factory('Geocoder', [
       return addrStr;
     }
     function Geocoder() {
-      this.google = google;
+      this.google = google || {};
       this.geocoder = new google.maps.Geocoder();
     }
     Geocoder.prototype._getRegion = function (country) {
@@ -4975,13 +5044,16 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   'Supply',
   'Notification',
   '$filter',
-  'Supplier',
-  function ($scope, Supply, Notification, $filter, Supplier) {
-    var fetching = true;
+  'KeyboardNavigation',
+  '$rootScope',
+  '$location',
+  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location) {
+    var fetching = true, index = 0, currentSelection;
     Notification.display('Loading supplies...', false);
     $scope.supplies = Supply.query(function () {
       fetching = false;
       Notification.hide();
+      changeSelection(index);
     });
     $scope.$watch('query', function (q) {
       if (q) {
@@ -4994,6 +5066,8 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
               $scope.supplies.push(resources[i]);
             }
           }
+          index = 0;
+          changeSelection(index);
         });
       }
     });
@@ -5009,6 +5083,51 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
         });
       }
     };
+    function filter(array) {
+      return $filter('filter')($scope.supplies, $scope.query);
+    }
+    function changeSelection(i) {
+      $rootScope.safeApply(function () {
+        if (currentSelection) {
+          currentSelection.$selected = false;
+        }
+        currentSelection = filter($scope.supplies)[i];
+        if (currentSelection) {
+          currentSelection.$selected = true;
+        }
+      });
+      var selection = $('.item.selected');
+      var container = selection.parents('.outer-container');
+      var scrollTop = container.scrollTop();
+      var cHeight = container.innerHeight();
+      if (scrollTop > selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      }
+    }
+    var keyboardNav = new KeyboardNavigation();
+    keyboardNav.ondown = function () {
+      if (index < filter($scope.supplies).length - 1) {
+        index += 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onup = function () {
+      if (index !== 0) {
+        index -= 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onenter = function () {
+      $rootScope.safeApply(function () {
+        $location.path('/supply/' + currentSelection.id);
+      });
+    };
+    keyboardNav.enable();
+    $scope.$on('$destroy', function () {
+      keyboardNav.disable();
+    });
   }
 ]);
 angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
@@ -5016,12 +5135,15 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   'PurchaseOrder',
   '$filter',
   'Notification',
-  function ($scope, PurchaseOrder, $filter, Notification) {
-    var fetching = true;
+  'KeyboardNavigation',
+  '$location',
+  function ($scope, PurchaseOrder, $filter, Notification, KeyboardNavigation, $location) {
+    var fetching = true, index = 0, currentSelection;
     Notification.display('Loading purchase orders...', false);
     $scope.poList = PurchaseOrder.query(function () {
       fetching = false;
       Notification.hide();
+      changeSelection(index);
     }, function () {
       fetching = false;
     });
@@ -5036,6 +5158,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
               $scope.poList.push(resources[i]);
             }
           }
+          index = 0;
+          changeSelection(index);
         });
       }
     });
@@ -5053,6 +5177,51 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
         });
       }
     };
+    function filter(array) {
+      return $filter('filter')(array, $scope.query);
+    }
+    function changeSelection(i) {
+      $scope.safeApply(function () {
+        if (currentSelection) {
+          currentSelection.$selected = false;
+        }
+        currentSelection = filter($scope.poList)[i];
+        if (currentSelection) {
+          currentSelection.$selected = true;
+        }
+      });
+      var selection = $('.item.selected');
+      var container = selection.parents('.outer-container');
+      var scrollTop = container.scrollTop();
+      var cHeight = container.innerHeight();
+      if (scrollTop > selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      }
+    }
+    var keyboardNav = new KeyboardNavigation();
+    keyboardNav.ondown = function () {
+      if (index < filter($scope.poList).length - 1) {
+        index += 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onup = function () {
+      if (index !== 0) {
+        index -= 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onenter = function () {
+      $scope.safeApply(function () {
+        $location.path('/order/purchase_order/' + currentSelection.id);
+      });
+    };
+    keyboardNav.enable();
+    $scope.$on('$destroy', function () {
+      keyboardNav.disable();
+    });
   }
 ]);
 angular.module('employeeApp').factory('PurchaseOrder', [
@@ -5258,8 +5427,10 @@ angular.module('employeeApp').directive('onScrollEnd', [function () {
 angular.module('employeeApp').directive('customerList', [
   'Customer',
   'Notification',
-  '$parse',
-  function (Customer, Notification, $parse) {
+  'KeyboardNavigation',
+  '$rootScope',
+  '$filter',
+  function (Customer, Notification, KeyboardNavigation, $rootScope, $filter) {
     return {
       templateUrl: 'views/templates/customer-list.html',
       replace: true,
@@ -5269,10 +5440,10 @@ angular.module('employeeApp').directive('customerList', [
         onSelect: '&'
       },
       link: function postLink(scope, element, attrs) {
-        var fetching = true, currentSelection;
-        scope.currentIndex = 0;
+        var fetching = true, currentSelection, index = 0;
         scope.customers = Customer.query({ limit: 20 }, function (response) {
           fetching = false;
+          changeSelection(index);
         });
         scope.$watch('query', function (q) {
           if (q) {
@@ -5285,6 +5456,8 @@ angular.module('employeeApp').directive('customerList', [
                   scope.customers.push(resources[i]);
                 }
               }
+              index = 0;
+              changeSelection(index);
             });
           }
         });
@@ -5307,7 +5480,57 @@ angular.module('employeeApp').directive('customerList', [
         scope.select = function (customer) {
           scope.onSelect({ 'customer': customer });
         };
-        $(window).keydown(parseKeydown);
+        function filter(array) {
+          return $filter('orderBy')($filter('filter')(scope.customers, scope.query), 'name');
+        }
+        function changeSelection(i) {
+          $rootScope.safeApply(function () {
+            if (currentSelection) {
+              currentSelection.$selected = false;
+            }
+            currentSelection = filter(scope.customers)[i];
+            if (currentSelection) {
+              currentSelection.$selected = true;
+            }
+          });
+          var selection = $('.customer.selected');
+          var container = selection.parents('.inner-container');
+          var scrollTop = container.scrollTop();
+          var cHeight = container.innerHeight();
+          if (scrollTop > selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          }
+        }
+        var keyboardNav = new KeyboardNavigation();
+        keyboardNav.ondown = function () {
+          if (index < filter(scope.customers).length - 1) {
+            index += 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onup = function () {
+          if (index !== 0) {
+            index -= 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onenter = function () {
+          $rootScope.safeApply(function () {
+            scope.select(currentSelection);
+          });
+        };
+        scope.$watch('visible', function (val) {
+          if (val) {
+            keyboardNav.enable();
+          } else {
+            keyboardNav.disable();
+          }
+        });
+        scope.$on('$destroy', function () {
+          keyboardNav.disable();
+        });
       }
     };
   }
@@ -5316,20 +5539,27 @@ angular.module('employeeApp').directive('upholsteryList', [
   'Upholstery',
   'Notification',
   '$filter',
-  function (Upholstery, Notification, $filter) {
+  'KeyboardNavigation',
+  '$rootScope',
+  function (Upholstery, Notification, $filter, KeyboardNavigation, $rootScope) {
     return {
       templateUrl: 'views/templates/upholstery-list.html',
       replace: true,
       restrict: 'A',
-      scope: { onSelect: '&' },
+      scope: {
+        onSelect: '&',
+        safeApply: '&',
+        visible: '='
+      },
       link: function postLink(scope, element, attrs) {
-        var fetching = true, currentSelection;
-        scope.currentIndex = 0;
+        var fetching = true, currentSelection, index = 0;
         scope.upholsteries = Upholstery.query({ limit: 20 }, function (response) {
           fetching = false;
+          changeSelection(index);
         });
         scope.$watch('query', function (q) {
           if (q) {
+            scope.currentIndex = 0;
             Upholstery.query({
               q: q,
               limit: 10 + scope.query.length * 2
@@ -5339,6 +5569,8 @@ angular.module('employeeApp').directive('upholsteryList', [
                   scope.upholsteries.push(resources[i]);
                 }
               }
+              index = 0;
+              changeSelection(index);
             });
           }
         });
@@ -5358,9 +5590,58 @@ angular.module('employeeApp').directive('upholsteryList', [
             });
           }
         };
+        function changeSelection(i) {
+          $rootScope.safeApply(function () {
+            if (currentSelection) {
+              currentSelection.$selected = false;
+            }
+            currentSelection = $filter('filter')(scope.upholsteries, scope.query)[i];
+            if (currentSelection) {
+              currentSelection.$selected = true;
+            }
+          });
+          var selection = $('.upholstery.selected');
+          var container = selection.parents('.inner-container');
+          var scrollTop = container.scrollTop();
+          var cHeight = container.innerHeight();
+          if (scrollTop > selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          }
+        }
         scope.select = function (upholstery) {
           scope.onSelect({ $upholstery: upholstery });
         };
+        var keyboardNav = new KeyboardNavigation();
+        keyboardNav.ondown = function () {
+          if (index < $filter('filter')(scope.upholsteries, scope.query).length - 1) {
+            index += 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onup = function () {
+          if (index !== 0) {
+            index -= 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onenter = function () {
+          $rootScope.safeApply(function () {
+            scope.select(currentSelection);
+          });
+        };
+        scope.$watch('visible', function (val) {
+          console.log(val);
+          if (val) {
+            keyboardNav.enable();
+          } else {
+            keyboardNav.disable();
+          }
+        });
+        scope.$on('$destroy', function () {
+          keyboardNav.disable();
+        });
       }
     };
   }
@@ -5368,16 +5649,23 @@ angular.module('employeeApp').directive('upholsteryList', [
 angular.module('employeeApp').directive('tableList', [
   'Table',
   'Notification',
-  function (Table, Notification) {
+  'KeyboardNavigation',
+  '$rootScope',
+  '$filter',
+  function (Table, Notification, KeyboardNavigation, $rootScope, $filter) {
     return {
       templateUrl: 'views/templates/table-list.html',
       replace: true,
       restrict: 'A',
-      scope: { onSelect: '&' },
+      scope: {
+        onSelect: '&',
+        visible: '='
+      },
       link: function postLink(scope, element, attrs) {
-        var fetching = true;
+        var fetching = true, currentSelection, index = 0;
         scope.tables = Table.query({ limit: 20 }, function (response) {
           fetching = false;
+          changeSelection(index);
         });
         scope.$watch('query', function (q) {
           if (q) {
@@ -5390,6 +5678,8 @@ angular.module('employeeApp').directive('tableList', [
                   scope.tables.push(resources[i]);
                 }
               }
+              index = 0;
+              changeSelection(index);
             });
           }
         });
@@ -5415,6 +5705,59 @@ angular.module('employeeApp').directive('tableList', [
         scope.select = function (table) {
           scope.onSelect({ $table: table });
         };
+        function changeSelection(i) {
+          $rootScope.safeApply(function () {
+            if (currentSelection) {
+              currentSelection.$selected = false;
+            }
+            currentSelection = $filter('filter')(scope.tables, scope.query)[i];
+            if (currentSelection) {
+              currentSelection.$selected = true;
+            }
+          });
+          var selection = $('.table.selected');
+          var container = selection.parents('.inner-container');
+          var scrollTop = container.scrollTop();
+          var cHeight = container.innerHeight();
+          if (scrollTop > selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          }
+        }
+        scope.select = function (table) {
+          scope.onSelect({ $table: table });
+        };
+        var keyboardNav = new KeyboardNavigation();
+        keyboardNav.ondown = function () {
+          if (index < $filter('filter')(scope.tables, scope.query).length - 1) {
+            index += 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onup = function () {
+          if (index !== 0) {
+            index -= 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onenter = function () {
+          $rootScope.safeApply(function () {
+            scope.select(currentSelection);
+          });
+        };
+        keyboardNav.enable();
+        scope.$watch('visible', function (val) {
+          console.log(val);
+          if (val) {
+            keyboardNav.enable();
+          } else {
+            keyboardNav.disable();
+          }
+        });
+        scope.$on('$destroy', function () {
+          keyboardNav.disable();
+        });
       }
     };
   }
@@ -5467,9 +5810,20 @@ angular.module('employeeApp').directive('fabricSelector', [
             });
           }
         };
-        scope.done = function (customer) {
+        scope.done = function () {
           scope.onComplete();
         };
+        function parseKeydown(evt) {
+          if (evt.which === 13) {
+            scope.$apply(function () {
+              scope.done();
+            });
+          }
+        }
+        $(window).on('keydown', parseKeydown);
+        scope.$on('$destroy', function () {
+          $(window).off('keydown', parseKeydown);
+        });
       }
     };
   }
@@ -5585,8 +5939,8 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       delete supply.image;
       delete supply.supplier;
       return supply;
-    }, function (old, newVal) {
-      if (!updateLoopActive) {
+    }, function (newVal, oldVal) {
+      if (!updateLoopActive && oldVal.hasOwnProperty('id')) {
         updateLoopActive = true;
         timeoutPromise = $timeout(function () {
           Notification.display('Updating ' + $scope.supply.description + '...', false);
@@ -5772,3 +6126,349 @@ angular.module('employeeApp').directive('img', [function () {
       }
     };
   }]);
+angular.module('employeeApp.services').factory('KeyboardNavigation', [
+  '$rootScope',
+  function KeyboardNavigation($rootScope) {
+    function KeyboardNavigationFactory(configs) {
+      var currentIndex = 0, enabled = false, scope = configs ? configs.scope ? configs.scope : $rootScope.$new() : $rootScope.$new(), onleft, onright, onup, ondown, onenter;
+      configs = configs || {};
+      function changeIndex(valInc) {
+        if (configs.array) {
+          scope.$apply(function () {
+            currentIndex += valInc;
+          });
+        }
+      }
+      function parseKeydown(evt) {
+        switch (evt.which) {
+        case 38:
+          changeIndex(-1);
+          if (onup) {
+            onup();
+          }
+          break;
+        case 39:
+          if (onright) {
+            onright();
+          }
+          break;
+        case 40:
+          changeIndex(1);
+          if (ondown) {
+            ondown();
+          }
+          break;
+        case 13:
+          if (onenter) {
+            onenter();
+          }
+          break;
+        }
+      }
+      function disable() {
+        if (enabled) {
+          $(window).off('keydown', parseKeydown);
+          enabled = false;
+        }
+      }
+      function enable() {
+        if (!enabled) {
+          $(window).on('keydown', parseKeydown);
+          enabled = true;
+        }
+      }
+      function KeyboardNav() {
+        enable();
+        if (configs.scope) {
+          configs.scope.$on('$destroy', function () {
+            disable();
+          });
+        }
+      }
+      KeyboardNav.prototype.disable = function () {
+        disable();
+      };
+      KeyboardNav.prototype.enable = function () {
+        enable();
+      };
+      Object.defineProperties(KeyboardNav.prototype, {
+        onup: {
+          set: function (fn) {
+            onup = fn;
+          }
+        },
+        ondown: {
+          set: function (fn) {
+            ondown = fn;
+          }
+        },
+        onleft: {
+          set: function (fn) {
+            onleft = fn;
+          }
+        },
+        onright: {
+          set: function (fn) {
+            onright = fn;
+          }
+        },
+        onenter: {
+          set: function (fn) {
+            onenter = fn;
+          }
+        }
+      });
+      return new KeyboardNav();
+    }
+    return KeyboardNavigationFactory;
+  }
+]);
+angular.module('employeeApp').directive('supplierList', [
+  'Supplier',
+  'Notification',
+  'KeyboardNavigation',
+  '$rootScope',
+  '$filter',
+  function (Supplier, Notification, KeyboardNavigation, $rootScope, $filter) {
+    return {
+      templateUrl: 'views/templates/supplier-list.html',
+      replace: true,
+      restrict: 'A',
+      scope: {
+        visible: '=supplierList',
+        onSelect: '&'
+      },
+      link: function postLink(scope, element, attrs) {
+        var fetching = true, currentSelection, index = 0;
+        scope.suppliers = Supplier.query({ limit: 20 }, function (response) {
+          fetching = false;
+          changeSelection(index);
+        });
+        scope.$watch('query', function (q) {
+          if (q) {
+            Supplier.query({
+              q: q,
+              limit: 5
+            }, function (resources) {
+              for (var i = 0; i < resources.length; i++) {
+                if (scope.suppliers.indexOfById(resources[i].id) == -1) {
+                  scope.suppliers.push(resources[i]);
+                }
+              }
+              index = 0;
+              changeSelection(index);
+            });
+          }
+        });
+        scope.loadNext = function () {
+          if (!fetching) {
+            Notification.display('Loading more suppliers...', false);
+            fetching = true;
+            Supplier.query({
+              offset: scope.suppliers.length,
+              limit: 50
+            }, function (resources) {
+              fetching = false;
+              Notification.hide();
+              for (var i = 0; i < resources.length; i++) {
+                scope.suppliers.push(resources[i]);
+              }
+            });
+          }
+        };
+        scope.select = function (supplier) {
+          scope.onSelect({ '$supplier': supplier });
+        };
+        function filter(array) {
+          return $filter('orderBy')($filter('filter')(scope.suppliers, scope.query), 'name');
+        }
+        function changeSelection(i) {
+          $rootScope.safeApply(function () {
+            if (currentSelection) {
+              currentSelection.$selected = false;
+            }
+            currentSelection = filter(scope.suppliers)[i];
+            if (currentSelection) {
+              currentSelection.$selected = true;
+            }
+          });
+          var selection = $('.supplier.selected');
+          var container = selection.parents('.inner-container');
+          var scrollTop = container.scrollTop();
+          var cHeight = container.innerHeight();
+          if (scrollTop > selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          }
+        }
+        var keyboardNav = new KeyboardNavigation();
+        keyboardNav.ondown = function () {
+          if (index < filter(scope.suppliers).length - 1) {
+            index += 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onup = function () {
+          if (index !== 0) {
+            index -= 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onenter = function () {
+          $rootScope.safeApply(function () {
+            scope.select(currentSelection);
+          });
+        };
+        scope.$watch('visible', function (val) {
+          if (val) {
+            keyboardNav.enable();
+          } else {
+            keyboardNav.disable();
+          }
+        });
+        scope.$on('$destroy', function () {
+          keyboardNav.disable();
+        });
+      }
+    };
+  }
+]);
+angular.module('employeeApp').directive('supplyList', [
+  'Supply',
+  '$filter',
+  'KeyboardNavigation',
+  'Notification',
+  '$rootScope',
+  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope) {
+    return {
+      templateUrl: 'views/templates/supply-list.html',
+      replace: true,
+      restrict: 'A',
+      scope: {
+        visible: '=supplyList',
+        onSelect: '&',
+        supplier: '='
+      },
+      link: function postLink(scope, element, attrs) {
+        var fetching = true, currentSelection, index = 0;
+        if (attrs.supplier) {
+          scope.$watch('supplier', function (val) {
+            if (val) {
+              scope.supplies = Supply.query({
+                supplier_id: val.id,
+                limit: 20
+              }, function (response) {
+                fetching = false;
+                changeSelection(index);
+              });
+            }
+          });
+        } else {
+          scope.supplies = Supply.query({ limit: 20 }, function (response) {
+            fetching = false;
+            changeSelection(index);
+          });
+        }
+        scope.$watch('query', function (q) {
+          if (q) {
+            Supply.query({
+              q: q,
+              limit: 10 + q.length * 2
+            }, function (resources) {
+              for (var i = 0; i < resources.length; i++) {
+                if (scope.supplies.indexOfById(resources[i].id) == -1) {
+                  scope.supplies.push(resources[i]);
+                }
+              }
+              index = 0;
+              changeSelection(index);
+            });
+          }
+        });
+        scope.loadNext = function () {
+          if (!fetching) {
+            Notification.display('Loading more supplies...', false);
+            fetching = true;
+            Supply.query({
+              offset: scope.supplies.length,
+              limit: 50
+            }, function (resources) {
+              fetching = false;
+              Notification.hide();
+              for (var i = 0; i < resources.length; i++) {
+                scope.supplies.push(resources[i]);
+              }
+            });
+          }
+        };
+        scope.select = function (supply) {
+          scope.onSelect({ '$supply': supply });
+        };
+        function filter(array) {
+          return $filter('filter')(array, scope.query);
+        }
+        function changeSelection(i) {
+          $rootScope.safeApply(function () {
+            if (currentSelection) {
+              currentSelection.$selected = false;
+            }
+            currentSelection = filter(scope.supplies)[i];
+            if (currentSelection) {
+              currentSelection.$selected = true;
+            }
+          });
+          var selection = $('.supply.selected');
+          var container = selection.parents('.inner-container');
+          var scrollTop = container.scrollTop();
+          var cHeight = container.innerHeight();
+          if (scrollTop > selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+            container.scrollTop(selection.outerHeight() * i);
+          }
+        }
+        var keyboardNav = new KeyboardNavigation();
+        keyboardNav.ondown = function () {
+          if (index < filter(scope.supplies).length - 1) {
+            index += 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onup = function () {
+          if (index !== 0) {
+            index -= 1;
+            changeSelection(index);
+          }
+        };
+        keyboardNav.onenter = function () {
+          $rootScope.safeApply(function () {
+            scope.select(currentSelection);
+          });
+        };
+        scope.$watch('visible', function (val) {
+          if (val) {
+            keyboardNav.enable();
+          } else {
+            keyboardNav.disable();
+          }
+        });
+        scope.$on('$destroy', function () {
+          keyboardNav.disable();
+        });
+      }
+    };
+  }
+]);
+angular.module('employeeApp.services').service('CameraService', function CameraService() {
+  function getUserMedia() {
+    navigator.getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia || window.navigator.msGetUserMedia;
+    return navigator.getUserMedia;
+  }
+  return {
+    hasUserMedia: function () {
+      return !!getUserMedia();
+    },
+    getUserMedia: getUserMedia
+  };
+});
