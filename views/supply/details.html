@@ -12,6 +12,9 @@
 		<nav>
 			<ul>
 				<li>
+					<div ng-click="showAddImage=true">Add Image</div>
+				</li>
+				<li>
 					<div ng-click="showQuantity=true; action = 'add'">Add</div>
 				</li>
 				<li>
@@ -46,6 +49,11 @@
 		</div>
 		<div class="bottom-bar">
 			<button ng-click="changeQuantity(action, quantity)">{{action}}</button>
+		</div>
+	</div>
+	<div class="add-image" modal="showAddImage" title="Add Image for Supply">
+		<div class="container">
+			<div image-uploader url='/api/v1/supply/image' on-upload="addImage(data)"></div>
 		</div>
 	</div>
 	<form class="workspace">

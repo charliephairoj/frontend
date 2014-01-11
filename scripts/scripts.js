@@ -1409,7 +1409,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
         }
       } catch (e) {
         Notification.display(e.message, false);
-        throw new Error(e);
       }
     };
     $scope.reset = function () {
@@ -1419,7 +1418,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     };
     $scope.isValidated = function () {
       if (!$scope.ack.customer) {
-        throw new TypeError('Customer is not an object');
+        throw new TypeError('Please add a customer.');
       } else {
         if (!$scope.ack.customer.hasOwnProperty('id')) {
           throw new ReferenceError('Missin customer ID');
@@ -1432,6 +1431,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           throw new RangeError('No products added to the order');
         } else {
           for (var i = 0; i < $scope.ack.items.length; i++) {
+            var item = $scope.ack.items[i];
             if (!$scope.ack.items[i].hasOwnProperty('quantity') || !$scope.ack.items[i].quantity) {
               throw new RangeError('Expecting a quantity of at least 1 for ' + $scope.ack.items[i].description);
             }
@@ -1440,14 +1440,19 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
               if (!$scope.ack.items[i].has_price) {
               }
             }
+            if (!item.hasOwnProperty('id')) {
+              if (!item.is_custom) {
+                throw new TypeError('Item without id is not custom. Please contact an Administrator.');
+              }
+            }
           }
         }
       }
-      if ($scope.ack.vat === undefined || $scope.ack.vat === null) {
-        throw new TypeError('Vat is not a number');
-      }
       if (!$scope.ack.delivery_date) {
-        throw new TypeError('Delivery Date is not a valid Date type');
+        throw new TypeError('Please select a preliminary delivery date.');
+      }
+      if ($scope.ack.vat === undefined || $scope.ack.vat === null) {
+        throw new TypeError('Please set the vat.');
       }
       if (!$scope.ack.po_id) {
         throw new TypeError('PO# is not defined');
@@ -5933,6 +5938,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.showHeight = function () {
       return validHeight.indexOf($scope.supply.units) > -1 || $scope.supply.units == 'kg' && $scope.supply.type == 'packaging' ? true : false;
     };
+    $scope.addImage = function (image) {
+      $scope.supply.image = image;
+    };
     $scope.$watch(function () {
       var supply = angular.copy($scope.supply);
       delete supply.last_modified;
@@ -6472,3 +6480,60 @@ angular.module('employeeApp.services').service('CameraService', function CameraS
     getUserMedia: getUserMedia
   };
 });
+angular.module('employeeApp.directives').directive('camera', [
+  'CameraService',
+  function (CameraService) {
+    return {
+      template: '<div class="camera">' + '<canvas></canvas>' + '<video class="camera-video"></video>' + '<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' + '<div class="btn-menu">' + '<div  class="save-btn" ng-click="save()">Save</div>' + '<div class="retake-btn" ng-click="retake()">Retake</div>' + '</div>' + '</div>',
+      restrict: 'EA',
+      replace: true,
+      scope: { onSnapshot: '&' },
+      link: function postLink(scope, element, attrs) {
+        if (!CameraService.hasUserMedia()) {
+          return;
+        }
+        var userMedia = CameraService.getUserMedia, canvas = element.find('canvas')[0], ctx = canvas.getContext('2d'), video = element.find('video')[0], width = attrs.width || 1280, height = attrs.height || 720;
+        var onSuccess = function (stream) {
+          video.src = window.URL.createObjectURL(stream);
+          video.play();
+        };
+        navigator.getUserMedia({
+          video: {
+            mandatory: {
+              minWidth: width,
+              minHeight: height
+            }
+          },
+          audio: false
+        }, onSuccess, function (e) {
+          console.log(e);
+        });
+        function getImageAsBlob(url) {
+          var bytes = atob(url.split(',')[1]);
+          var stream = new Uint8Array(bytes.length);
+          for (var key in bytes) {
+            stream[key] = bytes.charCodeAt(key);
+          }
+          return new Blob([stream], { type: 'image/jpeg' });
+        }
+        scope.retake = function () {
+          $(canvas).removeClass('active');
+        };
+        scope.save = function () {
+          var img = getImageAsBlob(canvas.toDataURL('image/jpeg'));
+          scope.onSnapshot({ $image: img });
+          scope.retake();
+        };
+        scope.takeSnapshot = function () {
+          width = video.videoWidth;
+          height = video.videoHeight;
+          canvas.width = width;
+          canvas.height = height;
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(video, 0, 0, width, height);
+          $(canvas).addClass('active');
+        };
+      }
+    };
+  }
+]);

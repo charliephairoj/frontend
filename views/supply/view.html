@@ -13,10 +13,14 @@
 		</header>
 		<nav>
 			<ul>
-				<li ng-show="currentUser.hasPermission('add_supplier')">
+				<li>
+
+					<!--ng-show="currentUser.hasPermission('add_supplier')">-->
 					<button ng-click="showAddSupplier=true">Add Supplier</button>
 				</li>
-				<li ng-show="currentUser.hasPermission('add_supply')">
+				<li>
+
+					<!-- ng-show="currentUser.hasPermission('add_supply')">-->
 					<button ng-click="showAddSupply=true">Add Supply</button>
 				</li>
 				<li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a>
