@@ -5336,7 +5336,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
           return units === 'pc' || units === 'pack' || units === 'kg' && type === 'packaging' ? true : false;
         };
         scope.supply = new Supply();
-        scope.supply.units = 'piece';
+        scope.supply.units = 'pc';
         scope.suppliers = Supplier.query({ limit: 0 });
         scope.add = function () {
           if (scope.form.$valid) {

@@ -47,9 +47,9 @@
 			<tr>
 				<td>Purchasing Units</td>
 				<td>
-					<select required ng-model="supply.units">
+					<select ng-required ng-model="supply.units">
 						<option value="pc" selected>Piece</option>
-						<option value="container" selected>Container</option>
+						<option value="container">Container</option>
 						<option value="m">Meter</option>
 						<option value="yd">Yard</option>
 						<option value="kg">Kilogram</option>
@@ -59,44 +59,44 @@
 					</select>
 				</td>
 			</tr>
-			<tr ui-if="showWidth()">
+			<tr ng-if="showWidth()">
 				<td>Width</td>
 				<td>
 					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.width" />
 					<select required ng-model="supply.width_units">
-						<option value="inch">Inch</option>
-						<option value="millimeter">Millimeter</option>
-						<option value="centimeter">Centimeter</option>
-						<option value="meter">Meter</option>
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
 					</select>
 				</td>
 			</tr>
-			<tr ui-if="showDepth()">
+			<tr ng-if="showDepth()">
 				<td>Depth</td>
 				<td>
 					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.depth" />
 					<select required ng-model="supply.depth_units">
-						<option value="inch">Inch</option>
-						<option value="millimeter">Millimeter</option>
-						<option value="centimeter">Centimeter</option>
-						<option value="meter">Meter</option>
-						<option value="yard">Yard</option>
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
 					</select>
 				</td>
 			</tr>
-			<tr ui-if="showHeight()">
+			<tr ng-if="showHeight()">
 				<td>Height</td>
 				<td>
 					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.height" />
 					<select required ng-model="supply.height_units">
-						<option value="inch">Inch</option>
-						<option value="millimeter">Millimeter</option>
-						<option value="centimeter">Centimeter</option>
-						<option value="meter">Meter</option>
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
 					</select>
 				</td>
 			</tr>
-			<tr class="piece-per-pack" ui-if="supply.units == 'pack' || supply.units == 'box'">
+			<tr class="piece-per-pack" ng-if="supply.units == 'pack' || supply.units == 'box'">
 				<td>Pieces per Pack</td>
 				<td>
 					<input required ng-model="supply.piece_per_pack" />
