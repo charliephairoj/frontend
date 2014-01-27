@@ -1,6 +1,5 @@
 <div class="userDetailsPage">
-	<form name="passForm" modal novalidate ng-model="showChangePassword">
-		<div class="title">Change {{currentUser.username}}'s Password</div>
+	<form name="passForm" modal novalidate ng-model="showChangePassword" title="Change {{user.username}}'s Password">
 		<div class="container">
 			<table>
 				<tr>
@@ -63,6 +62,14 @@
 					</div>
 					<div class="cell">
 						<input type="text" ng-model="user.last_name" ec-blur="update()" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell">
+						<label>Telephone</label>
+					</div>
+					<div class="cell">
+						<input type="text" ng-model="user.telephone" ec-blur="update()" />
 					</div>
 				</div>
 				<div class="row">

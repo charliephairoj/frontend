@@ -29,7 +29,7 @@
 			<tr>
 				<td>Type</td>
 				<td>
-					<select required ng-model="supply.type">
+					<select class="type" required ng-model="supply.type">
 						<option value="metal">Metal</option>
 						<option value="wood">Wood</option>
 						<option value="foam">Foam</option>
@@ -41,7 +41,9 @@
 						<option value="nail">Nail</option>
 						<option value="screw">Screw</option>
 						<option value="staple">Staple</option>
+						<option value="custom">Custom</option>
 					</select>
+					<input ng-if="supply.type == 'custom'" required class="custom-type" type="text" ng-model="supply.custom_type" />
 				</td>
 			</tr>
 			<tr>
@@ -107,6 +109,11 @@
 				<td>
 					<input required ng-model="supply.unit_cost" />
 				</td>
+			</tr>
+			<tr>
+				<td>Discount</td>
+				<td>
+					<input required maxlength="2" size="2" ng-model="supply.discount" />%</td>
 			</tr>
 			<tr ng-show="currentUser.hasModule('Administrator')">
 				<td>Administrator Only</td>

@@ -1399,8 +1399,12 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           Notification.display('Creating Acknowledgement...', false);
           $scope.ack.$create(function (response) {
             Notification.display('Acknowledgement created');
-            window.open(response.pdf.acknowledgement);
-            window.open(response.pdf.production);
+            if (response.pdf.acknowledgement) {
+              window.open(response.pdf.acknowledgement);
+            }
+            if (response.pdf.production) {
+              window.open(response.pdf.production);
+            }
             angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
           }, function (e) {
             console.error(e);
@@ -1970,7 +1974,9 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
         Notification.display('Creating Acknowledgement...', false);
         $scope.shipping.$save(function (resource) {
           Notification.display('Shipping manifest created');
-          window.open(resource.pdf.url);
+          if (resource.pdf.url) {
+            window.open(resource.pdf.url);
+          }
           $location.path('/order/shipping');
         }, function () {
           Notification.display('There was an error in creating the shipping manifest', false);
@@ -2175,6 +2181,7 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
   '$http',
   'Notification',
   function ($scope, Group, User, $routeParams, $location, $http, Notification) {
+    var destroyed = false;
     function indexById(list, item) {
       if (!list.hasOwnProperty('length')) {
         throw new TypeError('Expecting an Array');
@@ -2234,15 +2241,22 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
       });
     };
     $scope.remove = function () {
-      $scope.user.$delete(function () {
-        $location.path('/users');
-      });
+      if ($scope.currentUser.hasPermission('delete_user')) {
+        Notification.display('Deleting user ' + $scope.user.username + '...', false);
+        $scope.user.$delete(function () {
+          Notification.display($scope.user.username + ' deleted.');
+          destroyed = true;
+          $location.path('/administrator/user');
+        });
+      }
     };
     $scope.update = function () {
       $scope.user.$update();
     };
     $scope.$on('$destroy', function () {
-      $scope.user.$update();
+      if (!destroyed) {
+        $scope.user.$update();
+      }
     });
   }
 ]);
@@ -3266,7 +3280,9 @@ angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
     };
     $scope.getPDF = function () {
       Notification.display('Retrieving PDF...', false);
-      window.open($scope.shipping.pdf.url);
+      if ($scope.shipping.pdf.url) {
+        window.open($scope.shipping.pdf.url);
+      }
     };
     $scope.save = function () {
       Notification.display('Saving Shipping Manifest...', false);
@@ -5245,7 +5261,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   'Supply',
   'Notification',
   '$filter',
-  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter) {
+  '$timeout',
+  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout) {
     $scope.showSuppliers = false;
     $scope.showSupplies = false;
     $scope.suppliers = Supplier.query({ limit: 0 });
@@ -5267,10 +5284,26 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     $scope.removeItem = function (index) {
       $scope.po.items.splice(index, 1);
     };
+    $scope.$watch('po.items', function (newVal, oldVal) {
+      if (newVal.length == oldVal.length && newVal.length > 1) {
+        for (var i = 0; i < newVal.length; i++) {
+          if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
+            var cost = newVal[i].cost;
+            var obj = newVal[i];
+            $timeout(function () {
+              if (obj.cost == cost) {
+                var supply = obj.isPrototypeOf(Supply) ? obj : new Supply(obj);
+                supply.$update();
+              }
+            }, 5000);
+          }
+        }
+      }
+    }, true);
     $scope.subtotal = function () {
       var subtotal = 0;
       for (var i = 0; i < $scope.po.items.length; i++) {
-        subtotal += Number($scope.po.items[i].cost) * Number($scope.po.items[i].quantity || 1);
+        subtotal += Number($scope.po.items[i].override_cost ? $scope.po.items[i].override_cost_amount : $scope.po.items[i].cost) * Number($scope.po.items[i].quantity || 1);
       }
       return subtotal.toFixed(2);
     };
@@ -5371,6 +5404,7 @@ angular.module('employeeApp.directives').directive('addSupplier', [
       scope: { 'visible': '=addSupplier' },
       link: function postLink(scope, element, attrs) {
         scope.supplier = new Supplier();
+        scope.contact = {};
         scope.nameTip = 'What is the supplier\'s name (required)';
         scope.thaiNameTip = 'Enter the supplier\'s name in Thai';
         scope.emailTip = 'Enter a valid email address (required)';
@@ -5383,18 +5417,42 @@ angular.module('employeeApp.directives').directive('addSupplier', [
         scope.territoryTip = 'What chaengwat/territory/state is the supplier in? (required)';
         scope.countryTip = 'What country is the supplier in? (requied)';
         scope.zipcodeTip = 'What zipcode is the supplier in? (required)';
+        scope.addContact = function (contact) {
+          scope.supplier.contacts = scope.supplier.contacts || [];
+          if (scope.supplier.contacts.length === 0) {
+            contact = contact || scope.contact;
+            contact.primary = true;
+          }
+          scope.supplier.contacts.push(contact);
+          scope.contact = {};
+        };
+        scope.validation = function () {
+          var primary = [];
+          for (var i = 0; i < (scope.supplier.contacts && scope.supplier.contacts.length); i++) {
+            if (scope.supplier.contacts[i].primary) {
+              primary.append(scope.supplier.contacts[i]);
+            }
+          }
+          if (primary.length != 1) {
+            throw ValueError('There can only be 1 primary contact');
+          }
+        };
         scope.add = function () {
-          if (scope.form.$valid) {
-            Notification.display('Adding supplier...', false);
-            scope.supplier.$save(function (response) {
-              Notification.display(scope.supplier.name + ' added');
-              scope.visible = false;
-              scope.supplier = new Supplier();
-            }, function (reason) {
-              console.error(reason);
-            });
-          } else {
-            Notification.display('Please fill out the form properly');
+          try {
+            if (scope.form.$valid) {
+              Notification.display('Adding supplier...', false);
+              scope.supplier.$save(function (response) {
+                Notification.display(scope.supplier.name + ' added');
+                scope.visible = false;
+                scope.supplier = new Supplier();
+              }, function (reason) {
+                console.error(reason);
+              });
+            } else {
+              Notification.display('Please fill out the form properly');
+            }
+          } catch (e) {
+            Notification.display(e);
           }
         };
       }
@@ -5637,7 +5695,6 @@ angular.module('employeeApp').directive('upholsteryList', [
           });
         };
         scope.$watch('visible', function (val) {
-          console.log(val);
           if (val) {
             keyboardNav.enable();
           } else {

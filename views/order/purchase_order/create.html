@@ -132,6 +132,12 @@
 							<td>Email:</td>
 							<td>{{po.supplier.email}}</td>
 						</tr>
+						<tr>
+							<td>Project:</td>
+							<td>
+								<textarea ng-model="po.project"></textarea>
+							</td>
+						</tr>
 				</table>
 			</div>
 			<div class="order">
@@ -160,11 +166,16 @@
 						</tr>
 						<tr>
 							<td>Unit Cost:</td>
-							<td>{{supply.cost | number:2}}{{po.supplier.currency}}</td>
+							<td>
+								<input ng-model="supply.cost" ng-disabled="supply.override_cost" type="text" />{{po.supplier.currency}}
+								<input type="checkbox" ng-model="supply.override_cost" />
+								<input class="override_cost" ng-disabled="!supply.override_cost" type="text" ng-model="supply.override_cost_amount" />
+								<span ng-hide="!supply.override_cost">{{po.supplier.currency}}</span>
+							</td>
 						</tr>
 						<tr>
 							<td>Total Cost:</td>
-							<td>{{supply.cost*supply.quantity || 0 | number:2}}{{po.supplier.currency}}</td>
+							<td>{{(supply.override_cost ? supply.override_cost_amount : supply.cost)*supply.quantity || 0 | number:2}}{{po.supplier.currency}}</td>
 						</tr>
 					</table>
 					<img ng-src="{{supply.image.url}}" />

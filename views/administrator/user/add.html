@@ -16,54 +16,64 @@
 			</ul>
 		</nav>
 	</div>
-	<table ec-droppable="add()">
-		<tr>
-			<td>
-				<label>First Name</label>
-			</td>
-			<td>
-				<input required type="text" ng-model="user.first_name" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Last Name</label>
-			</td>
-			<td>
-				<input required type="text" ng-model="user.last_name" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Email</label>
-			</td>
-			<td>
-				<input required type="text" ng-model="user.email" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Username</label>
-			</td>
-			<td>
-				<input required type="text" ng-model="user.username" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Password</label>
-			</td>
-			<td>
-				<input required type="password" ng-model="user.password" />
-			</td>
-		</tr>
-		<tr ng-repeat="group in user.groups">
-			<td>{{group.name}}</td>
-		</tr>
-	</table>
-	<table>
-		<tr ng-repeat="group in groupList | exclude:user.groups" ec-draggable='{"id":{{group.id}}}'>
-			<td>{{group.name}}</td>
-		</tr>
-	</table>
+	<div class="workspace">
+		<table class="new-user-table">
+			<tr>
+				<td>
+					<label>First Name</label>
+				</td>
+				<td>
+					<input required autofocus type="text" ng-model="user.first_name" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Last Name</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.last_name" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Telephone</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.telephone" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Email</label>
+				</td>
+				<td>
+					<input required type="email" ng-model="user.email" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Username</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.username" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Password</label>
+				</td>
+				<td>
+					<input required type="password" ng-model="user.password" />
+				</td>
+			</tr>
+			<tr ng-repeat="group in user.groups">
+				<td>{{group.name}}</td>
+			</tr>
+		</table>
+		<table>
+			<tr ng-repeat="group in groups">
+				<td>{{group.name}}</td>
+			</tr>
+		</table>
+	</div>
 </form>

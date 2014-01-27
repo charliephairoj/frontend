@@ -160,14 +160,14 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<tr ng-show="currentUser.hasPermission('view_cost')">
 					<td>
 						<label>Cost per {{units[supply.units]}}</label>
 					</td>
 					<td>
 						<input class="price" type="text" ng-model="supply.cost" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />{{supply.supplier.currency}}</td>
 				</tr>
-				<tr>
+				<tr ng-show="currentUser.hasPermission('view_cost')">
 					<td>
 						<label>Discount</label>
 					</td>
@@ -180,7 +180,7 @@
 					</td>
 					<td>{{supply.quantity}} {{supply.units}}</td>
 				</tr>
-				<tr>
+				<tr ng-show="currentUser.hasModule('administrator')">
 					<td>
 						<label>Admin Only</label>
 					</td>
