@@ -147,16 +147,20 @@
 						<label>Units</label>
 					</td>
 					<td>
-						<select ng-model="supply.units" ng-options="key as value for (key, value) in units">
-							<!--
-                    		<option value="m">Meter</option>
-                    		<option value="mm">Millimeter</option>
-                    		<option value="yd">Yard</option>
-                    		<option value="kg">Kilogram</option>
-							<option value="pc">Piece</option>
-							<option value="pack">Pack</option>
+						<select ng-model="supply.units">
+
+							<!--ng-options="key as value for (key, value) in units">-->
+							<option value="pc" selected>Piece</option>
 							<option value="container">Container</option>
-							-->
+							<option value="m">Meter</option>
+							<option value="yd">Yard</option>
+							<option value="kg">Kilogram</option>
+							<option value="mm">Millimeter</option>
+							<option value="pack">Pack</option>
+							<option value="pack">Box</option>
+							<option value="cm^2">cm&#0178;</option>
+							<option value="m^2">m&#0178;</option>
+							<option value="in^2">in&#0178;</option>
 						</select>
 					</td>
 				</tr>

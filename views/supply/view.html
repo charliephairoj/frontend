@@ -51,19 +51,25 @@
 	<!--
         Search Bar
     -->
-	<div data-search-bar data-ng-model="query"></div>
+	<div data-search-bar data-ng-model="query">
+		<div class="filter-by">
+			Filter By:
+			<select ng-model="search.type" ng-options="t|beautify for t in types"></select>
+		</div>
+	</div>
 	<!--
         Workspace
     -->
 	<div class="workspace" style="z-index:1;">
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
-				<li class="item-container" ng-repeat="supply in supplies | filter:query">
+				<li class="item-container" ng-repeat="supply in supplies | filter:search:strict | filter:query | orderBy:'description'">
 					<a class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" ng-href="#/supply/{{supply.id}}">
 						<div class="img-container">
 							<img ng-src="{{supply.image.url}}" />
 						</div>
-						<span class="star">&#9733;</span>
+
+						<!--<span class="star">&#9733;</span>-->
 						<div class="description">
 							{{supply.description}}
 							<br />{{supply.supplier.name}}

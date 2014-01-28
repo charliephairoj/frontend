@@ -132,12 +132,6 @@
 							<td>Email:</td>
 							<td>{{po.supplier.email}}</td>
 						</tr>
-						<tr>
-							<td>Project:</td>
-							<td>
-								<textarea ng-model="po.project"></textarea>
-							</td>
-						</tr>
 				</table>
 			</div>
 			<div class="order">
@@ -150,6 +144,12 @@
 						<td>Currency:</td>
 						<td>
 							{{po.supplier.currency}}
+						</td>
+					</tr>
+					<tr>
+						<td>Project:</td>
+						<td>
+							<input type="text" size="40" ng-model="po.project" />
 						</td>
 					</tr>
 				</table>

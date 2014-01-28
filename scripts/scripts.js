@@ -3217,7 +3217,10 @@ angular.module('employeeApp.services').factory('dateParser', [function () {
         var data = response.data;
         if (angular.isArray(data)) {
           for (var i = 0; i < data.length; i++) {
-            data[i] = formatter(data[i]);
+            try {
+              data[i] = formatter(data[i]);
+            } catch (e) {
+            }
           }
         } else if (angular.isObject(data)) {
           data = formatter(data);
@@ -5068,9 +5071,14 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   'KeyboardNavigation',
   '$rootScope',
   '$location',
-  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location) {
+  '$http',
+  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http) {
     var fetching = true, index = 0, currentSelection;
     Notification.display('Loading supplies...', false);
+    $http.get('/api/v1/supply/type').success(function (response) {
+      $scope.types = response;
+      $scope.types.splice($scope.types.indexOf(null), 1);
+    });
     $scope.supplies = Supply.query(function () {
       fetching = false;
       Notification.hide();
@@ -5146,6 +5154,20 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       });
     };
     keyboardNav.enable();
+    $scope.$watch('showAddSupply', function (val, oldVal) {
+      if (val && !oldVal) {
+        keyboardNav.disable();
+      } else if (!val && oldVal) {
+        keyboardNav.enable();
+      }
+    });
+    $scope.$watch('showAddSupplier', function (val, oldVal) {
+      if (val && !oldVal) {
+        keyboardNav.disable();
+      } else if (!val && oldVal) {
+        keyboardNav.enable();
+      }
+    });
     $scope.$on('$destroy', function () {
       keyboardNav.disable();
     });
@@ -5347,7 +5369,8 @@ angular.module('employeeApp.directives').directive('addSupply', [
   'Supplier',
   'Supply',
   'Notification',
-  function ($rootScope, Supplier, Supply, Notification) {
+  '$http',
+  function ($rootScope, Supplier, Supply, Notification, $http) {
     return {
       templateUrl: 'views/templates/add-supply.html',
       replace: true,
@@ -6405,7 +6428,8 @@ angular.module('employeeApp').directive('supplyList', [
   'KeyboardNavigation',
   'Notification',
   '$rootScope',
-  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope) {
+  '$http',
+  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http) {
     return {
       templateUrl: 'views/templates/supply-list.html',
       replace: true,
@@ -6417,6 +6441,11 @@ angular.module('employeeApp').directive('supplyList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, currentSelection, index = 0;
+        var promise = $http.get('/api/v1/supply/type');
+        promise.success(function (d) {
+          scope.types = d;
+          scope.types.splice(scope.types.indexOf(null), 1);
+        });
         if (attrs.supplier) {
           scope.$watch('supplier', function (val) {
             if (val) {
