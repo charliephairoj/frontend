@@ -4,6 +4,7 @@
 	-->
 	<div add-supply="showAddSupply"></div>
 	<div add-supplier="showAddSupplier"></div>
+	<div supply-scanner-modal="scannerMode"></div>
 	<!--
         Sidebar
     -->
@@ -22,6 +23,11 @@
 
 					<!-- ng-show="currentUser.hasPermission('add_supply')">-->
 					<button ng-click="showAddSupply=true">Add Supply</button>
+				</li>
+				<li>
+
+					<!-- ng-show="currentUser.hasPermission('add_supply')">-->
+					<button class="scanner-mode" ng-class="{'on':scannerMode==true, 'off': scannerMode==false}" ng-click="scannerMode=true">Scanner Mode</button>
 				</li>
 				<li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a>
 				</li>

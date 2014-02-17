@@ -273,7 +273,8 @@ angular.module('employeeApp').run([
       container: 'Container',
       pc: 'Piece'
     };
-    scanner.enable();
+    window.globalScanner = new scanner('global');
+    globalScanner.enable();
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
@@ -285,11 +286,17 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
   function ($scope, Customer, $location, Notification, Geocoder) {
     $scope.customer = new Customer();
     $scope.save = function () {
-      Notification.display('Saving Customer...', false);
-      $scope.customer.$save(function () {
-        Notification.display('Customer Saved');
-        $location.path('/contact/customer');
-      });
+      if ($scope.form.$valid) {
+        Notification.display('Creating customer...', false);
+        $scope.customer.$save(function () {
+          Notification.display('Customer created');
+          $location.path('/contact/customer');
+        }, function (e) {
+          Notification.display('There was an error in creating the customer', false);
+        });
+      } else {
+        Notification.display('Please fill out all required fields correctly', false);
+      }
     };
     $scope.getPosition = function () {
       if ($scope.customer.address.address1 && $scope.customer.address.city && $scope.customer.address.territory && $scope.customer.address.country && $scope.customer.address.zipcode) {
@@ -320,22 +327,44 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
   '$routeParams',
   '$location',
   'Notification',
-  function ($scope, Customer, $routeParams, $location, Notification) {
+  '$timeout',
+  function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
+    var updateLoopActive = false, timeoutPromise;
     $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
     });
     $scope.update = function () {
-      Notification.display('Updating...', false);
-      $scope.customer.$update(function () {
-        Notification.display('Customer Save');
-      }, function () {
-        Notification.display('Unable to Update Customer');
-      });
     };
+    $scope.$watch(function () {
+      var customer = angular.copy($scope.customer);
+      delete customer.last_modified;
+      return customer;
+    }, function (newVal, oldVal) {
+      if (oldVal.hasOwnProperty('id') && !updateLoopActive) {
+        updateLoopActive = true;
+        timeoutPromise = $timeout(function () {
+          Notification.display('Updating customer...', false);
+          var customer = angular.copy($scope.customer);
+          customer.$update(function () {
+            updateLoopActive = false;
+            Notification.display('Customer updated');
+          }, function () {
+            Notification.display('There was an error updating the customer');
+          });
+        }, 5000);
+      }
+    }, true);
     $scope.remove = function () {
       $scope.customer.$delete(function () {
         $location.path('/contact/customer');
       });
     };
+    $scope.$on('$destroy', function () {
+      $timeout.cancel(timeoutPromise);
+      Notification.display('Updating customer...', false);
+      $scope.customer.$update(function () {
+        Notification.display('Customer updated.');
+      });
+    });
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerViewCtrl', [
@@ -403,11 +432,15 @@ angular.module('employeeApp').controller('ContactSupplierAddCtrl', [
     };
     $scope.save = function () {
       if ($scope.form.$valid) {
-        Notification.display('Saving Supplier...', false);
+        Notification.display('Saving supplier...', false);
         $scope.supplier.$save(function () {
           Notification.display('Supplier Saved');
           $location.path('/contact/supplier');
+        }, function (e) {
+          Notification.display('There was an error in creating this supplier', false);
         });
+      } else {
+        Notification.display('Please fill out all required sections correctly');
       }
     };
   }
@@ -452,14 +485,17 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
   '$location',
   'SupplierContact',
   'Notification',
-  function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification) {
+  '$timeout',
+  function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout) {
+    var updateLoopActive = false, timeoutPromise;
     $scope.supplier = Supplier.get({ 'id': $routeParams.id });
-    $scope.addContact = function () {
+    $scope.addContact = function (contact) {
       $scope.supplier.contacts = $scope.supplier.contacts || [];
-      $scope.supplier.contacts.push(angular.copy($scope.contact));
+      contact = contact || $scope.contact;
+      $scope.supplier.contacts.push(contact);
       $scope.contact = {};
       $scope.showAddContact = false;
-      $scope.supplier.$save();
+      $scope.supplier.$update();
     };
     $scope.deleteContact = function ($index) {
       var contact = SupplierContact.get({ 'id': $scope.supplier.contacts[$index].id }, function () {
@@ -469,17 +505,40 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
           $scope.$apply();
         });
     };
+    $scope.$watch(function () {
+      var supplier = angular.copy($scope.supplier);
+      delete supplier.last_modified;
+      return supplier;
+    }, function (newVal, oldVal) {
+      if (!updateLoopActive && oldVal.hasOwnProperty('id')) {
+        updateLoopActive = true;
+        timeoutPromise = $timeout(function () {
+          Notification.display('Updating supplier...', false);
+          var supplier = angular.copy($scope.supplier);
+          supplier.$update(function () {
+            updateLoopActive = false;
+            Notification.display('Supplier updated');
+          }, function () {
+            Notification.display('There was an error updating the supplier');
+          });
+        }, 5000);
+      }
+    }, true);
     $scope.update = function () {
-      Notification.display('Updating Supplier...', false);
-      $scope.supplier.$update(function (data) {
-        Notification.display('Supplier Updated');
-      });
     };
     $scope.remove = function () {
       $scope.supplier.$remove(function () {
         $location.path('/contact/supplier');
       });
     };
+    $scope.$on('$destroy', function () {
+      Notification.display('Updating supplier...', false);
+      $scope.supplier.$update(function () {
+        Notification.display('Supplier updated');
+      }, function (e) {
+        Notification.display('There was an error updating the supplier');
+      });
+    });
   }
 ]);
 angular.module('employeeApp.services').factory('ecResource', [
@@ -1005,15 +1064,19 @@ angular.module('employeeApp.filters').filter('dateFilter', [function () {
   }]);
 angular.module('employeeApp.filters').filter('beautify', [function () {
     return function (input) {
-      var newStrArray = [], newStr, upperLetter, newWord, words = input.split(/\s+/);
-      angular.forEach(words, function (word) {
-        upperLetter = word.charAt(0).toUpperCase();
-        newWord = word.slice(1);
-        newWord = upperLetter + newWord;
-        newStrArray.push(newWord);
-      });
-      newStr = newStrArray.join(' ');
-      return newStr;
+      try {
+        var newStrArray = [], newStr, upperLetter, newWord, words = input.split(/\s+/);
+        angular.forEach(words, function (word) {
+          upperLetter = word.charAt(0).toUpperCase();
+          newWord = word.slice(1);
+          newWord = upperLetter + newWord;
+          newStrArray.push(newWord);
+        });
+        newStr = newStrArray.join(' ');
+        return newStr;
+      } catch (e) {
+        return input;
+      }
     };
   }]);
 angular.module('employeeApp.filters').filter('exclude', [function () {
@@ -1408,7 +1471,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
           }, function (e) {
             console.error(e);
-            Notification.display('There an error in creating the Acknowledgement', false);
+            Notification.display('There was an error in creating the Acknowledgement', false);
           });
         }
       } catch (e) {
@@ -1419,6 +1482,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       $scope.ack = new Acknowledgement();
       $scope.ack.items = [];
       storage.removeItem('acknowledgement-create');
+      Notification.display('Acknowledgement reset.');
     };
     $scope.isValidated = function () {
       if (!$scope.ack.customer) {
@@ -1744,48 +1808,55 @@ angular.module('employeeApp.directives').directive('telephone', [
 angular.module('employeeApp.directives').directive('map', [
   'mapMarker',
   function (mapMarker) {
-    var latLng = {}, map, marker, mapOptions = {
-        center: new google.maps.LatLng(13.776239, 100.527884),
-        zoom: 10,
-        mapTypeId: google.maps.MapTypeId.HYBRID
-      };
+    var latLng = {}, map, marker;
+    try {
+      var mapOptions = {
+          center: new google.maps.LatLng(13.776239, 100.527884),
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+    } catch (e) {
+    }
     return {
       restrict: 'A',
       replace: false,
       link: function (scope, element, attrs) {
-        scope.map = {
-          Marker: mapMarker,
-          LatLng: google.maps.LatLng
-        };
-        scope.map.map = new google.maps.Map(element.get(0), mapOptions);
-        scope.$on('shown', function () {
-          google.maps.event.trigger(scope.map.map, 'resize');
-        });
-        scope.map.refresh = function () {
-          google.maps.event.triggger(this.map);
-        };
-        scope.map.createMarker = function (obj) {
-          if (obj instanceof google.maps.LatLng) {
-            latLng = obj;
-          } else if (obj.hasOwnProperty('lat') && obj.hasOwnProperty('lng')) {
-            latLng = new google.maps.LatLng(obj.lat, obj.lng);
-          } else {
-            latLng = null;
-          }
-          return new scope.map.Marker({
-            map: this.map,
-            position: latLng
+        try {
+          scope.map = {
+            Marker: mapMarker,
+            LatLng: google.maps.LatLng
+          };
+          scope.map.map = new google.maps.Map(element.get(0), mapOptions);
+          scope.$on('shown', function () {
+            google.maps.event.trigger(scope.map.map, 'resize');
           });
-        };
-        scope.map.setPosition = function (obj) {
-          if (obj instanceof google.maps.LatLng) {
-            latLng = obj;
-          } else {
-            latLng = new google.maps.LatLng(obj.lat, obj.lng);
-          }
-          this.map.panTo(latLng);
-          this.map.setZoom(14);
-        };
+          scope.map.refresh = function () {
+            google.maps.event.triggger(this.map);
+          };
+          scope.map.createMarker = function (obj) {
+            if (obj instanceof google.maps.LatLng) {
+              latLng = obj;
+            } else if (obj.hasOwnProperty('lat') && obj.hasOwnProperty('lng')) {
+              latLng = new google.maps.LatLng(obj.lat, obj.lng);
+            } else {
+              latLng = null;
+            }
+            return new scope.map.Marker({
+              map: this.map,
+              position: latLng
+            });
+          };
+          scope.map.setPosition = function (obj) {
+            if (obj instanceof google.maps.LatLng) {
+              latLng = obj;
+            } else {
+              latLng = new google.maps.LatLng(obj.lat, obj.lng);
+            }
+            this.map.panTo(latLng);
+            this.map.setZoom(14);
+          };
+        } catch (e) {
+        }
       }
     };
   }
@@ -1853,9 +1924,13 @@ angular.module('employeeApp.directives').directive('modal', [function () {
                     console.warn(e);
                   }
                   if (attrs.ngModel || attrs.modal) {
-                    scope.$apply(function () {
+                    if (scope.$$phase == '$apply' || scope.$$phase == '$digest') {
                       scope[attrs.ngModel || attrs.modal] = false;
-                    });
+                    } else {
+                      scope.$apply(function () {
+                        scope[attrs.ngModel || attrs.modal] = false;
+                      });
+                    }
                   }
                   if (attrs.onhide) {
                     scope.$eval(attrs.onhide);
@@ -3016,11 +3091,23 @@ angular.module('employeeApp.services').factory('scanner', [
           /^S-\d+$/,
           '/order/shipping/'
         ]
-      ], customeCodes = [], parseStandardCodes = true;
-    function Scanner() {
+      ], customCodes = [], parseStandardCodes = true;
+    var check = function (evt) {
+      this._check(evt);
+    };
+    function Scanner(identity) {
+      this._identity = identity;
       this._activeParse = false;
+      this.enabled = false;
       this._onscan = null;
-      this._code = '';
+      this.f = check.bind(this);
+      Object.defineProperties(this, {
+        _code: {
+          get: function () {
+            return code;
+          }
+        }
+      });
     }
     Scanner.prototype._check = function (evt, customFn) {
       if (evt.keyCode === 76 && evt.altKey) {
@@ -3061,15 +3148,24 @@ angular.module('employeeApp.services').factory('scanner', [
       }
       for (var h = 0; h < customCodes.length; h++) {
         if (customCodes[h][0].test(code)) {
-          customcodes[h][1](code);
+          customCodes[h][1](code);
         }
       }
     };
+    Object.defineProperties(Scanner.prototype, {
+      standardEnabled: {
+        get: function () {
+          return parseStandardCodes;
+        }
+      }
+    });
     Scanner.prototype.enable = function () {
-      angular.element(document.body).bind('keydown', this._check.bind(this));
+      angular.element(document.body).on('keydown', this.f);
+      this.enabled = true;
     };
     Scanner.prototype.disable = function () {
-      angular.element(document.body).unbind('keydown', this._check.bind(this));
+      angular.element(document.body).off('keydown', this.f);
+      this.enabled = false;
     };
     Scanner.prototype.disableStandard = function () {
       parseStandardCodes = false;
@@ -3086,16 +3182,22 @@ angular.module('employeeApp.services').factory('scanner', [
     Scanner.deregister = function (re) {
       for (var i = 0; i < customCodes.length; i++) {
         if (customCodes[i][0] == re) {
-          customCode.splice(i);
+          customCodes.splice(i);
         }
       }
+    };
+    Scanner.prototype.destroy = function () {
+      this.disable();
     };
     Object.defineProperty(Scanner.prototype, 'onscan', {
       set: function (fn) {
         this._onscan = fn;
       }
     });
-    return new Scanner();
+    function ScannerFactory(identity) {
+      return new Scanner(identity);
+    }
+    return ScannerFactory;
   }
 ]);
 angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
@@ -3199,39 +3301,48 @@ angular.module('employeeApp').directive('scanner', [
     };
   }
 ]);
-angular.module('employeeApp.services').factory('dateParser', [function () {
-    return function (promise) {
-      function formatter(obj) {
-        if (obj.hasOwnProperty('delivery_date')) {
-          obj.delivery_date = new Date(obj.delivery_date);
-        }
-        if (obj.hasOwnProperty('time_created')) {
-          obj.time_created = new Date(obj.time_created);
-        }
-        if (obj.hasOwnProperty('last_login')) {
-          obj.last_login = new Date(obj.last_login);
-        }
-        return obj;
+angular.module('employeeApp.services').factory('dateParser', [
+  '$q',
+  function ($q) {
+    function formatter(obj) {
+      if (obj.hasOwnProperty('delivery_date')) {
+        obj.delivery_date = new Date(obj.delivery_date);
       }
-      return promise.then(function (response) {
-        var data = response.data;
-        if (angular.isArray(data)) {
-          for (var i = 0; i < data.length; i++) {
-            try {
-              data[i] = formatter(data[i]);
-            } catch (e) {
+      if (obj.hasOwnProperty('time_created')) {
+        obj.time_created = new Date(obj.time_created);
+      }
+      if (obj.hasOwnProperty('last_login')) {
+        obj.last_login = new Date(obj.last_login);
+      }
+      return obj;
+    }
+    return {
+      'response': function (response) {
+        try {
+          var data = response.data;
+          if (angular.isArray(data)) {
+            for (var i = 0; i < data.length; i++) {
+              try {
+                data[i] = formatter(data[i]);
+              } catch (e) {
+              }
             }
+          } else if (angular.isObject(data)) {
+            data = formatter(data);
           }
-        } else if (angular.isObject(data)) {
-          data = formatter(data);
+          response.data = data;
+        } catch (e) {
+          console.error(e);
         }
-        response.data = data;
-        return response;
-      }, function () {
-      });
+        return response || $q.when(response);
+      },
+      'responseError': function (rejection) {
+        return $q.reject(rejection);
+      }
     };
-  }]).config(function ($httpProvider) {
-  $httpProvider.responseInterceptors.push('dateParser');
+  }
+]).config(function ($httpProvider) {
+  $httpProvider.interceptors.push('dateParser');
 });
 angular.module('employeeApp.services').factory('Permission', [
   '$resource',
@@ -5025,35 +5136,30 @@ angular.module('employeeApp').factory('s3', [function () {
   }]);
 angular.module('employeeApp').factory('FileUploader', [
   '$q',
+  '$http',
   'Notification',
-  function ($q, Notification) {
-    var uploader = {};
+  function ($q, $http, Notification) {
+    var uploader = {}, type, fd;
     uploader.upload = function (file, url, data) {
-      if (!file.isPrototypeOf) {
-        throw new TypeError('Expectina a file');
-      }
-      var type = file.isPrototypeOf(Image) ? 'Image' : 'File';
+      type = file.isPrototypeOf(Image) ? 'Image' : 'File';
+      fd = new FormData();
       Notification.display('Uploading ' + type + '...', false);
-      var fd = new FormData();
       fd.append(type.toLowerCase(), file);
       for (var i in data) {
         fd.append(i, data[i]);
       }
-      var deferred = $q.defer();
-      jQuery.ajax(url || 'upload/images', {
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          Notification.display(type + ' Uploaded');
-          deferred.resolve(response);
-        },
-        error: function (response) {
-          deferred.reject(response);
-        }
+      var promise = $http({
+          method: 'POST',
+          url: url || 'upload/images',
+          data: formData,
+          headers: { 'Content-Type': undefined },
+          transformRequest: angular.identity
+        });
+      promise.success(function (data, status, headers, config) {
+      }).error(function (response) {
+        Notification.display('There was an error in uploading the ' + type, false);
       });
-      return deferred.promise;
+      return promise;
     };
     return uploader;
   }
@@ -5079,6 +5185,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       $scope.types = response;
       $scope.types.splice($scope.types.indexOf(null), 1);
     });
+    $scope.scannerMode = false;
     $scope.supplies = Supply.query(function () {
       fetching = false;
       Notification.hide();
@@ -5102,10 +5209,12 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
     });
     $scope.loadNext = function () {
       if (!fetching) {
+        Notification.display('Loading more supplies...', false);
         Supply.query({
           offset: $scope.supplies.length,
           limit: 50
         }, function (resources) {
+          Notification.hide();
           for (var i = 0; i < resources.length; i++) {
             $scope.supplies.push(resources[i]);
           }
@@ -5113,7 +5222,10 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       }
     };
     function filter(array) {
-      return $filter('filter')($scope.supplies, $scope.query);
+      array = $filter('filter')(array, $scope.search);
+      array = $filter('filter')(array, $scope.query);
+      array = $filter('orderBy')(array, 'description');
+      return array;
     }
     function changeSelection(i) {
       $rootScope.safeApply(function () {
@@ -5165,6 +5277,15 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       if (val && !oldVal) {
         keyboardNav.disable();
       } else if (!val && oldVal) {
+        keyboardNav.enable();
+      }
+    });
+    $scope.$watch('scannerMode', function (val, oldVal) {
+      if (val && !oldVal) {
+        globalScanner.disable();
+        keyboardNav.disable();
+      } else if (!val && oldVal) {
+        globalScanner.enable();
         keyboardNav.enable();
       }
     });
@@ -5327,35 +5448,54 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       for (var i = 0; i < $scope.po.items.length; i++) {
         subtotal += Number($scope.po.items[i].override_cost ? $scope.po.items[i].override_cost_amount : $scope.po.items[i].cost) * Number($scope.po.items[i].quantity || 1);
       }
-      return subtotal.toFixed(2);
+      return Number(subtotal.toFixed(2));
+    };
+    $scope.supplierDiscount = function () {
+      var subtotal = Number($scope.subtotal());
+      return ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
+    };
+    $scope.discount = function () {
+      var subtotal = Number($scope.subtotal()) - Number($scope.supplierDiscount());
+      return ($scope.po.discount || 0) / 100 * subtotal;
     };
     $scope.total = function () {
       var subtotal = Number($scope.subtotal());
+      subtotal = subtotal - ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
+      subtotal = subtotal - ($scope.po.discount || 0) / 100 * subtotal;
       var vat = subtotal * (Number($scope.po.vat || 0) / 100);
       return vat + subtotal;
     };
     $scope.verifyOrder = function () {
       if (!$scope.po.hasOwnProperty('supplier')) {
-        return false;
+        throw new Error('Please select a supplier');
       }
       if ($scope.po.items.length <= 0) {
-        return false;
+        throw new Error('Please add items to the purchase order');
+      }
+      for (var i = 0; i < $scope.po.items.length; i++) {
+        if (!$scope.po.items[i].quantity || $scope.po.items[i].quantity <= 0) {
+          throw new Error($scope.po.items[i].description + ' is missing a quantity');
+        }
       }
       return true;
     };
     $scope.save = function () {
-      if ($scope.verifyOrder()) {
-        Notification.display('Creating purchase order...', false);
-        $scope.po.$save(function (response) {
-          try {
-            window.open(response.pdf.url);
-          } catch (e) {
-            console.warn(e);
-          }
-          Notification.display('Purchase order created.');
-        }, function () {
-          Notification.display('ooops');
-        });
+      try {
+        if ($scope.verifyOrder()) {
+          Notification.display('Creating purchase order...', false);
+          $scope.po.$save(function (response) {
+            try {
+              window.open(response.pdf.url);
+            } catch (e) {
+              console.warn(e);
+            }
+            Notification.display('Purchase order created.');
+          }, function (e) {
+            Notification.display('There was an error in creating the purchase order.');
+          });
+        }
+      } catch (e) {
+        Notification.display(e.message);
       }
     };
     $scope.reset = function () {
@@ -5396,13 +5536,14 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.suppliers = Supplier.query({ limit: 0 });
         scope.add = function () {
           if (scope.form.$valid) {
-            Notification.display('Add supply...', false);
+            Notification.display('Creating supply...', false);
             scope.supply.$create(function (response) {
-              Notification.display(scope.supply.description + ' added');
+              Notification.display('Supply created');
               scope.visible = false;
               scope.supply = new Supply();
             }, function (reason) {
               console.error(reason);
+              Notification.display('There was an error in creating the supply', false);
             });
           } else {
             Notification.display('Please fill out the form properly');
@@ -5463,13 +5604,14 @@ angular.module('employeeApp.directives').directive('addSupplier', [
         scope.add = function () {
           try {
             if (scope.form.$valid) {
-              Notification.display('Adding supplier...', false);
+              Notification.display('Creating supplier...', false);
               scope.supplier.$save(function (response) {
-                Notification.display(scope.supplier.name + ' added');
+                Notification.display('Supplier created');
                 scope.visible = false;
                 scope.supplier = new Supplier();
               }, function (reason) {
                 console.error(reason);
+                Notification.display('There was an error in creating the supplier', false);
               });
             } else {
               Notification.display('Please fill out the form properly');
@@ -5985,12 +6127,15 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   'Notification',
   'Supply',
   '$timeout',
-  function ($scope, $routeParams, Notification, Supply, $timeout) {
+  '$location',
+  'scanner',
+  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner) {
     Notification.display('Retrieving supply...', false);
     $scope.showQuantity = false;
     $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
       Notification.hide();
     });
+    globalScanner.disable();
     var updateLoopActive = false, timeoutPromise;
     var validWidth = [
         'm',
@@ -6021,6 +6166,14 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.addImage = function (image) {
       $scope.supply.image = image;
     };
+    scanner = new scanner('supply/details');
+    scanner.enable();
+    scanner.disableStandard();
+    scanner.register(/^\d+(\-\d+)*$/, function (code) {
+      if (!$scope.supply.upc) {
+        $scope.supply.upc = code;
+      }
+    });
     $scope.$watch(function () {
       var supply = angular.copy($scope.supply);
       delete supply.last_modified;
@@ -6032,9 +6185,12 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         updateLoopActive = true;
         timeoutPromise = $timeout(function () {
           Notification.display('Updating ' + $scope.supply.description + '...', false);
-          $scope.supply.$update(function () {
+          var supply = angular.copy($scope.supply);
+          supply.$update(function () {
             updateLoopActive = false;
-            Notification.display($scope.supply.description + ' updated.');
+            Notification.display($scope.supply.description + ' updated');
+          }, function () {
+            Notification.display('There was an error in updating ' + $scope.supply.description);
           });
         }, 5000);
       }
@@ -6067,7 +6223,17 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope.supply.$update(function () {
         Notification.display($scope.supply.description + ' updated.');
       });
+      globalscanner.enable();
     });
+    $scope.remove = function () {
+      if ($scope.currentUser.hasPermission('delete_supply')) {
+        Notification.display('Deleting supply...', false);
+        $scope.supply.$delete(function () {
+          Notification.display('Supply deleted');
+          $location.path('/supply');
+        });
+      }
+    };
   }
 ]);
 angular.module('employeeApp').directive('imageUploader', [
@@ -6143,13 +6309,14 @@ angular.module('employeeApp.directives').directive('addCustomer', [
         };
         scope.add = function () {
           if (scope.form.$valid) {
-            Notification.display('Adding customer:+ ' + scope.customer.first_name + '...', false);
+            Notification.display('Creating customer...', false);
             scope.customer.$save(function (response) {
-              Notification.display(scope.customer.first_name + ' added');
+              Notification.display('Customer created');
               scope.visible = false;
               scope.customer = new Customer();
             }, function (reason) {
               console.error(reason);
+              Notification.display('There was an error in creating the customer');
             });
           } else {
             Notification.display('Please fill out the form properly');
@@ -6619,6 +6786,63 @@ angular.module('employeeApp.directives').directive('camera', [
           ctx.drawImage(video, 0, 0, width, height);
           $(canvas).addClass('active');
         };
+      }
+    };
+  }
+]);
+angular.module('employeeApp.services').factory('requestError', [
+  '$q',
+  'Notification',
+  function ($q, Notification) {
+    return {
+      'response': function (response) {
+        return response || $q.when(response);
+      },
+      'responseError': function (rejection) {
+        Notification.display(rejection.data || 'An Error Occurred.');
+        console.error(rejection);
+        return $q.reject(rejection);
+      }
+    };
+  }
+]).config(function ($httpProvider) {
+  $httpProvider.interceptors.push('requestError');
+});
+angular.module('employeeApp.directives').directive('supplyScannerModal', [
+  'scanner',
+  'Supply',
+  'Notification',
+  function (scanner, Supply, Notification) {
+    return {
+      templateUrl: 'views/templates/supply-scanner-modal.html',
+      restrict: 'A',
+      scope: { 'visible': '=supplyScannerModal' },
+      link: function postLink(scope, element, attrs) {
+        scope.scanner = new scanner('supply-scanner-modal');
+        scope.$watch('visible', function (val) {
+          if (val) {
+            try {
+              window.globalScanner.disable();
+            } catch (e) {
+            }
+            scope.scanner.enable();
+            scope.scanner.disableStandard();
+            scope.scanner.register(/^DRS-\d+$/, function (code) {
+              scope.supply = Supply.get({ id: code.split('-')[1] }, function () {
+              }, function () {
+              });
+            });
+            scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
+              scope.supply = Supply.get({ upc: code });
+            });
+          } else {
+            scope.scanner.disable();
+            scope.scanner.enableStandard();
+          }
+        });
+        scope.$on('$destroy', function () {
+          scope.scanner.disable();
+        });
       }
     };
   }

@@ -92,17 +92,26 @@
 						<td></td>
 					</tr>
 					<tr ng-repeat="item in po.items">
-						<td colspan="2">- {{item.description}}
+						<td>- {{item.description}}
 							<br />Qty: {{item.quantity}}
 						</td>
+						<td>{{(item.override_cost ? item.override_cost_amount : item.cost) * item.quantity || 0 | number:2}}{{po.supplier.currency}}</td>
 					</tr>
 					<tr class="subtotal">
 						<td>Subtotal:</td>
 						<td>{{subtotal() | number:2}}{{po.supplier.currency}}</td>
 					</tr>
 					<tr>
+						<td>Supplier's Discount {{(po.supplier && po.supplier.discount) || 0}}%</td>
+						<td>{{supplierDiscount() | number:2}}{{po.supplier.currency}}</td>
+					</tr>
+					<tr>
+						<td>Additional Discount {{po.discount || 0}}%</td>
+						<td>{{discount() | number:2}}{{po.supplier.currency}}</td>
+					</tr>
+					<tr>
 						<td>Vat {{po.vat || 0}}%</td>
-						<td>{{((po.vat || 0)/100) * subtotal() | number:2}}</td>
+						<td>{{((po.vat || 0)/100) * subtotal() | number:2}}{{po.supplier.currency}}</td>
 					</tr>
 					<tr>
 						<td>Total:</td>
@@ -152,6 +161,24 @@
 							<input type="text" size="40" ng-model="po.project" />
 						</td>
 					</tr>
+					<tr>
+						<td>Discount:</td>
+						<td>
+							<input type="text" size="2" maxlength="2" ng-model="po.discount" />%
+						</td>
+					</tr>
+					<tr>
+						<td>Deposit:</td>
+						<td>
+							<input type="text" size="2" maxlength="2" ng-model="po.deposit" />%
+						</td>
+					</tr>
+					<tr>
+						<td>Comments:</td>
+						<td>
+							<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div class="supplies" ng-show="po.items.length>0">
@@ -168,8 +195,8 @@
 							<td>Unit Cost:</td>
 							<td>
 								<input ng-model="supply.cost" ng-disabled="supply.override_cost" type="text" />{{po.supplier.currency}}
-								<input type="checkbox" ng-model="supply.override_cost" />
-								<input class="override_cost" ng-disabled="!supply.override_cost" type="text" ng-model="supply.override_cost_amount" />
+								<input class="override-cost-checkbox" type="checkbox" ng-model="supply.override_cost" />Override Cost
+								<input class="override-cost" ng-disabled="!supply.override_cost" type="text" ng-model="supply.override_cost_amount" />
 								<span ng-hide="!supply.override_cost">{{po.supplier.currency}}</span>
 							</td>
 						</tr>
