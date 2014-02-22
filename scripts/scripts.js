@@ -4973,10 +4973,10 @@ angular.module('employeeApp').directive('productSelector', [
         function uploadImage(image, callback) {
           Notification.display('Uploading image...', false);
           var promise = FileUploader.upload(image, scope.url || 'upload/images');
-          promise.success(function (response) {
+          promise.then(function (response) {
             Notification.display('Image Uploaded');
             (callback || angular.noop)(response);
-          }).error(function () {
+          }, function () {
             Notification.display('Failed to upload image.');
           });
         }
@@ -5157,10 +5157,6 @@ angular.module('employeeApp').factory('FileUploader', [
           headers: { 'Content-Type': undefined },
           transformRequest: angular.identity
         });
-      promise.success(function (data, status, headers, config) {
-      }).error(function (response) {
-        Notification.display('There was an error in uploading the ' + type.toLowerCase(), false);
-      });
       return promise;
     };
     return uploader;
