@@ -4971,18 +4971,12 @@ angular.module('employeeApp').directive('productSelector', [
         scope.tableList = Table.query();
         scope.product = {};
         function uploadImage(image, callback) {
-          Notification.display('Uploading Image', false);
-          var fd = new FormData();
-          fd.append('image', image);
-          jQuery.ajax(scope.url || 'upload/images', {
-            type: 'POST',
-            data: fd,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              Notification.display('Image Uploaded');
-              (callback || angular.noop)(response);
-            }
+          Notification.display('Uploading image...', false);
+          var promise = FileUploader.upload(image, scope.url || 'upload/images');
+          promise.success(function () {
+            Notification.display('Image Uploaded');
+          }).error(function () {
+            Notification.display('Failed to upload image.');
           });
         }
         function add() {
@@ -5141,23 +5135,30 @@ angular.module('employeeApp').factory('FileUploader', [
   function ($q, $http, Notification) {
     var uploader = {}, type, fd;
     uploader.upload = function (file, url, data) {
-      type = file.isPrototypeOf(Image) ? 'Image' : 'File';
-      fd = new FormData();
+      try {
+        type = file.type.split('/')[0];
+      } catch (e) {
+      }
+      type = file.isPrototypeOf(Image) || type === 'image' ? 'Image' : 'File';
+      var fd = new FormData();
       Notification.display('Uploading ' + type + '...', false);
       fd.append(type.toLowerCase(), file);
-      for (var i in data) {
-        fd.append(i, data[i]);
+      try {
+        for (var i in data) {
+          fd.append(i, data[i]);
+        }
+      } catch (e) {
       }
       var promise = $http({
           method: 'POST',
           url: url || 'upload/images',
-          data: formData,
+          data: fd,
           headers: { 'Content-Type': undefined },
           transformRequest: angular.identity
         });
       promise.success(function (data, status, headers, config) {
       }).error(function (response) {
-        Notification.display('There was an error in uploading the ' + type, false);
+        Notification.display('There was an error in uploading the ' + type.toLowerCase(), false);
       });
       return promise;
     };
@@ -5520,20 +5521,21 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.showWidth = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
-          return units === 'm' || units === 'pc' || units === 'pack' || units === 'yd' || units === 'kg' && type === 'packaging' ? true : false;
+          return scope.supply.new_supply ? units === 'm' || units === 'pc' || units === 'pack' || units === 'yd' || units === 'kg' && type === 'packaging' ? true : false : false;
         };
         scope.showDepth = function () {
           var units = scope.supply.units;
-          return units === 'pc' || units === 'pack' ? true : false;
+          return scope.supply.new_supply ? units === 'pc' || units === 'pack' ? true : false : false;
         };
         scope.showHeight = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
-          return units === 'pc' || units === 'pack' || units === 'kg' && type === 'packaging' ? true : false;
+          return scope.supply.new_supply ? units === 'pc' || units === 'pack' || units === 'kg' && type === 'packaging' ? true : false : false;
         };
         scope.supply = new Supply();
         scope.supply.units = 'pc';
         scope.suppliers = Supplier.query({ limit: 0 });
+        scope.supplies = Supply.query({ limit: 0 });
         scope.add = function () {
           if (scope.form.$valid) {
             Notification.display('Creating supply...', false);

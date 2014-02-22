@@ -9,12 +9,25 @@
 				</td>
 			</tr>
 			<tr>
+				<td>New Supply</td>
+				<td>
+					<input type="checkbox" ng-model="supply.new_supply" />
+				</td>
+			</tr>
+			<tr>
+				<td>Supply</td>
+				<td>
+					<select class="supply" required ng-if="!supply.new_supply" ng-options="supply.description for supply in supplies | orderBy:'description'" ng-model="supply">
+					</select>
+				</td>
+			</tr>
+			<tr ng-if="supply.new_supply">
 				<td>Description(English)</td>
 				<td>
 					<input required ng-model="supply.description" size="40" />
 				</td>
 			</tr>
-			<tr>
+			<tr ng-if="supply.new_supply">
 				<td>Description(Thai)</td>
 				<td>
 					<input ng-model="supply.description_th" size="40" />
@@ -26,7 +39,7 @@
 					<input ng-model="supply.reference" type="text" />
 				</td>
 			</tr>
-			<tr>
+			<tr ng-if="supply.new_supply">
 				<td>Type</td>
 				<td>
 					<select class="type" required ng-model="supply.type">
@@ -45,8 +58,8 @@
 					</select>
 					<input ng-if="supply.type == 'custom'" required class="custom-type" type="text" ng-model="supply.custom_type" />
 				</td>
-			</tr>
-			<tr>
+			</tr ng-if="supply.new_supply">
+			<tr ng-if="supply.new_supply">
 				<td>Purchasing Units</td>
 				<td>
 					<select ng-required ng-model="supply.units">
