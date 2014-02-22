@@ -4973,8 +4973,9 @@ angular.module('employeeApp').directive('productSelector', [
         function uploadImage(image, callback) {
           Notification.display('Uploading image...', false);
           var promise = FileUploader.upload(image, scope.url || 'upload/images');
-          promise.success(function () {
+          promise.success(function (response) {
             Notification.display('Image Uploaded');
+            (callback || angular.noop)(response);
           }).error(function () {
             Notification.display('Failed to upload image.');
           });
