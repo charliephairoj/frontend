@@ -4985,7 +4985,8 @@ angular.module('employeeApp').directive('productSelector', [
           scope.add({ product: newProduct });
         }
         scope.addImage = function (data) {
-          scope.product.image = data;
+          var image = data.hasOwnProperty('data') ? data.data : data;
+          scope.product.image = image;
         };
         scope.addUpholstery = function (upholstery) {
           if (upholstery) {
@@ -6256,10 +6257,14 @@ angular.module('employeeApp').directive('imageUploader', [
         scope.buttonOff = function () {
           scope.showUploadButton = false;
         };
-        scope.upload = function ($image) {
+        scope.upload = function ($image, callback) {
           var promise = FileUploader.upload($image, scope.url);
           promise.then(function (data) {
+            Notification.display('File was uploaded');
             scope.onUpload({ data: data });
+            (callback || angular.noop)(data);
+          }, function () {
+            Notification.display('There was an error uploading the file');
           });
         };
       }
