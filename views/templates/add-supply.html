@@ -14,10 +14,10 @@
 					<input type="checkbox" ng-model="supply.new_supply" />
 				</td>
 			</tr>
-			<tr>
+			<tr ng-if="!supply.new_supply">
 				<td>Supply</td>
 				<td>
-					<select class="supply" required ng-if="!supply.new_supply" ng-options="supply.description for supply in supplies | orderBy:'description'" ng-model="supply">
+					<select class="supply" required ng-options="supply.description for supply in supplies | orderBy:'description'" ng-model="supply" ng-change="changeSupply(supply)">
 					</select>
 				</td>
 			</tr>
@@ -59,24 +59,6 @@
 					<input ng-if="supply.type == 'custom'" required class="custom-type" type="text" ng-model="supply.custom_type" />
 				</td>
 			</tr ng-if="supply.new_supply">
-			<tr ng-if="supply.new_supply">
-				<td>Purchasing Units</td>
-				<td>
-					<select ng-required ng-model="supply.units">
-						<option value="pc" selected>Piece</option>
-						<option value="container">Container</option>
-						<option value="m">Meter</option>
-						<option value="yd">Yard</option>
-						<option value="kg">Kilogram</option>
-						<option value="mm">Millimeter</option>
-						<option value="pack">Pack</option>
-						<option value="pack">Box</option>
-						<option value="cm^2">cm&#0178;</option>
-						<option value="m^2">m&#0178;</option>
-						<option value="in^2">in&#0178;</option>
-					</select>
-				</td>
-			</tr>
 			<tr ng-if="showWidth()">
 				<td>Width</td>
 				<td>
@@ -111,6 +93,42 @@
 						<option value="mm">Millimeter</option>
 						<option value="cm">Centimeter</option>
 						<option value="m">Meter</option>
+					</select>
+				</td>
+			</tr>
+			<tr ng-if="supply.new_supply">
+				<td>Units</td>
+				<td>
+					<select ng-required ng-model="supply.units">
+						<option value="pc" selected>Piece</option>
+						<option value="container">Container</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+						<option value="kg">Kilogram</option>
+						<option value="mm">Millimeter</option>
+						<option value="pack">Pack</option>
+						<option value="pack">Box</option>
+						<option value="cm^2">cm&#0178;</option>
+						<option value="m^2">m&#0178;</option>
+						<option value="in^2">in&#0178;</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Purchasing Units for {{supply.supplier.name}}</td>
+				<td>
+					<select ng-required ng-model="supply.supplier.purchasing_units">
+						<option value="pc" selected>Piece</option>
+						<option value="container">Container</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+						<option value="kg">Kilogram</option>
+						<option value="mm">Millimeter</option>
+						<option value="pack">Pack</option>
+						<option value="pack">Box</option>
+						<option value="cm^2">cm&#0178;</option>
+						<option value="m^2">m&#0178;</option>
+						<option value="in^2">in&#0178;</option>
 					</select>
 				</td>
 			</tr>

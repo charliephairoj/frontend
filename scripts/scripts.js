@@ -5533,18 +5533,35 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.supply = new Supply();
         scope.supply.units = 'pc';
         scope.suppliers = Supplier.query({ limit: 0 });
-        scope.supplies = Supply.query({ limit: 0 });
+        scope.supplies = Supply.query({ limit: 5 });
+        scope.changeSupply = function (supply) {
+          angular.extend(scope.supply, supply);
+        };
         scope.add = function () {
           if (scope.form.$valid) {
             Notification.display('Creating supply...', false);
-            scope.supply.$create(function (response) {
-              Notification.display('Supply created');
-              scope.visible = false;
-              scope.supply = new Supply();
-            }, function (reason) {
-              console.error(reason);
-              Notification.display('There was an error in creating the supply', false);
-            });
+            scope.supply.suppliers = scope.supply.suppliers || [];
+            if (scope.supply.suppliers.indexOfById(scope.supply.supplier)) {
+              scope.supply.suppliers.push(scope.supply.supplier);
+            }
+            delete scope.supply.supplier;
+            if (scope.supply.hasOwnProperty('id')) {
+              scope.supply.$update(function (response) {
+                scope.visible = false;
+                scope.supply = new Supply();
+              }, function (reason) {
+                console.error(reason);
+              });
+            } else {
+              scope.supply.$create(function (response) {
+                Notification.display('Supply created');
+                scope.visible = false;
+                scope.supply = new Supply();
+              }, function (reason) {
+                console.error(reason);
+                Notification.display('There was an error in creating the supply', false);
+              });
+            }
           } else {
             Notification.display('Please fill out the form properly');
           }
@@ -6167,12 +6184,12 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope.supply.image = image;
     };
     scanner = new scanner('supply/details');
-    scanner.enable();
     scanner.disableStandard();
     scanner.register(/^\d+(\-\d+)*$/, function (code) {
-      if (!$scope.supply.upc) {
-        $scope.supply.upc = code;
-      }
+      $scope.safeApply(function () {
+        $scope.selectedSupplier.upc = code;
+        $scope.showAddUPC = false;
+      });
     });
     $scope.$watch(function () {
       var supply = angular.copy($scope.supply);
@@ -6195,6 +6212,13 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         }, 5000);
       }
     }, true);
+    $scope.$watch('showAddUPC', function (newVal, oldVal) {
+      if (newVal) {
+        scanner.enable();
+      } else {
+        scanner.disable();
+      }
+    });
     $scope.add = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
@@ -6832,12 +6856,21 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             scope.scanner.enable();
             scope.scanner.disableStandard();
             scope.scanner.register(/^DRS-\d+$/, function (code) {
-              scope.supply = Supply.get({ id: code.split('-')[1] }, function () {
+              scope.supply = Supply.get({ id: code.split('-')[1] }, function (response) {
+                console.log(response);
               }, function () {
               });
             });
             scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
-              scope.supply = Supply.get({ upc: code });
+              Supply.query({ upc: code }, function (response) {
+                try {
+                  scope.supply = response[0];
+                } catch (e) {
+                  console.log(e);
+                }
+              }, function (reason) {
+                console.log(reason);
+              });
             });
           } else {
             scope.scanner.disable();
