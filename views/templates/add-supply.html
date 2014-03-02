@@ -36,7 +36,7 @@
 			<tr>
 				<td>Reference</td>
 				<td>
-					<input ng-model="supply.reference" type="text" />
+					<input ng-model="supply.supplier.reference" type="text" />
 				</td>
 			</tr>
 			<tr ng-if="supply.new_supply">
@@ -132,16 +132,16 @@
 					</select>
 				</td>
 			</tr>
-			<tr class="piece-per-pack" ng-if="supply.units == 'pack' || supply.units == 'box'">
+			<tr class="piece-per-pack" ng-if="supply.supplier.purchasing_units == 'pack' || supply.supplier.purchasing_units == 'box'">
 				<td>Pieces per Pack</td>
 				<td>
 					<input required ng-model="supply.piece_per_pack" />
 				</td>
 			</tr>
 			<tr>
-				<td>Price per {{supply.units | beautify}}</td>
+				<td>Price per {{supply.supplier.purchasing_units | beautify}}</td>
 				<td>
-					<input required ng-model="supply.unit_cost" />
+					<input required ng-model="supply.supplier.cost" />
 				</td>
 			</tr>
 			<tr>
@@ -152,7 +152,7 @@
 			<tr ng-show="currentUser.hasModule('Administrator')">
 				<td>Administrator Only</td>
 				<td>
-					<input type="checkbox" ng-model="supply.admin_only" />
+					<input type="checkbox" ng-model="supply.supplier.admin_only" />
 				</td>
 			</tr>
 			<tr>

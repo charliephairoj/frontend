@@ -5533,7 +5533,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.supply = new Supply();
         scope.supply.units = 'pc';
         scope.suppliers = Supplier.query({ limit: 0 });
-        scope.supplies = Supply.query({ limit: 5 });
+        scope.supplies = Supply.query({ limit: 0 });
         scope.changeSupply = function (supply) {
           angular.extend(scope.supply, supply);
         };
@@ -5567,6 +5567,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
           }
         };
         scope.addImage = function (data) {
+          console.log(data);
           scope.supply.image = data;
         };
       }
