@@ -1,6 +1,16 @@
 <div name="form" novalidate class="supply-scanner" modal="visible" title="Scan supply">
 	<div class="container">
-		<div>
+		<div class="ready-container" ng-hide="supply">
+			<div class="inner-container">
+				<h2>
+					Waiting for barcode scan...
+				</h2>
+			</div>
+		</div>
+		<div class="supply">
+			<div class="image-container">
+				<img ng-src="{{supply.image.url}}" center="true" />
+			</div>
 			<table>
 				<tr class="description">
 					<td>Description</td>
@@ -8,21 +18,35 @@
 				</tr>
 				<tr class="width">
 					<td>Width</td>
-					<td>{{supply.width}}</td>
+					<td>{{supply.width}}{{supply.width_units}}</td>
 				</tr>
 				<tr class="depth">
 					<td>Depth</td>
-					<td>{{supply.depth}}</td>
+					<td>{{supply.depth}}{{supply.depth_units}}</td>
 				</tr>
 				<tr class="height">
 					<td>Height</td>
-					<td>{{supply.height}}</td>
+					<td>{{supply.height}}{{supply.height_units}}</td>
 				</tr>
 				<tr class="quantity">
 					<td>Quantity</td>
-					<td>{{supply.quantity}}</td>
+					<td>{{supply.quantity}} {{supply.units}}</td>
 				</tr>
 			</table>
+		</div>
+		<div class="quantity-container">
+			<h3>Quantity</h3>
+			<input type="number" size="5" autofocus ng-model="quantity" />
+			<button class="add" ng-class="{'active':action=='add'}" ng-click="changeQuantity(quantity)">
+				<span>
+					Add
+				</span>
+			</button>
+			<button class="subtract" ng-class="{'active':action=='subtract'}" ng-click="changeQuantity(quantity)">
+				<span>
+					Subtract
+				</span>
+			</button>
 		</div>
 	</div>
 </div>

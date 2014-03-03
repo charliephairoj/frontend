@@ -6149,6 +6149,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   'scanner',
   function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner) {
     Notification.display('Retrieving supply...', false);
+    $scope.action = 'subtract';
     $scope.showQuantity = false;
     $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
       Notification.hide();
@@ -6243,6 +6244,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope[action]();
     };
     $scope.$on('$destroy', function () {
+      scanner.disable();
       $timeout.cancel(timeoutPromise);
       Notification.display('Updating ' + $scope.supply.description + '...', false);
       $scope.supply.$update(function () {
@@ -6374,7 +6376,6 @@ angular.module('employeeApp').controller('MainCtrl', [
 ]);
 angular.module('employeeApp').directive('img', [function () {
     function position(spec) {
-      console.log(spec);
       if (spec.height && spec.parentHeight && spec.elementHeight) {
         var heightDiff = spec.parentHeight - spec.elementHeight;
         spec.element.css('top', heightDiff / 2);
@@ -6394,7 +6395,7 @@ angular.module('employeeApp').directive('img', [function () {
             var parent = element.parent();
             var pWidth = parent.innerWidth();
             var pHeight = parent.innerWidth();
-            element.one('load', function () {
+            element.on('load', function () {
               if (iAttrs.center) {
                 position({
                   element: element,
@@ -6412,7 +6413,8 @@ angular.module('employeeApp').directive('img', [function () {
   }]);
 angular.module('employeeApp.services').factory('KeyboardNavigation', [
   '$rootScope',
-  function KeyboardNavigation($rootScope) {
+  '$log',
+  function KeyboardNavigation($rootScope, $log) {
     function KeyboardNavigationFactory(configs) {
       var currentIndex = 0, enabled = false, scope = configs ? configs.scope ? configs.scope : $rootScope.$new() : $rootScope.$new(), onleft, onright, onup, ondown, onenter;
       configs = configs || {};
@@ -6425,6 +6427,11 @@ angular.module('employeeApp.services').factory('KeyboardNavigation', [
       }
       function parseKeydown(evt) {
         switch (evt.which) {
+        case 37:
+          if (onleft) {
+            onleft();
+          }
+          break;
         case 38:
           changeIndex(-1);
           if (onup) {
@@ -6841,13 +6848,69 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
   'scanner',
   'Supply',
   'Notification',
-  function (scanner, Supply, Notification) {
+  'KeyboardNavigation',
+  '$timeout',
+  function (scanner, Supply, Notification, KeyboardNavigation, $timeout) {
     return {
       templateUrl: 'views/templates/supply-scanner-modal.html',
       restrict: 'A',
+      replace: true,
       scope: { 'visible': '=supplyScannerModal' },
       link: function postLink(scope, element, attrs) {
+        var keyboardNav = new KeyboardNavigation();
+        scope.action = 'subtract';
         scope.scanner = new scanner('supply-scanner-modal');
+        var focusOnQuantity = function () {
+          element.find('input').focus();
+        };
+        scope.changeQuantity = function (quantity) {
+          quantity = quantity || scope.quantity;
+          if (scope.supply.hasOwnProperty('id') && quantity > 0) {
+            scope.supply['$' + scope.action]({ quantity: quantity }, function () {
+              scope.quantity = 0;
+              $timeout(function () {
+                scope.supply = undefined;
+              }, 5000);
+            });
+          }
+        };
+        scope.scanner.register(/^DRS-\d+$/, function (code) {
+          scope.supply = Supply.get({ id: code.split('-')[1] }, function (response) {
+            focusOnQuantity();
+            console.log(response);
+          }, function () {
+          });
+        });
+        scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
+          Supply.query({ upc: code }, function (response) {
+            focusOnQuantity();
+            try {
+              scope.supply = response[0];
+            } catch (e) {
+              console.log(e);
+            }
+          }, function (reason) {
+            console.log(reason);
+          });
+        });
+        function changeAction(action) {
+          if (scope.$$phase === '$digest' || scope.$$phase === '$apply') {
+            scope.action = action;
+          } else {
+            scope.$apply(function () {
+              scope.action = action;
+            });
+          }
+        }
+        keyboardNav.onright = function () {
+          changeAction('subtract');
+        };
+        keyboardNav.onleft = function () {
+          changeAction('add');
+        };
+        keyboardNav.onenter = function () {
+          scope.changeQuantity(scope.quantity);
+        };
         scope.$watch('visible', function (val) {
           if (val) {
             try {
@@ -6855,30 +6918,16 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             } catch (e) {
             }
             scope.scanner.enable();
+            keyboardNav.enable();
             scope.scanner.disableStandard();
-            scope.scanner.register(/^DRS-\d+$/, function (code) {
-              scope.supply = Supply.get({ id: code.split('-')[1] }, function (response) {
-                console.log(response);
-              }, function () {
-              });
-            });
-            scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
-              Supply.query({ upc: code }, function (response) {
-                try {
-                  scope.supply = response[0];
-                } catch (e) {
-                  console.log(e);
-                }
-              }, function (reason) {
-                console.log(reason);
-              });
-            });
           } else {
             scope.scanner.disable();
+            keyboardNav.disable();
             scope.scanner.enableStandard();
           }
         });
         scope.$on('$destroy', function () {
+          keyNav.disable();
           scope.scanner.disable();
         });
       }
