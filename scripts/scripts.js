@@ -6185,7 +6185,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.addImage = function (image) {
       $scope.supply.image = image;
     };
-    $scope.showStickers = function () {
+    $scope.viewStickers = function () {
       try {
         window.open($scope.supply.sticker.url);
       } catch (e) {
