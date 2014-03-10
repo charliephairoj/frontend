@@ -6185,6 +6185,13 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.addImage = function (image) {
       $scope.supply.image = image;
     };
+    $scope.showStickers = function () {
+      try {
+        window.open($scope.supply.sticker.url);
+      } catch (e) {
+        Notification.display('This supply is missing a sticker');
+      }
+    };
     scanner = new scanner('supply/details');
     scanner.disableStandard();
     scanner.register(/^\d+(\-\d+)*$/, function (code) {
