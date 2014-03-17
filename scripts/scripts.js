@@ -4975,7 +4975,7 @@ angular.module('employeeApp').directive('productSelector', [
           var promise = FileUploader.upload(image, scope.url || 'upload/images');
           promise.then(function (response) {
             Notification.display('Image Uploaded');
-            (callback || angular.noop)(response);
+            (callback || angular.noop)(response.data);
           }, function () {
             Notification.display('Failed to upload image.');
           });
@@ -6293,10 +6293,13 @@ angular.module('employeeApp').directive('imageUploader', [
         };
         scope.upload = function ($image, callback) {
           var promise = FileUploader.upload($image, scope.url);
-          promise.then(function (data) {
+          promise.then(function (dataObj) {
             Notification.display('File was uploaded');
-            scope.onUpload({ data: data });
-            (callback || angular.noop)(data);
+            scope.onUpload({
+              data: dataObj.data,
+              $image: dataObj.data
+            });
+            (callback || angular.noop)(dataObj.data);
           }, function () {
             Notification.display('There was an error uploading the file');
           });
@@ -6874,6 +6877,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
           quantity = quantity || scope.quantity;
           if (scope.supply.hasOwnProperty('id') && quantity > 0) {
             scope.supply['$' + scope.action]({ quantity: quantity }, function () {
+              Notification.display('Quantity of ' + scope.supply.description + ' changed to ' + scope.supply.quantity);
               scope.quantity = 0;
               $timeout(function () {
                 scope.supply = undefined;
@@ -6882,10 +6886,12 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
           }
         };
         scope.scanner.register(/^DRS-\d+$/, function (code) {
+          Notification.display('Looking up supply...', false);
           scope.supply = Supply.get({ id: code.split('-')[1] }, function (response) {
+            Notification.hide();
             focusOnQuantity();
-            console.log(response);
           }, function () {
+            Notification.display('Unable to find supply.', false);
           });
         });
         scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {

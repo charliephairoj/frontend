@@ -36,13 +36,13 @@
 		</div>
 		<div class="quantity-container">
 			<h3>Quantity</h3>
-			<input type="number" size="5" autofocus ng-model="quantity" />
-			<button class="add" ng-class="{'active':action=='add'}" ng-click="changeQuantity(quantity)">
+			<input class="quantity" type="number" size="5" autofocus ng-model="quantity" />
+			<button class="add" ng-class="{'active':action=='add'}" ng-click="action='add';changeQuantity(quantity)">
 				<span>
 					Add
 				</span>
 			</button>
-			<button class="subtract" ng-class="{'active':action=='subtract'}" ng-click="changeQuantity(quantity)">
+			<button class="subtract" ng-class="{'active':action=='subtract'}" ng-click="action='subtract';changeQuantity(quantity)">
 				<span>
 					Subtract
 				</span>
