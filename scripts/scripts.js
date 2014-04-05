@@ -2289,8 +2289,13 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
     $scope.user = User.get({ 'id': $routeParams.id }, function () {
       merge($scope.groupList, $scope.user.groups);
     });
+    $scope.addImage = function (imageData) {
+      $scope.showAddImage = false;
+      $scope.user.image = imageData.hasOwnProperty('data') ? imageData.data : imageData;
+      $scope.user.$update();
+    };
     $scope.changePassword = function () {
-      var url = '/user/' + $scope.user.id + '/change_password';
+      var url = '/api/v1/user/' + $scope.user.id + '/change_password';
       $http.post(url, $scope.password).success(function (e) {
         Notification.display('Password successfully changed');
         $scope.password = {};
@@ -2344,6 +2349,9 @@ angular.module('employeeApp').controller('AdministratorUserAddCtrl', [
     $scope.user = new User();
     $scope.user.groups = [];
     $scope.groups = Group.query({ limit: 0 });
+    $scope.addImage = function (imageData) {
+      $scope.user.image = imageData.hasOwnProperty('data') ? imageData.data : imageData;
+    };
     $scope.save = function () {
       if ($scope.form.$valid) {
         for (var i = 0; i < $scope.groups.length; i++) {
@@ -6153,6 +6161,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     $scope.showQuantity = false;
     $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
       Notification.hide();
+      $scope.suppliers = $scope.supply.suppliers;
     });
     globalScanner.disable();
     var updateLoopActive = false, timeoutPromise;
@@ -6205,6 +6214,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       delete supply.last_modified;
       delete supply.image;
       delete supply.supplier;
+      delete supply.quantity;
       return supply;
     }, function (newVal, oldVal) {
       if (!updateLoopActive && oldVal.hasOwnProperty('id')) {
@@ -6234,6 +6244,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         quantity = $scope.quantity;
       }
       $scope.supply.$add({ quantity: quantity }, function () {
+        if (!$scope.supply.hasOwnProperty('suppliers')) {
+          $scope.supply.suppliers = $scope.suppliers;
+        }
       });
     };
     $scope.subtract = function (quantity) {
@@ -6242,6 +6255,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         quantity = $scope.quantity;
       }
       $scope.supply.$subtract({ quantity: quantity }, function () {
+        if (!$scope.supply.hasOwnProperty('suppliers')) {
+          $scope.supply.suppliers = $scope.suppliers;
+        }
       });
     };
     $scope.changeQuantity = function (action, quantity) {

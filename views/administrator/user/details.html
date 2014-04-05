@@ -1,4 +1,11 @@
 <div class="userDetailsPage">
+	<!--
+		Modals
+	-->
+	<div modal="showAddImage" class="add-profile-picture">
+		<div class="container" image-uploader url="api/v1/user/image" on-upload="addImage(data)">
+		</div>
+	</div>
 	<form name="passForm" modal novalidate ng-model="showChangePassword" title="Change {{user.username}}'s Password">
 		<div class="container">
 			<table>
@@ -25,6 +32,9 @@
     -->
 	<div class="sidebar">
 		<header>
+			<div class="profilePic" ui-if="user.image" ng-click="showAddImage=true">
+				<img ng-src="{{user.image.url}}" />
+			</div>
 			<h1><span>Add User</span></h1>
 		</header>
 		<nav>
