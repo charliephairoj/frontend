@@ -8,10 +8,11 @@
 			</div>
 		</div>
 		<div class="supply">
-			<div class="image-container">
-				<img ng-src="{{supply.image.url}}" center="true" />
+			<div class="image-container" ng-click="showAddImage=true">
+				<img ng-hide="showAddImage" ng-src="{{supply.image.url}}" center="true" />
+				<div ng-show="showAddImage" image-uploader url='/api/v1/supply/image' on-upload="addImage(data)"></div>
 			</div>
-			<table>
+			<table class="supply-details">
 				<tr class="description">
 					<td>Description</td>
 					<td>{{supply.description}}</td>
@@ -28,23 +29,25 @@
 					<td>Height</td>
 					<td>{{supply.height}}{{supply.height_units}}</td>
 				</tr>
-				<tr class="quantity">
-					<td>Quantity</td>
-					<td>{{supply.quantity}} {{supply.units}}</td>
+				<tr>
+					<td class="quantity" ng-class="{'ok':supply.quantity>0, 'warning':supply.quantity==0}">Quantity(ปริมาณ)</td>
+					<td class="quantity" ng-class="{'ok':supply.quantity>0, 'warning':supply.quantity==0}">
+						{{supply.quantity | number:fractSize()}} {{supply.units}}
+					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="quantity-container">
 			<h3>Quantity</h3>
-			<input class="quantity" type="number" size="5" autofocus ng-model="quantity" />
+			<input class="quantity" type="text" size="5" autofocus ng-model="quantity" />
 			<button class="add" ng-class="{'active':action=='add'}" ng-click="action='add';changeQuantity(quantity)">
 				<span>
-					Add
+					Add(เพิ่ม)
 				</span>
 			</button>
 			<button class="subtract" ng-class="{'active':action=='subtract'}" ng-click="action='subtract';changeQuantity(quantity)">
 				<span>
-					Subtract
+					Subtract(เบิก)
 				</span>
 			</button>
 		</div>
