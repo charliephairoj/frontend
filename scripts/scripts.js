@@ -7891,8 +7891,6 @@ angular.module('employeeApp.services').factory('KeyboardNavigation', [
       }
       ;
       function parseKeydown(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
         switch (evt.which) {
         case 37:
           if (onleft) {
