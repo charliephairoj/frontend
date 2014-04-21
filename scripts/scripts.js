@@ -8366,10 +8366,6 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
         var keyboardNav = new KeyboardNavigation();
         scope.action = 'subtract';
         scope.scanner = new scanner('supply-scanner-modal');
-        scope.supply = {
-          'units': 'pc',
-          'quantity': 0
-        };
         var focusOnQuantity = function () {
           var quantity = element.find('input');
           quantity.focus();
