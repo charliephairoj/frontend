@@ -668,16 +668,75 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     });
   }
 ]);
-/* jshint ignore: start */
+/*
+ * Resource Service
+ * 
+ * The purpose of this service is too provide
+ * a wrapper for the native $resource service
+ * provided by AngularJS. This resource allows us 
+ * to interface with the storage service and prepopulat
+ * the response before updating with the response 
+ * from the server.
+ * 
+ * The service must all be able to poll and used the 
+ * 'last-modified' key to retrieve the most recent version
+ * of data
+ * 
+ * Capabilities:
+ * 
+ * -Perform basic GET, PUT, POST and DELETE operations
+ * -prepopulate the response with data from the storage
+ *  service
+ * 
+ * Structure and Cycle:
+ * 
+ * The intended structure and cycle of the resource is
+ * 1. A GET request is made to retrieve an item or an
+ *    array of items
+ *    -If there is already prexisting data then retrieve
+ *     the data from the storage and respond
+ *    -When the server responsds update the returned data
+ *     by finding the id and then updating the item
+ * 2. Save the last-checked time to be used later for polling
+ * 3. Returns a new Resource that prototypically inherits from
+ *    the parent. 
+ * 4. Save the resource should call the underlying request from 
+ *    the parent. 
+ * 
+ * Properties:
+ * 
+ * -$$poll: If true begin a timeout based
+ *      repeated calling of the initial function
+ * -$$last_checked: Date and Time of the last GET
+ *      request made to the server that was successful
+ * -$$timeout: Hold the reference to the current timeout
+ * 
+ * Public Methods:
+ * 
+ * Parent Methods:
+ * -poll()
+ * -get()
+ * -query()
+ * -save()
+ * -delete()
+ * 
+ * Child Methods:
+ * -$save()
+ * -$delete()
+ * -$get()
+ * -$query()
+ */
 angular.module('employeeApp.services').factory('Resource', [
-  '$storage',
+  'eaStorage',
   '$rootScope',
   '$http',
   '$q',
   '$parse',
   '$resource',
-  function ($storage, $rootScope, $http, $q, $parse, $resource) {
+  'Notification',
+  function (eaStorage, $rootScope, $http, $q, $parse, $resource, Notification) {
     function ResourceFactory(url, paramDefaults, actions) {
+      //Default methods available to the public
       var DEFAULT_ACTIONS = {
           'get': { method: 'GET' },
           'save': { method: 'POST' },
@@ -688,7 +747,11 @@ angular.module('employeeApp.services').factory('Resource', [
           },
           'remove': { method: 'DELETE' },
           'delete': { method: 'DELETE' }
-        }, oResource, storage = $storage(url.split(/\//g)[0]), value, poll = false, getter = function (obj, path) {
+        }, oResource = new $resource(url, paramDefaults, actions),
+        //jshint ignore:line
+        storage = eaStorage(url.split(/\//g)[0]), db,
+        // = eaIndexedDB(url),
+        value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
           return $parse(path)(obj);
         };
       /*Helper Functions*/
@@ -703,6 +766,10 @@ angular.module('employeeApp.services').factory('Resource', [
         });
         return ids;
       }
+      /*
+         * Locates the index of an object
+         * which matches the supplied id
+         */
       function indexOfId(array, id) {
         for (var i = 0; i < array.length; i++) {
           if (array[i].hasOwnProperty('id')) {
@@ -715,38 +782,21 @@ angular.module('employeeApp.services').factory('Resource', [
       }
       //Extend all actions to include default and argument actions
       actions = angular.extend({}, DEFAULT_ACTIONS, actions);
-      //Assign original and new resource
-      oResource = new $resource(url, paramDefaults, actions);
+      /*
+         * Initialize the Resource the properties
+         */
       function Resource(value) {
         angular.extend(this, value || {});
         this.$$poll = false;
-        this.$$last_checked = false;
-        this.$$timeout;
+        this.$$last_checked = null;
+        this.$$timeout = null;
         this.$$date = true;
       }
       /*
-             * Set Date for when doing mock tests
-             */
-      Resource.disableDate = function () {
-        this.$$date = false;
-      };
-      Resource.prototype.disableDate = Resource.disableDate;
-      /*
-             * Create a polling function. When the polling function 
-             * is call the poll value will be set to true
-             */
-      Resource.poll = function () {
-        this.$$poll = true;
-        poll = true;
-        return this;
-      };
-      Resource.prototype.poll = Resource.poll;
-      Resource.stopPolling = function () {
-        poll = false;
-        return this;
-      };
-      Resource.prototype.poll = Resource.poll;
-      //Loop through actions
+         * Loop through all the actions and assign them 
+         * as methods to the Resource and process the data
+         * and the params for each method
+         */
       angular.forEach(actions, function (action, name) {
         var hasBody = action.method == 'POST' || action.method == 'PUT' || action.method == 'PATCH';
         //Default methods
@@ -756,6 +806,7 @@ angular.module('employeeApp.services').factory('Resource', [
           var success = angular.noop;
           var error = null;
           var promise;
+          /* jshint ignore: start */
           switch (arguments.length) {
           case 4:
             error = a4;
@@ -790,79 +841,133 @@ angular.module('employeeApp.services').factory('Resource', [
           default:
             throw 'Expected between 0-4 arguments [params, data, success, error], got ' + arguments.length + ' arguments.';
           }
+          /* jshint ignore: end */
+          /*
+                 * RESETTING AREA:
+                 * 
+                 * This area will reset the settings of the call if the previous 
+                 * action does not meet the current action. We do this in the case 
+                 * of polling where the action is the same as before.
+                 */
+          if (previousAction != name || params != previousParams) {
+            this.$$last_checked = undefined;
+          }
+          /*
+                 * CRTICIAL COMPONENT:
+                 * 
+                 * This part will determine whether to set the return referenced as an 
+                 * array, object, or to keep it in its current state. This is crucial 
+                 * for when polling is activated. 
+                 */
           if (action.isArray) {
             value = angular.isArray(value) ? value || [] : [];
           } else {
             value = angular.isObject(value) && !value.hasOwnProperty('length') ? value || {} : {};
+            value = this instanceof Resource ? this : new Resource(value);
           }
-          value['$$marker'] = 'poop';
-          //Runs storage mechanism if exists
-          if (storage[name]) {
-            //Determines if param or data is used
-            var strorageData = hasBody ? storage[name](data) || value : storage[name](params) || value;
-            //Determines if array or not when creating resource
-            if (action.isArray) {
-              angular.forEach(strorageData, function (item, index) {
-                var index = indexOfId(value, item.id);
-                if (index > -1) {
-                  angular.extend(value[index], new Resource(item));
+          /*
+                 * Determines whether to include the last modified parameter depending
+                 * on whether the 'last_checked' var has a value or not
+                 */
+          //dump((this.$$last_checked && typeof(this.$$last_checked) != "boolean") && action.method == "GET")
+          if (this.$$last_checked !== undefined && action.method == 'GET') {
+            angular.extend(params, { last_modified: this.$$last_checked.toISOString() });
+          }
+          /*
+                if(storage.getLastModified() && action.method == "GET"){
+                    angular.extend(params, {last_modified:storage.getLastModified().toISOString()});
                 }
-                index > -1 ? angular.extend(value[index], new Resource(item)) : value.push(new Resource(item));
-              });
-            } else {
-              value = new Resource(strorageData);
-            }
-            //Copies storage data with key to self
-            if (hasBody) {
-              angular.extend(value, this);
-            }
-          }
-          /*
-                     * Determines whether to include the last modified parameter depending
-                     * on whether the 'last_checked' var has a value or not
-                     */
-          /*
-                    if(this.$$last_checked && action.method == "GET" && poll){ 
-                        angular.extend(params, {last_modified:this.$$last_checked.toISOString()})
-                    }
-                    if(storage.getLastModified() && action.method == "GET"){
-                        angular.extend(params, {last_modified:storage.getLastModified().toISOString()});
-                    }
-                    */
+                */
           var oPromise = oResource[name](params, data, function (response) {
-              //save data to storage
-              action.method == 'DELETE' ? storage.remove(params) : storage.save(response);
-              //copy data to body
+              /*
+                     * If the hasBody is positive, it indicates this is a child
+                     * resource and there for the resource it self should be update
+                     * with the data because it is currently presented tot he user
+                     */
               if (action.method == 'DELETE' || hasBody) {
                 angular.extend(this, response);
               }
-              //pass data to placeholder
-              if (action.isArray) {
-                //Reset array
-                var index;
-                angular.forEach(response, function (item) {
-                  var index = indexOfId(value, item.id);
-                  if (index > -1) {
-                    angular.extend(value[index], item);
-                  } else {
-                    value.push(new Resource(item));
+              /*
+                     * If the method is GET it indicates that the user has requested 
+                     * data and the resource is a gateway and it itself is no the the
+                     * data holder. There for the reference that is returned to the user 
+                     * should be update with either the array of items or the item data
+                     * respecitvely.
+                     */
+              if (action.method === 'GET') {
+                if (action.isArray || angular.isArray(response)) {
+                  var index;
+                  /*
+                             * We use vanilla javascript to iterate through 
+                             * the array and apply changes to that the 
+                             * digest is not trigger initially. We wait till
+                             * the end to trigger the digest
+                             */
+                  for (var i in response) {
+                    //Find the index of the matched item by id
+                    index = indexOfId(value, response[i].id);
+                    if (index > -1) {
+                      /*
+                                    * In order not to waste resource we
+                                    * first check if the two items are equal or not.
+                                    * If they are not equal then we perform an extend
+                                    */
+                      if (!angular.equals(value[index], response[i])) {
+                        angular.extend(value[index], new Resource(response[i]));
+                        if (value[index].deleted) {
+                          value.splice(index, 1);
+                          var item = [];
+                          item.splice(index);
+                        }
+                      }
+                    } else {
+                      //Add the new item
+                      if (!response[i].deleted) {
+                        try {
+                          value.push(new Resource(response[i]));
+                        } catch (e) {
+                          console.warn(e.stack);
+                        }
+                      }
+                    }
                   }
-                });
-              } else {
-                angular.extend(value, new Resource(response));
+                } else {
+                  //Upate the reference with the data
+                  if (response.deleted) {
+                    angular.copy({}, value);
+                    Notification.display('This resource no longer exists.');
+                  } else {
+                    angular.extend(value, new Resource(response));
+                  }
+                }
               }
-              this.$$last_checked = new Date();
-              storage.saveLastModified(this.$$last_checked);
-              if (poll && action.method == 'GET') {
-                this.$$timeout = setTimeout(Resource[name], 5000);
-              }
-              console.log(value.length);
-              //execute callback
+              /*
+                     * Determines whether the action is to delete from the server
+                     * or to post and get data. Because post and get data would 
+                     * both return responses we would save this to the storage. 
+                     * For delete requests, we would have to delete the item
+                     */
+              /*
+                    if(db.ready){
+                        action.method == "DELETE" ? db.remove(params) : hasBody ? db.save(this) : db.save(value);  // jshint ignore:line
+                    }*/
+              //action.method == "DELETE" ? storage.remove(params) : hasBody ? storage.save(this) : storage.save(value);  
+              /*
+                     * Last checked
+                     */
+              //Run success call back
               success(response);
             }.bind(this), function (e) {
-              console.log(e);
             });
           //return placeholder
+          /*
+                 * We set what action just took place
+                 * so that we may know if to change
+                 * the settings of the current action
+                 */
+          previousAction = name;
+          previousParams = params;
+          //Return the reference
           return value;
         };
         //Prototypical methods
@@ -883,6 +988,7 @@ angular.module('employeeApp.services').factory('Resource', [
               params = a1;
               success = a2 || angular.noop;
             }
+            break;
           case 0:
             break;
           default:
@@ -897,7 +1003,6 @@ angular.module('employeeApp.services').factory('Resource', [
     return ResourceFactory;
   }
 ]);
-/* jshint ignore:end */
 angular.module('employeeApp.services').factory('$storage', [function () {
     function storageFactory(key) {
       //Create the main factory
@@ -1207,7 +1312,7 @@ angular.module('employeeApp.services').factory('Notification', [
   }
 ]);
 angular.module('employeeApp.services').factory('SupplierContact', [
-  'eaResource',
+  '$resource',
   function (eaResource) {
     return eaResource('supplier_contact/:id', { id: '@id' });
   }
@@ -5150,342 +5255,137 @@ angular.module('employeeApp.services').factory('Contact', [
  * -remove()
  * -clear()
  */
-angular.module('employeeApp.services').factory('eaIndexedDB', [
+angular.module('employeeApp.services').factory('DB', [
   '$q',
   '$timeout',
   '$rootScope',
   function ($q, $timeout, $rootScope) {
     /*
-     * Helper Functions
-     */
-    function getNamespaces() {
-      //return JSON.parse(window.localStorage.getItem('namespaces')) || [];
-      return [
-        'customer',
-        'supplier',
-        'supplier-contact',
-        'permission',
-        'acknowledgement',
-        'acknowledgement-item',
-        'contact',
-        'shipping',
-        'transaction',
-        'fabric',
-        'supply',
-        'model',
-        'product',
-        'configuration',
-        'upholstery',
-        'group',
-        'user',
-        'delivery',
-        'table',
-        'project',
-        'project-room',
-        'project-item',
-        'purchase-order',
-        'test'
-      ];
-    }
-    function saveNamespaces(namespaces) {
-      window.localStorage.setItem('namespaces', JSON.stringify(namespaces));
-    }
-    function formatNamespace(str) {
-      try {
-        var strArray = str.split(/\//);
-        var re = new RegExp(/^\:/);
-        str = '';
-        for (var key in strArray) {
-          if (!re.test(strArray[key])) {
-            if (str.length > 0) {
-              str += '-';
-            }
-            str += strArray[key];
-          }
-        }
-        return str;
-      } catch (e) {
-        throw new TypeError('Must be a string');
-      }
-    }
-    /*
-     * Initialize the IndexedDB
-     * 
-     * We open the database so that child objectstores can be retrieved from
-     * this database instead of making repeated calls to open a new database
-     */
-    var database = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    var version = getNamespaces().length;
-    var request = database.open('app', version);
-    var DBVehicle = { _readyFns: [] };
-    Object.defineProperties(DBVehicle, {
-      onready: {
-        set: function (fn) {
-          this._readyFns.push(fn);
+	 * Private Vars
+	 */
+    var db, version = 1, objectStores = [
+        {
+          'resourceName': 'supply',
+          'keyPath': 'id',
+          'indexes': [
+            'id',
+            'supplier'
+          ]
         },
-        get: function () {
-          return function () {
-            for (var key in this._readyFns) {
-              this._readyFns[key]();
-            }
-          };
+        {
+          'resourceName': 'acknowledgement',
+          'keyPath': 'id',
+          'indexes': [
+            'id',
+            'delivery_date'
+          ]
         }
-      }
-    });
+      ];
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     /*
-     * The version number is based on the number of namespaces
-     * When the number of namespaces increases, then the version
-     * number increases, initiating an upgrade needed call. 
-     * 
-     * Namespaces that do not have a corresponding object store 
-     * are then associated with a new object store
-     */
-    request.onupgradeneeded = function (event) {
-      var namespaces = getNamespaces();
-      //angular.extend(db, request.result);
-      DBVehicle.db = request.result;
-      var db = DBVehicle.db;
-      for (var key in namespaces) {
-        if (!db.objectStoreNames.contains(namespaces[key])) {
-          var objectStore = db.createObjectStore(namespaces[key], { keyPath: 'id' });  //objectStore.createIndex("idIndex", "id", { unique: true });
-        }
-      }
-    };
+	 * Private functions 
+	 */
     /*
-     * If the database is successfully opened or upgraded
-     * then the db is assigned to the parent, the ready status
-     * is set to true, and the onready callback is called if 
-     * it is defined. 
-     */
-    request.onsuccess = function (e) {
-      DBVehicle.db = request.result;
-      DBVehicle.onready();
-    };
-    /*
-     * If the database is unable to open then the error is printed
-     * to the console. 
-     */
-    request.onerror = function (e) {
-      console.error(e);
-    };
-    function factory(namespace) {
-      namespace = formatNamespace(namespace);
-      /*
-         * Create a store of namespaces in the localStorage
-         */
-      var namespaces = JSON.parse(window.localStorage.getItem('namespaces')) || [];
-      if (namespaces.indexOf(namespace) == -1) {
-        namespaces.push(namespace);
-      }
-      window.localStorage.setItem('namespaces', JSON.stringify(namespaces));
-      /*
-         * Create the class to be prototyped
-         * 
-         * We initialize the indexedDB with the appropriate
-         * object store by using the class name
-         * 
-         * We open the database and use a version number
-         * that is determined by the total number of namespaces, 
-         * so as to automatically update the database to contain
-         * the new object store
-         */
-      function Database(namespace) {
-        this.namespace = namespace;
-        this.indexedDB = database;
-        this.DBVehicle = DBVehicle;
-        Object.defineProperties(this, {
-          db: {
-            get: function () {
-              return this.DBVehicle.db;
-            }
-          },
-          ready: {
-            get: function () {
-              return this.DBVehicle.db ? true : false;
-            }
-          },
-          onready: {
-            set: function (fn) {
-              this.DBVehicle.onready = fn;
+	 * Open database
+	 */
+    function openDatabase() {
+      var openRequest = indexedDB.open('employee', version);
+      //On success
+      openRequest.onsuccess = function (e) {
+        //Get the database
+        db = e.target.result;
+      };
+      //On Error
+      openRequest.onerror = function (e) {
+        console.log('Error opening indexedDB');
+        console.dir(e);
+      };
+      //On Upgrade Needed
+      openRequest.onupgradeneeded = function (e) {
+        console.log('Upgrading the indexedDB..');
+        //Get the database
+        db = e.target.result;
+        //Create the object store if it does not exists
+        for (var i = 0; i < objectStores.length; i++) {
+          var param = objectStores[i];
+          //Creates the store if not yet created
+          if (!db.objectStoreNames.contains(param.resourceName)) {
+            var objectStore = db.createObjectStore(param.resourceName, { keyPath: param.keyPath });
+          } else {
+            var objectStore = db.transaction.objectStore(param.resourceName);
+          }
+          //Cycle throught the indexes
+          for (var h = 0; h < param.indexes.length; h++) {
+            var index = param.indexes[h];
+            //Creates indexes if not yet created
+            if (!objectStore.indexNames.contains(index)) {
+              objectStore.createIndex(index, index, { unique: false });
             }
           }
-        });
-      }
-      /*
-         * Private functions
-         */
-      Database.prototype._cleanObj = function (obj) {
-        var re = new RegExp(/^\$/);
-        for (var key in obj) {
-          if (re.test(key) || angular.isFunction(obj[key])) {
-            delete obj[key];
-          }
-        }
-        return obj;
-      };
-      Database.prototype._save = function (obj, success, error) {
-        try {
-          var cleanObj = this._cleanObj(obj);
-          var request = this.db.transaction([this.namespace], 'readwrite').objectStore(this.namespace).put(cleanObj);
-          request.onsuccess = function (evt) {
-            (success || angular.noop)();
-          };
-          request.onerror = function (evt) {
-            console.error(evt);
-            (error || angular.noop)(evt);
-          };
-        } catch (e) {
-          console.error(e);
-          (error || angular.noop)(e);
         }
       };
-      Database.prototype._get = function (param, success, error) {
-        try {
-          param = parseFloat(param);
-          var store = this.db.transaction(this.namespace).objectStore(this.namespace).get(param).onsuccess = function (evt) {
-              var response = evt.target.result || null;
-              (success || angular.noop)(response);
-            };
-        } catch (e) {
-          console.error(e.stack);
-          (error || angular.noop)();
-        }  /*
-                .get(param);
-            
-            request.onsuccess = function(evt){
-                console.log(evt);
-                console.log(request.results);
-                (success || angular.noop)(request.result);
-            };
-                
-            request.onerror = function(evt){
-                console.log(evt);
-                console.log('error');
-                (error || angular.noop)();
-            };*/
-      };
-      Database.prototype._query = function (param, success, error) {
-        var data = [];
-        var objectStore = this.db.transaction([this.namespace], 'readonly').objectStore(this.namespace);
-        var request = objectStore.openCursor();
-        request.onsuccess = function (evt) {
-          var cursor = evt.target.result;
-          if (cursor) {
-            data.push(cursor.value);
-            cursor.continue();
-          } else {
-            (success || angular.noop)(data);
-          }
-        };
-        request.onerror = function (evt) {
-          console.error(evt);
-          (error || angular.noop)();
-        };
-      };
-      Database.prototype._remove = function (arg, success, error) {
-        var request = this.db.transaction([this.namespace], 'readwrite').objectStore(this.namespace).delete(arg);
-        request.onsuccess = function (evt) {
-          (success || angular.noop)();
-        };
-        request.onerror = function (evt) {
-          (error || angular.noop)();
-        };
-      };
-      /*
-         * Private Clear method
-         */
-      Database.prototype._clear = function (success, error) {
-        try {
-          var store = this.db.transaction(this.namespace, 'readwrite').objectStore(this.namespace);
-          store.clear().onsuccess = function () {
-            (success || angular.noop)();
-          };
-        } catch (e) {
-          console.error(e.stack);
-          (error || angular.noop)(e);
-        }
-      };
-      /*
-         * This section will implements the public facing APIs that
-         * are available to retrieve data
-         */
-      Database.prototype.query = function (arg1, arg2, arg3) {
-        var success, error, param;
-        switch (arguments.length) {
-        case 1:
-          /* jshint ignore: start */
-          angular.isFunction(arg1) ? success = arg1 : param = arg1;
-          /* jshint ignore: end */
-          break;
-        case 2:
-          if (angular.isFunction(arg1)) {
-            success = arg1;
-            error = arg2;
-          } else {
-            param = arg1;
-            success = arg2;
-          }
-          break;
-        case 3:
-          if (angular.isFunction(arg1)) {
-            success = arg1;
-            error = arg2;
-          } else {
-            param = arg1;
-            success = arg2;
-            error = arg3;
-          }
-          break;
-        default:
-          throw new RangeError('Expects between 1-3 arguments');
-        }
-        try {
-          this._query(param, success, error);
-        } catch (e) {
-        }
-      };
-      Database.prototype.get = function (param, success, error) {
-        if (arguments.length < 1 && arguments.length > 3) {
-          throw new RangeError('Expects between 1-3 argumeents');
-        }
-        try {
-          this._get(param, success, error);
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      Database.prototype.save = function (obj, success, error) {
-        try {
-          if (angular.isArray(obj)) {
-            for (var key in obj) {
-              this._save(obj[key]);
-            }
-            (success || angular.noop)();
-          } else {
-            this._save(obj, success, error);
-          }
-        } catch (e) {
-          console.error(e.stack);
-        }
-      };
-      Database.prototype.remove = function (arg, success, error) {
-        try {
-          this._remove(arg, success, error);
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      Database.prototype.clear = function (success, error) {
-        this._clear(success, error);
-      };
-      Database.prototype.destroy = function (success) {
-        this.indexedDB.deleteDatabase('app').onsuccess = function () {
-          (success || angular.noop)();
-        };
-      };
-      return new Database(namespace);
     }
-    return factory;
+    function DB(resourceName) {
+      this.resourceName = resourceName;
+      if (!db) {
+        openDatabase();
+      }
+      /*
+		 * Query
+		 * 
+		 * Gets all the objects in the object store that 
+		 * meets the specified parameters
+		 */
+      this.query = function () {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName]);
+        objectStore.openCursor().onsuccess = function (event) {
+          var data = [], cursor = event.target.result;
+          //Add object to the array and continue to the next one
+          if (cursor) {
+            data.append(cursor.value);
+            cursor.continue();  //Resolve the promise
+          } else {
+            deferred.resolve(data);
+          }
+        };
+        return deferred.promise;
+      };
+      this.get = function (id) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName]);
+        var request = objectStore.get(id);
+        request.onsuccess = function (e) {
+          var result = request.result;
+          deferred.resolve(result);
+        };
+        return deferred.promise;
+      };
+      this.create = function (obj) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName], 'readwrite');
+        var request = objectStore.add(object);
+        request.onsucces = function (e) {
+          deferred.resolve();
+        };
+        request.onerror = function (e) {
+          console.log(e.target.error.name);
+        };
+        return deferred.promise;
+      };
+      this.update = function (obj) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName], 'readwrite');
+        var request = objectStore.put(object);
+        request.onsucces = function (e) {
+          deferred.resolve();
+        };
+        request.onerror = function (e) {
+          console.log(e.target.error.name);
+        };
+        return deferred.promise;
+      };
+    }
+    function DBFactory(resourceName) {
+      return new DB(resourceName);
+    }
+    return DBFactory;
   }
 ]);
 angular.module('employeeApp').controller('ProductInventoryCtrl', [
@@ -7522,8 +7422,11 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
 		 * is automattically because selectedSupplier is 
 		 * referencing it
 		 */
-      if ($scope.suppliers.length == 1) {
-        $scope.selectedSupplier = $scope.suppliers[0];
+      try {
+        if ($scope.supply.suppliers.length == 1) {
+          $scope.selectedSupplier = $scope.supply.suppliers[0];
+        }
+      } catch (e) {
       }
     });
     globalScanner.disable();
@@ -7686,7 +7589,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope.supply.$update({ 'country': 'TH' }, function () {
         Notification.display($scope.supply.description + ' updated.');
       });
-      globalscanner.enable();
+      globalScanner.enable();
     });
     /*
 	 * Remove
@@ -8370,7 +8273,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
           quantity.val('');
         };
         scope.fractSize = function () {
-          return scope.supply.units == 'pc' ? 0 : 2;
+          return scope.supply ? scope.supply.units == 'pc' ? 0 : 2 : 2;
         };
         /*
 			 * Watchers
