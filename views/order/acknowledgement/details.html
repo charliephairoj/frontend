@@ -44,10 +44,13 @@
 					<div ng-click="showCal=true">Change Delivery Date</div>
 				</li>
 				<li>
-					<div ng-click="getPDF('acknowledgement')">View Acknowledgement</div>
+					<a ng-href="{{acknowledgement.pdf.acknowledgement}}" target="_blank">View Acknowledgement</a>
 				</li>
 				<li>
-					<div ng-click="getPDF('production')">View Production</div>
+					<a ng-href="{{acknowledgement.pdf.production}}" target="_blank">View Production</a>
+				</li>
+				<li>
+					<a ng-href="{{acknowledgement.pdf.label}}" target="_blank">View Shipping Labels</a>
 				</li>
 				<li>
 					<div ng-click="viewLog()">View Log</div>

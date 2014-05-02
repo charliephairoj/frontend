@@ -240,7 +240,8 @@ angular.module('employeeApp').run([
   'CurrentUser',
   'scanner',
   '$http',
-  function ($rootScope, CurrentUser, scanner, $http) {
+  'Geocoder',
+  function ($rootScope, CurrentUser, scanner, $http, Geocoder) {
     $rootScope.currentUser = new CurrentUser();
     Array.prototype.indexOfById = function (needle) {
       needle = typeof needle == 'object' ? needle.hasOwnProperty('id') ? needle.id : null : needle;
@@ -275,6 +276,29 @@ angular.module('employeeApp').run([
     };
     window.globalScanner = new scanner('global');
     globalScanner.enable();
+    $rootScope.country = 'TH';
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var promise = Geocoder.reverseGeocode(position.coords.latitude, position.coords.longitude);
+        promise.then(function (results) {
+          for (var i in results[0].address_components) {
+            var component = results[0].address_components[i];
+            if (typeof component.types == 'object') {
+              if (component.types.indexOf('country') != -1) {
+                console.log(component);
+                $rootScope.country = component.short_name;
+              }
+            }
+          }
+        }, function () {
+          console.error('Getting the position failed');
+        });
+      }, function (e) {
+        console.log(e);
+      });
+    } else {
+      console.log('Geolocation not available');
+    }
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
@@ -541,14 +565,15 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     });
   }
 ]);
-angular.module('employeeApp.services').factory('ecResource', [
-  '$storage',
+angular.module('employeeApp.services').factory('Resource', [
+  'eaStorage',
   '$rootScope',
   '$http',
   '$q',
   '$parse',
   '$resource',
-  function ($storage, $rootScope, $http, $q, $parse, $resource) {
+  'Notification',
+  function (eaStorage, $rootScope, $http, $q, $parse, $resource, Notification) {
     function ResourceFactory(url, paramDefaults, actions) {
       var DEFAULT_ACTIONS = {
           'get': { method: 'GET' },
@@ -560,7 +585,7 @@ angular.module('employeeApp.services').factory('ecResource', [
           },
           'remove': { method: 'DELETE' },
           'delete': { method: 'DELETE' }
-        }, oResource, storage = $storage(url.split(/\//g)[0]), value, poll = false, getter = function (obj, path) {
+        }, oResource = new $resource(url, paramDefaults, actions), storage = eaStorage(url.split(/\//g)[0]), db, value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
           return $parse(path)(obj);
         };
       function extractParams(data, actionParams) {
@@ -585,29 +610,13 @@ angular.module('employeeApp.services').factory('ecResource', [
         return -1;
       }
       actions = angular.extend({}, DEFAULT_ACTIONS, actions);
-      oResource = new $resource(url, paramDefaults, actions);
       function Resource(value) {
         angular.extend(this, value || {});
         this.$$poll = false;
-        this.$$last_checked = false;
-        this.$$timeout;
+        this.$$last_checked = null;
+        this.$$timeout = null;
         this.$$date = true;
       }
-      Resource.disableDate = function () {
-        this.$$date = false;
-      };
-      Resource.prototype.disableDate = Resource.disableDate;
-      Resource.poll = function () {
-        this.$$poll = true;
-        poll = true;
-        return this;
-      };
-      Resource.prototype.poll = Resource.poll;
-      Resource.stopPolling = function () {
-        poll = false;
-        return this;
-      };
-      Resource.prototype.poll = Resource.poll;
       angular.forEach(actions, function (action, name) {
         var hasBody = action.method == 'POST' || action.method == 'PUT' || action.method == 'PATCH';
         Resource[name] = function (a1, a2, a3, a4) {
@@ -649,57 +658,60 @@ angular.module('employeeApp.services').factory('ecResource', [
           default:
             throw 'Expected between 0-4 arguments [params, data, success, error], got ' + arguments.length + ' arguments.';
           }
+          if (previousAction != name || params != previousParams) {
+            this.$$last_checked = undefined;
+          }
           if (action.isArray) {
             value = angular.isArray(value) ? value || [] : [];
           } else {
             value = angular.isObject(value) && !value.hasOwnProperty('length') ? value || {} : {};
+            value = this instanceof Resource ? this : new Resource(value);
           }
-          value['$$marker'] = 'poop';
-          if (storage[name]) {
-            var strorageData = hasBody ? storage[name](data) || value : storage[name](params) || value;
-            if (action.isArray) {
-              angular.forEach(strorageData, function (item, index) {
-                var index = indexOfId(value, item.id);
-                if (index > -1) {
-                  angular.extend(value[index], new Resource(item));
-                }
-                index > -1 ? angular.extend(value[index], new Resource(item)) : value.push(new Resource(item));
-              });
-            } else {
-              value = new Resource(strorageData);
-            }
-            if (hasBody) {
-              angular.extend(value, this);
-            }
+          if (this.$$last_checked !== undefined && action.method == 'GET') {
+            angular.extend(params, { last_modified: this.$$last_checked.toISOString() });
           }
           var oPromise = oResource[name](params, data, function (response) {
-              action.method == 'DELETE' ? storage.remove(params) : storage.save(response);
               if (action.method == 'DELETE' || hasBody) {
                 angular.extend(this, response);
               }
-              if (action.isArray) {
-                var index;
-                angular.forEach(response, function (item) {
-                  var index = indexOfId(value, item.id);
-                  if (index > -1) {
-                    angular.extend(value[index], item);
-                  } else {
-                    value.push(new Resource(item));
+              if (action.method === 'GET') {
+                if (action.isArray || angular.isArray(response)) {
+                  var index;
+                  for (var i in response) {
+                    index = indexOfId(value, response[i].id);
+                    if (index > -1) {
+                      if (!angular.equals(value[index], response[i])) {
+                        angular.extend(value[index], new Resource(response[i]));
+                        if (value[index].deleted) {
+                          value.splice(index, 1);
+                          var item = [];
+                          item.splice(index);
+                        }
+                      }
+                    } else {
+                      if (!response[i].deleted) {
+                        try {
+                          value.push(new Resource(response[i]));
+                        } catch (e) {
+                          console.warn(e.stack);
+                        }
+                      }
+                    }
                   }
-                });
-              } else {
-                angular.extend(value, new Resource(response));
+                } else {
+                  if (response.deleted) {
+                    angular.copy({}, value);
+                    Notification.display('This resource no longer exists.');
+                  } else {
+                    angular.extend(value, new Resource(response));
+                  }
+                }
               }
-              this.$$last_checked = new Date();
-              storage.saveLastModified(this.$$last_checked);
-              if (poll && action.method == 'GET') {
-                this.$$timeout = setTimeout(Resource[name], 5000);
-              }
-              console.log(value.length);
               success(response);
             }.bind(this), function (e) {
-              console.log(e);
             });
+          previousAction = name;
+          previousParams = params;
           return value;
         };
         Resource.prototype['$' + name] = function (a1, a2, a3) {
@@ -719,6 +731,7 @@ angular.module('employeeApp.services').factory('ecResource', [
               params = a1;
               success = a2 || angular.noop;
             }
+            break;
           case 0:
             break;
           default:
@@ -970,7 +983,7 @@ angular.module('employeeApp.services').factory('Notification', [
   }
 ]);
 angular.module('employeeApp.services').factory('SupplierContact', [
-  'eaResource',
+  '$resource',
   function (eaResource) {
     return eaResource('supplier_contact/:id', { id: '@id' });
   }
@@ -1426,7 +1439,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   'Customer',
   '$filter',
   'Notification',
-  function ($scope, Acknowledgement, Customer, $filter, Notification) {
+  '$window',
+  function ($scope, Acknowledgement, Customer, $filter, Notification, $window) {
     $scope.showFabric = false;
     $scope.uploading = false;
     $scope.customImageScale = 100;
@@ -1463,10 +1477,10 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           $scope.ack.$create(function (response) {
             Notification.display('Acknowledgement created');
             if (response.pdf.acknowledgement) {
-              window.open(response.pdf.acknowledgement);
+              $window.open(response.pdf.acknowledgement);
             }
             if (response.pdf.production) {
-              window.open(response.pdf.production);
+              $window.open(response.pdf.production);
             }
             angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
           }, function (e) {
@@ -3214,7 +3228,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$routeParams',
   'Notification',
   '$http',
-  function ($scope, Acknowledgement, $routeParams, Notification, $http) {
+  '$window',
+  function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
     Notification.display('Loading Acknowledgement...', false);
     $scope.showCal = false;
     $scope.acknowledgement = Acknowledgement.get({
@@ -3233,7 +3248,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
     $scope.getPDF = function (type) {
       try {
         var address = $scope.acknowledgement.pdf[type.toLowerCase()];
-        window.open(address);
+        $window.open(address);
       } catch (e) {
         var message = 'Missing ' + type + ' pdf for Acknowledgement #' + $scope.acknowledgement.id;
         Notification.display(message);
@@ -4187,274 +4202,112 @@ angular.module('employeeApp.services').factory('Contact', [
     return eaResource('contact/:id', { id: '@id' });
   }
 ]);
-angular.module('employeeApp.services').factory('eaIndexedDB', [
+angular.module('employeeApp.services').factory('DB', [
   '$q',
   '$timeout',
   '$rootScope',
   function ($q, $timeout, $rootScope) {
-    function getNamespaces() {
-      return [
-        'customer',
-        'supplier',
-        'supplier-contact',
-        'permission',
-        'acknowledgement',
-        'acknowledgement-item',
-        'contact',
-        'shipping',
-        'transaction',
-        'fabric',
-        'supply',
-        'model',
-        'product',
-        'configuration',
-        'upholstery',
-        'group',
-        'user',
-        'delivery',
-        'table',
-        'project',
-        'project-room',
-        'project-item',
-        'purchase-order',
-        'test'
-      ];
-    }
-    function saveNamespaces(namespaces) {
-      window.localStorage.setItem('namespaces', JSON.stringify(namespaces));
-    }
-    function formatNamespace(str) {
-      try {
-        var strArray = str.split(/\//);
-        var re = new RegExp(/^\:/);
-        str = '';
-        for (var key in strArray) {
-          if (!re.test(strArray[key])) {
-            if (str.length > 0) {
-              str += '-';
-            }
-            str += strArray[key];
-          }
-        }
-        return str;
-      } catch (e) {
-        throw new TypeError('Must be a string');
-      }
-    }
-    var database = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    var version = getNamespaces().length;
-    var request = database.open('app', version);
-    var DBVehicle = { _readyFns: [] };
-    Object.defineProperties(DBVehicle, {
-      onready: {
-        set: function (fn) {
-          this._readyFns.push(fn);
+    var db, version = 1, objectStores = [
+        {
+          'resourceName': 'supply',
+          'keyPath': 'id',
+          'indexes': [
+            'id',
+            'supplier'
+          ]
         },
-        get: function () {
-          return function () {
-            for (var key in this._readyFns) {
-              this._readyFns[key]();
-            }
-          };
+        {
+          'resourceName': 'acknowledgement',
+          'keyPath': 'id',
+          'indexes': [
+            'id',
+            'delivery_date'
+          ]
         }
-      }
-    });
-    request.onupgradeneeded = function (event) {
-      var namespaces = getNamespaces();
-      DBVehicle.db = request.result;
-      var db = DBVehicle.db;
-      for (var key in namespaces) {
-        if (!db.objectStoreNames.contains(namespaces[key])) {
-          var objectStore = db.createObjectStore(namespaces[key], { keyPath: 'id' });
-        }
-      }
-    };
-    request.onsuccess = function (e) {
-      DBVehicle.db = request.result;
-      DBVehicle.onready();
-    };
-    request.onerror = function (e) {
-      console.error(e);
-    };
-    function factory(namespace) {
-      namespace = formatNamespace(namespace);
-      var namespaces = JSON.parse(window.localStorage.getItem('namespaces')) || [];
-      if (namespaces.indexOf(namespace) == -1) {
-        namespaces.push(namespace);
-      }
-      window.localStorage.setItem('namespaces', JSON.stringify(namespaces));
-      function Database(namespace) {
-        this.namespace = namespace;
-        this.indexedDB = database;
-        this.DBVehicle = DBVehicle;
-        Object.defineProperties(this, {
-          db: {
-            get: function () {
-              return this.DBVehicle.db;
-            }
-          },
-          ready: {
-            get: function () {
-              return this.DBVehicle.db ? true : false;
-            }
-          },
-          onready: {
-            set: function (fn) {
-              this.DBVehicle.onready = fn;
+      ];
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    function openDatabase() {
+      var openRequest = indexedDB.open('employee', version);
+      openRequest.onsuccess = function (e) {
+        db = e.target.result;
+      };
+      openRequest.onerror = function (e) {
+        console.log('Error opening indexedDB');
+        console.dir(e);
+      };
+      openRequest.onupgradeneeded = function (e) {
+        console.log('Upgrading the indexedDB..');
+        db = e.target.result;
+        for (var i = 0; i < objectStores.length; i++) {
+          var param = objectStores[i];
+          if (!db.objectStoreNames.contains(param.resourceName)) {
+            var objectStore = db.createObjectStore(param.resourceName, { keyPath: param.keyPath });
+          } else {
+            var objectStore = db.transaction.objectStore(param.resourceName);
+          }
+          for (var h = 0; h < param.indexes.length; h++) {
+            var index = param.indexes[h];
+            if (!objectStore.indexNames.contains(index)) {
+              objectStore.createIndex(index, index, { unique: false });
             }
           }
-        });
+        }
+      };
+    }
+    function DB(resourceName) {
+      this.resourceName = resourceName;
+      if (!db) {
+        openDatabase();
       }
-      Database.prototype._cleanObj = function (obj) {
-        var re = new RegExp(/^\$/);
-        for (var key in obj) {
-          if (re.test(key) || angular.isFunction(obj[key])) {
-            delete obj[key];
-          }
-        }
-        return obj;
-      };
-      Database.prototype._save = function (obj, success, error) {
-        try {
-          var cleanObj = this._cleanObj(obj);
-          var request = this.db.transaction([this.namespace], 'readwrite').objectStore(this.namespace).put(cleanObj);
-          request.onsuccess = function (evt) {
-            (success || angular.noop)();
-          };
-          request.onerror = function (evt) {
-            console.error(evt);
-            (error || angular.noop)(evt);
-          };
-        } catch (e) {
-          console.error(e);
-          (error || angular.noop)(e);
-        }
-      };
-      Database.prototype._get = function (param, success, error) {
-        try {
-          param = parseFloat(param);
-          var store = this.db.transaction(this.namespace).objectStore(this.namespace).get(param).onsuccess = function (evt) {
-              var response = evt.target.result || null;
-              (success || angular.noop)(response);
-            };
-        } catch (e) {
-          console.error(e.stack);
-          (error || angular.noop)();
-        }
-      };
-      Database.prototype._query = function (param, success, error) {
-        var data = [];
-        var objectStore = this.db.transaction([this.namespace], 'readonly').objectStore(this.namespace);
-        var request = objectStore.openCursor();
-        request.onsuccess = function (evt) {
-          var cursor = evt.target.result;
+      this.query = function () {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName]);
+        objectStore.openCursor().onsuccess = function (event) {
+          var data = [], cursor = event.target.result;
           if (cursor) {
-            data.push(cursor.value);
+            data.append(cursor.value);
             cursor.continue();
           } else {
-            (success || angular.noop)(data);
+            deferred.resolve(data);
           }
         };
-        request.onerror = function (evt) {
-          console.error(evt);
-          (error || angular.noop)();
+        return deferred.promise;
+      };
+      this.get = function (id) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName]);
+        var request = objectStore.get(id);
+        request.onsuccess = function (e) {
+          var result = request.result;
+          deferred.resolve(result);
         };
+        return deferred.promise;
       };
-      Database.prototype._remove = function (arg, success, error) {
-        var request = this.db.transaction([this.namespace], 'readwrite').objectStore(this.namespace).delete(arg);
-        request.onsuccess = function (evt) {
-          (success || angular.noop)();
+      this.create = function (obj) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName], 'readwrite');
+        var request = objectStore.add(object);
+        request.onsucces = function (e) {
+          deferred.resolve();
         };
-        request.onerror = function (evt) {
-          (error || angular.noop)();
+        request.onerror = function (e) {
+          console.log(e.target.error.name);
         };
+        return deferred.promise;
       };
-      Database.prototype._clear = function (success, error) {
-        try {
-          var store = this.db.transaction(this.namespace, 'readwrite').objectStore(this.namespace);
-          store.clear().onsuccess = function () {
-            (success || angular.noop)();
-          };
-        } catch (e) {
-          console.error(e.stack);
-          (error || angular.noop)(e);
-        }
-      };
-      Database.prototype.query = function (arg1, arg2, arg3) {
-        var success, error, param;
-        switch (arguments.length) {
-        case 1:
-          angular.isFunction(arg1) ? success = arg1 : param = arg1;
-          break;
-        case 2:
-          if (angular.isFunction(arg1)) {
-            success = arg1;
-            error = arg2;
-          } else {
-            param = arg1;
-            success = arg2;
-          }
-          break;
-        case 3:
-          if (angular.isFunction(arg1)) {
-            success = arg1;
-            error = arg2;
-          } else {
-            param = arg1;
-            success = arg2;
-            error = arg3;
-          }
-          break;
-        default:
-          throw new RangeError('Expects between 1-3 arguments');
-        }
-        try {
-          this._query(param, success, error);
-        } catch (e) {
-        }
-      };
-      Database.prototype.get = function (param, success, error) {
-        if (arguments.length < 1 && arguments.length > 3) {
-          throw new RangeError('Expects between 1-3 argumeents');
-        }
-        try {
-          this._get(param, success, error);
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      Database.prototype.save = function (obj, success, error) {
-        try {
-          if (angular.isArray(obj)) {
-            for (var key in obj) {
-              this._save(obj[key]);
-            }
-            (success || angular.noop)();
-          } else {
-            this._save(obj, success, error);
-          }
-        } catch (e) {
-          console.error(e.stack);
-        }
-      };
-      Database.prototype.remove = function (arg, success, error) {
-        try {
-          this._remove(arg, success, error);
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      Database.prototype.clear = function (success, error) {
-        this._clear(success, error);
-      };
-      Database.prototype.destroy = function (success) {
-        this.indexedDB.deleteDatabase('app').onsuccess = function () {
-          (success || angular.noop)();
+      this.update = function (obj) {
+        var deferred = $q.defer(), objectStore = db.transaction([this.resourceName], 'readwrite');
+        var request = objectStore.put(object);
+        request.onsucces = function (e) {
+          deferred.resolve();
         };
+        request.onerror = function (e) {
+          console.log(e.target.error.name);
+        };
+        return deferred.promise;
       };
-      return new Database(namespace);
     }
-    return factory;
+    function DBFactory(resourceName) {
+      return new DB(resourceName);
+    }
+    return DBFactory;
   }
 ]);
 angular.module('employeeApp').controller('ProductInventoryCtrl', [
@@ -4514,8 +4367,13 @@ angular.module('employeeApp.services').factory('Geocoder', [
       return addrStr;
     }
     function Geocoder() {
-      this.google = google || {};
-      this.geocoder = new google.maps.Geocoder();
+      this.google = 'google' in window ? window.google : {
+        maps: {
+          Geocoder: angular.noop,
+          LatLng: angular.noop
+        }
+      };
+      this.geocoder = new this.google.maps.Geocoder();
     }
     Geocoder.prototype._getRegion = function (country) {
       switch (country.toLocaleLowerCase()) {
@@ -4573,6 +4431,14 @@ angular.module('employeeApp.services').factory('Geocoder', [
       } else {
         throw new TypeError('Arguments must be in the form of an object.');
       }
+    };
+    Geocoder.prototype.reverseGeocode = function (lat, lng) {
+      var deferred = $q.defer();
+      var latLng = new this.google.maps.LatLng(lat, lng);
+      this.geocoder.geocode({ 'latLng': latLng }, function (results, status) {
+        deferred.resolve(results);
+      });
+      return deferred.promise;
     };
     return new Geocoder();
   }
@@ -5186,6 +5052,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   '$location',
   '$http',
   function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http) {
+    console.log($scope.types);
     var fetching = true, index = 0, currentSelection;
     Notification.display('Loading supplies...', false);
     $http.get('/api/v1/supply/type').success(function (response) {
@@ -5193,7 +5060,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       $scope.types.splice($scope.types.indexOf(null), 1);
     });
     $scope.scannerMode = false;
-    $scope.supplies = Supply.query(function () {
+    $scope.supplies = Supply.query({ 'country': $scope.country }, function () {
       fetching = false;
       Notification.hide();
       changeSelection(index);
@@ -5202,7 +5069,8 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       if (q) {
         Supply.query({
           limit: 10,
-          q: q
+          q: q,
+          'country': $scope.country
         }, function (resources) {
           for (var i = 0; i < resources.length; i++) {
             if ($scope.supplies.indexOfById(resources[i].id) == -1) {
@@ -5219,11 +5087,14 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
         Notification.display('Loading more supplies...', false);
         Supply.query({
           offset: $scope.supplies.length,
-          limit: 50
+          limit: 50,
+          country: $scope.country
         }, function (resources) {
           Notification.hide();
           for (var i = 0; i < resources.length; i++) {
-            $scope.supplies.push(resources[i]);
+            if ($scope.supplies.indexOfById(resources[i].id) == -1) {
+              $scope.supplies.push(resources[i]);
+            }
           }
         });
       }
@@ -5412,7 +5283,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   'Notification',
   '$filter',
   '$timeout',
-  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout) {
+  '$window',
+  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window) {
     $scope.showSuppliers = false;
     $scope.showSupplies = false;
     $scope.suppliers = Supplier.query({ limit: 0 });
@@ -5492,7 +5364,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           Notification.display('Creating purchase order...', false);
           $scope.po.$save(function (response) {
             try {
-              window.open(response.pdf.url);
+              $window.open(response.pdf.url);
             } catch (e) {
               console.warn(e);
             }
@@ -5537,6 +5409,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
           var units = scope.supply.units;
           var type = scope.supply.type;
           return scope.supply.new_supply ? units === 'pc' || units === 'pack' || units === 'kg' && type === 'packaging' ? true : false : false;
+        };
+        scope.types = function () {
+          return 'ok';
         };
         scope.supply = new Supply();
         scope.supply.units = 'pc';
@@ -6087,7 +5962,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   'PurchaseOrder',
   'Notification',
   '$location',
-  function ($scope, $routeParams, PurchaseOrder, Notification, $location) {
+  '$window',
+  function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window) {
     Notification.display('Loading purchase order ' + $routeParams.id + '...', false);
     $scope.po = PurchaseOrder.get({
       id: $routeParams.id,
@@ -6095,8 +5971,28 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     }, function () {
       Notification.hide();
     });
+    $scope.update = function () {
+      Notification.display('Saving changes to Purchase Order for ' + $scope.po.id, false);
+      $scope.po.$update(function () {
+        Notification.display('Changes to Purchase Order ' + $scope.po.id + ' saved.');
+        $window.open($scope.po.pdf.url);
+      }, function (e) {
+        console.error(e);
+      });
+    };
+    $scope.addItem = function (item) {
+      if ($scope.po.items.indexOfById(item) != -1) {
+        $scope.showAddItem = false;
+        $scope.po.items.push(item);
+      } else {
+        Notification.display('This item is already present in the purchase order');
+      }
+    };
+    $scope.removeItem = function ($index) {
+      $scope.po.items.splice($index, 1);
+    };
     $scope.viewPDF = function () {
-      window.open($scope.po.pdf.url);
+      $window.open($scope.po.pdf.url);
     };
     $scope.order = function () {
       Notification.display('Updating purchase order...', false);
@@ -6155,13 +6051,22 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   '$timeout',
   '$location',
   'scanner',
-  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner) {
+  '$window',
+  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window) {
     Notification.display('Retrieving supply...', false);
     $scope.action = 'subtract';
     $scope.showQuantity = false;
-    $scope.supply = Supply.get({ 'id': $routeParams.id }, function () {
+    $scope.supply = Supply.get({
+      'id': $routeParams.id,
+      'country': $scope.country
+    }, function () {
       Notification.hide();
-      $scope.suppliers = $scope.supply.suppliers;
+      try {
+        if ($scope.supply.suppliers.length == 1) {
+          $scope.selectedSupplier = $scope.supply.suppliers[0];
+        }
+      } catch (e) {
+      }
     });
     globalScanner.disable();
     var updateLoopActive = false, timeoutPromise;
@@ -6196,7 +6101,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
     };
     $scope.viewStickers = function () {
       try {
-        window.open($scope.supply.sticker.url);
+        $window.open($scope.supply.sticker.url);
       } catch (e) {
         Notification.display('This supply is missing a sticker');
       }
@@ -6222,7 +6127,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         timeoutPromise = $timeout(function () {
           Notification.display('Updating ' + $scope.supply.description + '...', false);
           var supply = angular.copy($scope.supply);
-          supply.$update(function () {
+          supply.$update({ 'country': $scope.country }, function () {
             updateLoopActive = false;
             Notification.display($scope.supply.description + ' updated');
           }, function () {
@@ -6243,7 +6148,10 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       if (!quantity) {
         quantity = $scope.quantity;
       }
-      $scope.supply.$add({ quantity: quantity }, function () {
+      $scope.supply.$add({
+        quantity: quantity,
+        'country': $scope.country
+      }, function () {
         if (!$scope.supply.hasOwnProperty('suppliers')) {
           $scope.supply.suppliers = $scope.suppliers;
         }
@@ -6254,7 +6162,10 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       if (!quantity) {
         quantity = $scope.quantity;
       }
-      $scope.supply.$subtract({ quantity: quantity }, function () {
+      $scope.supply.$subtract({
+        quantity: quantity,
+        'country': $scope.country
+      }, function () {
         if (!$scope.supply.hasOwnProperty('suppliers')) {
           $scope.supply.suppliers = $scope.suppliers;
         }
@@ -6270,10 +6181,10 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       scanner.disable();
       $timeout.cancel(timeoutPromise);
       Notification.display('Updating ' + $scope.supply.description + '...', false);
-      $scope.supply.$update(function () {
+      $scope.supply.$update({ 'country': 'TH' }, function () {
         Notification.display($scope.supply.description + ' updated.');
       });
-      globalscanner.enable();
+      globalScanner.enable();
     });
     $scope.remove = function () {
       if ($scope.currentUser.hasPermission('delete_supply')) {
@@ -6451,33 +6362,39 @@ angular.module('employeeApp.services').factory('KeyboardNavigation', [
           });
         }
       }
+      function directionHandler(evt, fn) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        fn();
+      }
+      ;
       function parseKeydown(evt) {
         switch (evt.which) {
         case 37:
           if (onleft) {
-            onleft();
+            directionHandler(evt, onleft);
           }
           break;
         case 38:
           changeIndex(-1);
           if (onup) {
-            onup();
+            directionHandler(evt, onup);
           }
           break;
         case 39:
           if (onright) {
-            onright();
+            directionHandler(evt, onright);
           }
           break;
         case 40:
           changeIndex(1);
           if (ondown) {
-            ondown();
+            directionHandler(evt, ondown);
           }
           break;
         case 13:
           if (onenter) {
-            onenter();
+            directionHandler(evt, onenter);
           }
           break;
         }
@@ -6876,23 +6793,48 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
   'Notification',
   'KeyboardNavigation',
   '$timeout',
-  function (scanner, Supply, Notification, KeyboardNavigation, $timeout) {
+  '$rootScope',
+  function (scanner, Supply, Notification, KeyboardNavigation, $timeout, $rootScope) {
     return {
       templateUrl: 'views/templates/supply-scanner-modal.html',
       restrict: 'A',
       replace: true,
       scope: { 'visible': '=supplyScannerModal' },
       link: function postLink(scope, element, attrs) {
+        console.log(scope.country);
         var keyboardNav = new KeyboardNavigation();
         scope.action = 'subtract';
         scope.scanner = new scanner('supply-scanner-modal');
         var focusOnQuantity = function () {
-          element.find('input').focus();
+          var quantity = element.find('input');
+          quantity.focus();
+          quantity.val('');
+        };
+        scope.fractSize = function () {
+          return scope.supply ? scope.supply.units == 'pc' ? 0 : 2 : 2;
+        };
+        scope.$watch('showAddImage', function (val) {
+          if (val) {
+            element.addClass('add-image');
+          } else {
+            element.removeClass('add-image');
+          }
+        });
+        scope.addImage = function (data) {
+          Notification.display('Updating the supply\'s image', false);
+          var image = data.hasOwnProperty('data') ? data.data : data;
+          scope.supply.image = image;
+          scope.supply.$update(function () {
+            Notification.display('Supply\'s image updated.');
+          });
         };
         scope.changeQuantity = function (quantity) {
           quantity = quantity || scope.quantity;
           if (scope.supply.hasOwnProperty('id') && quantity > 0) {
-            scope.supply['$' + scope.action]({ quantity: quantity }, function () {
+            scope.supply['$' + scope.action]({
+              quantity: quantity,
+              'country': $rootScope.country
+            }, function () {
               Notification.display('Quantity of ' + scope.supply.description + ' changed to ' + scope.supply.quantity);
               scope.quantity = 0;
               $timeout(function () {
@@ -6903,7 +6845,10 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
         };
         scope.scanner.register(/^DRS-\d+$/, function (code) {
           Notification.display('Looking up supply...', false);
-          scope.supply = Supply.get({ id: code.split('-')[1] }, function (response) {
+          scope.supply = Supply.get({
+            id: code.split('-')[1],
+            'country': $rootScope.country
+          }, function (response) {
             Notification.hide();
             focusOnQuantity();
           }, function () {
@@ -6911,7 +6856,10 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
           });
         });
         scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
-          Supply.query({ upc: code }, function (response) {
+          Supply.query({
+            upc: code,
+            'country': $rootScope.country
+          }, function (response) {
             focusOnQuantity();
             try {
               scope.supply = response[0];
@@ -6953,11 +6901,13 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             scope.scanner.disable();
             keyboardNav.disable();
             scope.scanner.enableStandard();
+            scope.showAddImage = false;
           }
         });
         scope.$on('$destroy', function () {
-          keyNav.disable();
+          keyboardNav.disable();
           scope.scanner.disable();
+          scope.showAddImage = false;
         });
       }
     };
