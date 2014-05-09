@@ -327,7 +327,8 @@ angular.module('employeeApp').run([
               if (component.types.indexOf('country') != -1) {
                 console.log(component);
                 //Set country to main scope, to be called later
-                $rootScope.country = 'KH';  //$rootScope.country = component.short_name;
+                //$rootScope.country = 'KH';
+                $rootScope.country = component.short_name;
               }
             }
           }
@@ -340,6 +341,31 @@ angular.module('employeeApp').run([
     } else {
       console.log('Geolocation not available');
     }
+    /*
+	 * Determine if it is an iOS device
+	 */
+    window.iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
+    /*
+	 * Prevent rubber band effect of iOS webapp
+ 	 */
+    var scrollY = 0;
+    $(document).on('touchstart', function (e) {
+      scrollY = e.originalEvent.touches.item(0).clientY;
+    });
+    $(document).on('touchmove', function (e) {
+      var container = angular.element(e.target).parents('.scroll-enabled')[0];
+      if (container) {
+        var containerHeight = $(container).height();
+        var scrollDelta = scrollY - e.originalEvent.touches.item(0).clientY;
+        if (container.scrollTop == 0 && scrollDelta < 0) {
+          e.preventDefault();
+        } else if (containerHeight + container.scrollTop == container.scrollHeight && scrollDelta > 0) {
+          e.preventDefault();
+        }
+      } else {
+        e.preventDefault();
+      }
+    });
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
@@ -6220,7 +6246,8 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   '$rootScope',
   '$location',
   '$http',
-  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http) {
+  'FileUploader',
+  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader) {
     console.log($scope.types);
     /*
 	* Vars and flags
@@ -6238,6 +6265,30 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       Notification.hide();
       changeSelection(index);
     });
+    /*
+	* Adding image for ipads and iphones
+	* 
+	* This particular function is intended for the iphone and ipad.
+	* It allows the user to directly add an image to the supply from the 
+	* device's camera
+	*/
+    $scope.addImage = function (element, supply) {
+      //Upload the file
+      var promise = FileUploader.upload(element.files[0], '/api/v1/supply/image');
+      //Process the file after a successful upload
+      promise.then(function (data) {
+        Notification.display('Image uploaded');
+        //Apply the image data and url to the supply, 
+        //and then save the supply to the serve
+        $scope.safeApply(function () {
+          supply.image = data.hasOwnProperty('data') ? data.data : data;
+          supply.save();
+        });  //Process a failed upload
+      }, function (e) {
+        console.log(e);
+        Notification.display('Unable to upload image', false);
+      });
+    };
     /*
 	* Search mechanism
 	* 
@@ -8399,6 +8450,117 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
           scope.scanner.disable();
           scope.showAddImage = false;
         });
+      }
+    };
+  }
+]);
+'use strict';
+angular.module('employeeApp').service('Resizer', function Resizer() {
+});
+'use strict';
+angular.module('employeeApp').directive('touchstart', function () {
+  return {
+    restrict: 'A',
+    link: function postLink(scope, element, attrs) {
+      function touchStart(e) {
+        element.addClass('touch-start');
+      }
+      //Apply if an iOS device
+      if (iOS) {
+        element.on('touchstart', touchStart);
+        scope.$on('$destroy', function () {
+          element.off('touchstart', touchStart);
+        });
+      }
+    }
+  };
+});
+'use strict';
+angular.module('employeeApp').directive('touchmove', function () {
+  return {
+    restrict: 'A',
+    link: function postLink(scope, element, attrs) {
+      function touchMove(e) {
+        element.addClass('touch-move');
+        element.removeClass('touch-start');
+      }
+      //Apply if an iOS device 
+      if (iOS) {
+        element.on('touchmove', touchMove);
+        scope.$on('$destroy', function () {
+          element.off('touchmove', touchMove);
+        });
+      }
+    }
+  };
+});
+'use strict';
+angular.module('employeeApp').directive('touchend', function () {
+  return {
+    restrict: 'A',
+    link: function postLink(scope, element, attrs) {
+      function touchEnd(e) {
+        //element.addClass('touch-end');
+        element.removeClass('touch-start');
+        element.removeClass('touch-move');
+      }
+      //Apply if an iOS device
+      if (iOS) {
+        element.on('touchend', touchEnd);
+        scope.$on('$destroy', function () {
+          element.off('touchmove', touchEnd);
+        });
+      }
+    }
+  };
+});
+'use strict';
+angular.module('employeeApp').directive('touchselect', [
+  '$location',
+  function ($location) {
+    return {
+      restrict: 'A',
+      link: function postLink(scope, element, attrs) {
+        //Flags
+        var started = false, moved = false;
+        //Handlers
+        function click(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        function touchStart() {
+          console.log('touched');
+          started = true;
+        }
+        function touchMove() {
+          console.log('moved');
+          moved = true;
+        }
+        function touchEnd() {
+          if (started && !moved) {
+            console.log('time to click');
+            var url = attrs.ngHref || attrs.href;
+            scope.safeApply(function () {
+              $location.path(url);
+            });
+            element.click();
+          }
+          started = false;
+          moved = false;
+        }
+        if (iOS) {
+          element.on('click', click);
+          element.on('touchstart', touchStart);
+          element.on('touchmove', touchMove);
+          element.on('touchend', touchEnd);
+          //Release the event handlers
+          scope.$on('$destroy', function () {
+            element.off('click', click);
+            element.off('touchstart', touchStart);
+            element.off('touchmove', touchMove);
+            element.off('touchEnd', touchEnd);
+          });
+        }
       }
     };
   }
