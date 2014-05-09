@@ -211,6 +211,9 @@ function merge(permList, groupPerms) {
     });
   }
 }
+/*
+ * Declare the standard headers
+ */
 angular.module('employeeApp').config([
   '$httpProvider',
   function ($httpProvider) {
@@ -225,6 +228,9 @@ angular.module('employeeApp').config([
       'expires': '-1',
       'pragma': 'no-cache'
     };
+    /*
+     * Takes out the objects from the data 
+     */
     $httpProvider.defaults.transformResponse.push(function (data, headers) {
       if (typeof data == 'object') {
         if (data.hasOwnProperty('meta') && data.hasOwnProperty('objects')) {
@@ -235,6 +241,9 @@ angular.module('employeeApp').config([
     });
   }
 ]);
+/*
+ * Run top level application code
+ */
 angular.module('employeeApp').run([
   '$rootScope',
   'CurrentUser',
@@ -242,7 +251,14 @@ angular.module('employeeApp').run([
   '$http',
   'Geocoder',
   function ($rootScope, CurrentUser, scanner, $http, Geocoder) {
+    /*
+	 * Get the current user and place it at the top scope
+	 */
     $rootScope.currentUser = new CurrentUser();
+    /*
+     * Prototypical extension of core classes
+     */
+    //Array: indexById
     Array.prototype.indexOfById = function (needle) {
       needle = typeof needle == 'object' ? needle.hasOwnProperty('id') ? needle.id : null : needle;
       var haystack = this;
@@ -253,6 +269,12 @@ angular.module('employeeApp').run([
       }
       return -1;
     };
+    /*
+     * Finding a key by value
+     * 
+     * This function finds the first instance of a key 
+     * based on the value provided
+     */
     $rootScope.safeApply = function (fn) {
       var phase = this.$root.$$phase;
       if (phase == '$apply' || phase == '$digest') {
@@ -263,6 +285,10 @@ angular.module('employeeApp').run([
         this.$apply(fn);
       }
     };
+    /*
+     * Set values and objects that are used throughout
+     * the application
+     */
     $rootScope.units = {
       'in': 'Inch',
       cm: 'Centimeter',
@@ -276,21 +302,32 @@ angular.module('employeeApp').run([
     };
     window.globalScanner = new scanner('global');
     globalScanner.enable();
+    /*
+	 * Geolocating the user
+	 * 
+	 * Establishes the current country that the user is currently in.
+	 * First uses the HTML5 geolocation test to determine, if the browser
+	 * has implemented. And then retrieves the lat and lng. The lat and lng 
+	 * are then reverse geolocated with the google maps reserves geocode
+	 * service. The results are then search for the country code. 
+	 * 
+	 */
+    //Set initial country
     $rootScope.country = 'TH';
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(function (position) {
+        //Reverse geocode and returns the promise
         var promise = Geocoder.reverseGeocode(position.coords.latitude, position.coords.longitude);
+        //Set the success and error callbacks for the promise
         promise.then(function (results) {
+          //Cycle through componenets to look for country
           for (var i in results[0].address_components) {
             var component = results[0].address_components[i];
             if (typeof component.types == 'object') {
               if (component.types.indexOf('country') != -1) {
                 console.log(component);
-<<<<<<< HEAD
                 //Set country to main scope, to be called later
                 //$rootScope.country = 'KH';
-=======
->>>>>>> 64d5a2c09ea10c1e3dc56eca6335c0cebdc40054
                 $rootScope.country = component.short_name;
               }
             }
@@ -354,6 +391,7 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
     };
     $scope.getPosition = function () {
       if ($scope.customer.address.address1 && $scope.customer.address.city && $scope.customer.address.territory && $scope.customer.address.country && $scope.customer.address.zipcode) {
+        //Get promise and bind to call backs
         var promise = Geocoder.geocode($scope.customer.address);
         promise.then(function (results) {
           if ($scope.marker) {
@@ -361,11 +399,14 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
           } else {
             $scope.marker = $scope.map.createMarker(results[0].geometry.location);
             $scope.marker.onchange = function (latLng) {
+              //Set address lat and lng
               $scope.customer.address.lat = $scope.marker.lat;
               $scope.customer.address.lng = $scope.marker.lng;
             };
           }
+          //Reposition the map to the marker
           $scope.map.setPosition(results[0].geometry.location);
+          //Set the Address lat and lng
           $scope.customer.address.lat = $scope.marker.lat;
           $scope.customer.address.lng = $scope.marker.lng;
         }, function (status) {
@@ -386,6 +427,30 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
     var updateLoopActive = false, timeoutPromise;
     $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
     });
+    /*
+    function updatePosition(results){
+        if ($scope.marker) {
+            $scope.marker.setPosition(results[0].geometry.location);
+        } else {
+            $scope.marker = $scope.map.createMarker(results[0].geometry.location);
+            $scope.marker.onchange = function (latLng) {
+                //Set address lat and lng
+                $scope.customer.address.lat = $scope.marker.lat;
+                $scope.customer.address.lng = $scope.marker.lng;
+                $scope.customer.address.user_defined_latlng = true;
+                $scope.customer.$update();
+            };
+        }
+      
+        //Reposition the map to the marker
+        $scope.map.setPosition(results[0].geometry.location);
+      
+        //Set the Address lat and lng
+        $scope.customer.address[0].lat = $scope.marker.lat;
+        $scope.customer.address[0].lng = $scope.marker.lng;
+    }
+    */
+    //Mehtods
     $scope.update = function () {
     };
     $scope.$watch(function () {
@@ -407,6 +472,13 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
         }, 5000);
       }
     }, true);
+    /*
+    $scope.updatePosition = function () {
+        var promise = Geocoder.geocode($scope.customer.address);
+        promise.then(function (results) {
+            updatePosition(results);
+        });
+    };*/
     $scope.remove = function () {
       $scope.customer.$delete(function () {
         $location.path('/contact/customer');
@@ -429,10 +501,22 @@ angular.module('employeeApp').controller('ContactCustomerViewCtrl', [
   '$filter',
   function ($scope, Customer, Notification, $location, $filter) {
     var fetching = false;
+    //Display system notification
     Notification.display('Loading Customers...', false);
+    //Poll the server for customers
     $scope.customers = Customer.query(function () {
       Notification.hide();
     });
+    /*
+     * Searches the server
+     * 
+     * This function will search the server via GET
+     * with the query string as a parameter
+     * if the query string is not undefined
+     * 
+     * The resources returned are then added to the 
+     * list of they are are not already in the list
+     */
     $scope.$watch('query', function (q) {
       if (q) {
         Customer.query({ q: q }, function (resources) {
@@ -467,7 +551,10 @@ angular.module('employeeApp').controller('ContactSupplierAddCtrl', [
   'Notification',
   function ($scope, Supplier, $location, Notification) {
     $scope.supplier = new Supplier();
+    //Mehtods
+    //addS  contact to the supplier
     $scope.addContact = function () {
+      //Notify
       Notification.display('Contact Added to Supplier');
       $scope.supplier.contacts = $scope.supplier.contacts || [];
       $scope.supplier.contacts.push(angular.copy($scope.contact));
@@ -484,10 +571,13 @@ angular.module('employeeApp').controller('ContactSupplierAddCtrl', [
           });
         });
     };
+    //Method to save the supplier to the database
     $scope.save = function () {
       if ($scope.form.$valid) {
+        //Notify
         Notification.display('Saving supplier...', false);
         $scope.supplier.$save(function () {
+          //Notify
           Notification.display('Supplier Saved');
           $location.path('/contact/supplier');
         }, function (e) {
@@ -505,10 +595,15 @@ angular.module('employeeApp').controller('ContactSupplierViewCtrl', [
   'Notification',
   '$filter',
   function ($scope, Supplier, Notification, $filter) {
+    //System message
     Notification.display('Loading suppliers...', false);
+    //Load initial suppliers
     $scope.suppliers = Supplier.query(function () {
       Notification.hide();
     });
+    /*
+     * Search Mechanism
+     */
     $scope.$watch('query', function (q) {
       if (q) {
         Supplier.query({ q: q }, function (resources) {
@@ -542,15 +637,19 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
   '$timeout',
   function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout) {
     var updateLoopActive = false, timeoutPromise;
+    //Retreive the supplier from the server
     $scope.supplier = Supplier.get({ 'id': $routeParams.id });
+    //addS  contact to the supplier
     $scope.addContact = function (contact) {
       $scope.supplier.contacts = $scope.supplier.contacts || [];
       contact = contact || $scope.contact;
       $scope.supplier.contacts.push(contact);
       $scope.contact = {};
       $scope.showAddContact = false;
+      //Save changes
       $scope.supplier.$update();
     };
+    //Remove a supplier contact
     $scope.deleteContact = function ($index) {
       var contact = SupplierContact.get({ 'id': $scope.supplier.contacts[$index].id }, function () {
           $scope.supplier.contacts.splice($index, 1);
@@ -595,6 +694,64 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     });
   }
 ]);
+/*
+ * Resource Service
+ * 
+ * The purpose of this service is too provide
+ * a wrapper for the native $resource service
+ * provided by AngularJS. This resource allows us 
+ * to interface with the storage service and prepopulat
+ * the response before updating with the response 
+ * from the server.
+ * 
+ * The service must all be able to poll and used the 
+ * 'last-modified' key to retrieve the most recent version
+ * of data
+ * 
+ * Capabilities:
+ * 
+ * -Perform basic GET, PUT, POST and DELETE operations
+ * -prepopulate the response with data from the storage
+ *  service
+ * 
+ * Structure and Cycle:
+ * 
+ * The intended structure and cycle of the resource is
+ * 1. A GET request is made to retrieve an item or an
+ *    array of items
+ *    -If there is already prexisting data then retrieve
+ *     the data from the storage and respond
+ *    -When the server responsds update the returned data
+ *     by finding the id and then updating the item
+ * 2. Save the last-checked time to be used later for polling
+ * 3. Returns a new Resource that prototypically inherits from
+ *    the parent. 
+ * 4. Save the resource should call the underlying request from 
+ *    the parent. 
+ * 
+ * Properties:
+ * 
+ * -$$poll: If true begin a timeout based
+ *      repeated calling of the initial function
+ * -$$last_checked: Date and Time of the last GET
+ *      request made to the server that was successful
+ * -$$timeout: Hold the reference to the current timeout
+ * 
+ * Public Methods:
+ * 
+ * Parent Methods:
+ * -poll()
+ * -get()
+ * -query()
+ * -save()
+ * -delete()
+ * 
+ * Child Methods:
+ * -$save()
+ * -$delete()
+ * -$get()
+ * -$query()
+ */
 angular.module('employeeApp.services').factory('Resource', [
   'eaStorage',
   '$rootScope',
@@ -605,6 +762,7 @@ angular.module('employeeApp.services').factory('Resource', [
   'Notification',
   function (eaStorage, $rootScope, $http, $q, $parse, $resource, Notification) {
     function ResourceFactory(url, paramDefaults, actions) {
+      //Default methods available to the public
       var DEFAULT_ACTIONS = {
           'get': { method: 'GET' },
           'save': { method: 'POST' },
@@ -615,9 +773,14 @@ angular.module('employeeApp.services').factory('Resource', [
           },
           'remove': { method: 'DELETE' },
           'delete': { method: 'DELETE' }
-        }, oResource = new $resource(url, paramDefaults, actions), storage = eaStorage(url.split(/\//g)[0]), db, value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
+        }, oResource = new $resource(url, paramDefaults, actions),
+        //jshint ignore:line
+        storage = eaStorage(url.split(/\//g)[0]), db,
+        // = eaIndexedDB(url),
+        value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
           return $parse(path)(obj);
         };
+      /*Helper Functions*/
       function extractParams(data, actionParams) {
         var ids = {};
         actionParams = angular.extend({}, paramDefaults, actionParams);
@@ -629,6 +792,10 @@ angular.module('employeeApp.services').factory('Resource', [
         });
         return ids;
       }
+      /*
+         * Locates the index of an object
+         * which matches the supplied id
+         */
       function indexOfId(array, id) {
         for (var i = 0; i < array.length; i++) {
           if (array[i].hasOwnProperty('id')) {
@@ -639,7 +806,11 @@ angular.module('employeeApp.services').factory('Resource', [
         }
         return -1;
       }
+      //Extend all actions to include default and argument actions
       actions = angular.extend({}, DEFAULT_ACTIONS, actions);
+      /*
+         * Initialize the Resource the properties
+         */
       function Resource(value) {
         angular.extend(this, value || {});
         this.$$poll = false;
@@ -647,18 +818,26 @@ angular.module('employeeApp.services').factory('Resource', [
         this.$$timeout = null;
         this.$$date = true;
       }
+      /*
+         * Loop through all the actions and assign them 
+         * as methods to the Resource and process the data
+         * and the params for each method
+         */
       angular.forEach(actions, function (action, name) {
         var hasBody = action.method == 'POST' || action.method == 'PUT' || action.method == 'PATCH';
+        //Default methods
         Resource[name] = function (a1, a2, a3, a4) {
           var params = {};
           var data;
           var success = angular.noop;
           var error = null;
           var promise;
+          /* jshint ignore: start */
           switch (arguments.length) {
           case 4:
             error = a4;
             success = a3;
+          //fallthrough
           case 3:
           case 2:
             if (angular.isFunction(a2)) {
@@ -668,7 +847,7 @@ angular.module('employeeApp.services').factory('Resource', [
                 break;
               }
               success = a2;
-              error = a3;
+              error = a3;  //fallthrough
             } else {
               params = a1;
               data = a2;
@@ -688,28 +867,77 @@ angular.module('employeeApp.services').factory('Resource', [
           default:
             throw 'Expected between 0-4 arguments [params, data, success, error], got ' + arguments.length + ' arguments.';
           }
+          /* jshint ignore: end */
+          /*
+                 * RESETTING AREA:
+                 * 
+                 * This area will reset the settings of the call if the previous 
+                 * action does not meet the current action. We do this in the case 
+                 * of polling where the action is the same as before.
+                 */
           if (previousAction != name || params != previousParams) {
             this.$$last_checked = undefined;
           }
+          /*
+                 * CRTICIAL COMPONENT:
+                 * 
+                 * This part will determine whether to set the return referenced as an 
+                 * array, object, or to keep it in its current state. This is crucial 
+                 * for when polling is activated. 
+                 */
           if (action.isArray) {
             value = angular.isArray(value) ? value || [] : [];
           } else {
             value = angular.isObject(value) && !value.hasOwnProperty('length') ? value || {} : {};
             value = this instanceof Resource ? this : new Resource(value);
           }
+          /*
+                 * Determines whether to include the last modified parameter depending
+                 * on whether the 'last_checked' var has a value or not
+                 */
+          //dump((this.$$last_checked && typeof(this.$$last_checked) != "boolean") && action.method == "GET")
           if (this.$$last_checked !== undefined && action.method == 'GET') {
             angular.extend(params, { last_modified: this.$$last_checked.toISOString() });
           }
+          /*
+                if(storage.getLastModified() && action.method == "GET"){
+                    angular.extend(params, {last_modified:storage.getLastModified().toISOString()});
+                }
+                */
           var oPromise = oResource[name](params, data, function (response) {
+              /*
+                     * If the hasBody is positive, it indicates this is a child
+                     * resource and there for the resource it self should be update
+                     * with the data because it is currently presented tot he user
+                     */
               if (action.method == 'DELETE' || hasBody) {
                 angular.extend(this, response);
               }
+              /*
+                     * If the method is GET it indicates that the user has requested 
+                     * data and the resource is a gateway and it itself is no the the
+                     * data holder. There for the reference that is returned to the user 
+                     * should be update with either the array of items or the item data
+                     * respecitvely.
+                     */
               if (action.method === 'GET') {
                 if (action.isArray || angular.isArray(response)) {
                   var index;
+                  /*
+                             * We use vanilla javascript to iterate through 
+                             * the array and apply changes to that the 
+                             * digest is not trigger initially. We wait till
+                             * the end to trigger the digest
+                             */
                   for (var i in response) {
+                    //Find the index of the matched item by id
                     index = indexOfId(value, response[i].id);
                     if (index > -1) {
+                      /*
+                                    * In order not to waste resource we
+                                    * first check if the two items are equal or not.
+                                    * If they are not equal then we perform an extend
+                                    */
                       if (!angular.equals(value[index], response[i])) {
                         angular.extend(value[index], new Resource(response[i]));
                         if (value[index].deleted) {
@@ -719,6 +947,7 @@ angular.module('employeeApp.services').factory('Resource', [
                         }
                       }
                     } else {
+                      //Add the new item
                       if (!response[i].deleted) {
                         try {
                           value.push(new Resource(response[i]));
@@ -729,6 +958,7 @@ angular.module('employeeApp.services').factory('Resource', [
                     }
                   }
                 } else {
+                  //Upate the reference with the data
                   if (response.deleted) {
                     angular.copy({}, value);
                     Notification.display('This resource no longer exists.');
@@ -737,13 +967,36 @@ angular.module('employeeApp.services').factory('Resource', [
                   }
                 }
               }
+              /*
+                     * Determines whether the action is to delete from the server
+                     * or to post and get data. Because post and get data would 
+                     * both return responses we would save this to the storage. 
+                     * For delete requests, we would have to delete the item
+                     */
+              /*
+                    if(db.ready){
+                        action.method == "DELETE" ? db.remove(params) : hasBody ? db.save(this) : db.save(value);  // jshint ignore:line
+                    }*/
+              //action.method == "DELETE" ? storage.remove(params) : hasBody ? storage.save(this) : storage.save(value);  
+              /*
+                     * Last checked
+                     */
+              //Run success call back
               success(response);
             }.bind(this), function (e) {
             });
+          //return placeholder
+          /*
+                 * We set what action just took place
+                 * so that we may know if to change
+                 * the settings of the current action
+                 */
           previousAction = name;
           previousParams = params;
+          //Return the reference
           return value;
         };
+        //Prototypical methods
         Resource.prototype['$' + name] = function (a1, a2, a3) {
           var params = extractParams(this), success = angular.noop, error;
           switch (arguments.length) {
@@ -778,13 +1031,17 @@ angular.module('employeeApp.services').factory('Resource', [
 ]);
 angular.module('employeeApp.services').factory('$storage', [function () {
     function storageFactory(key) {
+      //Create the main factory
       function StorageEngine(key) {
+        //ASSIGNS KEY TO OBJECT
         this.key = key;
+        //CHECKS IF SUPPORTS LOCALSTORAGE
         if ('localStorage' in window && window.localStorage !== null) {
           this.storage = window.localStorage;
           this.getKeys();
         }
       }
+      //determines if storage works
       StorageEngine.prototype.isSupported = function () {
         try {
           return 'localStorage' in window && window.localStorage !== null;
@@ -792,35 +1049,51 @@ angular.module('employeeApp.services').factory('$storage', [function () {
           return false;
         }
       };
+      /*
+         * The following methods deal with the key and 
+         * array of keys that holds the ids for individual 
+         * objects under this key.
+         */
+      //Create a key
       StorageEngine.prototype.createKeysArray = function () {
         this.keys = [];
         this.saveKeys();
         return this.keys;
       };
+      //Save keys
       StorageEngine.prototype.saveKeys = function () {
-        typeof this.keys === 'object' ? this.storage.setItem(this.key, JSON.stringify(this.keys)) : this.createKeysArray();
+        typeof this.keys === 'object' ? this.storage.setItem(this.key, JSON.stringify(this.keys)) : this.createKeysArray();  // jshint ignore:line
       };
       StorageEngine.prototype.createKey = function () {
         key = 'storage-temp' + Date.now();
         return key;
       };
+      //Save a key
       StorageEngine.prototype.saveKey = function (arg) {
         var itemKey = this.key + arg;
+        //CHECK IF keys is valid
         this.keys = this.keys || this.createKeysArray();
+        //Checks for duplicates
         if (this.keys.indexOf(itemKey) === -1) {
           this.keys.push(itemKey);
           this.saveKeys();
         }
         return itemKey;
       };
+      //Retrieve all keys
       StorageEngine.prototype.getKeys = function () {
+        //Get keys
         this.keys = JSON.parse(this.storage.getItem(this.key));
+        //If keys are not an array, create an array to hold keys
         if (typeof this.keys != 'object') {
+          //Create an for keys and saves it
           this.createKeysArray();
         }
         return this.keys;
       };
+      //Delete a key
       StorageEngine.prototype.deleteKey = function (key) {
+        //Checks whether keys are valid
         this.keys = this.keys || this.getKeys();
         var index = this.keys.indexOf(key);
         if (index != -1) {
@@ -831,6 +1104,7 @@ angular.module('employeeApp.services').factory('$storage', [function () {
           return false;
         }
       };
+      //Clear Keys
       StorageEngine.prototype.clearKeys = function () {
         this.keys = [];
         this.storage.setItem(this.key, JSON.stringify(this.keys));
@@ -840,19 +1114,31 @@ angular.module('employeeApp.services').factory('$storage', [function () {
           return false;
         }
       };
+      //Get a key
       StorageEngine.prototype.getKey = function (arg) {
+        //CREATE TEMPORARY KEY
         return this.key + arg;
       };
+      /*
+         * The following methods deal with the actual retrieving, storing
+         * and delete of the object themselves represented by the keys
+         */
+      //querya all items of name space
       StorageEngine.prototype.query = function () {
+        //create array to hold data
         var data = [], i;
+        //iterate through all the keys
         this.keys = this.getKeys();
         for (i in this.keys) {
           data.push(JSON.parse(this.storage.getItem(this.keys[i])));
         }
+        //return the data
         return data;
       };
+      //Save item into storage
       StorageEngine.prototype.save = function (data) {
         var itemKey;
+        //Function to save object if it has an id
         function saveFn(obj) {
           if (obj.hasOwnProperty('id')) {
             var itemKey = this.saveKey(obj.id);
@@ -863,23 +1149,31 @@ angular.module('employeeApp.services').factory('$storage', [function () {
           }
         }
         var saveObject = saveFn.bind(this);
+        //Check if the data is valid
         if (data) {
+          //Checks if an array or not
           if (angular.isArray(data)) {
+            //loop through items
             for (var i = 0; i < data.length; i++) {
+              //return false if data did not save
               if (!saveObject(data[i])) {
                 return false;
               }
             }
           } else {
+            //return false if data did not save
             return saveObject(data) ? data : false;
           }
         } else {
+          //return false if data is not valid
           return false;
         }
       };
+      //Get an item from storage
       StorageEngine.prototype.get = function (args) {
         if (args.hasOwnProperty('id')) {
           var itemKey;
+          //CHECKS IF THE ARG
           itemKey = this.getKey(args.id);
           if (itemKey) {
             return JSON.parse(this.storage.getItem(itemKey));
@@ -890,24 +1184,35 @@ angular.module('employeeApp.services').factory('$storage', [function () {
           return args;
         }
       };
+      //Remove an Item from storage
       StorageEngine.prototype.remove = function (args) {
+        //declare vars
         var itemKey;
+        //checks if object has an id
         if (args.hasOwnProperty('id')) {
+          //get item key from id
           itemKey = this.getKey(args.id);
+          //delete item and item key
           this.storage.removeItem(itemKey);
           this.deleteKey(itemKey);
-          return true;
+          return true;  //returns false is has no id
         } else {
           return false;
         }
       };
+      //Clear Items
       StorageEngine.prototype.clear = function () {
         var index;
+        //clear items
         for (index in this.keys) {
           this.storage.removeItem(this.keys[index]);
         }
+        //clear keys
         this.clearKeys();
       };
+      /*
+         * Save and retrieves last modified time for resources
+         */
       StorageEngine.prototype.saveLastModified = function (date) {
         this.storage.setItem(this.key + '-last_modified', date.toISOString());
       };
@@ -944,9 +1249,12 @@ angular.module('employeeApp.services').factory('Supplier', [
 angular.module('employeeApp.services').factory('CurrentUser', [
   '$http',
   function ($http) {
+    //Create the initial object
     function User() {
+      //Declare flags and array holder for fns
       this.ready = false;
       this._onready = [];
+      //Get information about the current user
       var promise = $http.get('/api/v1/current_user');
       promise.then(function (response) {
         angular.extend(this, response.data || {});
@@ -956,10 +1264,16 @@ angular.module('employeeApp.services').factory('CurrentUser', [
         }
       }.bind(this));
     }
+    //checks if user has a permission
     User.prototype.hasPermission = function (permStr) {
+      //If the permissions are not yet
+      //loaded then false is returnd
       return this.modules ? this.permissions.indexOf(permStr) !== -1 ? true : false : false;
     };
+    //Checks if user has a module
     User.prototype.hasModule = function (moduleStr) {
+      //If the permissions are not yet
+      //loaded then false is returnd
       return this.modules ? this.modules.indexOf(moduleStr) !== -1 ? true : false : false;
     };
     Object.defineProperties(User.prototype, {
@@ -971,6 +1285,7 @@ angular.module('employeeApp.services').factory('CurrentUser', [
         }
       }
     });
+    //return the user
     return User;
   }
 ]);
@@ -991,12 +1306,21 @@ angular.module('employeeApp.services').factory('Notification', [
       this.notification = angular.element('#notification');
       this.promise = null;
     }
+    /*
+     * The display function will display a new messge
+     * And call a timeout after a certain amount of time
+     * to fade out the message. If the message is already displayed,
+     * it will just change the message and cancel the old timeout.
+     */
     Notifier.prototype.display = function (message, autoHide) {
+      //Change message and 
       $rootScope.safeApply(function () {
         this.notification.html(message);
         center(this.notification);
         this.notification.addClass('active');
       }.bind(this));
+      //Cancels the fadingout and 
+      //removal of message
       if (this.promise) {
         $timeout.cancel(this.promise);
       }
@@ -1007,6 +1331,7 @@ angular.module('employeeApp.services').factory('Notification', [
       }
     };
     Notifier.prototype.hide = function () {
+      //Remove Message and 
       this.notification.removeClass('active');
     };
     return new Notifier();
@@ -1108,14 +1433,24 @@ angular.module('employeeApp.filters').filter('dateFilter', [function () {
 angular.module('employeeApp.filters').filter('beautify', [function () {
     return function (input) {
       try {
-        var newStrArray = [], newStr, upperLetter, newWord, words = input.split(/\s+/);
+        //declare vars
+        var newStrArray = [], newStr, upperLetter, newWord,
+          //split the words into array
+          words = input.split(/\s+/);
+        //loops through the words and uppercase first letter
         angular.forEach(words, function (word) {
+          //Capitalize first lteer 
           upperLetter = word.charAt(0).toUpperCase();
+          //get remainder of word
           newWord = word.slice(1);
+          //create new formatted word
           newWord = upperLetter + newWord;
+          //add to new string array
           newStrArray.push(newWord);
         });
+        //join new string array
         newStr = newStrArray.join(' ');
+        //return string
         return newStr;
       } catch (e) {
         return input;
@@ -1123,6 +1458,7 @@ angular.module('employeeApp.filters').filter('beautify', [function () {
     };
   }]);
 angular.module('employeeApp.filters').filter('exclude', [function () {
+    //function to compare
     return function (array, key, value) {
       if (!(array instanceof Array)) {
         return [];
@@ -1153,6 +1489,7 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
     $scope.modelList = Model.query({ limit: 0 });
     $scope.configurationList = Configuration.query({ limit: 0 });
     $scope.upholstery = new Upholstery();
+    //Text for tooltips
     $scope.modelText = 'Choose a Model';
     $scope.configurationText = 'Choose a Configuration';
     $scope.widthText = 'Enter a Width in millimeters';
@@ -1162,9 +1499,11 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
     $scope.lpText = 'Enter the number of Lumbar Pillows';
     $scope.cpText = 'Enter the number of Corner Pillows';
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('/api/v1/upholstery/image', {
@@ -1244,7 +1583,9 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
         $scope.updateLoopActive = false;
       });
     });
+    //Upload Image
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
@@ -1335,9 +1676,11 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
   '$location',
   function ($scope, Model, Notification, $location) {
     $scope.model = new Model();
+    //Tooltips
     $scope.nameText = 'Enter a Name for this Model';
     $scope.modelText = 'Enter a Model Number for this Model';
     $scope.collectionText = 'Enter this Model\'s Collection';
+    //Adds a new models
     $scope.save = function (model) {
       Notification.display('Saving Model...', false);
       $scope.model.$create(function () {
@@ -1346,9 +1689,11 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
       });
     };
     $scope.uploadImage = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('/api/v1/model/image', {
@@ -1413,10 +1758,13 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
   '$http',
   function ($scope, Model, $routeParams, $location, Notification, $http) {
     $scope.model = Model.get({ 'id': $routeParams.id });
+    //Uploads Profie Image
     $scope.upload = function () {
+      //display notification
       Notification.display('Uploading Model Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('fabric/' + $scope.model.id + '/image', {
@@ -1436,9 +1784,13 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
       });
     };
     $scope.remove = function () {
+      //Notify
       Notification.display('Deleting Model...');
+      //Ajax call to delete
       $scope.model.$delete(function () {
+        //Notify
         Notification.display('Model Deleted');
+        //Reroute to view page
         $location.path('/product/model');
       });
     };
@@ -1471,6 +1823,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   'Notification',
   '$window',
   function ($scope, Acknowledgement, Customer, $filter, Notification, $window) {
+    //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
     $scope.customImageScale = 100;
@@ -1486,7 +1839,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       storage.setItem('acknowledgement-create', JSON.stringify($scope.ack));
     };
     $scope.addCustomer = function (customer) {
+      //Set Customer
       $scope.ack.customer = customer;
+      //Hide Customer Panel
       $scope.showCustomers = false;
       $scope.tempSave();
     };
@@ -1528,7 +1883,12 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       storage.removeItem('acknowledgement-create');
       Notification.display('Acknowledgement reset.');
     };
+    //Validations
     $scope.isValidated = function () {
+      /*
+         * The following are test to see if
+         * The property has already been added
+         */
       if (!$scope.ack.customer) {
         throw new TypeError('Please add a customer.');
       } else {
@@ -1536,22 +1896,34 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           throw new ReferenceError('Missin customer ID');
         }
       }
+      //Validate ordered Items
       if (!$scope.ack.items) {
         throw new TypeError('Products is not an array');
       } else {
+        //Verifies that there are items ordered
         if ($scope.ack.items.length <= 0) {
           throw new RangeError('No products added to the order');
         } else {
           for (var i = 0; i < $scope.ack.items.length; i++) {
             var item = $scope.ack.items[i];
+            /*
+                     * Check that there is a quantity 
+                     * for each piece of product
+                     */
             if (!$scope.ack.items[i].hasOwnProperty('quantity') || !$scope.ack.items[i].quantity) {
               throw new RangeError('Expecting a quantity of at least 1 for ' + $scope.ack.items[i].description);
             }
+            /*
+                     * Validates that every item has a price
+                     */
             if (!$scope.ack.items[i].hasOwnProperty('has_price')) {
             } else {
               if (!$scope.ack.items[i].has_price) {
               }
             }
+            /*
+                     * Validates custom items
+                     */
             if (!item.hasOwnProperty('id')) {
               if (!item.is_custom) {
                 throw new TypeError('Item without id is not custom. Please contact an Administrator.');
@@ -1560,15 +1932,19 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           }
         }
       }
+      //Validate Delivery Date
       if (!$scope.ack.delivery_date) {
         throw new TypeError('Please select a preliminary delivery date.');
       }
+      //Validate vat
       if ($scope.ack.vat === undefined || $scope.ack.vat === null) {
         throw new TypeError('Please set the vat.');
       }
+      //Validate purchase order number
       if (!$scope.ack.po_id) {
         throw new TypeError('PO# is not defined');
       }
+      //Return true for form validated
       return true;
     };
   }
@@ -1581,13 +1957,26 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   '$filter',
   'KeyboardNavigation',
   function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation) {
+    /*
+	 * Vars
+	 * 
+	 * -fetching: this is a switch to see if there is currently a call being made
+	 */
     var fetching = true, index = 0, currentSelection;
+    //Display Program Notification
     Notification.display('Loading Acknowledgements...', false);
+    //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
       Notification.hide();
       fetching = false;
       changeSelection(index);
     });
+    /*
+	 * Take the query in the searchbar and then sends 
+	 * the query to the server to get more results. The
+	 * resuls are then integrated with the current list of
+	 * resources;
+	 */
     $scope.$watch('query', function (q) {
       if (q) {
         Acknowledgement.query({
@@ -1604,6 +1993,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         });
       }
     });
+    //Loads the next set of data
     $scope.loadNext = function () {
       if (!fetching) {
         fetching = true;
@@ -1732,16 +2122,36 @@ angular.module('employeeApp').directive('dropOn', [function () {
     function emptyStrFilter(element, index, array) {
       return element !== '';
     }
+    /*
+     * Function helps get the target object
+     * in the scope
+     */
     function getTarget(scope, targetString) {
+      //Assigns vars
+      /*
+         * Extracts the first string part, which
+         * we can expect to exsist. Then we extract
+         * the last part, which we check if we need
+         * to make
+         */
       var preTarget = targetString.split(/\.\w*$/).shift(), targetObj = targetString.split(/\./).pop(), target;
+      //Evaluates against scope
       target = scope.$eval(preTarget);
+      //check if obj exsists and create if not
       target[targetObj] = target[targetObj] || {};
+      //advances the progressing
       target = target[targetObj];
+      //Return 
       return target;
     }
+    /*
+     * Function returns the data from the drop event
+     * and automatically parses it
+     */
     function getData(event) {
       return JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
     }
+    //Prevent Propagation
     function preventPropagation(event) {
       event.stopPropagation();
       event.preventDefault();
@@ -1754,6 +2164,11 @@ angular.module('employeeApp').directive('dropOn', [function () {
         element.bind('drop', function (event) {
           preventPropagation(event);
           element.removeClass('drag');
+          /*
+                 * Gets the target and copies
+                 * the data from the dragged 
+                 * object to it
+                 */
           scope.$apply(function () {
             var target = getTarget(scope, attrs.dropOn);
             angular.copy(getData(event), target);
@@ -1775,42 +2190,74 @@ angular.module('employeeApp').directive('imageDropTarget', [
       restrict: 'A',
       replace: false,
       link: function ($scope, element, attrs) {
+        /*
+             * Create Objects and Functions to be used
+             */
+        //File Reader
         var fileReader = new FileReader();
         fileReader.onload = function (evt) {
           var image = { 'url': evt.target.result };
+          //Create array if not exists
           $scope.imagePreviews = $scope.imagePreviews || [];
           $scope.$apply(function () {
             $scope.imagePreviews.push(image);
           });
         };
+        /*
+             * Available methods to interact with this directive 
+             * inlucde: clear images
+             */
+        //Clear Image
         $scope.clearImages = function () {
-          $scope.images ? $scope.images.length = 0 : $scope.images = [];
+          $scope.images ? $scope.images.length = 0 : $scope.images = [];  // jshint ignore:line
         };
+        /*
+             * Add functions to deal with the drag enter,leave and
+             * over actions of the user
+             */
+        //Drag Enter
         element.bind('dragenter', function (evt) {
           evt.preventDefault();
           element.addClass('active');
         });
+        //Drag Leave
         element.bind('dragleave', function (evt) {
           evt.preventDefault();
           element.removeClass('active');
         });
+        //Drag over
         element.bind('dragover', function (evt) {
           evt.preventDefault();
           element.addClass('active');
         });
+        /*
+             * This Section deals with the Dropping of the file, 
+             * checking if it is an image, and adding it to the array
+             * "scope.images"
+             */
         element.bind('drop', function (evt) {
+          //prevent default
           evt.preventDefault();
           evt.stopPropagation();
           element.removeClass('active');
+          //Get original evt within jquery evt
           var e = evt.originalEvent;
+          //Get the files
           var files = e.dataTransfer.files;
+          //Loop Through all up loaded files,
+          //validate that they are images and add
+          //it to the "scope.images"
           for (var i = 0; i < files.length; i++) {
             if (files[i].type == 'image/png' || files[i].type == 'image/jpeg') {
+              //Create array if not exists
               $scope.images = $scope.images || [];
+              //Push image   
               $scope.images.push(files[i]);
+              //Read data and push to preview
               fileReader.readAsDataURL(files[i]);
             }
           }
+          //Eval the attr of this directive
           $scope.$eval(attrs.imageDropTarget);
         });
       }
@@ -1824,9 +2271,13 @@ angular.module('employeeApp').directive('beautify', [
     return {
       restrict: 'A',
       link: function (scope, element, attr) {
+        //bind to blur
         element.bind('blur', function () {
+          //create new beautified version
           var beautifiedValue = $filter('beautify')(element.context.value);
+          //apply to input
           element.context.value = beautifiedValue;
+          //assign to model
           $parse(attr.ngModel).assign(scope, beautifiedValue);
         });
       }
@@ -1840,9 +2291,13 @@ angular.module('employeeApp.directives').directive('telephone', [
     return {
       restrict: 'A',
       link: function (scope, element, attr) {
+        //bind to blur
         element.bind('blur', function () {
+          //create new beautified version
           var filteredValue = $filter('telephone')(element.context.value);
+          //apply to input
           element.context.value = filteredValue;
+          //assign to model
           $parse(attr.ngModel).assign(scope, filteredValue);
         });
       }
@@ -1852,7 +2307,9 @@ angular.module('employeeApp.directives').directive('telephone', [
 angular.module('employeeApp.directives').directive('map', [
   'mapMarker',
   function (mapMarker) {
+    //Create the variables to be used
     var latLng = {}, map, marker;
+    //Options for the map 
     try {
       var mapOptions = {
           center: new google.maps.LatLng(13.776239, 100.527884),
@@ -1871,12 +2328,14 @@ angular.module('employeeApp.directives').directive('map', [
             LatLng: google.maps.LatLng
           };
           scope.map.map = new google.maps.Map(element.get(0), mapOptions);
+          //Refresh the map if a shown event is broadcast
           scope.$on('shown', function () {
             google.maps.event.trigger(scope.map.map, 'resize');
           });
           scope.map.refresh = function () {
             google.maps.event.triggger(this.map);
           };
+          //Create a marker and adds to scope.map.markers
           scope.map.createMarker = function (obj) {
             if (obj instanceof google.maps.LatLng) {
               latLng = obj;
@@ -1890,6 +2349,7 @@ angular.module('employeeApp.directives').directive('map', [
               position: latLng
             });
           };
+          //Set map position
           scope.map.setPosition = function (obj) {
             if (obj instanceof google.maps.LatLng) {
               latLng = obj;
@@ -1982,6 +2442,11 @@ angular.module('employeeApp.directives').directive('modal', [function () {
                 });
               }
             }
+            /*
+					* Hide the modal when the page
+					* changes based on the scope 
+					* messages
+					*/
             scope.$on('$destroy', function () {
               if (backdrop) {
                 backdrop.remove();
@@ -2058,6 +2523,7 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
       $scope.shipping.customer = ack.customer;
       $scope.shipping.items = ack.items;
       $scope.shipping.delivery_date = new Date(ack.delivery_date);
+      //Hide Customer Panel
       $scope.showAck = false;
     };
     $scope.$watch('query', function (q) {
@@ -2107,13 +2573,19 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
     $scope.removeProduct = function (index) {
       $scope.shipping.items.splice(index, 1);
     };
+    //Validations
     $scope.isValidated = function () {
+      /*
+         * The following are test to see if
+         * The property has already been added
+         */
       if (!$scope.shipping.acknowledgement) {
         return false;
       }
       if (!$scope.shipping.delivery_date) {
         return false;
       }
+      //Return true for form validated
       return true;
     };
     $scope.$on('$destroy', function () {
@@ -2121,18 +2593,34 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
     });
   }
 ]);
+/*
+ * All shipped orders view
+ */
 angular.module('employeeApp').controller('OrderShippingViewCtrl', [
   '$scope',
   'Shipping',
   '$filter',
   'Notification',
   function ($scope, Shipping, $filter, Notification) {
+    /*
+	 * Vars and flags
+	 */
     var fetching = true;
     Notification.display('Loading shipping manifests...', false);
+    /*
+	 * Get an array of shipping manifests from the server
+	 */
     $scope.shippingList = Shipping.query(function (resources) {
       fetching = false;
       Notification.hide();
     });
+    /*
+	 * Search the server 
+	 * 
+	 * The controller will send a GET request to the server
+	 * with the query string whenever the "$scope.query" changes
+	 * and when it is not undefined
+	 */
     $scope.$watch('query', function (q) {
       if (q) {
         Shipping.query({
@@ -2147,6 +2635,14 @@ angular.module('employeeApp').controller('OrderShippingViewCtrl', [
         });
       }
     });
+    /*
+	 * Load more shipping manifests
+	 * 
+	 * The function will request more manifests based on the current number 
+	 * and the offset. The number of new manifests is limited to 20, which can be 
+	 * changed via the parameters. This is intended to be used in conjuction with 
+	 * the "on-scroll-end" directive
+	 */
     $scope.loadNext = function () {
       if (!fetching) {
         Notification.display('Loading more shipping manifests...', false);
@@ -2209,13 +2705,25 @@ angular.module('employeeApp').controller('AdministratorGroupAddCtrl', [
     $scope.permissions = Permission.query({ limit: 0 });
     $scope.group = new Group();
     $scope.group.permissions = [];
+    /*
+	 * Saves the group to the server
+	 */
     $scope.save = function () {
+      /*
+		* Adds selected permissions to the permissions
+		* allowed for this group
+		* Runs through all the permissions, and checks the '$checked'
+		* attribute. If it is positive then that permission is added
+		* to the permissions for the gorup
+		*/
       for (var i = 0; i < $scope.permissions; i++) {
         if ($scope.permissions[i].$checked) {
           $scope.group.permissions.push($scope.permissions[i]);
         }
       }
+      //Post the data to the server
       $scope.group.$create(function () {
+        //Return to list page after successful creation
         $location.path('/administrator/group');
       });
     };
@@ -2225,6 +2733,7 @@ angular.module('employeeApp').controller('AdministratorGroupViewCtrl', [
   '$scope',
   'Group',
   function ($scope, Group) {
+    //Requests groups from the server
     $scope.groups = Group.query({ limit: 0 });
   }
 ]);
@@ -2235,6 +2744,10 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
   '$routeParams',
   '$location',
   function ($scope, Group, Permission, $routeParams, $location) {
+    /*
+     * Return the index of the first
+     * occurence of the id in the list
+     */
     function indexById(list, item) {
       if (!list.hasOwnProperty('length')) {
         throw new TypeError('Expecting an Array');
@@ -2244,6 +2757,7 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
           throw new TypeError('Expecting an id property for argument 2');
         }
       }
+      //Set the id var
       var id = typeof item == 'object' ? item.id : item;
       for (var i in list) {
         if (list[i].id == id) {
@@ -2252,6 +2766,10 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
       }
       return -1;
     }
+    /*
+     * Marks all items in list1 with $checked = true
+     * property if it is in list 2
+     */
     function merge(list1, list2) {
       for (var i in list1) {
         for (var h in list2) {
@@ -2261,12 +2779,19 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
         }
       }
     }
+    /*
+     * Calls for updated verions of the resources
+     */
     $scope.permissionList = Permission.query({ limit: 0 }, function () {
       merge($scope.permissionList, $scope.group.permissions);
     });
     $scope.group = Group.get({ 'id': $routeParams.id }, function () {
       merge($scope.permissionList, $scope.group.permissions);
     });
+    /*
+     * Removes or adds a permission to the group
+     * permissions based on whether or not 
+     */
     $scope.updatePermission = function (permission) {
       if (permission.$checked) {
         if (indexById($scope.group.permissions, permission) == -1) {
@@ -2281,6 +2806,9 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
       $scope.group.$update(function (response) {
       });
     };
+    /*
+     * Deletes the group
+     */
     $scope.remove = function () {
       $scope.group.$delete(function () {
         $location.path('/groups');
@@ -2310,6 +2838,7 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
           throw new TypeError('Expecting an id property for argument 2');
         }
       }
+      //Set the id var
       var id = typeof item == 'object' ? item.id : item;
       for (var i in list) {
         if (list[i].id == id) {
@@ -2333,6 +2862,12 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
     $scope.user = User.get({ 'id': $routeParams.id }, function () {
       merge($scope.groupList, $scope.user.groups);
     });
+    /*
+	 * Add Profile Image
+	 * 
+	 * Recieves the image data as an argument. The data is then applied 
+	 * to the user and the user is saved
+	 */
     $scope.addImage = function (imageData) {
       $scope.showAddImage = false;
       $scope.user.image = imageData.hasOwnProperty('data') ? imageData.data : imageData;
@@ -2359,6 +2894,7 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
           $scope.user.groups.splice(index, 1);
         }
       }
+      //Save the model
       Notification.display('Updating ' + $scope.user.username + '...', false);
       $scope.user.$update(function (response) {
         Notification.display($scope.user.username + ' updated.');
@@ -2393,16 +2929,33 @@ angular.module('employeeApp').controller('AdministratorUserAddCtrl', [
     $scope.user = new User();
     $scope.user.groups = [];
     $scope.groups = Group.query({ limit: 0 });
+    /*
+	 * Add Profile Image
+	 * 
+	 * Recieves the image data as an argument. The data is then applied 
+	 * to the user and the user is saved
+	 */
     $scope.addImage = function (imageData) {
       $scope.user.image = imageData.hasOwnProperty('data') ? imageData.data : imageData;
     };
     $scope.save = function () {
+      //Validates the form
       if ($scope.form.$valid) {
+        /*
+			* Adds groups to the user
+			* 
+			* Runs through all the groups and checks if 
+			* it hs been checked off. Groups that have been 
+			* checked off are then added to the user groups
+			*/
         for (var i = 0; i < $scope.groups.length; i++) {
           if ($scope.groups[i].$checked) {
             $scope.user.groups.push(angular.copy($scope.groups[i]));
           }
         }
+        /*
+			 * Saves the user by sending a POST request to the server
+			 */
         $scope.user.$create(function () {
           $location.path('/administrator/user');
         });
@@ -2414,6 +2967,7 @@ angular.module('employeeApp').controller('AdministratorUserViewCtrl', [
   '$scope',
   'User',
   function ($scope, User) {
+    //Request users from the server
     $scope.users = User.query({ limit: 0 });
   }
 ]);
@@ -2444,6 +2998,16 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
     $scope.fabrics = Fabric.query(function () {
       fetching = false;
     });
+    /*
+     * Search the server
+     * 
+     * The controller will send a GET query to the server
+     * with the query string as a paramter whenever the 
+     * 'scope.query' changes. 
+     * 
+     * The results are then added to the '$scope.fabrics', if it 
+     * is not already in the list, which is matched by the item id
+     */
     $scope.$watch('query', function (q) {
       if (q) {
         Fabric.query({
@@ -2458,6 +3022,15 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
         });
       }
     });
+    /*
+	* Load more fabrics
+	* 
+	* This function will load more fabrics based on the 
+	* current number of fabrics in the list, which becomes the offset. 
+	* 
+	* Note: The fabrics are not checked for duplicaiton before being added
+	* to the list
+	*/
     $scope.loadNext = function () {
       if (!fetching) {
         fetching = true;
@@ -2487,6 +3060,7 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
   function ($scope, Supplier, Fabric, $location, Notification) {
     $scope.supplierList = Supplier.query();
     $scope.fabric = new Fabric();
+    //Tooltips
     $scope.supplierText = 'Choose a Supplier for this Fabric';
     $scope.referenceText = 'Enter the Supplier\'s Reference Number';
     $scope.lengthText = 'Enter the Current Length of this Fabric in yards';
@@ -2494,19 +3068,27 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
     $scope.patternText = 'Enter the Pattern of this Fabric';
     $scope.colorText = 'Enter the Color of this Fabric';
     $scope.cost = 'Enter the Cost per Yard of this Fabric';
+    //Methods
+    //Add Fabric
     $scope.save = function () {
+      //Display saving message
       Notification.display('Saving Fabric...', false);
+      //Checks the form is valid
       if ($scope.form.$valid) {
+        //save to database
         $scope.fabric.$create(function () {
           Notification.display('Fabric Saved');
           $location.path('supply/fabric');
         });
       }
     };
+    //Upload Image
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('fabric/image', {
@@ -2532,10 +3114,13 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
   '$http',
   function ($scope, Fabric, $routeParams, $location, Notification, $http) {
     $scope.fabric = Fabric.get({ 'id': $routeParams.id });
+    //Uploads Profie Image
     $scope.upload = function () {
+      //display notification
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('fabric/' + $scope.fabric.id + '/image', {
@@ -2544,17 +3129,21 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
         processData: false,
         contentType: false,
         success: function (responseData) {
+          //display success mesage
           Notification.display('Image Updated');
           $scope.fabric.image = {};
           angular.copy(responseData, $scope.fabric.image);
           $scope.fabric.$save();
+          //Set new profile pic
           $scope.profileImageUrl = $scope.fabric.image.url;
+          //Clear upload images and clear previews
           $scope.imagePreviews = null;
           $scope.images = null;
           $scope.$apply();
         }
       });
     };
+    //Create fabric actions
     var DEFAULT_ACTIONS = [
         'reserve',
         'add',
@@ -2585,9 +3174,13 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
       });
     };
     $scope.remove = function () {
+      //Notify
       Notification.display('Deleting Fabric...');
+      //Ajax call to delete
       $scope.fabric.$delete(function () {
+        //Notify
         Notification.display('Fabric Deleted');
+        //Reroute to view page
         $location.path('/fabric');
       });
     };
@@ -2604,11 +3197,16 @@ angular.module('employeeApp').controller('SupplyFoamDetailsCtrl', [
   '$location',
   'Notification',
   function ($scope, Foam, $routeParams, $location, Notification) {
+    //Poller.poll($scope, function(){
     $scope.foam = Foam.get({ 'id': $routeParams.id });
+    //});
+    //Uploads Profie Image
     $scope.upload = function () {
+      //display notification
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('supply/' + $scope.foam.id + '/image', {
@@ -2617,11 +3215,14 @@ angular.module('employeeApp').controller('SupplyFoamDetailsCtrl', [
         processData: false,
         contentType: false,
         success: function (responseData) {
+          //display success mesage
           Notification.display('Image Updated');
           $scope.foam.image = {};
           angular.copy(responseData, $scope.foam.image);
           $scope.foam.$save();
+          //Set new profile pic
           $scope.profileImageUrl = $scope.foam.image.url;
+          //Clear upload images and clear previews
           $scope.imagePreviews = null;
           $scope.images = null;
           $scope.$apply();
@@ -2651,15 +3252,20 @@ angular.module('employeeApp').controller('SupplyFoamAddCtrl', [
   function ($scope, Foam, Supplier, $location, Notification) {
     $scope.supplierList = Supplier.query();
     $scope.foam = new Foam();
+    //Methods
+    //Add Lumber
     $scope.save = function () {
       $scope.foam.$save(function () {
         $location.path('/foam');
       });
     };
+    //Upload Image
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('supply/image', {
@@ -2729,8 +3335,46 @@ angular.module('employeeApp.services').factory('Transaction', [
     return eaResource('transaction/:id', { id: '@id' });
   }
 ]);
+/*
+ * Local Storage Service
+ * 
+ * This Service will keep an active collection that can be 
+ * queried via id. The collection will also act as an interface 
+ * with the localStorage of the browser. The storage of items
+ * in the collection will be entirely based on the id of the.
+ * The main function will be a factory that returns a collection
+ * for a specified namespace. 
+ * 
+ * Capabilities:
+ * 
+ * -main collection for a namespace
+ * -Maintain active collection
+ * -Get an object from the collection
+ * -Save an object to the collection
+ *   -check for duplicate id. If found
+ *    then updates instead of create a new one
+ * -get all objects from the collection
+ * -delete an object from the collection
+ * -keep collection in sync with localStorage
+ * 
+ * Public Methods
+ * 
+ * -query(arg)
+ * -save()
+ * -get(arg)
+ * -remove(arg)
+ * 
+ * Private Methods
+ * 
+ * -saveToStorage()
+ * -loadFromStorage()
+ * 
+ */
 angular.module('employeeApp.services').factory('eaStorage', [function () {
+    //Factory Function 
     function factory(namespace) {
+      //compare 2 items and see if the first items
+      //has the same keys and values of second item
       function compare(item, arg) {
         var aKey;
         for (aKey in arg) {
@@ -2756,25 +3400,66 @@ angular.module('employeeApp.services').factory('eaStorage', [function () {
         }
         return obj;
       }
+      //Storage initialization
       function storage(namespace) {
         this.namespace = namespace;
         this.collection = this.__loadFromStorage__(this.namespace) || {};
       }
+      /*
+		 * Properties
+		*/
+      /*Disabled*/
+      //Get Length of collection
       storage.__defineGetter__('length', function () {
-        return 'ok';
+        return 'ok';  //Object.keys(this.collection).length; 
       });
+      /*
+		* Private functions
+		*/
+      /*
+		* Save function
+		* 
+		* Saves an object with an id property
+		* to the collection
+		*/
       storage.prototype.__save__ = function (obj) {
+        //Checks if the obj has an id
         if (obj.hasOwnProperty('id')) {
           this.collection[obj.id] = obj;
         } else {
         }
       };
+      /*
+		* Save to Local Storage
+		* 
+		* Stringifies the item and then saves it to 
+		* the local storage as a string. The key is the first
+		* variable while the data is the second variable
+		*/
       storage.prototype.__saveToStorage__ = function (key, data) {
         window.localStorage.setItem(key, JSON.stringify(data));
       };
+      /*
+		* Load from Local Storage
+		* 
+		* The function will retrieve an item from the local storage. 
+		* The data is then parsed by the JSON module before being
+		* returned.
+		*/
       storage.prototype.__loadFromStorage__ = function (key) {
         return JSON.parse(window.localStorage.getItem(key));
       };
+      /*
+		* Public Methods
+		*/
+      /*
+		* Query items form the collection
+		* 
+		* The argument must be in the form of an
+		* object where the keys will be used to compare
+		* with keys of objects in the collection
+		* and the value compared with the objects' values
+		*/
       storage.prototype.query = function (arg) {
         if (typeof arg === 'object') {
           var data = [], key;
@@ -2784,11 +3469,26 @@ angular.module('employeeApp.services').factory('eaStorage', [function () {
               data.push(this.collection[key]);
             }
           }
+          //Return the data set
           return data;
         } else {
           throw new TypeError('Arguments must be in the form of a key:value object');
         }
       };
+      /*
+		* Save Function 
+		* 
+		* This function will save either and object
+		* or an array of objects. Both are saved via
+		* a save function
+		* 
+		* The save inner function checks if the object 
+		* or the object in the array has an id property
+		* and throws an error if it does not.
+		* 
+		* After all saves, the entire collection is saved
+		* to the local storage
+		*/
       storage.prototype.save = function (obj) {
         var i;
         if (Object.prototype.toString.call(obj) === '[object Array]') {
@@ -2800,28 +3500,95 @@ angular.module('employeeApp.services').factory('eaStorage', [function () {
         }
         this.__saveToStorage__(this.namespace, this.collection);
       };
+      //Get an obj by id
       storage.prototype.get = function (id) {
         return this.collection[id] ? parseDate(this.collection[id]) : null;
       };
+      //Iterate through all the items in the collecion
       storage.prototype.iterate = function (callback) {
         var key;
+        //Loop through all keys
         for (key in this.collection) {
+          //check the it is a direct property
           if (this.collection.hasOwnProperty(key)) {
+            //call back fn with item as argument
             callback(parseDate(this.collection[key]));
           }
         }
       };
+      //Delete an object by id
       storage.prototype.remove = function (arg) {
+        //Establish id or extract it
         var id = typeof arg === 'object' ? arg.hasOwnProperty('id') ? arg.id : null : arg;
         if (this.collection.hasOwnProperty(id)) {
           delete this.collection[id];
           this.__saveToStorage__(this.namespace, this.collection);
         }
       };
+      //Returns the namespace based storage
       return new storage(namespace);
     }
+    //Return Factory Function 
     return factory;
   }]);
+/*
+ * Resource Service
+ * 
+ * The purpose of this service is too provide
+ * a wrapper for the native $resource service
+ * provided by AngularJS. This resource allows us 
+ * to interface with the storage service and prepopulat
+ * the response before updating with the response 
+ * from the server.
+ * 
+ * The service must all be able to poll and used the 
+ * 'last-modified' key to retrieve the most recent version
+ * of data
+ * 
+ * Capabilities:
+ * 
+ * -Perform basic GET, PUT, POST and DELETE operations
+ * -prepopulate the response with data from the storage
+ *  service
+ * 
+ * Structure and Cycle:
+ * 
+ * The intended structure and cycle of the resource is
+ * 1. A GET request is made to retrieve an item or an
+ *    array of items
+ *    -If there is already prexisting data then retrieve
+ *     the data from the storage and respond
+ *    -When the server responsds update the returned data
+ *     by finding the id and then updating the item
+ * 2. Save the last-checked time to be used later for polling
+ * 3. Returns a new Resource that prototypically inherits from
+ *    the parent. 
+ * 4. Save the resource should call the underlying request from 
+ *    the parent. 
+ * 
+ * Properties:
+ * 
+ * -$$poll: If true begin a timeout based
+ *      repeated calling of the initial function
+ * -$$last_checked: Date and Time of the last GET
+ *      request made to the server that was successful
+ * -$$timeout: Hold the reference to the current timeout
+ * 
+ * Public Methods:
+ * 
+ * Parent Methods:
+ * -poll()
+ * -get()
+ * -query()
+ * -save()
+ * -delete()
+ * 
+ * Child Methods:
+ * -$save()
+ * -$delete()
+ * -$get()
+ * -$query()
+ */
 angular.module('employeeApp.services').factory('eaResource', [
   'eaStorage',
   '$rootScope',
@@ -2834,6 +3601,7 @@ angular.module('employeeApp.services').factory('eaResource', [
   'Notification',
   function (eaStorage, $rootScope, $http, $q, $parse, $resource, $timeout, eaIndexedDB, Notification) {
     function ResourceFactory(url, paramDefaults, actions) {
+      //Default methods available to the public
       var DEFAULT_ACTIONS = {
           'get': { method: 'GET' },
           'save': { method: 'POST' },
@@ -2844,9 +3612,12 @@ angular.module('employeeApp.services').factory('eaResource', [
           },
           'remove': { method: 'DELETE' },
           'delete': { method: 'DELETE' }
-        }, oResource = new $resource(url, paramDefaults, actions), storage = eaStorage(url.split(/\//g)[0]), db = eaIndexedDB(url), value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
+        }, oResource = new $resource(url, paramDefaults, actions),
+        //jshint ignore:line
+        storage = eaStorage(url.split(/\//g)[0]), db = eaIndexedDB(url), value, previousAction, previousParams, last_checked = true, poll = true, getter = function (obj, path) {
           return $parse(path)(obj);
         };
+      /*Helper Functions*/
       function extractParams(data, actionParams) {
         var ids = {};
         actionParams = angular.extend({}, paramDefaults, actionParams);
@@ -2858,6 +3629,10 @@ angular.module('employeeApp.services').factory('eaResource', [
         });
         return ids;
       }
+      /*
+         * Locates the index of an object
+         * which matches the supplied id
+         */
       function indexOfId(array, id) {
         for (var i = 0; i < array.length; i++) {
           if (array[i].hasOwnProperty('id')) {
@@ -2868,7 +3643,11 @@ angular.module('employeeApp.services').factory('eaResource', [
         }
         return -1;
       }
+      //Extend all actions to include default and argument actions
       actions = angular.extend({}, DEFAULT_ACTIONS, actions);
+      /*
+         * Initialize the Resource the properties
+         */
       function Resource(value) {
         angular.extend(this, value || {});
         this.$$poll = false;
@@ -2876,10 +3655,17 @@ angular.module('employeeApp.services').factory('eaResource', [
         this.$$timeout = null;
         this.$$date = true;
       }
+      /*
+         * Set Date for when doing mock tests
+         */
       Resource.disableLastChecked = function () {
         last_checked = false;
       };
       Resource.prototype.disableLastChecked = Resource.disableLastChecked;
+      /*
+         * Create a polling function. When the polling function 
+         * is call the poll value will be set to true
+         */
       Resource.poll = function () {
         this.$$poll = true;
         poll = true;
@@ -2892,18 +3678,26 @@ angular.module('employeeApp.services').factory('eaResource', [
         return this;
       };
       Resource.prototype.poll = Resource.poll;
+      /*
+         * Loop through all the actions and assign them 
+         * as methods to the Resource and process the data
+         * and the params for each method
+         */
       angular.forEach(actions, function (action, name) {
         var hasBody = action.method == 'POST' || action.method == 'PUT' || action.method == 'PATCH';
+        //Default methods
         Resource[name] = function (a1, a2, a3, a4) {
           var params = {};
           var data;
           var success = angular.noop;
           var error = null;
           var promise;
+          /* jshint ignore: start */
           switch (arguments.length) {
           case 4:
             error = a4;
             success = a3;
+          //fallthrough
           case 3:
           case 2:
             if (angular.isFunction(a2)) {
@@ -2913,7 +3707,7 @@ angular.module('employeeApp.services').factory('eaResource', [
                 break;
               }
               success = a2;
-              error = a3;
+              error = a3;  //fallthrough
             } else {
               params = a1;
               data = a2;
@@ -2933,21 +3727,50 @@ angular.module('employeeApp.services').factory('eaResource', [
           default:
             throw 'Expected between 0-4 arguments [params, data, success, error], got ' + arguments.length + ' arguments.';
           }
+          /* jshint ignore: end */
+          /*
+                 * RESETTING AREA:
+                 * 
+                 * This area will reset the settings of the call if the previous 
+                 * action does not meet the current action. We do this in the case 
+                 * of polling where the action is the same as before.
+                 */
           if (previousAction != name || params != previousParams) {
             this.$$last_checked = undefined;
           }
+          /*
+                 * CRTICIAL COMPONENT:
+                 * 
+                 * This part will determine whether to set the return referenced as an 
+                 * array, object, or to keep it in its current state. This is crucial 
+                 * for when polling is activated. 
+                 */
           if (action.isArray) {
             value = angular.isArray(value) ? value || [] : [];
           } else {
             value = angular.isObject(value) && !value.hasOwnProperty('length') ? value || {} : {};
             value = this instanceof Resource ? this : new Resource(value);
           }
+          /*
+                 * Preloads Data from the indexedDB
+                 * 
+                 * We first must check if this is a request for data. 
+                 * After we check if the db is ready. Depending on whether 
+                 * it is ready or not we proceed in two different ways:
+                 * 
+                 * -db is ready:
+                 *     -check if to make query or get call
+                 * -db is not ready:
+                 *     -attach an on ready call and make the 
+                 *      appropriate get or query call
+                 */
           if (action.method == 'GET' && !this.$$last_checked) {
             if (db.ready) {
               if (action.isArray) {
                 db.query(function (data) {
                   var fn = function () {
                     for (var key in data) {
+                      //Loop for existing item in value
                       var index = indexOfId(value, data[key].id);
                       if (index != -1) {
                         angular.copy(data[key], value[index]);
@@ -2990,6 +3813,7 @@ angular.module('employeeApp.services').factory('eaResource', [
                   db.query(function (data) {
                     var fn = function () {
                       for (var key in data) {
+                        //Loop for existing item in value
                         var index = indexOfId(value, data[key].id);
                         if (index != -1) {
                           angular.copy(data[key], value[index]);
@@ -3031,19 +3855,53 @@ angular.module('employeeApp.services').factory('eaResource', [
               }
             }
           }
+          /*
+                 * Determines whether to include the last modified parameter depending
+                 * on whether the 'last_checked' var has a value or not
+                 */
+          //dump((this.$$last_checked && typeof(this.$$last_checked) != "boolean") && action.method == "GET")
           if (this.$$last_checked !== undefined && action.method == 'GET') {
             angular.extend(params, { last_modified: this.$$last_checked.toISOString() });
           }
+          /*
+                if(storage.getLastModified() && action.method == "GET"){
+                    angular.extend(params, {last_modified:storage.getLastModified().toISOString()});
+                }
+                */
           var oPromise = oResource[name](params, data, function (response) {
+              /*
+                     * If the hasBody is positive, it indicates this is a child
+                     * resource and there for the resource it self should be update
+                     * with the data because it is currently presented tot he user
+                     */
               if (action.method == 'DELETE' || hasBody) {
                 angular.extend(this, response);
               }
+              /*
+                     * If the method is GET it indicates that the user has requested 
+                     * data and the resource is a gateway and it itself is no the the
+                     * data holder. There for the reference that is returned to the user 
+                     * should be update with either the array of items or the item data
+                     * respecitvely.
+                     */
               if (action.method === 'GET') {
                 if (action.isArray || angular.isArray(response)) {
                   var index;
+                  /*
+                             * We use vanilla javascript to iterate through 
+                             * the array and apply changes to that the 
+                             * digest is not trigger initially. We wait till
+                             * the end to trigger the digest
+                             */
                   for (var i in response) {
+                    //Find the index of the matched item by id
                     index = indexOfId(value, response[i].id);
                     if (index > -1) {
+                      /*
+                                    * In order not to waste resource we
+                                    * first check if the two items are equal or not.
+                                    * If they are not equal then we perform an extend
+                                    */
                       if (!angular.equals(value[index], response[i])) {
                         angular.extend(value[index], new Resource(response[i]));
                         if (value[index].deleted) {
@@ -3053,6 +3911,7 @@ angular.module('employeeApp.services').factory('eaResource', [
                         }
                       }
                     } else {
+                      //Add the new item
                       if (!response[i].deleted) {
                         try {
                           value.push(new Resource(response[i]));
@@ -3063,6 +3922,7 @@ angular.module('employeeApp.services').factory('eaResource', [
                     }
                   }
                 } else {
+                  //Upate the reference with the data
                   if (response.deleted) {
                     angular.copy({}, value);
                     Notification.display('This resource no longer exists.');
@@ -3071,25 +3931,55 @@ angular.module('employeeApp.services').factory('eaResource', [
                   }
                 }
               }
+              /*
+                     * Determines whether the action is to delete from the server
+                     * or to post and get data. Because post and get data would 
+                     * both return responses we would save this to the storage. 
+                     * For delete requests, we would have to delete the item
+                     */
               if (db.ready) {
-                action.method == 'DELETE' ? db.remove(params) : hasBody ? db.save(this) : db.save(value);
+                action.method == 'DELETE' ? db.remove(params) : hasBody ? db.save(this) : db.save(value);  // jshint ignore:line
               }
+              //action.method == "DELETE" ? storage.remove(params) : hasBody ? storage.save(this) : storage.save(value);  
+              /*
+                     * Last checked
+                     */
               if (last_checked) {
                 this.$$last_checked = new Date();
               }
+              /*
+                     * The Resource will check if to poll the server only if
+                     * the action method is a GET and the $$poll swtich is turned
+                     * on. 
+                     * 
+                     * The request itself is incapsulated in an anonymous function
+                     * so that we can pass arguments and bind 'this'
+                     */
               if (this.$$poll && action.method == 'GET') {
+                //Call timeout
                 this.$$timeout = $timeout(function () {
+                  //Create binded fn
                   var request = Resource[name].bind(this);
+                  //call binded fn
                   request(params, data, success, error);
                 }.bind(this), 30000);
               }
+              //Run success call back
               success(response);
             }.bind(this), function (e) {
             });
+          //return placeholder
+          /*
+                 * We set what action just took place
+                 * so that we may know if to change
+                 * the settings of the current action
+                 */
           previousAction = name;
           previousParams = params;
+          //Return the reference
           return value;
         };
+        //Prototypical methods
         Resource.prototype['$' + name] = function (a1, a2, a3) {
           var params = extractParams(this), success = angular.noop, error;
           switch (arguments.length) {
@@ -3162,14 +4052,25 @@ angular.module('employeeApp.services').factory('scanner', [
       });
     }
     Scanner.prototype._check = function (evt, customFn) {
+      /*
+		 * Checks if the character is the start code for the 
+		 * scanner. If it is the start code, then turn on the parse
+		 * switch to get the successive characters
+		 */
       if (evt.keyCode === 76 && evt.altKey) {
         evt.preventDefault();
-        this._activeParse = true;
+        this._activeParse = true;  /*
+		 * Checks if the character is the end code for the scanner.
+		 * If it is, then turn off the parse switch, send the code to dispatch,
+		 * and reset the code variable
+		 */
       } else if (evt.altKey && evt.keyCode == 71) {
         evt.preventDefault();
         this._activeParse = false;
         this._dispatch(code);
-        code = '';
+        code = '';  /*
+		 * If the parse switch is on, add the keypressed character to the code string
+		 */
       } else {
         if (this._activeParse) {
           evt.preventDefault();
@@ -3187,14 +4088,16 @@ angular.module('employeeApp.services').factory('scanner', [
       }
     };
     Scanner.prototype._dispatch = function (code) {
+      //console.debug(this._identity+' status: '+this.enabled+' / code: '+this._code);
       codes = code.split('-');
       if (parseStandardCodes) {
         for (var i = 0; i < standardCodes.length; i++) {
           if (standardCodes[i][0].test(code)) {
             codes = code.split('-');
+            /* jshint ignore:start */
             $rootScope.safeApply(function () {
               $location.path(standardCodes[i][1] + codes[1]);
-            });
+            });  /* jshint ignore:end */
           }
         }
       }
@@ -3204,6 +4107,13 @@ angular.module('employeeApp.services').factory('scanner', [
         }
       }
     };
+    /*
+     * Public API
+     * 
+     * -enable
+     * -disable
+     * -onscan
+     */
     Object.defineProperties(Scanner.prototype, {
       standardEnabled: {
         get: function () {
@@ -3260,14 +4170,18 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$http',
   '$window',
   function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
+    //Show system notification
     Notification.display('Loading Acknowledgement...', false);
+    //Set Vars
     $scope.showCal = false;
+    //GET request server for Acknowledgements
     $scope.acknowledgement = Acknowledgement.get({
       'id': $routeParams.id,
       'pdf': true
     }, function () {
       Notification.display('Acknowledgement Loaded');
     });
+    //Grid Options
     $scope.gridOptions = {
       data: 'acknowledgement.products',
       columnDefs: [{
@@ -3275,6 +4189,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
           displayName: 'Image'
         }]
     };
+    //Request pdf for acknowledgements from server
     $scope.getPDF = function (type) {
       try {
         var address = $scope.acknowledgement.pdf[type.toLowerCase()];
@@ -3285,6 +4200,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         throw new Error(message);
       }
     };
+    //Request log data for acknowledgement
     $scope.viewLog = function () {
       $http.get('acknowledgement/' + $scope.acknowledgement.id + '/log').success(function (data) {
         angular.forEach(data, function (log) {
@@ -3294,6 +4210,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         });
       });
     };
+    //Save updates to the server
     $scope.save = function () {
       Notification.display('Saving Acknowledgement...', false);
       $scope.acknowledgement.$update(function (response) {
@@ -3459,6 +4376,11 @@ angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
     };
   }
 ]);
+/**
+ * The following features are still outstanding: popup delay, animation as a
+ * function, placement as a function, inside, support for more triggers than
+ * just mouse enter/leave, html tooltips, and selector delegatation.
+ */
 angular.module('employeeApp.directives').directive('tooltipPopup', function () {
   return {
     restrict: 'EA',
@@ -3489,12 +4411,15 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
           scope.tt_tooltip = val;
         });
         attr.$observe('tooltipPlacement', function (val) {
+          // If no placement was provided, default to 'top'.
           scope.tt_placement = val || 'right';
         });
         attr.$observe('tooltipAnimation', function (val) {
           scope.tt_animation = $parse(val);
         });
+        // By default, the tooltip is not open.
         scope.tt_isOpen = false;
+        // Calculate the current position and size of the directive element.
         function getPosition() {
           var boundingClientRect = element[0].getBoundingClientRect();
           return {
@@ -3504,23 +4429,34 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
             left: boundingClientRect.left + $window.pageXOffset
           };
         }
+        // Show the tooltip popup element.
         function show() {
           var position, ttWidth, ttHeight, ttPosition;
+          //don't show empty tooltips
           if (!scope.tt_tooltip) {
             return;
           }
+          // If there is a pending remove transition, we must cancel it, lest the
+          // toolip be mysteriously removed.
           if (transitionTimeout) {
             $timeout.cancel(transitionTimeout);
           }
+          // Set the initial positioning.
           tooltip.css({
             top: 0,
             left: 0,
             display: 'block'
           });
+          // Now we add it to the DOM because need some info about it. But it's not 
+          // visible yet anyway.
           element.after(tooltip);
+          // Get the position of the directive element.
           position = getPosition();
+          // Get the height and width of the tooltip so we can center it.
           ttWidth = tooltip.prop('offsetWidth');
           ttHeight = tooltip.prop('offsetHeight');
+          // Calculate the tooltip's top and left coordinates to center it with
+          // this directive.
           switch (scope.tt_placement) {
           case 'right':
             ttPosition = {
@@ -3547,11 +4483,19 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
             };
             break;
           }
+          // Now set the calculated positioning.
           tooltip.css(ttPosition);
+          // And show the tooltip.
           scope.tt_isOpen = true;
         }
+        // Hide the tooltip popup element.
         function hide() {
+          // First things first: we don't show it anymore.
+          //tooltip.removeClass( 'in' );
           scope.tt_isOpen = false;
+          // And now we remove it from the DOM. However, if we have animation, we 
+          // need to wait for it to expire beforehand.
+          // FIXME: this is a placeholder for a port of the transitions library.
           if (angular.isDefined(scope.tt_animation) && scope.tt_animation()) {
             transitionTimeout = $timeout(function () {
               tooltip.remove();
@@ -3560,6 +4504,7 @@ angular.module('employeeApp.directives').directive('tooltipPopup', function () {
             tooltip.remove();
           }
         }
+        // Register the event listeners.
         element.bind(triggerChoice || 'mouseenter', function () {
           scope.$apply(show);
         });
@@ -3615,6 +4560,7 @@ angular.module('employeeApp').controller('SupplyPropViewCtrl', [
   '$location',
   function ($scope, Supply, $filter, $q, Notification, $location) {
     $scope.supplyList = Supply.query({ type: 'prop' });
+    //Change page to add page
     $scope.add = function () {
       $scope.safeApply(function () {
         $location.path('/supply/prop/add');
@@ -3625,8 +4571,16 @@ angular.module('employeeApp').controller('SupplyPropViewCtrl', [
       var resource = $filter('orderBy')($filter('filter')($scope.supplyList, $scope.query), 'supplier.name')[index], deferred, promise, fd = new FormData();
       deferred = $q.defer();
       promise = deferred.promise;
+      //Create promise events
       promise.then(function (data) {
+        /*The success fulfillment of the
+             * promise will kick in the events:
+             * -Show success notice
+             * -update image property of prop
+             */
         Notification.display('Image Updated');
+        //Perform scope updates if
+        //The scope still exists
         $scope.safeApply(function () {
           resource.image = resource.image || {};
           angular.copy(data, resource.image);
@@ -3637,6 +4591,7 @@ angular.module('employeeApp').controller('SupplyPropViewCtrl', [
       }, function (reason) {
         Notification.display('Unable to Upload Image');
       });
+      //Append image and upload the form data
       fd.append('image', image);
       jQuery.ajax('supply/image', {
         type: 'POST',
@@ -3665,13 +4620,27 @@ angular.module('employeeApp').controller('SupplyPropAddCtrl', [
     $scope.supplierList = Supplier.query();
     $scope.prop = new Supply();
     $scope.prop.type = 'prop';
+    //Tooltips
     $scope.supplierText = 'Choose a Supplier for this Fabric';
     $scope.referenceText = 'Enter the Supplier\'s Reference Number';
     $scope.widthText = 'Enter the Width in millimeters';
     $scope.depthText = 'Enter the Depth in millimeters';
     $scope.heightText = 'Enter the Height in millimeters';
     $scope.cost = 'Enter the Cost in the format of 100 or 123.45';
+    //Methods
+    //Add Fabric
     $scope.save = function () {
+      /*
+         * The function will first check if the 
+         * form is valid
+         * 
+         * If the form is valid then there is a check
+         * to see if there is an image upload in progress
+         * 
+         * if there is then it will save the item after the image 
+         * is uploaded
+         */
+      //Checks the form is valid
       if ($scope.form.$valid) {
         if (uploading) {
           var prop = angular.copy($scope.prop);
@@ -3685,6 +4654,7 @@ angular.module('employeeApp').controller('SupplyPropAddCtrl', [
           }, angular.noop);
         } else {
           Notification.display('Saving Prop...', false);
+          //save to database
           $scope.prop.$save(function () {
             Notification.display('Prop Saved');
           });
@@ -3692,16 +4662,28 @@ angular.module('employeeApp').controller('SupplyPropAddCtrl', [
         $location.path('/supply/prop');
       }
     };
+    //Upload Image
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
+      //Create deferred and promose
       deferred = $q.defer();
       promise = deferred.promise;
+      //Create promise events
       promise.then(function (data) {
+        /*The success fulfillment of the
+             * promise will kick in the events:
+             * -Show success notice
+             * -update image property of prop
+             */
         Notification.display('Image Updated');
+        //Perform scope updates if
+        //The scope still exists
         if ($scope) {
           $scope.$apply(function () {
             $scope.prop.image = $scope.prop.image || {};
@@ -3711,6 +4693,7 @@ angular.module('employeeApp').controller('SupplyPropAddCtrl', [
       }, function (reason) {
         Notification.display('Unable to Upload Image');
       });
+      //Set uploading switch to true
       uploading = true;
       jQuery.ajax('supply/image', {
         type: 'POST',
@@ -3749,6 +4732,7 @@ angular.module('employeeApp').controller('SupplyPropDetailsCtrl', [
   function ($scope) {
   }
 ]);
+//'use strict';
 angular.module('employeeApp').directive('searchBar', [
   '$compile',
   function ($compile) {
@@ -3770,26 +4754,41 @@ angular.module('employeeApp').directive('searchBar', [
         $compile(input)(scope);
         element.append(input);
         element.append(clearButton);
+        /*
+			* The handler will detect if ctrl/cmd+F 
+			* is pressed on the keyboard
+			* 
+			* If press occurs, we disable the default action
+			* perform state specific actions
+			*/
         function searchHandler(evt) {
           if (evt.which == '70' && (evt.metaKey || evt.ctrlKey)) {
             evt.preventDefault();
+            //Determine
             scope.$apply(function () {
               if (element.hasClass('focus')) {
+                //Hide object and blur
                 input.blur();
                 element.removeClass('focus');
               } else {
+                //Show and focus
                 input.focus();
                 element.addClass('focus');
               }
             });
           }
         }
+        //Bind an action 
         $(window).on('keydown', searchHandler);
+        /*
+			 * Clear Button
+			 */
         clearButton.click(function () {
           scope.$apply(function () {
             scope.query = '';
           });
         });
+        //Unbind when leaving the Page
         scope.$on('$destroy', function () {
           $(window).off('keydown', searchHandler);
         });
@@ -3930,7 +4929,9 @@ angular.module('employeeApp.directives').directive('imageCropper', [
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     };
     Scene.prototype.draw = function () {
+      //Calculations
       this.repositionCorners();
+      //Rendering
       this.drawBackground();
       this.ctx.drawImage(this.img, this.bX, this.bY, this.bW, this.bH, this.bX * this.xProportion, this.bY * this.yProportion, this.bW * this.xProportion, this.bH * this.yProportion);
       this.drawCubes();
@@ -3957,7 +4958,9 @@ angular.module('employeeApp.directives').directive('imageCropper', [
         this.canvas.width = this.bW;
         this.canvas.height = this.bH;
       }
-      this.ctx.drawImage(this.img, this.x, this.y, this.w, this.h, 0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(this.img, this.x, this.y, this.w, this.h, 0, 0, this.canvas.width, this.canvas.height);  // this.canvas.width = this.bW/this.xProportion
+                                                                                                                  // this.canvas.height = this.bH/this.xProportion
+                                                                                                                  //this.ctx.putImageData(imageData, 0, 0, this.canvas.width, this.canvas.height);
     };
     Scene.prototype.getImageAsURL = function () {
       var canvas = document.createElement('canvas');
@@ -3998,13 +5001,17 @@ angular.module('employeeApp.directives').directive('imageCropper', [
         var scene;
         var image;
         var mousedown = false;
+        //Set Canvas to parent width and height
         canvas.width = canvasContainer.outerWidth();
         canvas.height = canvasContainer.outerHeight();
         fileReader.onload = function (evt) {
           parent.removeClass('drag-drop-active');
+          //Create Image
           image = new Image();
           image.onload = function (e) {
+            //Display Notification
             Notification.display('Image Rendered');
+            //Set canvas dimensions
             var height = canvasContainer.outerHeight();
             var width = canvasContainer.outerWidth();
             var ratio1 = height / width;
@@ -4016,10 +5023,16 @@ angular.module('employeeApp.directives').directive('imageCropper', [
               canvas.height = height;
               canvas.width = image.width * height / image.height;
             }
+            //Position the canvas relative to parent
             angular.element(canvas).css('top', (height - canvas.height) / 2);
             angular.element(canvas).css('left', (width - canvas.width) / 2);
+            //Create and Draw new Scene
             scene = new Scene(canvas, ctx, image);
             scene.drawImage();
+            /*
+                     * Try running the onload function that is 
+                     * attached to the scope directive
+                     */
             try {
               scope.onLoad();
             } catch (evt) {
@@ -4029,14 +5042,17 @@ angular.module('employeeApp.directives').directive('imageCropper', [
           };
           image.src = evt.target.result;
         };
+        //Drag Enter
         element.bind('dragenter', function (evt) {
           evt.preventDefault();
           parent.addClass('drag-drop-active');
         });
+        //Drag Leave
         element.bind('dragleave', function (evt) {
           evt.preventDefault();
           parent.removeClass('drag-drop-active');
         });
+        //Drag over
         element.bind('dragover', function (evt) {
           evt.preventDefault();
           parent.addClass('drag-drop-active');
@@ -4046,7 +5062,9 @@ angular.module('employeeApp.directives').directive('imageCropper', [
           evt.stopPropagation();
           Notification.display('Processing Image...', false);
           parent.removeClass('drag-drop-active');
+          //Get original evt within jquery evt
           var e = evt.originalEvent;
+          //Get the files
           var file = e.dataTransfer.files[0];
           fileReader.readAsDataURL(file);
         });
@@ -4110,6 +5128,17 @@ angular.module('employeeApp.directives').directive('imageCropper', [
           mousedown = false;
           corner = false;
         }
+        /*
+             * API Section
+             * 
+             * Properties:
+             * -scale
+             * 
+             * Methods:
+             * -crop
+             * -save
+             * -getImage
+             */
         scope.cropper = {
           cropping: false,
           image: {}
@@ -4218,7 +5247,7 @@ angular.module('employeeApp.services').factory('indexOfId', [
       this.worker.onmessage = function (e) {
         (callback || angular.noop)(e.data);
       };
-    };
+    };  //return new filter();
   }
 ]);
 angular.module('employeeApp').controller('SupplyLumberViewCtrl', [
@@ -4232,11 +5261,34 @@ angular.module('employeeApp.services').factory('Contact', [
     return eaResource('contact/:id', { id: '@id' });
   }
 ]);
+/*
+ * indexedDB Storage
+ * 
+ * This file implements a indexedDB backend to store objects
+ * from the server and the provide them as a cache and other 
+ * potential uses. 
+ * 
+ * Private Methods:
+ * - _save()
+ * - _get()
+ * - _query()
+ * - _remove()
+ * 
+ * Public Methods:
+ * -save()
+ * -get()
+ * -query()
+ * -remove()
+ * -clear()
+ */
 angular.module('employeeApp.services').factory('DB', [
   '$q',
   '$timeout',
   '$rootScope',
   function ($q, $timeout, $rootScope) {
+    /*
+	 * Private Vars
+	 */
     var db, version = 1, objectStores = [
         {
           'resourceName': 'supply',
@@ -4256,27 +5308,42 @@ angular.module('employeeApp.services').factory('DB', [
         }
       ];
     window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    /*
+	 * Private functions 
+	 */
+    /*
+	 * Open database
+	 */
     function openDatabase() {
       var openRequest = indexedDB.open('employee', version);
+      //On success
       openRequest.onsuccess = function (e) {
+        //Get the database
         db = e.target.result;
       };
+      //On Error
       openRequest.onerror = function (e) {
         console.log('Error opening indexedDB');
         console.dir(e);
       };
+      //On Upgrade Needed
       openRequest.onupgradeneeded = function (e) {
         console.log('Upgrading the indexedDB..');
+        //Get the database
         db = e.target.result;
+        //Create the object store if it does not exists
         for (var i = 0; i < objectStores.length; i++) {
           var param = objectStores[i];
+          //Creates the store if not yet created
           if (!db.objectStoreNames.contains(param.resourceName)) {
             var objectStore = db.createObjectStore(param.resourceName, { keyPath: param.keyPath });
           } else {
             var objectStore = db.transaction.objectStore(param.resourceName);
           }
+          //Cycle throught the indexes
           for (var h = 0; h < param.indexes.length; h++) {
             var index = param.indexes[h];
+            //Creates indexes if not yet created
             if (!objectStore.indexNames.contains(index)) {
               objectStore.createIndex(index, index, { unique: false });
             }
@@ -4289,13 +5356,20 @@ angular.module('employeeApp.services').factory('DB', [
       if (!db) {
         openDatabase();
       }
+      /*
+		 * Query
+		 * 
+		 * Gets all the objects in the object store that 
+		 * meets the specified parameters
+		 */
       this.query = function () {
         var deferred = $q.defer(), objectStore = db.transaction([this.resourceName]);
         objectStore.openCursor().onsuccess = function (event) {
           var data = [], cursor = event.target.result;
+          //Add object to the array and continue to the next one
           if (cursor) {
             data.append(cursor.value);
-            cursor.continue();
+            cursor.continue();  //Resolve the promise
           } else {
             deferred.resolve(data);
           }
@@ -4367,6 +5441,7 @@ angular.module('employeeApp.services').factory('Geocoder', [
   '$q',
   '$rootScope',
   function ($q, $rootScope) {
+    /*Helper functions*/
     function prepareAddress(obj) {
       var addrStr = '';
       if (obj.hasOwnProperty('address') || obj.hasOwnProperty('address1')) {
@@ -4405,6 +5480,28 @@ angular.module('employeeApp.services').factory('Geocoder', [
       };
       this.geocoder = new this.google.maps.Geocoder();
     }
+    /*
+    Object.defineProperties(Geocoder.prototype, {
+        address:{
+            get:function(){return this._address;},
+            set:function(addr){this._address = addr;}
+        },
+        city:{
+            get:function(){return this._city;},
+            set:function(city){this._city = city;},
+        },
+        territory:{
+            get:function(){return this._territory;},
+            set:function(territory){this._territory = territory;}
+        },
+        country:{
+            get:function(){return this._country;},
+            set:function(country){
+                this._country = country;
+                this._region = this._getRegion(this._country);
+            }
+        }
+    });*/
     Geocoder.prototype._getRegion = function (country) {
       switch (country.toLocaleLowerCase()) {
       case 'thailand':
@@ -4619,7 +5716,9 @@ angular.module('employeeApp').controller('ProductTableDetailsCtrl', [
   '$location',
   function ($scope, Table, $routeParams, Notification, $location) {
     $scope.table = Table.get({ 'id': $routeParams.id });
+    //Upload Image
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
@@ -4669,14 +5768,17 @@ angular.module('employeeApp').controller('ProductTableAddCtrl', [
     $scope.configurationList = Configuration.query({ limit: 0 });
     $scope.modelList = Model.query({ limit: 0 });
     $scope.table = new Table();
+    //Text for tooltips
     $scope.modelText = 'Choose a Model';
     $scope.configurationText = 'Choose a Configuration';
     $scope.widthText = 'Enter a Width in millimeters';
     $scope.depthText = 'Enter a Depth in millimeters';
     $scope.upload = function () {
+      //Notify of uploading image
       Notification.display('Uploading Image...', false);
       var fd = new FormData();
       fd.append('image', $scope.images[0]);
+      //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
       jQuery.ajax('/api/v1/upholstery/image', {
@@ -4709,9 +5811,12 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
   'Customer',
   '$location',
   function ($scope, Project, Notification, Customer, $location) {
+    //Controlling attributes
     $scope.showAddProject = false;
+    //Query the server for projects continouosly
     $scope.projectList = Project.query();
     $scope.customerList = Customer.query();
+    //Grid options
     $scope.gridOptions = {
       data: 'projectList',
       columnDefs: [
@@ -4738,6 +5843,7 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
         }
       ]
     };
+    //Create new project
     $scope.create = function () {
       Notification.display('Creating new project...', false);
       var project = new Project();
@@ -4875,14 +5981,30 @@ angular.module('employeeApp').directive('productSelector', [
         scope.tableList = Table.query();
         scope.product = {};
         function uploadImage(image, callback) {
+          //Display Notification
           Notification.display('Uploading image...', false);
+          //Set the upload Target
+          //Get new image and add to form data
+          //var fd = new FormData();
+          //fd.append('image', image);
           var promise = FileUploader.upload(image, scope.url || 'upload/images');
           promise.then(function (response) {
             Notification.display('Image Uploaded');
             (callback || angular.noop)(response.data);
           }, function () {
             Notification.display('Failed to upload image.');
-          });
+          });  /*//Upload the image
+                    jQuery.ajax(scope.url || "upload/images", {
+						type:'POST',
+						data:fd,
+						processData:false,
+						contentType:false,
+						success: function(response){
+							Notification.display('Image Uploaded');
+							(callback || angular.noop)(response);
+						}
+					});
+					*/
         }
         function add() {
           var newProduct = angular.copy(scope.product);
@@ -4910,6 +6032,14 @@ angular.module('employeeApp').directive('productSelector', [
         };
         scope.addCustomItem = function (item, image) {
           if (item) {
+            /*
+                        var promise = FileUploader.upload(image, scope.url);
+                        promise.then(function(response){
+                            
+                            angular.copy(response, scope.product.image);
+                                            
+                            
+                        });*/
             angular.extend(scope.product, item);
             scope.product.is_custom = true;
             scope.product.type = 'custom';
@@ -4953,16 +6083,19 @@ angular.module('employeeApp').directive('fileHandler', [
       replace: true,
       link: function postLink(scope, element, attrs) {
         var reader = new FileReader();
+        //Drag Enter
         element.bind('dragenter', function (evt) {
           evt.preventDefault();
           element.addClass('drag-drop-active');
           element.addClass('drag-over');
         });
+        //Drag Leave
         element.bind('dragleave', function (evt) {
           evt.preventDefault();
           element.removeClass('drag-drop-active');
           element.removeClass('drag-over');
         });
+        //Drag over
         element.bind('dragover', function (evt) {
           evt.preventDefault();
           element.addClass('drag-drop-active');
@@ -4973,7 +6106,9 @@ angular.module('employeeApp').directive('fileHandler', [
           evt.stopPropagation();
           element.removeClass('drag-drop-active');
           element.removeClass('drag-over');
+          //Get original evt within jquery evt
           var e = evt.originalEvent;
+          //Get the files
           var files = e.dataTransfer.files;
           scope.files = files;
         });
@@ -5013,21 +6148,28 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
       ]
     };
     $scope.addProduct = function (product) {
+      //Notification of product add to which room
       Notification.display('Adding ' + product.description + ' to ' + $scope.room.description, false);
+      //Create item and set details
       var item = new ProjectItem();
       item.product = product;
       item.type = 'product';
       item.room = { id: $scope.room.id };
       item.reference = $scope.room.reference + ($scope.room.items.length + 1);
+      //Save the Item to the server
       item.$save(function () {
         Notification.display(item.description + ' added to ' + $scope.room.description);
+        //Add item to current room on display
         $scope.room.items.push(item);
       });
     };
   }
 ]);
 angular.module('employeeApp').factory('s3', [function () {
+    // Service logic
+    // ...
     var meaningOfLife = 42;
+    // Public API here
     return {
       someMethod: function () {
         return meaningOfLife;
@@ -5041,20 +6183,36 @@ angular.module('employeeApp').factory('FileUploader', [
   function ($q, $http, Notification) {
     var uploader = {}, type, fd;
     uploader.upload = function (file, url, data) {
+      //if(!file.isPrototypeOf){
+      //throw new TypeError("Expectina a file");
+      //}
+      //Determine file type and data
       try {
         type = file.type.split('/')[0];
       } catch (e) {
       }
       type = file.isPrototypeOf(Image) || type === 'image' ? 'Image' : 'File';
       var fd = new FormData();
+      //fd = data.isPrototypeOf(FormData) ? data : new FormData();
       Notification.display('Uploading ' + type + '...', false);
+      //Attch the file to be sent
       fd.append(type.toLowerCase(), file);
+      //Add additional data to the form data
       try {
         for (var i in data) {
           fd.append(i, data[i]);
         }
       } catch (e) {
       }
+      /*
+         * We use the angular $http module to send the image
+         * 
+         * We have to set the content type to undefined so that 
+         * it is not automatically 'application/json'
+         * 
+         * We set the transformRequest to angular.identity so that
+         * the data is not serialized
+         */
       var promise = $http({
           method: 'POST',
           url: url || 'upload/images',
@@ -5062,6 +6220,13 @@ angular.module('employeeApp').factory('FileUploader', [
           headers: { 'Content-Type': undefined },
           transformRequest: angular.identity
         });
+      /*
+		promise.success(function(data, status, headers, config) {
+
+		}).error(function (response) {
+			Notification.display("There was an error in uploading the "+type.toLowerCase(), false);
+		});
+		*/
       return promise;
     };
     return uploader;
@@ -5084,7 +6249,11 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   'FileUploader',
   function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader) {
     console.log($scope.types);
+    /*
+	* Vars and flags
+	*/
     var fetching = true, index = 0, currentSelection;
+    //system message
     Notification.display('Loading supplies...', false);
     $http.get('/api/v1/supply/type').success(function (response) {
       $scope.types = response;
@@ -5096,7 +6265,6 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       Notification.hide();
       changeSelection(index);
     });
-<<<<<<< HEAD
     /*
 	* Adding image for ipads and iphones
 	* 
@@ -5128,8 +6296,6 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
 	* whenever the query string changes and that string will 
 	* be sent along as a parameter. 
 	*/
-=======
->>>>>>> 64d5a2c09ea10c1e3dc56eca6335c0cebdc40054
     $scope.$watch('query', function (q) {
       if (q) {
         Supply.query({
@@ -5147,6 +6313,12 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
         });
       }
     });
+    /*
+	* Load more supplies
+	* 
+	* This function will load more supplies from the server
+	* be using the current number of supplies as the offset
+	*/
     $scope.loadNext = function () {
       if (!fetching) {
         Notification.display('Loading more supplies...', false);
@@ -5209,6 +6381,10 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       });
     };
     keyboardNav.enable();
+    /*
+	 * When adding suppliers or supply
+	 * disable the keyboard navigation
+	 */
     $scope.$watch('showAddSupply', function (val, oldVal) {
       if (val && !oldVal) {
         keyboardNav.disable();
@@ -5245,8 +6421,11 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   'KeyboardNavigation',
   '$location',
   function ($scope, PurchaseOrder, $filter, Notification, KeyboardNavigation, $location) {
+    //Flags and variables
     var fetching = true, index = 0, currentSelection;
+    //System wide message
     Notification.display('Loading purchase orders...', false);
+    //Poll Server for pos
     $scope.poList = PurchaseOrder.query(function () {
       fetching = false;
       Notification.hide();
@@ -5254,6 +6433,16 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
     }, function () {
       fetching = false;
     });
+    /*
+	 * Search Mechanism
+	 * 
+	 * a wartch is put on the query model. 
+	 * whenever it changes a request is made to the server 
+	 * with the query
+	 * 
+	 * The resources are then integrated with the list of 
+	 * PO's so that there are no duplicates
+	 */
     $scope.$watch('query', function (q) {
       if (q) {
         PurchaseOrder.query({
@@ -5350,43 +6539,82 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   '$timeout',
   '$window',
   function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window) {
+    /*
+	 * Setup vars
+	 */
     $scope.showSuppliers = false;
     $scope.showSupplies = false;
     $scope.suppliers = Supplier.query({ limit: 0 });
     $scope.po = new PurchaseOrder();
     $scope.po.items = [];
+    /*
+	 * Add a supplier to the purchase order
+	 */
     $scope.addSupplier = function (supplier) {
+      //Hide Modal
       $scope.showSuppliers = false;
       $scope.po.supplier = supplier;
       $scope.supplies = $filter('filter')(Supply.query({ supplier_id: supplier.id }, function (response) {
         $scope.supplies = $filter('filter')(response, supplier.name);
       }), supplier.name);
     };
+    /*
+	 * Add an item to the purchase order
+	 */
     $scope.addItem = function (item) {
+      //Hide Modal
       $scope.showSupplies = false;
       var purchasedItem = angular.copy(item);
       delete purchasedItem.quantity;
       $scope.po.items.push(purchasedItem);
     };
+    /*
+	 * Remove an item fro the purchase order
+	 */
     $scope.removeItem = function (index) {
       $scope.po.items.splice(index, 1);
     };
+    /*
+	 * Watch Items for change
+	 * 
+	 * We initially tests that the lengths are the same, 
+	 * in order to eliminate add and subtracting items.
+	 * 
+	 * We then loop through all the items and find the item
+	 * that has changed, and then we compare the costs and the id
+	 * to ensure the the same item has change. The costs is saved, 
+	 * and a reference object is made.
+	 * 
+	 * After a delay of 5 seconds, we compare the saved costs with the
+	 * current item cost, by using a reference. 
+	 */
     $scope.$watch('po.items', function (newVal, oldVal) {
+      //Filter out changes in length
       if (newVal.length == oldVal.length && newVal.length > 1) {
+        //Loop through all the items;
         for (var i = 0; i < newVal.length; i++) {
+          //Tests if the costs are different but the id is the same
           if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
             var cost = newVal[i].cost;
+            /*We make a reference to the original object, 
+					 *So that we can make sure the price has settled
+					 *in x milliseconds.*/
             var obj = newVal[i];
+            /* jshint ignore:start */
             $timeout(function () {
+              //Tests to make sure the cost has settled
               if (obj.cost == cost) {
                 var supply = obj.isPrototypeOf(Supply) ? obj : new Supply(obj);
                 supply.$update();
               }
-            }, 5000);
-          }
+            }, 5000);  /* jshint ignore:end */
+          }  //if (po.items[i].cost == newVal[i].cost)
         }
       }
     }, true);
+    /*
+	 * Calculate the subtotal
+	 */
     $scope.subtotal = function () {
       var subtotal = 0;
       for (var i = 0; i < $scope.po.items.length; i++) {
@@ -5396,19 +6624,30 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     };
     $scope.supplierDiscount = function () {
       var subtotal = Number($scope.subtotal());
+      //Calcuate the subtotal with the supplies's discount
       return ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
     };
     $scope.discount = function () {
       var subtotal = Number($scope.subtotal()) - Number($scope.supplierDiscount());
       return ($scope.po.discount || 0) / 100 * subtotal;
     };
+    /*
+	 * Calculate the total
+	 */
     $scope.total = function () {
       var subtotal = Number($scope.subtotal());
+      //Calcuate the subtotal with the supplies's discount
       subtotal = subtotal - ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
+      //Calculate the subtotal with the order's discount
       subtotal = subtotal - ($scope.po.discount || 0) / 100 * subtotal;
+      //Calculate vat
       var vat = subtotal * (Number($scope.po.vat || 0) / 100);
+      //Return subtotal + vat
       return vat + subtotal;
     };
+    /*
+	 * Verfication of order
+	 */
     $scope.verifyOrder = function () {
       if (!$scope.po.hasOwnProperty('supplier')) {
         throw new Error('Please select a supplier');
@@ -5423,6 +6662,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       }
       return true;
     };
+    /*
+	 * Save the purchase order to the server
+	 */
     $scope.save = function () {
       try {
         if ($scope.verifyOrder()) {
@@ -5442,6 +6684,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
         Notification.display(e.message);
       }
     };
+    /*
+	 * Reset the order
+	 */
     $scope.reset = function () {
       $scope.po = new PurchaseOrder();
       $scope.po.items = [];
@@ -5461,6 +6706,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
       restrict: 'EA',
       scope: { 'visible': '=addSupply' },
       link: function postLink(scope, element, attrs) {
+        /*
+			 * Vars and Properties
+			 */
         scope.showWidth = function () {
           var units = scope.supply.units;
           var type = scope.supply.type;
@@ -5488,11 +6736,13 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.add = function () {
           if (scope.form.$valid) {
             Notification.display('Creating supply...', false);
+            //Moves the supply and adds the the supplier array
             scope.supply.suppliers = scope.supply.suppliers || [];
             if (scope.supply.suppliers.indexOfById(scope.supply.supplier)) {
               scope.supply.suppliers.push(scope.supply.supplier);
             }
             delete scope.supply.supplier;
+            //Decides whether to update or create based on presence of id
             if (scope.supply.hasOwnProperty('id')) {
               scope.supply.$update(function (response) {
                 scope.visible = false;
@@ -5535,6 +6785,11 @@ angular.module('employeeApp.directives').directive('addSupplier', [
       link: function postLink(scope, element, attrs) {
         scope.supplier = new Supplier();
         scope.contact = {};
+        /*
+			 * Tips for the form
+			 * 
+			 * A list of tooltip texts for help the user navigate the form
+			 */
         scope.nameTip = 'What is the supplier\'s name (required)';
         scope.thaiNameTip = 'Enter the supplier\'s name in Thai';
         scope.emailTip = 'Enter a valid email address (required)';
@@ -5591,7 +6846,10 @@ angular.module('employeeApp.directives').directive('addSupplier', [
   }
 ]);
 angular.module('employeeApp').factory('inventory', [function () {
+    // Service logic
+    // ...
     var meaningOfLife = 42;
+    // Public API here
     return {
       someMethod: function () {
         return meaningOfLife;
@@ -5635,10 +6893,19 @@ angular.module('employeeApp').directive('customerList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, currentSelection, index = 0;
+        /*
+			* Initial fetching of the customers.
+			* 
+			* We will turn the fetching flag to false
+			* once we received the results
+			*/
         scope.customers = Customer.query({ limit: 20 }, function (response) {
           fetching = false;
           changeSelection(index);
         });
+        /*
+			 * Search
+			 */
         scope.$watch('query', function (q) {
           if (q) {
             Customer.query({
@@ -5655,6 +6922,10 @@ angular.module('employeeApp').directive('customerList', [
             });
           }
         });
+        /*
+			 * Loads the next set of customers if there is no fetching
+			 * currently running
+			 */
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more customers...', false);
@@ -5671,6 +6942,9 @@ angular.module('employeeApp').directive('customerList', [
             });
           }
         };
+        /*
+			 * The function to run when a customer is selected
+			 */
         scope.select = function (customer) {
           scope.onSelect({ 'customer': customer });
         };
@@ -5747,10 +7021,19 @@ angular.module('employeeApp').directive('upholsteryList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, currentSelection, index = 0;
+        /*
+             * Initial fetching of the customers.
+             * 
+             * We will turn the fetching flag to false
+             * once we received the results
+             */
         scope.upholsteries = Upholstery.query({ limit: 20 }, function (response) {
           fetching = false;
           changeSelection(index);
         });
+        /*
+			* Search
+			*/
         scope.$watch('query', function (q) {
           if (q) {
             scope.currentIndex = 0;
@@ -5768,6 +7051,10 @@ angular.module('employeeApp').directive('upholsteryList', [
             });
           }
         });
+        /*
+			* Loads the next set of customers if there is no fetching
+			* currently running
+			*/
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more upholsteries...', false);
@@ -5856,10 +7143,19 @@ angular.module('employeeApp').directive('tableList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, currentSelection, index = 0;
+        /*
+             * Initial fetching of the customers.
+             * 
+             * We will turn the fetching flag to false
+             * once we received the results
+             */
         scope.tables = Table.query({ limit: 20 }, function (response) {
           fetching = false;
           changeSelection(index);
         });
+        /*
+			 * Search
+			 */
         scope.$watch('query', function (q) {
           if (q) {
             Table.query({
@@ -5876,6 +7172,10 @@ angular.module('employeeApp').directive('tableList', [
             });
           }
         });
+        /*
+			* Loads the next set of customers if there is no fetching
+			* currently running
+			*/
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more tables...', false);
@@ -5970,9 +7270,18 @@ angular.module('employeeApp').directive('fabricSelector', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true;
+        /*
+			 * Initial fetching of the customers.
+			 * 
+			 * We will turn the fetching flag to false
+			 * once we received the results
+			 */
         scope.fabrics = Fabric.query(function (response) {
           fetching = false;
         });
+        /*
+			 * Search
+			 */
         scope.$watch('query', function (q) {
           if (q) {
             Fabric.query({
@@ -5987,6 +7296,10 @@ angular.module('employeeApp').directive('fabricSelector', [
             });
           }
         });
+        /*
+			 * Loads the next set of customers if there is no fetching
+			 * currently running
+			 */
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more fabrics...', false);
@@ -6003,6 +7316,9 @@ angular.module('employeeApp').directive('fabricSelector', [
             });
           }
         };
+        /*
+			 * The function to run when a customer is selected
+			 */
         scope.done = function () {
           scope.onComplete();
         };
@@ -6045,6 +7361,12 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         console.error(e);
       });
     };
+    /*
+	 * Adds a new Item to the Purchase Order. However
+	 * this does not save it to the database on the server
+	 * side. The update function must be called in addition
+	 * to adding the item
+	 */
     $scope.addItem = function (item) {
       if ($scope.po.items.indexOfById(item) != -1) {
         $scope.showAddItem = false;
@@ -6053,6 +7375,13 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         Notification.display('This item is already present in the purchase order');
       }
     };
+    /*
+	 * Remove an Item from the the purchase order
+	 * 
+	 * Takes an index as the argment and removes that corresponding item from
+	 * the items array of scope.po. This does not automatically update the server, 
+	 * must be called separately
+	 */
     $scope.removeItem = function ($index) {
       $scope.po.items.splice($index, 1);
     };
@@ -6062,7 +7391,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     $scope.order = function () {
       Notification.display('Updating purchase order...', false);
       $scope.showCal = false;
+      //Modify the order
       $scope.po.status = 'Ordered';
+      //Receive items
       for (var i = 0; i < $scope.po.items.length; i++) {
         $scope.po.items[i].status = 'Ordered';
       }
@@ -6074,7 +7405,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
       if ($scope.po.receive_date) {
         Notification.display('Updating purchase order...', false);
         $scope.showCal = false;
+        //Modify the order
         $scope.po.status = 'Received';
+        //Receive items
         for (var i = 0; i < $scope.po.items.length; i++) {
           $scope.po.items[i].status = 'Received';
         }
@@ -6087,7 +7420,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     };
     $scope.pay = function () {
       Notification.display('Updating purchase order...', false);
+      //Modify the order
       $scope.po.status = 'Paid';
+      //Pay for the items
       for (var i = 0; i < $scope.po.items.length; i++) {
         $scope.po.items[i].status = 'Paid';
       }
@@ -6098,6 +7433,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     $scope.cancel = function () {
       Notification.display('Cancelling purchase order...', false);
       $scope.po.status = 'Cancelled';
+      //Pay for the items
       for (var i = 0; i < $scope.po.items.length; i++) {
         $scope.po.items[i].status = 'Cancelled';
       }
@@ -6119,6 +7455,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   '$window',
   function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window) {
     Notification.display('Retrieving supply...', false);
+    /*
+	 * Vars
+	 */
     $scope.action = 'subtract';
     $scope.showQuantity = false;
     $scope.supply = Supply.get({
@@ -6126,6 +7465,14 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       'country': $scope.country
     }, function () {
       Notification.hide();
+      //Extract suppliers to be used for if add upc
+      //$scope.suppliers = $scope.supply.suppliers;
+      /*
+		 * Set the selected supplier automatically if 
+		 * there is only 1 supplier. The supply's supplier 
+		 * is automattically because selectedSupplier is 
+		 * referencing it
+		 */
       try {
         if ($scope.supply.suppliers.length == 1) {
           $scope.selectedSupplier = $scope.supply.suppliers[0];
@@ -6152,6 +7499,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         'pack',
         'pc'
       ];
+    /*
+	 * Seletively show dimensions
+	 */
     $scope.showWidth = function () {
       return validWidth.indexOf($scope.supply.units) > -1 || validWidth.indexOf($scope.supply.type) > -1 || $scope.supply.units == 'kg' && $scope.supply.type == 'packaging' ? true : false;
     };
@@ -6172,13 +7522,31 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       }
     };
     scanner = new scanner('supply/details');
+    //scanner.enable();
     scanner.disableStandard();
     scanner.register(/^\d+(\-\d+)*$/, function (code) {
       $scope.safeApply(function () {
+        /*
+			 * This adds the upc to the supplier in the supply's
+			 * object because "selectedSupplier" is referencing 
+			 * the original object
+			 */
         $scope.selectedSupplier.upc = code;
         $scope.showAddUPC = false;
       });
     });
+    /*
+	 * Update the supply
+	 * 
+	 * Sends a PUT request to the server with all the values
+	 * of the entire resource. We implement this by watching the supply
+	 * object. 
+	 * 
+	 * We utilize a custom listener function because we must delete, 
+	 * all dynamically generated content from the server, such as 
+	 * last_modifed, and unique url, as this will cause a loop
+	 * when the updating begins
+	 */
     $scope.$watch(function () {
       var supply = angular.copy($scope.supply);
       delete supply.last_modified;
@@ -6201,6 +7569,13 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         }, 5000);
       }
     }, true);
+    /*
+	 * Adding a upc
+	 * 
+	 * Set Keyboard Navigation
+	 * Detects the switch and opens the modal accordingly
+	 * 
+	 */
     $scope.$watch('showAddUPC', function (newVal, oldVal) {
       if (newVal) {
         scanner.enable();
@@ -6208,6 +7583,12 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         scanner.disable();
       }
     });
+    /*
+	 * Add a quantity
+	 * 
+	 * Sends a POST request to the server via the add url with 
+	 * the quanttity as a parameter
+	 */
     $scope.add = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
@@ -6222,6 +7603,12 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         }
       });
     };
+    /*
+	 * Subtract a quantity
+	 * 
+	 * Sends a POST reques to the server via the subtract url with the 
+	 * quantity as a parameter
+	 */
     $scope.subtract = function (quantity) {
       $scope.showQuantity = false;
       if (!quantity) {
@@ -6236,6 +7623,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
         }
       });
     };
+    /*
+	 * Change quantity
+	 */
     $scope.changeQuantity = function (action, quantity) {
       if (!quantity) {
         throw ValueError('Expecting a quantity');
@@ -6243,6 +7633,7 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       $scope[action]();
     };
     $scope.$on('$destroy', function () {
+      //Turn off scanner and keyboard Navigation
       scanner.disable();
       $timeout.cancel(timeoutPromise);
       Notification.display('Updating ' + $scope.supply.description + '...', false);
@@ -6251,6 +7642,9 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       });
       globalScanner.enable();
     });
+    /*
+	 * Remove
+	 */
     $scope.remove = function () {
       if ($scope.currentUser.hasPermission('delete_supply')) {
         Notification.display('Deleting supply...', false);
@@ -6283,6 +7677,12 @@ angular.module('employeeApp').directive('imageUploader', [
         scope.buttonOff = function () {
           scope.showUploadButton = false;
         };
+        /*
+			* Upload Image
+			* 
+			* Uploads image to the designated url. It then calls
+			* the on-upload function that is 
+			*/
         scope.upload = function ($image, callback) {
           var promise = FileUploader.upload($image, scope.url);
           promise.then(function (dataObj) {
@@ -6312,14 +7712,21 @@ angular.module('employeeApp.directives').directive('addCustomer', [
       scope: { visible: '=addCustomer' },
       link: function postLink(scope, element, attrs) {
         scope.customer = new Customer();
+        /*
+             * List of tips
+             * 
+             * The tips are to be used with the tooltips
+             */
         scope.firstNameTip = 'Enter the customer\'s first name or name (required)';
         scope.lastNameTip = 'Enter the customer\'s last name if applicable';
         scope.emailTip = 'Enter a valid email address (required)';
         scope.telTip = 'Enter a valid phone number (required)';
         scope.typeTip = 'What type of customer is this? (required)';
         scope.currencyTip = 'What currency does this customer deal in? (required)';
+        //Get the longitude and latitude of the customer's address
         scope.getLocation = function () {
           if (scope.customer.address.address1 && scope.customer.address.city && scope.customer.address.territory && scope.customer.address.country && scope.customer.address.zipcode && !scope.customer.address.user_defined_latlng) {
+            //Get promise and bind to call backs
             var promise = Geocoder.geocode(scope.customer.address);
             promise.then(function (results) {
               if (scope.marker) {
@@ -6327,12 +7734,15 @@ angular.module('employeeApp.directives').directive('addCustomer', [
               } else {
                 scope.marker = scope.map.createMarker(results[0].geometry.location);
                 scope.marker.onchange = function (latLng) {
+                  //Set address lat and lng
                   scope.customer.address.lat = scope.marker.lat;
                   scope.customer.address.lng = scope.marker.lng;
                   scope.customer.address.user_defined_latlng = true;
                 };
               }
+              //Reposition the map to the marker
               scope.map.setPosition(results[0].geometry.location);
+              //Set the Address lat and lng
               scope.customer.address.lat = scope.marker.lat;
               scope.customer.address.lng = scope.marker.lng;
             }, function (status) {
@@ -6394,6 +7804,7 @@ angular.module('employeeApp').directive('img', [function () {
         }
         return {
           post: function postLink(scope, element, iAttrs) {
+            //Add the preclass as soon as possible
             var parent = element.parent();
             var pWidth = parent.innerWidth();
             var pHeight = parent.innerWidth();
@@ -6539,10 +7950,19 @@ angular.module('employeeApp').directive('supplierList', [
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, currentSelection, index = 0;
+        /*
+			* Initial fetching of the suppliers.
+			* 
+			* We will turn the fetching flag to false
+			* once we received the results
+			*/
         scope.suppliers = Supplier.query({ limit: 20 }, function (response) {
           fetching = false;
           changeSelection(index);
         });
+        /*
+			 * Search
+			 */
         scope.$watch('query', function (q) {
           if (q) {
             Supplier.query({
@@ -6559,6 +7979,10 @@ angular.module('employeeApp').directive('supplierList', [
             });
           }
         });
+        /*
+			 * Loads the next set of suppliers if there is no fetching
+			 * currently running
+			 */
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more suppliers...', false);
@@ -6575,6 +7999,9 @@ angular.module('employeeApp').directive('supplierList', [
             });
           }
         };
+        /*
+			 * The function to run when a customer is selected
+			 */
         scope.select = function (supplier) {
           scope.onSelect({ '$supplier': supplier });
         };
@@ -6657,6 +8084,12 @@ angular.module('employeeApp').directive('supplyList', [
           scope.types = d;
           scope.types.splice(scope.types.indexOf(null), 1);
         });
+        /*
+			* Initial fetching of the supplies.
+			* 
+			* We will turn the fetching flag to false
+			* once we received the results
+			*/
         if (attrs.supplier) {
           scope.$watch('supplier', function (val) {
             if (val) {
@@ -6675,6 +8108,9 @@ angular.module('employeeApp').directive('supplyList', [
             changeSelection(index);
           });
         }
+        /*
+			 * Search
+			 */
         scope.$watch('query', function (q) {
           if (q) {
             Supply.query({
@@ -6691,6 +8127,10 @@ angular.module('employeeApp').directive('supplyList', [
             });
           }
         });
+        /*
+			 * Loads the next set of supplies if there is no fetching
+			 * currently running
+			 */
         scope.loadNext = function () {
           if (!fetching) {
             Notification.display('Loading more supplies...', false);
@@ -6707,6 +8147,9 @@ angular.module('employeeApp').directive('supplyList', [
             });
           }
         };
+        /*
+			 * The function to run when a customer is selected
+			 */
         scope.select = function (supply) {
           scope.onSelect({ '$supply': supply });
         };
@@ -6786,6 +8229,8 @@ angular.module('employeeApp.directives').directive('camera', [
       replace: true,
       scope: { onSnapshot: '&' },
       link: function postLink(scope, element, attrs) {
+        //console.log('test');
+        //console.log(CameraService.hasUserMedia());
         if (!CameraService.hasUserMedia()) {
           return;
         }
@@ -6867,6 +8312,9 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
       scope: { 'visible': '=supplyScannerModal' },
       link: function postLink(scope, element, attrs) {
         console.log(scope.country);
+        /*
+			 * Vars
+			 */
         var keyboardNav = new KeyboardNavigation();
         scope.action = 'subtract';
         scope.scanner = new scanner('supply-scanner-modal');
@@ -6878,6 +8326,14 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
         scope.fractSize = function () {
           return scope.supply ? scope.supply.units == 'pc' ? 0 : 2 : 2;
         };
+        /*
+			 * Watchers
+			 */
+        /*
+			 * This is a hack to rememdy that I cannot
+			 * add an ng-class to the main tag of this
+			 * directive
+			 */
         scope.$watch('showAddImage', function (val) {
           if (val) {
             element.addClass('add-image');
@@ -6885,6 +8341,11 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             element.removeClass('add-image');
           }
         });
+        /*
+			 * Add Image
+			 * 
+			 * Updates the image of the currently selected supply
+			 */
         scope.addImage = function (data) {
           Notification.display('Updating the supply\'s image', false);
           var image = data.hasOwnProperty('data') ? data.data : data;
@@ -6908,6 +8369,9 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             });
           }
         };
+        /*
+			 * Register the supply code regex
+			 */
         scope.scanner.register(/^DRS-\d+$/, function (code) {
           Notification.display('Looking up supply...', false);
           scope.supply = Supply.get({
@@ -6917,9 +8381,16 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             Notification.hide();
             focusOnQuantity();
           }, function () {
-            Notification.display('Unable to find supply.', false);
+            Notification.display('Unable to find supply.', false);  /*
+					scope.supply = Supply.get({id:code}, function () {
+						Notification.display('Unable to find supply', false);
+					});
+					*/
           });
         });
+        /*
+			 * Register the upc regex
+			 */
         scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
           Supply.query({
             upc: code,
@@ -6935,6 +8406,9 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             console.log(reason);
           });
         });
+        /*
+			 * Sets navigation
+			 */
         function changeAction(action) {
           if (scope.$$phase === '$digest' || scope.$$phase === '$apply') {
             scope.action = action;
@@ -6955,10 +8429,12 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
         };
         scope.$watch('visible', function (val) {
           if (val) {
+            //Disable the global scanner
             try {
               window.globalScanner.disable();
             } catch (e) {
             }
+            //Enable the scanner and disable the standard codes
             scope.scanner.enable();
             keyboardNav.enable();
             scope.scanner.disableStandard();
