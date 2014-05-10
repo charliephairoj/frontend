@@ -8317,6 +8317,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
 			 */
         var keyboardNav = new KeyboardNavigation();
         scope.action = 'subtract';
+        scope.disabled = true;
         scope.scanner = new scanner('supply-scanner-modal');
         var focusOnQuantity = function () {
           var quantity = element.find('input');
@@ -8356,7 +8357,8 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
         };
         scope.changeQuantity = function (quantity) {
           quantity = quantity || scope.quantity;
-          if (scope.supply.hasOwnProperty('id') && quantity > 0) {
+          if (scope.supply.hasOwnProperty('id') && quantity > 0 && !scope.disabled) {
+            scope.disabled = true;
             scope.supply['$' + scope.action]({
               quantity: quantity,
               'country': $rootScope.country
@@ -8378,6 +8380,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             id: code.split('-')[1],
             'country': $rootScope.country
           }, function (response) {
+            scope.disabled = false;
             Notification.hide();
             focusOnQuantity();
           }, function () {
@@ -8396,6 +8399,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             upc: code,
             'country': $rootScope.country
           }, function (response) {
+            scope.disabled = false;
             focusOnQuantity();
             try {
               scope.supply = response[0];
