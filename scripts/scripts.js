@@ -182,6 +182,9 @@ angular.module('employeeApp', [
     }).when('/order/purchase_order/:id', {
       templateUrl: 'views/order/purchase_order/details.html',
       controller: 'OrderPurchaseOrderDetailsCtrl'
+    }).when('/supply/log', {
+      templateUrl: 'views/supply/log.html',
+      controller: 'SupplyLogCtrl'
     }).when('/supply/:id', {
       templateUrl: 'views/supply/details.html',
       controller: 'SupplyDetailsCtrl'
@@ -347,7 +350,7 @@ angular.module('employeeApp').run([
     window.iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
     /*
 	 * Prevent rubber band effect of iOS webapp
- 	 */
+     */
     var scrollY = 0;
     $(document).on('touchstart', function (e) {
       scrollY = e.originalEvent.touches.item(0).clientY;
@@ -357,7 +360,7 @@ angular.module('employeeApp').run([
       if (container) {
         var containerHeight = $(container).height();
         var scrollDelta = scrollY - e.originalEvent.touches.item(0).clientY;
-        if (container.scrollTop == 0 && scrollDelta < 0) {
+        if (container.scrollTop === 0 && scrollDelta < 0) {
           e.preventDefault();
         } else if (containerHeight + container.scrollTop == container.scrollHeight && scrollDelta > 0) {
           e.preventDefault();
@@ -2196,7 +2199,7 @@ angular.module('employeeApp').directive('imageDropTarget', [
         //File Reader
         var fileReader = new FileReader();
         fileReader.onload = function (evt) {
-          var image = { 'url': evt.target.result };
+          var image = { 'url': jsevt.target.result };
           //Create array if not exists
           $scope.imagePreviews = $scope.imagePreviews || [];
           $scope.$apply(function () {
@@ -2885,7 +2888,7 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
     };
     $scope.updateGroup = function (group) {
       if (group.$checked) {
-        if ($scope.user.groups.indexOfById(group.id) == -1) {
+        if ($scope.user.groups.indexOfById(group.id) === -1) {
           $scope.user.groups.push(angular.copy(group));
         }
       } else {
@@ -8461,7 +8464,6 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
 'use strict';
 angular.module('employeeApp').service('Resizer', function Resizer() {
 });
-'use strict';
 angular.module('employeeApp').directive('touchstart', function () {
   return {
     restrict: 'A',
@@ -8470,7 +8472,7 @@ angular.module('employeeApp').directive('touchstart', function () {
         element.addClass('touch-start');
       }
       //Apply if an iOS device
-      if (iOS) {
+      if (window.iOS) {
         element.on('touchstart', touchStart);
         scope.$on('$destroy', function () {
           element.off('touchstart', touchStart);
@@ -8479,7 +8481,6 @@ angular.module('employeeApp').directive('touchstart', function () {
     }
   };
 });
-'use strict';
 angular.module('employeeApp').directive('touchmove', function () {
   return {
     restrict: 'A',
@@ -8489,7 +8490,7 @@ angular.module('employeeApp').directive('touchmove', function () {
         element.removeClass('touch-start');
       }
       //Apply if an iOS device 
-      if (iOS) {
+      if (window.iOS) {
         element.on('touchmove', touchMove);
         scope.$on('$destroy', function () {
           element.off('touchmove', touchMove);
@@ -8498,7 +8499,6 @@ angular.module('employeeApp').directive('touchmove', function () {
     }
   };
 });
-'use strict';
 angular.module('employeeApp').directive('touchend', function () {
   return {
     restrict: 'A',
@@ -8509,7 +8509,8 @@ angular.module('employeeApp').directive('touchend', function () {
         element.removeClass('touch-move');
       }
       //Apply if an iOS device
-      if (iOS) {
+      if (window.iOS) {
+        //jsHint ignore
         element.on('touchend', touchEnd);
         scope.$on('$destroy', function () {
           element.off('touchmove', touchEnd);
@@ -8518,7 +8519,6 @@ angular.module('employeeApp').directive('touchend', function () {
     }
   };
 });
-'use strict';
 angular.module('employeeApp').directive('touchselect', [
   '$location',
   function ($location) {
@@ -8552,7 +8552,7 @@ angular.module('employeeApp').directive('touchselect', [
           started = false;
           moved = false;
         }
-        if (iOS) {
+        if (window.iOS) {
           element.on('click', click);
           element.on('touchstart', touchStart);
           element.on('touchmove', touchMove);
@@ -8567,5 +8567,22 @@ angular.module('employeeApp').directive('touchselect', [
         }
       }
     };
+  }
+]);
+angular.module('employeeApp').controller('SupplyLogCtrl', [
+  '$scope',
+  '$http',
+  function ($scope, $http) {
+    var promise = $http.get('/api/v1/supply/log');
+    promise.then(function (response) {
+      $scope.logs = response.data;
+    });
+  }
+]);
+'use strict';
+angular.module('employeeApp').factory('SupplyLog', [
+  '$resource',
+  function ($resource) {
+    return $resource('/api/v1/supply/:id/:action', { id: '@id' }, {});
   }
 ]);
