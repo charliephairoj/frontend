@@ -84,29 +84,74 @@
 				</div>
 			</div>
 		</div>
-		<div class="products items">
-			<div class="table">
-				<div class="row" ng-repeat="item in po.items">
-					<div class="cell">
-						<div class="remove-btn" ng-click="removeItem($index)">x</div>
-						<div class="details">
-							<div class="details-row">
-								<div class="details-data">
-									{{item.description}}
-									<div class="quantity">
-										<input type="text" ng-model="item.quantity" />{{item.units}}
-									</div>
-								</div>
-							</div>
-							<div class="details-row">
-								<div class="details-data">
-									Status: {{item.status}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="order-details" ng-show="po.items">
+			<table>
+				<thead>
+					<tr class='heading'>
+						<td>Description</td>
+						<td>Discount</td>
+						<td>Unit Cost</td>
+						<td>Quantity</td>
+						<td>Total</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="items" ng-repeat="item in po.items">
+						<td class='description'>{{item.description}}</td>
+						<td class='discount'>
+							<input type="text" ng-model="item.discount" />
+						</td>
+						<td class='unit-cost'>{{unitCost(item.unit_cost, item.discount)}}</td>
+						<td class='quantity'>
+							<input type="text" ng-model="item.quantity" />
+						</td>
+						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity}}</td>
+						<td>
+							<button class="remove-btn" ng-click="removeItem($index)">Remove</td>
+					</tr>
+					<tr class="summary subtotal">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Subtotal</td>
+						<td class="value">{{subtotal() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary discount" ng-show="po.discount">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Discount {{po.discount}}%</td>
+						<td class="value">-{{discount() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary total" ng-show="po.discount">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Total</td>
+						<td class="value">{{total() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary vat" ng-show="po.vat">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Vat {{po.vat}}%</td>
+						<td class="value">{{total() * (po.vat / 100) | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary grand-total" ng-show="po.vat">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Grand Total</td>
+						<td class="value">{{grandTotal() | number:2}}</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

@@ -1825,11 +1825,13 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   '$filter',
   'Notification',
   '$window',
-  function ($scope, Acknowledgement, Customer, $filter, Notification, $window) {
+  'Project',
+  function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Project) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
     $scope.customImageScale = 100;
+    $scope.projects = Project.query();
     $scope.ack = new Acknowledgement();
     var uploadTargets = [];
     var storage = window.localStorage;
@@ -1862,6 +1864,14 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       try {
         if ($scope.isValidated()) {
           Notification.display('Creating Acknowledgement...', false);
+          /*
+				 * Preps for creation of a new project
+				 */
+          if ($scope.ack.newProject) {
+            $scope.ack.project = { codename: $scope.ack.newProjectName };
+            delete $scope.ack.newProject;
+            delete $scope.ack.newProjectName;
+          }
           $scope.ack.$create(function (response) {
             Notification.display('Acknowledgement created');
             if (response.pdf.acknowledgement) {
@@ -2212,7 +2222,9 @@ angular.module('employeeApp').directive('imageDropTarget', [
              */
         //Clear Image
         $scope.clearImages = function () {
+          /* jshint ignore:start */
           $scope.images ? $scope.images.length = 0 : $scope.images = [];  // jshint ignore:line
+                                                                          /* jshint ignore:end */
         };
         /*
              * Add functions to deal with the drag enter,leave and
@@ -5318,7 +5330,7 @@ angular.module('employeeApp.services').factory('DB', [
 	 * Open database
 	 */
     function openDatabase() {
-      var openRequest = indexedDB.open('employee', version);
+      var openRequest = indexedDB.open('employee', version), objectStore;
       //On success
       openRequest.onsuccess = function (e) {
         //Get the database
@@ -5339,9 +5351,9 @@ angular.module('employeeApp.services').factory('DB', [
           var param = objectStores[i];
           //Creates the store if not yet created
           if (!db.objectStoreNames.contains(param.resourceName)) {
-            var objectStore = db.createObjectStore(param.resourceName, { keyPath: param.keyPath });
+            objectStore = db.createObjectStore(param.resourceName, { keyPath: param.keyPath });
           } else {
-            var objectStore = db.transaction.objectStore(param.resourceName);
+            objectStore = db.transaction.objectStore(param.resourceName);
           }
           //Cycle throught the indexes
           for (var h = 0; h < param.indexes.length; h++) {
@@ -5372,7 +5384,8 @@ angular.module('employeeApp.services').factory('DB', [
           //Add object to the array and continue to the next one
           if (cursor) {
             data.append(cursor.value);
-            cursor.continue();  //Resolve the promise
+            cursor.continue();  //jshint ignore:line
+                                //Resolve the promise
           } else {
             deferred.resolve(data);
           }
@@ -5902,9 +5915,9 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   }
 ]);
 angular.module('employeeApp.services').factory('Project', [
-  'eaResource',
-  function (eaResource) {
-    return eaResource('project/:id', { id: '@id' });
+  '$resource',
+  function ($resource) {
+    return $resource('/api/v1/project/:id', { id: '@id' });
   }
 ]);
 angular.module('employeeApp.services').factory('Room', [
@@ -6541,15 +6554,16 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   '$filter',
   '$timeout',
   '$window',
-  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window) {
+  'Project',
+  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project) {
     /*
 	 * Setup vars
 	 */
     $scope.showSuppliers = false;
     $scope.showSupplies = false;
     $scope.suppliers = Supplier.query({ limit: 0 });
+    $scope.projects = Project.query();
     $scope.po = new PurchaseOrder();
-    $scope.po.items = [];
     /*
 	 * Add a supplier to the purchase order
 	 */
@@ -6557,6 +6571,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       //Hide Modal
       $scope.showSuppliers = false;
       $scope.po.supplier = supplier;
+      $scope.po.discount = supplier.discount;
       $scope.supplies = $filter('filter')(Supply.query({ supplier_id: supplier.id }, function (response) {
         $scope.supplies = $filter('filter')(response, supplier.name);
       }), supplier.name);
@@ -6567,6 +6582,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     $scope.addItem = function (item) {
       //Hide Modal
       $scope.showSupplies = false;
+      $scope.po.items = $scope.po.items || [];
       var purchasedItem = angular.copy(item);
       delete purchasedItem.quantity;
       $scope.po.items.push(purchasedItem);
@@ -6576,6 +6592,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
 	 */
     $scope.removeItem = function (index) {
       $scope.po.items.splice(index, 1);
+      if ($scope.po.items.length === 0) {
+        delete $scope.po.items;
+      }
     };
     /*
 	 * Watch Items for change
@@ -6592,61 +6611,58 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
 	 * current item cost, by using a reference. 
 	 */
     $scope.$watch('po.items', function (newVal, oldVal) {
-      //Filter out changes in length
-      if (newVal.length == oldVal.length && newVal.length > 1) {
-        //Loop through all the items;
-        for (var i = 0; i < newVal.length; i++) {
-          //Tests if the costs are different but the id is the same
-          if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
-            var cost = newVal[i].cost;
-            /*We make a reference to the original object, 
-					 *So that we can make sure the price has settled
-					 *in x milliseconds.*/
-            var obj = newVal[i];
-            /* jshint ignore:start */
-            $timeout(function () {
-              //Tests to make sure the cost has settled
-              if (obj.cost == cost) {
-                var supply = obj.isPrototypeOf(Supply) ? obj : new Supply(obj);
-                supply.$update();
-              }
-            }, 5000);  /* jshint ignore:end */
-          }  //if (po.items[i].cost == newVal[i].cost)
+      try {
+        //Filter out changes in length
+        if (newVal.length == oldVal.length && newVal.length > 1) {
+          //Loop through all the items;
+          for (var i = 0; i < newVal.length; i++) {
+            //Tests if the costs are different but the id is the same
+            if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
+              var cost = newVal[i].cost;
+              /*We make a reference to the original object, 
+						 *So that we can make sure the price has settled
+						 *in x milliseconds.*/
+              var obj = newVal[i];
+              $timeout(function () {
+                //Tests to make sure the cost has settled
+                if (obj.cost == cost) {
+                  var supply = obj.isPrototypeOf(Supply) ? obj : new Supply(obj);  //supply.$update();
+                }
+              }, 5000);  //jshint ignore:line
+            }  //if (po.items[i].cost == newVal[i].cost)
+          }
         }
+      } catch (e) {
       }
     }, true);
     /*
-	 * Calculate the subtotal
+	 * Unit costs
+	 */
+    $scope.unitCost = function (unitCost, discount) {
+      return unitCost - unitCost * (discount / 100);
+    };
+    /*
+	 * Functions to get summary totals
 	 */
     $scope.subtotal = function () {
       var subtotal = 0;
-      for (var i = 0; i < $scope.po.items.length; i++) {
-        subtotal += Number($scope.po.items[i].override_cost ? $scope.po.items[i].override_cost_amount : $scope.po.items[i].cost) * Number($scope.po.items[i].quantity || 1);
+      if ($scope.po.items) {
+        for (var i = 0; i < $scope.po.items.length; i++) {
+          var item = $scope.po.items[i];
+          subtotal += $scope.unitCost(item.cost, item.discount) * item.quantity;
+        }
       }
-      return Number(subtotal.toFixed(2));
-    };
-    $scope.supplierDiscount = function () {
-      var subtotal = Number($scope.subtotal());
-      //Calcuate the subtotal with the supplies's discount
-      return ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
+      return subtotal;
     };
     $scope.discount = function () {
-      var subtotal = Number($scope.subtotal()) - Number($scope.supplierDiscount());
-      return ($scope.po.discount || 0) / 100 * subtotal;
+      return $scope.subtotal() * (($scope.po.discount || 0) / 100);
     };
-    /*
-	 * Calculate the total
-	 */
     $scope.total = function () {
-      var subtotal = Number($scope.subtotal());
-      //Calcuate the subtotal with the supplies's discount
-      subtotal = subtotal - ($scope.po.supplier && $scope.po.supplier.discount || 0) / 100 * subtotal;
-      //Calculate the subtotal with the order's discount
-      subtotal = subtotal - ($scope.po.discount || 0) / 100 * subtotal;
-      //Calculate vat
-      var vat = subtotal * (Number($scope.po.vat || 0) / 100);
-      //Return subtotal + vat
-      return vat + subtotal;
+      return $scope.subtotal() - $scope.discount();
+    };
+    $scope.grandTotal = function () {
+      var total = $scope.total();
+      return total + total * ($scope.po.vat / 100);
     };
     /*
 	 * Verfication of order
@@ -6672,6 +6688,14 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       try {
         if ($scope.verifyOrder()) {
           Notification.display('Creating purchase order...', false);
+          /*
+				 * Preps for creation of a new project
+				 */
+          if ($scope.po.newProject) {
+            $scope.po.project = { codename: $scope.po.newProjectName };
+            delete $scope.po.newProject;
+            delete $scope.po.newProjectName;
+          }
           $scope.po.$save(function (response) {
             try {
               $window.open(response.pdf.url);
@@ -7365,6 +7389,35 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
       });
     };
     /*
+	 * Unit costs
+	 */
+    $scope.unitCost = function (unitCost, discount) {
+      return unitCost - unitCost * (discount / 100);
+    };
+    /*
+	 * Functions to get summary totals
+	 */
+    $scope.subtotal = function () {
+      var subtotal = 0;
+      if ($scope.po.items) {
+        for (var i = 0; i < $scope.po.items.length; i++) {
+          var item = $scope.po.items[i];
+          subtotal += $scope.unitCost(item.unit_cost, item.discount) * item.quantity;
+        }
+      }
+      return subtotal;
+    };
+    $scope.discount = function () {
+      return $scope.subtotal() * ($scope.po.discount / 100);
+    };
+    $scope.total = function () {
+      return $scope.subtotal() - $scope.discount();
+    };
+    $scope.grandTotal = function () {
+      var total = $scope.total();
+      return total + total * ($scope.po.vat / 100);
+    };
+    /*
 	 * Adds a new Item to the Purchase Order. However
 	 * this does not save it to the database on the server
 	 * side. The update function must be called in addition
@@ -7387,6 +7440,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
 	 */
     $scope.removeItem = function ($index) {
       $scope.po.items.splice($index, 1);
+      if ($scope.po.items.length === 0) {
+        delete $scope.po.items;
+      }
     };
     $scope.viewPDF = function () {
       $window.open($scope.po.pdf.url);
@@ -7846,7 +7902,6 @@ angular.module('employeeApp.services').factory('KeyboardNavigation', [
         evt.stopPropagation();
         fn();
       }
-      ;
       function parseKeydown(evt) {
         switch (evt.which) {
         case 37:
@@ -8461,7 +8516,6 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
     };
   }
 ]);
-'use strict';
 angular.module('employeeApp').service('Resizer', function Resizer() {
 });
 angular.module('employeeApp').directive('touchstart', function () {
@@ -8579,7 +8633,6 @@ angular.module('employeeApp').controller('SupplyLogCtrl', [
     });
   }
 ]);
-'use strict';
 angular.module('employeeApp').factory('SupplyLog', [
   '$resource',
   function ($resource) {

@@ -122,6 +122,14 @@
 							{{ack.customer.currency}}
 						</td>
 					</tr>
+					<tr class="project">
+						<td>Project:</td>
+						<td>
+							<select ng-options="project.codename for project in projects" ng-model="ack.project" ng-disabled="ack.newProject">
+								<input class="new-project-checkbox" type="checkbox" ng-model="ack.newProject" />New Project
+								<input class="new-project-name" type="text" ng-model="po.newProjectName" ng-show="ack.newProject">
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div class="products" ng-show="ack.items.length>0">
