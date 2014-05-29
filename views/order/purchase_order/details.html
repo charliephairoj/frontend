@@ -89,6 +89,7 @@
 				<thead>
 					<tr class='heading'>
 						<td>Description</td>
+						<td>Comments</td>
 						<td>Discount</td>
 						<td>Unit Cost</td>
 						<td>Quantity</td>
@@ -99,6 +100,9 @@
 				<tbody>
 					<tr class="items" ng-repeat="item in po.items">
 						<td class='description'>{{item.description}}</td>
+						<td>
+							<textarea ng-model=item.comments row="4"></textarea>
+						</td>
 						<td class='discount'>
 							<input type="text" ng-model="item.discount" />
 						</td>
@@ -111,6 +115,7 @@
 							<button class="remove-btn" ng-click="removeItem($index)">Remove</td>
 					</tr>
 					<tr class="summary subtotal">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -130,6 +135,7 @@
 						<td></td>
 						<td></td>
 						<td></td>
+						<td></td>
 						<td class="title">Total</td>
 						<td class="value">{{total() | number:2}}</td>
 						<td></td>
@@ -138,11 +144,13 @@
 						<td></td>
 						<td></td>
 						<td></td>
+						<td></td>
 						<td class="title">Vat {{po.vat}}%</td>
 						<td class="value">{{total() * (po.vat / 100) | number:2}}</td>
 						<td></td>
 					</tr>
 					<tr class="summary grand-total" ng-show="po.vat">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
