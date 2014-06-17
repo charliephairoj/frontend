@@ -8,9 +8,12 @@
 			</div>
 		</div>
 		<div class="inner-container" on-scroll-end="loadNext()">
-			<ul class="customer-container">
+			<ul class="supply-container">
 				<li class="supply" ng-class="{'selected':supply.$selected}" ng-click="select(supply)" ng-repeat="supply in supplies | filter:search:strict | filter:query | orderBy:'description'">
-					{{supply.description}}
+					<div class="image-container">
+						<img ng-src="{{supply.image.url}}">
+					</div>
+					<span class="description">{{supply.description}}</span>
 					<span class="cost">{{supply.unit_cost || cost}}{{supplier.currency}}</span>
 				</li>
 			</ul>
