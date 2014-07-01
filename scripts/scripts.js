@@ -185,9 +185,6 @@ angular.module('employeeApp', [
     }).when('/supply/log', {
       templateUrl: 'views/supply/log.html',
       controller: 'SupplyLogCtrl'
-    }).when('/supply/buying_guide', {
-      templateUrl: 'views/supply/buying_guide.html',
-      controller: 'SupplyBuyingGuideCtrl'
     }).when('/supply/:id', {
       templateUrl: 'views/supply/details.html',
       controller: 'SupplyDetailsCtrl'
@@ -308,7 +305,6 @@ angular.module('employeeApp').run([
     };
     window.globalScanner = new scanner('global');
     globalScanner.enable();
-    //hi
     /*
 	 * Geolocating the user
 	 * 
@@ -323,28 +319,25 @@ angular.module('employeeApp').run([
     $rootScope.country = 'TH';
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(function (position) {
-        if (Geocoder.initialized) {
-          //Reverse geocode and returns the promise
-          var promise = Geocoder.reverseGeocode(position.coords.latitude, position.coords.longitude);
-          //Set the success and error callbacks for the promise
-          promise.then(function (results) {
-            //Cycle through componenets to look for country
-            for (var i in results[0].address_components) {
-              var component = results[0].address_components[i];
-              if (typeof component.types == 'object') {
-                if (component.types.indexOf('country') != -1) {
-                  console.log(component);
-                  //Set country to main scope, to be called later
-                  //$rootScope.country = 'KH';
-                  $rootScope.country = component.short_name;
-                }
+        //Reverse geocode and returns the promise
+        var promise = Geocoder.reverseGeocode(position.coords.latitude, position.coords.longitude);
+        //Set the success and error callbacks for the promise
+        promise.then(function (results) {
+          //Cycle through componenets to look for country
+          for (var i in results[0].address_components) {
+            var component = results[0].address_components[i];
+            if (typeof component.types == 'object') {
+              if (component.types.indexOf('country') != -1) {
+                console.log(component);
+                //Set country to main scope, to be called later
+                //$rootScope.country = 'KH';
+                $rootScope.country = component.short_name;
               }
             }
-          }, function () {
-            console.error('Getting the position failed');
-          });
-        } else {
-        }
+          }
+        }, function () {
+          console.error('Getting the position failed');
+        });
       }, function (e) {
         console.log(e);
       });
@@ -1888,8 +1881,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
               $window.open(response.pdf.production);
             }
             angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
-            delete $scope.ack.newProject;
-            delete $scope.ack.newProjectName;
           }, function (e) {
             console.error(e);
             Notification.display('There was an error in creating the Acknowledgement', false);
@@ -3082,7 +3073,7 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
   '$location',
   'Notification',
   function ($scope, Supplier, Fabric, $location, Notification) {
-    $scope.suppliers = Supplier.query({ limit: 0 });
+    $scope.supplierList = Supplier.query();
     $scope.fabric = new Fabric();
     //Tooltips
     $scope.supplierText = 'Choose a Supplier for this Fabric';
@@ -5504,7 +5495,6 @@ angular.module('employeeApp.services').factory('Geocoder', [
         }
       };
       this.geocoder = new this.google.maps.Geocoder();
-      this.initialized = 'google' in window ? true : false;
     }
     /*
     Object.defineProperties(Geocoder.prototype, {
@@ -5588,13 +5578,9 @@ angular.module('employeeApp.services').factory('Geocoder', [
     Geocoder.prototype.reverseGeocode = function (lat, lng) {
       var deferred = $q.defer();
       var latLng = new this.google.maps.LatLng(lat, lng);
-      try {
-        this.geocoder.geocode({ 'latLng': latLng }, function (results, status) {
-          deferred.resolve(results);
-        });
-      } catch (e) {
-        deferred.reject('ok');
-      }
+      this.geocoder.geocode({ 'latLng': latLng }, function (results, status) {
+        deferred.resolve(results);
+      });
       return deferred.promise;
     };
     return new Geocoder();
@@ -6456,7 +6442,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
     //System wide message
     Notification.display('Loading purchase orders...', false);
     //Poll Server for pos
-    $scope.poList = PurchaseOrder.query({ limit: 20 }, function () {
+    $scope.poList = PurchaseOrder.query(function () {
       fetching = false;
       Notification.hide();
       changeSelection(index);
@@ -6663,8 +6649,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       if ($scope.po.items) {
         for (var i = 0; i < $scope.po.items.length; i++) {
           var item = $scope.po.items[i];
-          discount = item.discount || 0;
-          subtotal += $scope.unitCost(item.cost, discount) * item.quantity;
+          subtotal += $scope.unitCost(item.cost, item.discount) * item.quantity;
         }
       }
       return subtotal;
@@ -7527,7 +7512,8 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   '$location',
   'scanner',
   '$window',
-  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window) {
+  '$http',
+  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window, $http) {
     Notification.display('Retrieving supply...', false);
     /*
 	 * Vars
@@ -7539,6 +7525,96 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
       'country': $scope.country
     }, function () {
       Notification.hide();
+      $http.get('/api/v1/log', {
+        params: {
+          'action': 'PRICE CHANGE',
+          'supply': $scope.supply.id
+        }
+      }).then(function (response) {
+        var prices = [];
+        var data = response.data;
+        for (var i = 0; i < response.data.length; i++) {
+          prices.push(response.data[i].cost);
+        }
+        largest = Math.max.apply(Math, prices);
+        if (prices.length > 0) {
+          var box = d3.select('div.prices .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
+              return i * 6 + i + 'em';
+            }).style('background-color', function (d, i) {
+              try {
+                console.log(data[i - 1].cost + ':' + d.cost);
+                if (Number(data[i - 1].cost) > Number(d.cost)) {
+                  return 'green';
+                } else if (Number(data[i - 1].cost) < Number(d.cost)) {
+                  return 'red';
+                }
+              } catch (e) {
+                return 'black';
+              }
+            });
+          var costSpans = box.append('span').text(function (d) {
+              return d.cost + 'thb';
+            }).attr('class', 'price');
+          var dateSpans = box.append('span').attr('class', 'date').text(function (d) {
+              var date = new Date(d.timestamp);
+              return date.toLocaleDateString('en-us', {
+                year: 'numeric',
+                'month': 'short',
+                day: 'numeric'
+              });
+            });
+          d3.select('div.prices').transition().duration(500).style('background-color', '#FFF');
+          box.transition().duration(2000).delay(500).style('height', function (d) {
+            return d.cost / largest * 8 + 'em';
+          });
+        } else {
+          d3.select('div.prices').style('display', 'none');
+        }
+      });
+      $http.get('/api/v1/log', {
+        params: {
+          'action': 'SUBTRACT',
+          'supply': $scope.supply.id
+        }
+      }).then(function (response) {
+        var quantities = [];
+        var data = response.data;
+        for (var i = 0; i < response.data.length; i++) {
+          quantities.push(response.data[i].quantity);
+        }
+        largest = Math.max.apply(Math, quantities);
+        if (quantities.length > 0) {
+          var box = d3.select('div.usage .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
+              return i * 6 + i + 'em';
+            }).style('background-color', function (d, i) {
+              try {
+                console.log(data[i - 1].quantity + ':' + d.quantity);
+                if (Number(data[i - 1].quantity) > Number(d.quantity)) {
+                  return 'green';
+                } else if (Number(data[i - 1].quantity) < Number(d.quantity)) {
+                  return 'red';
+                }
+              } catch (e) {
+                return 'black';
+              }
+            });
+          var costSpans = box.append('span').text(function (d) {
+              return d.quantity;
+            }).attr('class', 'price');
+          var dateSpans = box.append('span').attr('class', 'date').text(function (d) {
+              var date = new Date(d.timestamp);
+              return date.toLocaleDateString('en-us', {
+                year: 'numeric',
+                'month': 'short',
+                day: 'numeric'
+              });
+            });
+          d3.select('div.usage').transition().duration(500).style('background-color', '#FFF');
+          box.transition().duration(2000).delay(500).style('height', function (d) {
+            return d.quantity / largest * 8 + 'em';
+          });
+        }
+      });
       //Extract suppliers to be used for if add upc
       //$scope.suppliers = $scope.supply.suppliers;
       /*
@@ -8151,7 +8227,7 @@ angular.module('employeeApp').directive('supplyList', [
         supplier: '='
       },
       link: function postLink(scope, element, attrs) {
-        var fetching = true, supplierId, currentSelection, index = 0;
+        var fetching = true, currentSelection, index = 0;
         var promise = $http.get('/api/v1/supply/type');
         promise.success(function (d) {
           scope.types = d;
@@ -8166,7 +8242,6 @@ angular.module('employeeApp').directive('supplyList', [
         if (attrs.supplier) {
           scope.$watch('supplier', function (val) {
             if (val) {
-              supplierId = val.id;
               scope.supplies = Supply.query({
                 supplier_id: val.id,
                 limit: 20
@@ -8206,28 +8281,17 @@ angular.module('employeeApp').directive('supplyList', [
 			 * currently running
 			 */
         scope.loadNext = function () {
-          fetching = false;
           if (!fetching) {
             Notification.display('Loading more supplies...', false);
             fetching = true;
-            var options = {
-                offset: scope.supplies.length,
-                limit: 50
-              };
-            //Set Supplier ID
-            console.log('supplierID: ' + supplierId);
-            if (supplierId) {
-              options['supplier_id'] = supplierId;
-            }
-            ;
-            Supply.query(options, function (resources) {
+            Supply.query({
+              offset: scope.supplies.length,
+              limit: 50
+            }, function (resources) {
               fetching = false;
               Notification.hide();
               for (var i = 0; i < resources.length; i++) {
-                if (scope.supplies.indexOfById(resources[i]) != -1) {
-                  scope.supplies.push(resources[i]);
-                }
-                ;
+                scope.supplies.push(resources[i]);
               }
             });
           }
@@ -8664,29 +8728,5 @@ angular.module('employeeApp').factory('SupplyLog', [
   '$resource',
   function ($resource) {
     return $resource('/api/v1/supply/:id/:action', { id: '@id' }, {});
-  }
-]);
-'use strict';
-angular.module('employeeApp').controller('SupplyBuyingGuideCtrl', [
-  '$scope',
-  'Supply',
-  '$http',
-  function ($scope, Supply, $http) {
-    /*
-	 * Prepare date for query
-	 *
-	 * We add a condition so that the request can be more easily tested
-	 * with the correct date
-	 */
-    if ($scope.d) {
-      var d = $scope.d;
-    } else {
-      var d = new Date();
-      d.setDate(d.getDate() - 21);
-    }
-    $scope.supplies = Supply.query({
-      'log__action': 'SUBTRACT',
-      'log__timestamp__gt': d.toISOString()
-    });
   }
 ]);

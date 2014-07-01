@@ -139,7 +139,9 @@
 							<td class='discount'>
 								<input type="text" ng-model="item.discount" />
 							</td>
-							<td class='unit-cost'>{{unitCost(item.cost, item.discount)}}</td>
+							<td class='unit-cost'>
+								<input type="text" ng-model="item.cost" />
+							</td>
 							<td class='quantity'>
 								<input type="text" ng-model="item.quantity" />
 							</td>

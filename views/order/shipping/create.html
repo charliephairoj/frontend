@@ -39,9 +39,12 @@
 		<!--
             Panels
         -->
-		<div class="ack_modal" data-modal ng-model="showAck" title="Acknowledgements">
+		<div class="ack_modal" data-modal ng-model="showAck">
+			<div class="title">
+				Acknowledgements
+				<input type="text" class="search" ng-model="query" />
+			</div>
 			<div class="container" on-scroll-end="loadNext()">
-				<div search-bar ng-model="query"></div>
 				<ul class="acknowledgements">
 					<li class="item" ng-click="addAcknowledgement(ack)" ng-repeat="ack in acknowledgements | filter:query | orderBy:'id':'true'">
 						{{ack.id}}
