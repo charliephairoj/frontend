@@ -21,7 +21,7 @@
 					<label>Supplier</label>
 				</td>
 				<td>
-					<select required tooltip="supplierText" , ng-options="supplier.name for supplier in supplierList" ng-model="fabric.supplier"></select>
+					<select required tooltip="{{supplierText}}" , ng-options="supplier.name for supplier in suppliers | orderBy:'name'" ng-model="fabric.supplier"></select>
 				</td>
 			</tr>
 			<tr>
