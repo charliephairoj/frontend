@@ -4,6 +4,8 @@
     -->
 	<div supplier-list="showSuppliers" on-select="addSupplier($supplier)"></div>
 	<div supply-list="showSupplies" supplier="po.supplier" on-select="addItem($supply)"></div>
+	<div add-supply="showAddSupply">
+	</div>
 	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat" title="Vat">
 		<input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
 		<div class="bottom_bar">
@@ -30,6 +32,9 @@
 					</li>
 					<li>
 						<div class="supply" checkmark="po.items && po.items.length" x="po.items.length==0 || !po.items" ng-click="showSupplies=true">Add Supply</div>
+					</li>
+					<li>
+						<div class="supply" ng-click="showAddSupply=true">Create a Supply</div>
 					</li>
 					<li>
 						<div class="vat" checkmark="po.vat" x="!po.vat" ng-click="showVat=!showVat">Set Vat</div>

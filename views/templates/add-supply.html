@@ -42,25 +42,26 @@
 			<tr ng-if="supply.new_supply">
 				<td>Type</td>
 				<td>
+					<input type="text" required ng-model="supply.type" list="add-supply-type" />
+					<datalist id="add-supply-type">
+						<select ng-model='selectedType' ng-options="k | beautify as v for (k, v) in types"></select>
+					</datalist>
 					<!--
-						<select class="type" required ng-model="supply.type" ng-options="t|beautify for t in types">
+						<select class="type" required ng-model="supply.type">
+							<option value="metal">Metal</option>
+							<option value="wood">Wood</option>
+        					<option value="foam">Foam</option>
+							<option value="polishing">Polishing</option>
+							<option value="canvas">Canvas</option>
+							<option value="glue">Glue</option>
+							<option value="fiber">Fiber</option>
+							<option value="packaging">Packaging</option>
+							<option value="nail">Nail</option>
+							<option value="screw">Screw</option>
+							<option value="staple">Staple</option>
 							<option value="custom">Custom</option>
 						</select>
 						-->
-					<select class="type" required ng-model="supply.type">
-						<option value="metal">Metal</option>
-						<option value="wood">Wood</option>
-						<option value="foam">Foam</option>
-						<option value="polishing">Polishing</option>
-						<option value="canvas">Canvas</option>
-						<option value="glue">Glue</option>
-						<option value="fiber">Fiber</option>
-						<option value="packaging">Packaging</option>
-						<option value="nail">Nail</option>
-						<option value="screw">Screw</option>
-						<option value="staple">Staple</option>
-						<option value="custom">Custom</option>
-					</select>
 					<input ng-if="supply.type == 'custom'" required class="custom-type" type="text" ng-model="supply.custom_type" />
 				</td>
 			</tr ng-if="supply.new_supply">
