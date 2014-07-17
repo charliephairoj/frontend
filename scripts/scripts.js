@@ -6312,6 +6312,19 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       changeSelection(index);
     });
     /*
+	*  Focus the list to the active element
+	*/
+    $scope.focus = function ($element) {
+      var container = $('div.outer-container');
+      /*
+		 * Set new scrollTop to determined by 
+		 * - Scroll Top
+		 * - offset of element
+		 * - mainmenu height 
+		 */
+      container.animate({ scrollTop: container.scrollTop() + $element.offset().top - $('.mainMenu').height() });
+    };
+    /*
 	* Adding image for ipads and iphones
 	* 
 	* This particular function is intended for the iphone and ipad.
@@ -8857,7 +8870,10 @@ angular.module('employeeApp.directives').directive('supply', [
       templateUrl: 'views/templates/supply.html',
       replace: true,
       restrict: 'EA',
-      scope: { supply: '=' },
+      scope: {
+        supply: '=',
+        onSelect: '&'
+      },
       link: function postLink(scope, element, attrs) {
         scope.fetched = false;
         scope.units = angular.copy($rootScope.units);
@@ -8943,6 +8959,11 @@ angular.module('employeeApp.directives').directive('supply', [
             cancelWatch();
           } else {
             element.addClass('active');
+            try {
+              scope.onSelect({ '$element': element });
+            } catch (e) {
+              console.error(e);
+            }
             Supply.get({ id: scope.supply.id }, function (response) {
               angular.extend(scope.supply, response);
               startWatch();

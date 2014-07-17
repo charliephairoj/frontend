@@ -72,7 +72,7 @@
 		<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="supply in supplies | filter:search:strict | filter:query | orderBy:'description'">
-					<div supply="supply"></div>
+					<div supply="supply" on-select="focus($element)"></div>
 					<!--
 	   				<div class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" touchstart touchmove touchend>
     					<div class="img-container">
