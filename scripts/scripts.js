@@ -8833,7 +8833,8 @@ angular.module('employeeApp.directives').directive('supply', [
   'Notification',
   '$timeout',
   '$window',
-  function ($http, Supply, $rootScope, Notification, $timeout, $window) {
+  'scanner',
+  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner) {
     function createChart(data, property, largestSize, className) {
       var box = d3.select('div.' + className + ' .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
           return i * 6 + i + 'em';
@@ -8878,6 +8879,17 @@ angular.module('employeeApp.directives').directive('supply', [
         scope.fetched = false;
         scope.units = angular.copy($rootScope.units);
         scope.types = angular.copy($rootScope.types || []);
+        //Set Up Scanner
+        scope.scanner = new scanner('supply/' + scope.supply.id);
+        scope.scanner.disableStandard();
+        scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
+          if (scope.upcTarget) {
+            scope.supply.suppliers[scope.supply.suppliers.indexOfById(scope.upcTarget.id)].code = code;
+            scope.scanner.disable();
+            globalScanner.enable();
+            scope.upcTarget = undefined;
+          }
+        });
         var updateLoopActive = false, cancelWatch = angular.noop(), badTypes = [
             'custom',
             null
@@ -9002,6 +9014,11 @@ angular.module('employeeApp.directives').directive('supply', [
               }
             });
           }
+        };
+        scope.addUPC = function (supplier) {
+          globalScanner.disable();
+          scope.upcTarget = supplier;
+          scope.scanner.enable();
         };
       }
     };

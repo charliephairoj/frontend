@@ -190,6 +190,7 @@
 						</td>
 					</tr>
 				</table>
+				<button class="barcode" ng-class="{'active': upcTarget.id == {{supplier.id}}}" ng-click="addUPC(supplier)">Add</button>
 				<div class="prices price-chart-supplier-{{supplier.id}}">
 					<div class="chart">
 						<span class="title">Cost Changes</span>
