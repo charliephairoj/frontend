@@ -51,41 +51,25 @@
 		<!--Holds all the different menu options. Determined which are visible based
 		on the permissions of the current user-->
 		<div class="mainMenuContainer scroll-enabled">
-			<a class="menu-item" href="#/contact" touchstart touchmove touchend>Contacts</a>
-			<a class="menu-item" href="#/product" touchstart touchmove touchend>Products</a>
-			<a class="menu-item" href="#/supply" touchstart touchmove touchend>Supplies</a>
-			<a class="menu-item" href="#/order" touchstart touchmove touchend>Orders</a>
-			<a class="menu-item" href="#/accounting" touchstart touchmove touchend>Accounting</a>
-			<a class="menu-item" href="#/project" touchstart touchmove touchend>Projects</a>
-			<a class="menu-item" href="#/administrator" touchstart touchmove touchend>Administrator</a>
-			<a href="#/hr" touchstart touchmove touchend>HR</a>
 			<!--
-            <li class="menuItem" ng-show="currentUser.hasModule('contacts')">
-                <a href="#/contact">Contacts</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('products')">
-                <a href="#/product">Products</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('supplies')">
-                <a href="#/supply">Supplies</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
-                <a href="#/order">Orders</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('accounting')">
-                <a href="#/accounting">Accounting</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('projects')">
-                <a href="#/project">Projects</a>
-            </li>
-            <li class="menuItem" ng-show="currentUser.hasModule('administrator')">
-                <a href="#/administrator">Administrator</a>
-            </li>
+                <a class="menu-item" href="#/contact" touchstart touchmove touchend>Contacts</a>
+                <a class="menu-item" href="#/product" touchstart touchmove touchend>Products</a>
+                <a class="menu-item" href="#/supply" touchstart touchmove touchend>Supplies</a>
+                <a class="menu-item" href="#/order" touchstart touchmove touchend>Orders</a>
+                <a class="menu-item" href="#/accounting" touchstart touchmove touchend>Accounting</a>
+                <a class="menu-item" href="#/project" touchstart touchmove touchend>Projects</a>
+                <a class="menu-item" href="#/administrator" touchstart touchmove touchend>Administrator</a>
             
-            <li class="menuItem" ng-show="currentUser.hasModule('administrator')">
-                <a href="#/hr">HR</a>
-            </li>
-           -->
+                <a href="#/hr" touchstart touchmove touchend>HR</a>
+				-->
+			<a href="#/contact" class="menu-item" ng-show="currentUser.hasModule('contacts')">Contacts</a>
+			<a href="#/product" class="menu-item" ng-show="currentUser.hasModule('products')">Products</a>
+			<a href="#/supply" class="menu-item" ng-show="currentUser.hasModule('supplies')">Supplies</a>
+			<a href="#/order" class="menu-item" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">Orders</a>
+			<a href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</a>
+			<a href="#/project" class="menu-item" ng-show="currentUser.hasModule('projects')">Projects</a>
+			<a href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</a>
+			<a href="#/hr" class="menu-item" ng-show="currentUser.hasModule('administrator')">HR</a>
 		</div>
 		<a href="/logout" class="logout">Logout</a>
 	</div>

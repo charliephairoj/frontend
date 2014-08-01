@@ -71,7 +71,7 @@
 	<div class="workspace" style="z-index:1;">
 		<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
 			<ul class="inner-container">
-				<li class="item-container" ng-repeat="supply in supplies" ng-show="([supply] | filter:search:strict | filter:query).length">
+				<li class="item-container" ng-repeat="supply in supplies | filter:search:strict | filter:query">
 					<div supply="supply" on-select="focus($element)"></div>
 					<!--
 	   				<div class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" touchstart touchmove touchend>
