@@ -5994,9 +5994,67 @@ angular.module('employeeApp.directives').directive('x', [function () {
   }]);
 angular.module('employeeApp').controller('HrEmployeeViewCtrl', [
   '$scope',
-  'User',
-  function ($scope, User) {
-    $scope.employeeList = User.query();
+  'Employee',
+  'Notification',
+  function ($scope, Employee, Notification) {
+    var fetching = false;
+    $scope.employees = Employee.query();
+    /*
+	*  Focus the list to the active element
+	*/
+    $scope.focus = function ($element) {
+      var container = $('div.outer-container');
+      /*
+		 * Set new scrollTop to determined by 
+		 * - Scroll Top
+		 * - offset of element
+		 * - mainmenu height 
+		 */
+      container.animate({ scrollTop: container.scrollTop() + $element.offset().top - $('.mainMenu').height() });
+    };
+    /*
+	* Search mechanism
+	* 
+	* This function will send a GET request to the server
+	* whenever the query string changes and that string will 
+	* be sent along as a parameter. 
+	*/
+    $scope.$watch('query', function (q) {
+      if (q) {
+        Employee.query({
+          limit: 10,
+          q: q
+        }, function (resources) {
+          for (var i = 0; i < resources.length; i++) {
+            if ($scope.employees.indexOfById(resources[i].id) == -1) {
+              $scope.employees.push(resources[i]);
+            }
+          }
+        });
+      }
+    });
+    /*
+	* Load more supplies
+	* 
+	* This function will load more supplies from the server
+	* be using the current number of supplies as the offset
+	*/
+    $scope.loadNext = function () {
+      if (!fetching) {
+        Notification.display('Loading more employees...', false);
+        Employee.query({
+          offset: $scope.employees.length,
+          limit: 50
+        }, function (resources) {
+          Notification.hide();
+          for (var i = 0; i < resources.length; i++) {
+            if ($scope.employees.indexOfById(resources[i].id) == -1) {
+              $scope.employees.push(resources[i]);
+            }
+          }
+        });
+      }
+    };
   }
 ]);
 angular.module('employeeApp').factory('ProjectItem', [
@@ -6775,8 +6833,12 @@ angular.module('employeeApp.directives').directive('addSupply', [
       templateUrl: 'views/templates/add-supply.html',
       replace: true,
       restrict: 'EA',
-      scope: { 'visible': '=addSupply' },
-      link: function postLink(scope, element, attrs) {
+      scope: {
+        'visible': '=addSupply',
+        'onAdd': '&'
+      },
+      require: '?supplyList',
+      link: function postLink(scope, element, attrs, supplyListCtrl) {
         /*
 			 * Vars and Properties
 			 */
@@ -6830,6 +6892,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
               scope.supply.$create(function (response) {
                 Notification.display('Supply created');
                 scope.visible = false;
+                scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
               }, function (reason) {
                 console.error(reason);
@@ -8281,7 +8344,8 @@ angular.module('employeeApp').directive('supplyList', [
       scope: {
         visible: '=supplyList',
         onSelect: '&',
-        supplier: '='
+        supplier: '=',
+        newSupply: '='
       },
       link: function postLink(scope, element, attrs) {
         var fetching = true, supplierId, currentSelection, index = 0;
@@ -8333,6 +8397,17 @@ angular.module('employeeApp').directive('supplyList', [
               index = 0;
               changeSelection(index);
             });
+          }
+        });
+        /*
+			 * Watch for new items to add
+			 */
+        scope.$watch('newSupply', function (supply) {
+          if (supply instanceof Supply) {
+            scope.supplies = scope.supplies || [];
+            if (scope.supplies.indexOfById(supply.id) == -1) {
+              scope.supplies.push(supply);
+            }
           }
         });
         /*
@@ -8834,9 +8909,10 @@ angular.module('employeeApp.directives').directive('supply', [
   '$timeout',
   '$window',
   'scanner',
-  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner) {
+  'D3',
+  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D3) {
     function createChart(data, property, largestSize, className) {
-      var box = d3.select('div.' + className + ' .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
+      var box = D3.select('div.' + className + ' .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
           return i * 6 + i + 'em';
         }).attr('class', function (d, i) {
           try {
@@ -8862,7 +8938,7 @@ angular.module('employeeApp.directives').directive('supply', [
             day: 'numeric'
           });
         });
-      d3.select('div.' + className).transition().duration(1000).style('border', '1px solid #CCC').style('height', '10em');
+      D3.select('div.' + className).transition().duration(1000).style('border', '1px solid #CCC').style('height', '10em');
       box.transition().duration(2000).delay(1000).style('height', function (d) {
         return d[property] / largestSize * 8 + 'em';
       });
@@ -9007,7 +9083,7 @@ angular.module('employeeApp.directives').directive('supply', [
                     if (dataObj.data.length > 0) {
                       createChart(dataObj.data, 'cost', dataObj.largest, 'price-chart-supplier-' + supplier_id);
                     } else {
-                      d3.select('div.price-chart-supplier-' + supplier_id + ' .chart').style('display', 'none');
+                      D3.select('div.price-chart-supplier-' + supplier_id + ' .chart').style('display', 'none');
                     }
                   });  //jshint ignore:line
                 }
@@ -9024,3 +9100,217 @@ angular.module('employeeApp.directives').directive('supply', [
     };
   }
 ]);
+angular.module('employeeApp').factory('Employee', [
+  '$resource',
+  '$http',
+  function ($resource) {
+    return $resource('/api/v1/employee/:id', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }
+]);
+angular.module('employeeApp').directive('employee', [
+  '$rootScope',
+  '$timeout',
+  'Notification',
+  'Attendance',
+  function ($rootScope, $timeout, Notification, Attendance) {
+    return {
+      templateUrl: 'views/templates/employee.html',
+      replace: true,
+      restrict: 'EA',
+      scope: {
+        employee: '=',
+        onSelect: '&'
+      },
+      link: function postLink(scope, element, attrs) {
+        scope.fetched = false;
+        scope.departments = [
+          'carpentry',
+          'painting',
+          'polishing',
+          'sewing',
+          'upholstery',
+          'foam',
+          'management',
+          'tufting',
+          'shearing',
+          'dying',
+          'inventory',
+          'packing',
+          'front office',
+          'graphics',
+          'accounting',
+          'landscaping'
+        ];
+        var updateLoopActive = false, timeoutPromise, cancelWatch = angular.noop(), badTypes = [
+            'custom',
+            null
+          ];
+        /*
+			 * General Functions
+			 */
+        //Start a watch on the scope for the supply var
+        function startWatch() {
+          cancelWatch = scope.$watch('employee', function (newVal, oldVal) {
+            if (!updateLoopActive && oldVal.hasOwnProperty('id')) {
+              updateLoopActive = true;
+              timeoutPromise = $timeout(function () {
+                var employee = angular.copy(scope.employee);
+                Notification.display('Updating ' + scope.employee.name + '...', false);
+                employee.$update(function () {
+                  updateLoopActive = false;
+                  Notification.display(scope.employee.name + ' updated');
+                }, function () {
+                  Notification.display('There was an error in updating ' + scope.employee.name);
+                });
+              }, 5000);
+            }
+          }, true);
+        }
+        scope.activate = function () {
+          if (element.hasClass('active')) {
+            element.removeClass('active');
+            cancelWatch();
+          } else {
+            element.addClass('active');
+            startWatch();
+            try {
+              scope.onSelect({ '$element': element });
+            } catch (e) {
+              console.error(e);
+            }
+            scope.attendances = Attendance.query({ employee__id: scope.employee.id }, function (response) {
+              scope.attendances = [];
+              scope.attendances.push.apply(scope.attendances, response);
+            });
+          }
+        };
+      }
+    };
+  }
+]);
+angular.module('employeeApp').factory('Attendance', [
+  '$resource',
+  '$http',
+  function ($resource, $http) {
+    return $resource('/api/v1/attendance/:id', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }
+]);
+angular.module('employeeApp').directive('attendanceChart', [
+  'D3',
+  function (D3) {
+    return {
+      templateUrl: 'views/templates/attendance-chart.html',
+      replace: true,
+      restrict: 'EA',
+      scope: {
+        data: '=',
+        active: '=',
+        onSelect: '&'
+      },
+      link: function postLink(scope, element, attrs) {
+        function activate() {
+          var barWidth = element.parents('.suppliers').width() / 2, barHeight = 20, leftMargin = 90, times = [], selectedAttendances = [], selectedElements = [], origin;
+          //Flags
+          var mouseDown = false;
+          for (var i = 0; i < scope.data.length; i++) {
+            times.push(scope.data[i].total_time);
+          }
+          var maxTime = D3.max(times);
+          var chart = D3.select(element[0]).append('svg').attr('class', 'chart').attr('width', barWidth).attr('height', 20 * scope.data.length);
+          var x = D3.scale.linear().domain([
+              0,
+              D3.max(times)
+            ]).range([
+              0,
+              barWidth - leftMargin
+            ]);
+          var bar = chart.selectAll('g').data(scope.data).enter().append('g').attr('transform', function (d, i) {
+              return 'translate(0,' + i * 20 + ')';
+            }).on('mouseover', function (d) {
+              var selectedBar = D3.select(this);
+              if (mouseDown) {
+                var index = selectedAttendances.indexOfById(d);
+                if (index == -1) {
+                  selectedAttendances.push(d);
+                  selectedElements.push(this);
+                  selectedBar.attr('class', 'selected');
+                }
+              } else {
+                scope.$apply(function () {
+                  scope.active = d;
+                });
+                selectedBar.attr('class', 'active');
+              }
+            }).on('mouseout', function (d) {
+              var yPos = $(this).offset().top;
+              var selectedBar = D3.select(this);
+              if (mouseDown) {
+                console.log(yPos + ' : ' + D3.event.y);
+                var index = selectedAttendances.indexOfById(d);
+                if (yPos >= D3.event.y) {
+                  selectedBar.classed('selected', false);
+                  selectedAttendances.splice(index, 1);
+                }
+              } else {
+                selectedBar.classed('active', false);
+              }
+            }).on('mousedown', function (d) {
+              mouseDown = true;
+              selectedAttendances.push(d);
+              var evt = D3.event;
+              origin = {
+                x: evt.x,
+                y: evt.y
+              };
+              D3.select(this).classed('selected', true).classed('active', false);
+            }).on('mouseup', function () {
+              mouseDown = false;
+              if (selectedAttendances.length) {
+                window.alert(selectedAttendances.length);
+                for (var i = 0; i < selectedElements.length; i++) {
+                  $(selectedElements[i]).removeClass('selected');
+                }
+                selectedAttendances = [];
+                selectedElements = [];
+              }
+            });
+          var otRect = bar.append('rect').attr('class', 'overtime').attr('x', leftMargin).attr('width', 0).attr('height', barHeight - 1);
+          var regRect = bar.append('rect').attr('class', 'regular-time').attr('x', leftMargin).attr('width', 0).attr('height', barHeight - 1);
+          var date = bar.append('text').attr('class', 'date').style('width', leftMargin + 'px').attr('x', leftMargin - 2).attr('y', 20 / 2).attr('dy', '.35em').text(function (d) {
+              var date = new Date(d.date);
+              return date.toLocaleDateString('en-us', {
+                year: 'numeric',
+                'month': 'short',
+                day: 'numeric'
+              });
+            });
+          otRect.transition().duration(2000).delay(function () {
+            return Math.random() * 100;
+          }).attr('width', function (d) {
+            return d.total_time ? d.total_time / maxTime * barWidth - leftMargin : 0;
+          });
+          regRect.transition().duration(2000).delay(function () {
+            return Math.random() * 100;
+          }).attr('width', function (d) {
+            return d.regular_time ? (d.regular_time / maxTime || 0) * barWidth - leftMargin : 0;
+          });
+        }
+        scope.$watch('data', function (newVal) {
+          if (newVal) {
+            activate();
+          }
+        });
+      }
+    };
+  }
+]);
+angular.module('employeeApp.services').service('D3', function D3() {
+  return d3;  //jshint ignore:line
+              // AngularJS will instantiate a singleton by calling "new" on this function
+});

@@ -1,40 +1,4 @@
-<div class="user-view-page" ng-init="showAddEmployee=false">
-	<!--
-        Forms
-    -->
-	<form name="addForm" novalidate class="add-employee" data-modal="showAddEmployee" data-ng-model="showAddEmployee">
-		<div class="title"></div>
-		<div class="container">
-			<table>
-				<tr>
-					<td>First Name</td>
-					<td>
-						<input type="text" required data-ng-model="employee.first_name" />
-					</td>
-				</tr>
-				<tr>
-					<td>Last Name</td>
-					<td>
-						<input type="text" required data-ng-model="employee.last_name" />
-					</td>
-				</tr>
-				<tr>
-					<td>Pay Type</td>
-					<td>
-						<input type="radio" value="hourly" name="pay" data-ng-model="employee.pay_type" /><span>Hourly</span>
-						<input type="radio" value="salary" name="pay" data-ng-model="employee.pay_type" /><span>Salary</span>
-					</td>
-				</tr>
-				<tr>
-					<td>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div class="bottom-bar">
-			<button data-ng-disabled="addForm.$invalid">Add</button>
-		</div>
-	</form>
+<div class="employee-view-page" ng-init="showAddEmployee=false">
 	<!--
         Sidebar
     -->
@@ -52,54 +16,18 @@
 			</ul>
 		</nav>
 	</div>
-	<div data-search-bar></div>
-	<div class="workspace grid">
-		<div class="header">
-			<div class="row">
-				<div class="cell id">ID</div>
-				<div class="cell name">Name</div>
-				<div class="cell email">Email</div>
-				<div class="cell last-login">Last Login</div>
-			</div>
+	<!--
+        Search Bar
+    -->
+	<div data-search-bar data-ng-model="query">
+	</div>
+	<div class="workspace" style="z-index:1;">
+		<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
+					<div employee="employee" on-select="focus($element)"></div>
+				</li>
+			</ul>
 		</div>
-		<div class="listContainer">
-			<div class="grid">
-				<div class="body">
-					<a ng-repeat="employee in employeeList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-						<div class="cell id">{{employee.id}}</div>
-						<div class="cell name">{{employee.first_name+' '+employee.last_name}}</div>
-						<div class="cell email">{{employee.email}}</div>
-						<div class="cell last-login">{{employee.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-					</a>
-				</div>
-			</div>
-		</div>
-		<!--
-        <div class="listContainer">
-            <div class="list">
-                    <a ng-repeat="user in userList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-                        <div class="cell">
-                            <div class="details">
-                                <div class="details-row">
-                                    <div class="details-title">Name:</div>
-                                    <div class="details-data">{{user.first_name+' '+user.last_name}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Username:</div>
-                                    <div class="details-data">{{user.username}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Email:</div>
-                                    <div class="details-data">{{user.email}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Last Login:</div>
-                                    <div class="details-data">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            </div>
-        </div>-->
 	</div>
 </div>

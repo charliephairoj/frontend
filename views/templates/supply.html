@@ -184,6 +184,11 @@
 						</td>
 					</tr>
 					<tr>
+						<td>{{supply.units}} per {{supplier.purchasing_units}}</td>
+						<td>
+							<input ng-model="supplier.quantity_per_purchasing_unit" />{{supply.units}}</td>
+					</tr>
+					<tr>
 						<td>Cost</td>
 						<td>
 							<input class="cost" type="text" ng-model="supplier.cost" />
