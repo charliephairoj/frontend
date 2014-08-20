@@ -341,7 +341,6 @@ angular.module('employeeApp').run([
               var component = results[0].address_components[i];
               if (typeof component.types == 'object') {
                 if (component.types.indexOf('country') != -1) {
-                  console.log(component);
                   //Set country to main scope, to be called later
                   //$rootScope.country = 'KH';
                   $rootScope.country = component.short_name;
@@ -367,10 +366,10 @@ angular.module('employeeApp').run([
 	 * Prevent rubber band effect of iOS webapp
      */
     var scrollY = 0;
-    $(document).on('touchstart', function (e) {
+    angular.element(document).on('touchstart', function (e) {
       scrollY = e.originalEvent.touches.item(0).clientY;
     });
-    $(document).on('touchmove', function (e) {
+    angular.element(document).on('touchmove', function (e) {
       var container = angular.element(e.target).parents('.scroll-enabled')[0];
       if (container) {
         var containerHeight = $(container).height();
@@ -1312,16 +1311,16 @@ angular.module('employeeApp.services').factory('Notification', [
   '$rootScope',
   function ($timeout, $rootScope) {
     function center(target) {
-      var width = $(window).width();
-      var tWidth = $(target).width();
-      if ($(target).css('left') === 0) {
-        $(target).css('left', width - tWidth);
+      var width = angular.element(window).width();
+      var tWidth = angular.element(target).width();
+      if (angular.element(target).css('left') === 0) {
+        angular.element(target).css('left', width - tWidth);
       } else {
-        $(target).css('margin-left', -(tWidth / 2));
+        angular.element(target).css('margin-left', -(tWidth / 2));
       }
     }
     function Notifier() {
-      this.notification = angular.element('#notification');
+      this.notification = angular.element(document.getElementById('notification'));
       this.promise = null;
     }
     /*
@@ -2428,7 +2427,7 @@ angular.module('employeeApp.directives').directive('modal', [function () {
     return {
       restrict: 'A',
       scope: false,
-      compile: function () {
+      compile: function (Element, Attrs) {
         return {
           pre: function (scope, tElement, tAttrs) {
             tElement.addClass('modal hide');
@@ -6351,12 +6350,13 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   '$location',
   '$http',
   'FileUploader',
-  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader) {
+  '$timeout',
+  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout) {
     console.log($scope.types);
     /*
 	* Vars and flags
 	*/
-    var fetching = true, index = 0, currentSelection;
+    var fetching = true, index = 0, currentSelection, activeQueryLoop = false, masterList = [], q;
     //system message
     Notification.display('Loading supplies...', false);
     $http.get('/api/v1/supply/type').success(function (response) {
@@ -6364,7 +6364,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       $scope.types.splice($scope.types.indexOf(null), 1);
     });
     $scope.scannerMode = false;
-    $scope.supplies = Supply.query({ 'country': $scope.country }, function () {
+    $scope.supplies = Supply.query({ 'country': $scope.country }, function (resources) {
       fetching = false;
       Notification.hide();
       changeSelection(index);
@@ -6414,6 +6414,30 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
 	* be sent along as a parameter. 
 	*/
     $scope.$watch('query', function (q) {
+      /*
+		//Set global q to search
+		q = queryStr
+		
+		//checks if the loop is currently active
+		//$scope.supplies = filter(masterList);
+		$timeout(function () {
+			$scope.supplies = filter(masterList);
+		}, 1);
+		
+		var tSwitch = $timeout(function () {
+			Supply.query({limit: 10, q: q, 'country': $scope.country}, function (resources) {
+				for (var i = 0; i < resources.length; i++) {
+					if (masterList.indexOfById(resources[i].id) == -1) {
+						masterList.push(resources[i]);
+					}
+				}
+				$scope.supplies = filter(masterList);
+				activeQueryLoop = false;
+			});
+		}, 1);
+		*/
+      //To Be deprecated in favor of a timeout based
+      //query mechanism
       if (q) {
         Supply.query({
           limit: 10,
@@ -6456,9 +6480,34 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
     function filter(array) {
       array = $filter('filter')(array, $scope.search);
       array = $filter('filter')(array, $scope.query);
+      array = $filter('limitTo')(array, 30);
       array = $filter('orderBy')(array, 'description');
       return array;
     }
+    $scope.customFilter = function (obj) {
+      if ($scope.query) {
+        var regex = new RegExp('\\b(' + $scope.query.split(' ') + ')', 'i');
+        try {
+          if (regex.test(obj.description)) {
+            return true;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        try {
+          for (var i = 0; i < obj.suppliers.length; i++) {
+            if (regex.text(obj.suppliers[i].name)) {
+              return true;
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        return false;
+      } else {
+        return true;
+      }
+    };
     function changeSelection(i) {
       $rootScope.safeApply(function () {
         if (currentSelection) {
@@ -6868,7 +6917,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         scope.supply.units = 'pc';
         scope.suppliers = Supplier.query({ limit: 0 });
         scope.supplies = Supply.query({ limit: 0 });
-        scope.changeSupply = function (supply) {
+        scope.selectSupply = function (supply) {
           angular.extend(scope.supply, supply);
         };
         scope.add = function () {
@@ -6885,6 +6934,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
               scope.supply.$update(function (response) {
                 scope.visible = false;
                 scope.supply = new Supply();
+                Notification.display('Supply created');
               }, function (reason) {
                 console.error(reason);
               });
@@ -6904,10 +6954,8 @@ angular.module('employeeApp.directives').directive('addSupply', [
           }
         };
         scope.addImage = function (data) {
-          console.log(data);
           scope.supply.image = data;
         };
-        console.log(scope);
       }
     };
   }
@@ -8075,11 +8123,11 @@ angular.module('employeeApp').directive('img', [function () {
         return {
           post: function postLink(scope, element, iAttrs) {
             //Add the preclass as soon as possible
-            var parent = element.parent();
-            var pWidth = parent.innerWidth();
-            var pHeight = parent.innerWidth();
             element.on('load', function () {
               if (iAttrs.center) {
+                var parent = element.parent();
+                var pWidth = parent.innerWidth();
+                var pHeight = parent.innerWidth();
                 position({
                   element: element,
                   width: true,
@@ -8336,7 +8384,8 @@ angular.module('employeeApp').directive('supplyList', [
   'Notification',
   '$rootScope',
   '$http',
-  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http) {
+  '$compile',
+  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, $compile) {
     return {
       templateUrl: 'views/templates/supply-list.html',
       replace: true,
@@ -8347,159 +8396,159 @@ angular.module('employeeApp').directive('supplyList', [
         supplier: '=',
         newSupply: '='
       },
-      link: function postLink(scope, element, attrs) {
-        var fetching = true, supplierId, currentSelection, index = 0;
-        var promise = $http.get('/api/v1/supply/type');
-        promise.success(function (d) {
-          scope.types = d;
-          scope.types.splice(scope.types.indexOf(null), 1);
-        });
-        /*
-			* Initial fetching of the supplies.
-			* 
-			* We will turn the fetching flag to false
-			* once we received the results
-			*/
-        if (attrs.supplier) {
-          scope.$watch('supplier', function (val) {
-            if (val) {
-              supplierId = val.id;
-              scope.supplies = Supply.query({
-                supplier_id: val.id,
-                limit: 20
-              }, function (response) {
+      compile: function compile(tElement, tAttrs, transclude) {
+        return {
+          post: function postLink(scope, element, attrs) {
+            var fetching = true, supplierId, currentSelection, index = 0;
+            var promise = $http.get('/api/v1/supply/type');
+            promise.success(function (d) {
+              scope.types = d;
+              scope.types.splice(scope.types.indexOf(null), 1);
+            });
+            /*
+					* Initial fetching of the supplies.
+					* 
+					* We will turn the fetching flag to false
+					* once we received the results
+					*/
+            if (attrs.supplier) {
+              scope.$watch('supplier', function (val) {
+                if (val) {
+                  supplierId = val.id;
+                  scope.supplies = Supply.query({
+                    supplier_id: val.id,
+                    limit: 20
+                  }, function (response) {
+                    fetching = false;
+                    changeSelection(index);
+                  });
+                }
+              });
+            } else {
+              scope.supplies = Supply.query({ limit: 20 }, function (response) {
                 fetching = false;
                 changeSelection(index);
               });
             }
-          });
-        } else {
-          scope.supplies = Supply.query({ limit: 20 }, function (response) {
-            fetching = false;
-            changeSelection(index);
-          });
-        }
-        /*
-			 * Search
-			 */
-        scope.$watch('query', function (q) {
-          if (q) {
-            Supply.query({
-              q: q,
-              limit: 10 + q.length * 2,
-              supplier_id: supplierId
-            }, function (resources) {
-              for (var i = 0; i < resources.length; i++) {
-                if (scope.supplies.indexOfById(resources[i].id) == -1) {
-                  scope.supplies.push(resources[i]);
+            /*
+					 * Search
+					 */
+            scope.$watch('query', function (q) {
+              if (q) {
+                Supply.query({
+                  q: q,
+                  limit: 10 + q.length * 2,
+                  supplier_id: supplierId
+                }, function (resources) {
+                  for (var i = 0; i < resources.length; i++) {
+                    if (scope.supplies.indexOfById(resources[i].id) == -1) {
+                      scope.supplies.push(resources[i]);
+                    }
+                  }
+                  index = 0;
+                  changeSelection(index);
+                });
+              }
+            });
+            /*
+					 * Watch for new items to add
+					 */
+            scope.$watch('newSupply', function (supply) {
+              if (supply instanceof Supply) {
+                scope.supplies = scope.supplies || [];
+                if (scope.supplies.indexOfById(supply.id) == -1) {
+                  scope.supplies.push(supply);
                 }
               }
-              index = 0;
-              changeSelection(index);
             });
-          }
-        });
-        /*
-			 * Watch for new items to add
-			 */
-        scope.$watch('newSupply', function (supply) {
-          if (supply instanceof Supply) {
-            scope.supplies = scope.supplies || [];
-            if (scope.supplies.indexOfById(supply.id) == -1) {
-              scope.supplies.push(supply);
-            }
-          }
-        });
-        /*
-			 * Loads the next set of supplies if there is no fetching
-			 * currently running
-			 */
-        scope.loadNext = function () {
-          fetching = false;
-          if (!fetching) {
-            Notification.display('Loading more supplies...', false);
-            fetching = true;
-            var options = {
-                offset: scope.supplies.length,
-                limit: 50
-              };
-            //Set Supplier ID
-            if (supplierId) {
-              options.supplier_id = supplierId;
-            }
-            Supply.query(options, function (resources) {
-              console.log(resources);
+            /*
+					 * Loads the next set of supplies if there is no fetching
+					 * currently running
+					 */
+            scope.loadNext = function () {
               fetching = false;
-              Notification.hide();
-              for (var i = 0; i < resources.length; i++) {
-                console.log(scope.supplies);
-                console.log(resources[i]);
-                console.log(scope.supplies.indexOfById(resources[i]));
-                console.log('done');
-                if (scope.supplies.indexOfById(resources[i]) == -1) {
-                  scope.supplies.push(resources[i]);
+              if (!fetching) {
+                Notification.display('Loading more supplies...', false);
+                fetching = true;
+                var options = {
+                    offset: scope.supplies.length,
+                    limit: 50
+                  };
+                //Set Supplier ID
+                if (supplierId) {
+                  options.supplier_id = supplierId;
                 }
+                Supply.query(options, function (resources) {
+                  console.log(resources);
+                  fetching = false;
+                  Notification.hide();
+                  for (var i = 0; i < resources.length; i++) {
+                    if (scope.supplies.indexOfById(resources[i]) == -1) {
+                      scope.supplies.push(resources[i]);
+                    }
+                  }
+                });
               }
+            };
+            /*
+					 * The function to run when a customer is selected
+					 */
+            scope.select = function (supply) {
+              scope.onSelect({ '$supply': supply });
+            };
+            function filter(array) {
+              return $filter('filter')(array, scope.query);
+            }
+            function changeSelection(i) {
+              $rootScope.safeApply(function () {
+                if (currentSelection) {
+                  currentSelection.$selected = false;
+                }
+                currentSelection = filter(scope.supplies)[i];
+                if (currentSelection) {
+                  currentSelection.$selected = true;
+                }
+              });
+              var selection = $('.supply.selected');
+              var container = selection.parents('.inner-container');
+              var scrollTop = container.scrollTop();
+              var cHeight = container.innerHeight();
+              if (scrollTop > selection.outerHeight() * i) {
+                container.scrollTop(selection.outerHeight() * i);
+              } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+                container.scrollTop(selection.outerHeight() * i);
+              }
+            }
+            var keyboardNav = new KeyboardNavigation();
+            keyboardNav.ondown = function () {
+              if (index < filter(scope.supplies).length - 1) {
+                index += 1;
+                changeSelection(index);
+              }
+            };
+            keyboardNav.onup = function () {
+              if (index !== 0) {
+                index -= 1;
+                changeSelection(index);
+              }
+            };
+            keyboardNav.onenter = function () {
+              $rootScope.safeApply(function () {
+                scope.select(currentSelection);
+              });
+            };
+            scope.$watch('visible', function (val) {
+              if (val) {
+                keyboardNav.enable();
+              } else {
+                keyboardNav.disable();
+              }
+            });
+            scope.$on('$destroy', function () {
+              keyboardNav.disable();
             });
           }
         };
-        /*
-			 * The function to run when a customer is selected
-			 */
-        scope.select = function (supply) {
-          scope.onSelect({ '$supply': supply });
-        };
-        function filter(array) {
-          return $filter('filter')(array, scope.query);
-        }
-        function changeSelection(i) {
-          $rootScope.safeApply(function () {
-            if (currentSelection) {
-              currentSelection.$selected = false;
-            }
-            currentSelection = filter(scope.supplies)[i];
-            if (currentSelection) {
-              currentSelection.$selected = true;
-            }
-          });
-          var selection = $('.supply.selected');
-          var container = selection.parents('.inner-container');
-          var scrollTop = container.scrollTop();
-          var cHeight = container.innerHeight();
-          if (scrollTop > selection.outerHeight() * i) {
-            container.scrollTop(selection.outerHeight() * i);
-          } else if (scrollTop + cHeight < selection.outerHeight() * i) {
-            container.scrollTop(selection.outerHeight() * i);
-          }
-        }
-        var keyboardNav = new KeyboardNavigation();
-        keyboardNav.ondown = function () {
-          if (index < filter(scope.supplies).length - 1) {
-            index += 1;
-            changeSelection(index);
-          }
-        };
-        keyboardNav.onup = function () {
-          if (index !== 0) {
-            index -= 1;
-            changeSelection(index);
-          }
-        };
-        keyboardNav.onenter = function () {
-          $rootScope.safeApply(function () {
-            scope.select(currentSelection);
-          });
-        };
-        scope.$watch('visible', function (val) {
-          if (val) {
-            keyboardNav.enable();
-          } else {
-            keyboardNav.disable();
-          }
-        });
-        scope.$on('$destroy', function () {
-          keyboardNav.disable();
-        });
       }
     };
   }
@@ -9314,3 +9363,181 @@ angular.module('employeeApp.services').service('D3', function D3() {
   return d3;  //jshint ignore:line
               // AngularJS will instantiate a singleton by calling "new" on this function
 });
+angular.module('employeeApp').directive('supplies', [
+  'Supply',
+  '$filter',
+  'KeyboardNavigation',
+  'Notification',
+  '$rootScope',
+  '$http',
+  '$compile',
+  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, $compile) {
+    return {
+      templateUrl: 'views/templates/supplies.html',
+      replace: true,
+      restrict: 'A',
+      scope: {
+        visible: '=supplyList',
+        onSelect: '&',
+        supplier: '=',
+        newSupply: '='
+      },
+      compile: function compile(tElement, tAttrs, transclude) {
+        return {
+          post: function postLink(scope, element, attrs) {
+            var fetching = true, supplierId, currentSelection, index = 0;
+            var promise = $http.get('/api/v1/supply/type');
+            promise.success(function (d) {
+              scope.types = d;
+              scope.types.splice(scope.types.indexOf(null), 1);
+            });
+            /*
+					* Initial fetching of the supplies.
+					* 
+					* We will turn the fetching flag to false
+					* once we received the results
+					*/
+            if (attrs.supplier) {
+              scope.$watch('supplier', function (val) {
+                if (val) {
+                  supplierId = val.id;
+                  scope.supplies = Supply.query({
+                    supplier_id: val.id,
+                    limit: 20
+                  }, function (response) {
+                    fetching = false;
+                    changeSelection(index);
+                  });
+                }
+              });
+            } else {
+              scope.supplies = Supply.query({ limit: 20 }, function (response) {
+                fetching = false;
+                changeSelection(index);
+              });
+            }
+            /*
+					 * Search
+					 */
+            scope.$watch('query', function (q) {
+              if (q) {
+                options = {
+                  q: q,
+                  limit: 10 + q.length * 2
+                };
+                if (supplierId) {
+                  options.supplier_id = supplierId;
+                }
+                Supply.query(options, function (resources) {
+                  for (var i = 0; i < resources.length; i++) {
+                    if (scope.supplies.indexOfById(resources[i].id) == -1) {
+                      scope.supplies.push(resources[i]);
+                    }
+                  }
+                  index = 0;
+                  changeSelection(index);
+                });
+              }
+            });
+            /*
+					 * Watch for new items to add
+					 */
+            scope.$watch('newSupply', function (supply) {
+              if (supply instanceof Supply) {
+                scope.supplies = scope.supplies || [];
+                if (scope.supplies.indexOfById(supply.id) == -1) {
+                  scope.supplies.push(supply);
+                }
+              }
+            });
+            /*
+					 * Loads the next set of supplies if there is no fetching
+					 * currently running
+					 */
+            scope.loadNext = function () {
+              fetching = false;
+              if (!fetching) {
+                Notification.display('Loading more supplies...', false);
+                fetching = true;
+                var options = {
+                    offset: scope.supplies.length,
+                    limit: 50
+                  };
+                //Set Supplier ID
+                if (supplierId) {
+                  options.supplier_id = supplierId;
+                }
+                Supply.query(options, function (resources) {
+                  fetching = false;
+                  Notification.hide();
+                  for (var i = 0; i < resources.length; i++) {
+                    if (scope.supplies.indexOfById(resources[i]) == -1) {
+                      scope.supplies.push(resources[i]);
+                    }
+                  }
+                });
+              }
+            };
+            /*
+					 * The function to run when a customer is selected
+					 */
+            scope.select = function (supply) {
+              scope.onSelect({ '$supply': supply });
+            };
+            function filter(array) {
+              return $filter('filter')(array, scope.query);
+            }
+            function changeSelection(i) {
+              $rootScope.safeApply(function () {
+                if (currentSelection) {
+                  currentSelection.$selected = false;
+                }
+                currentSelection = filter(scope.supplies)[i];
+                if (currentSelection) {
+                  currentSelection.$selected = true;
+                }
+              });
+              var selection = $('.supply.selected');
+              var container = selection.parents('.inner-container');
+              var scrollTop = container.scrollTop();
+              var cHeight = container.innerHeight();
+              if (scrollTop > selection.outerHeight() * i) {
+                container.scrollTop(selection.outerHeight() * i);
+              } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+                container.scrollTop(selection.outerHeight() * i);
+              }
+            }
+            var keyboardNav = new KeyboardNavigation();
+            keyboardNav.ondown = function () {
+              if (index < filter(scope.supplies).length - 1) {
+                index += 1;
+                changeSelection(index);
+              }
+            };
+            keyboardNav.onup = function () {
+              if (index !== 0) {
+                index -= 1;
+                changeSelection(index);
+              }
+            };
+            keyboardNav.onenter = function () {
+              $rootScope.safeApply(function () {
+                scope.select(currentSelection);
+              });
+            };
+            scope.$watch('visible', function (val) {
+              if (val) {
+                keyboardNav.enable();
+              } else {
+                keyboardNav.disable();
+              }
+            });
+            scope.$on('$destroy', function () {
+              keyboardNav.disable();
+            });
+          }
+        };
+      }
+    };
+  }
+]);

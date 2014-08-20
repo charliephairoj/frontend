@@ -14,11 +14,18 @@
 					<input type="checkbox" ng-model="supply.new_supply" />
 				</td>
 			</tr>
-			<tr ng-if="!supply.new_supply">
+			<tr class='supply' ng-if="!supply.new_supply">
 				<td>Supply</td>
 				<td>
-					<select class="supply" required ng-options="supply.description for supply in supplies | orderBy:'description'" ng-model="supply" ng-change="changeSupply(supply)">
-					</select>
+					<!--
+						<select class="supply" required ng-options="supply.description for supply in supplies | orderBy:'description'" ng-model="supply" ng-change="changeSupply(supply)">
+						</select>
+							-->
+					<span ng-show="supply.description">
+							Supply: {{supply.description}}
+						</span>
+					<br/>
+					<div supplies on-select="selectSupply($supply)"></div>
 				</td>
 			</tr>
 			<tr ng-if="supply.new_supply">

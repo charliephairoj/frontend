@@ -106,6 +106,7 @@
 								<option value="yd">Yard</option>
 								<option value="kg">Kilogram</option>
 								<option value="mm">Millimeter</option>
+								<option value="set">Set</option>
 								<option value="pack">Pack</option>
 								<option value="pack">Box</option>
 								<option value="cm^2">cm&#0178;</option>
@@ -175,6 +176,7 @@
 								<option value="yd">Yard</option>
 								<option value="kg">Kilogram</option>
 								<option value="mm">Millimeter</option>
+								<option value="set">Set</option>
 								<option value="pack">Pack</option>
 								<option value="pack">Box</option>
 								<option value="cm^2">cm&#0178;</option>
@@ -183,7 +185,7 @@
 							</select>
 						</td>
 					</tr>
-					<tr>
+					<tr ng-show="supply.units != supplier.purchasing_units">
 						<td>{{supply.units}} per {{supplier.purchasing_units}}</td>
 						<td>
 							<input ng-model="supplier.quantity_per_purchasing_unit" />{{supply.units}}</td>
