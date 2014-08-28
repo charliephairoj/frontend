@@ -196,6 +196,11 @@
 							<input class="cost" type="text" ng-model="supplier.cost" />
 						</td>
 					</tr>
+					<tr>
+						<td>Lead Time</td>
+						<td>
+							<input class="cost" type="text" ng-model="supplier.lead_time" />days</td>
+					</tr>
 				</table>
 				<button class="barcode" ng-class="{'active': upcTarget.id == {{supplier.id}}}" ng-click="addUPC(supplier)">Add</button>
 				<div class="prices price-chart-supplier-{{supplier.id}}">

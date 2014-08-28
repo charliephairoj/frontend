@@ -6440,7 +6440,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
       //query mechanism
       if (q) {
         Supply.query({
-          limit: 10,
+          limit: q.length,
           q: q,
           'country': $scope.country
         }, function (resources) {
