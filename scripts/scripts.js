@@ -5859,8 +5859,8 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
     //Controlling attributes
     $scope.showAddProject = false;
     //Query the server for projects continouosly
-    $scope.projectList = Project.query();
-    $scope.customerList = Customer.query();
+    $scope.projects = Project.query();
+    $scope.customers = Customer.query();
     //Grid options
     $scope.gridOptions = {
       data: 'projectList',
@@ -5909,11 +5909,27 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   'Room',
   'Notification',
   'FileUploader',
-  function ($scope, Project, $routeParams, Room, Notification, FileUploader) {
+  '$http',
+  '$timeout',
+  function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout) {
+    var timeoutPromise;
     $scope.showAddRoom = false;
     $scope.flag = false;
     $scope.project = Project.get({ id: $routeParams.id });
     $scope.room = {};
+    $scope.addCustomer = function (customer) {
+      $scope.showCustomers = false;
+      $scope.project.customer = customer;
+    };
+    $scope.addSupply = function ($supply) {
+      $scope.showAddSupply = false;
+      $scope.project.supplies.push($supply);
+      //Notify the user
+      Notification.display('Adding ' + $supply.description + ' to ' + $scope.project.codename);
+    };
+    $scope.removeSupply = function ($index) {
+      $scope.project.supplies.splice($index, 1);
+    };
     $scope.addImage = function (image) {
       var promise = FileUploader.upload(image, 'project/room/image');
       promise.then(function (response) {
@@ -5929,7 +5945,7 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
       });
     };
     $scope.addRoom = function () {
-      Notification.display('Adding ' + $scope.room.type, false);
+      Notification.display('Adding ' + $scope.room.description, false);
       var room = new Room();
       angular.extend(room, $scope.room);
       room.project = { id: $scope.project.id };
@@ -5941,18 +5957,37 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
         $scope.flag = true;
       });
     };
+    /*
+	 * Watches the project for changes in order to autosave
+	 */
+    $scope.$watch('project', function (newVal, oldVal) {
+      console.log(newVal, oldVal);
+      if (oldVal.hasOwnProperty('id')) {
+        $timeout.cancel(timeoutPromise);
+        timeoutPromise = $timeout(function () {
+          Notification.display('Saving...', false);
+          var project = angular.copy($scope.project);
+          project.$update(function () {
+            Notification.display('Project ' + $scope.project.codename + ' saved');
+          });
+        }, 750);
+      }
+    }, true);
   }
 ]);
 angular.module('employeeApp.services').factory('Project', [
   '$resource',
   function ($resource) {
-    return $resource('/api/v1/project/:id', { id: '@id' });
+    return $resource('/api/v1/project/:id', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
   }
 ]);
 angular.module('employeeApp.services').factory('Room', [
-  'eaResource',
-  function (eaResource) {
-    return eaResource('project/room/:id', { id: '@id' });
+  '$resource',
+  function ($resource) {
+    return $resource('/api/v1/room/:id', { id: '@id' });
   }
 ]);
 angular.module('employeeApp.directives').directive('checkmark', [function () {
@@ -6223,9 +6258,8 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   '$scope',
   'Room',
   '$routeParams',
-  'ProjectItem',
   'Notification',
-  function ($scope, Room, $routeParams, ProjectItem, Notification) {
+  function ($scope, Room, $routeParams, Notification) {
     $scope.room = Room.get({ id: $routeParams.id });
     $scope.gridOptions = {
       data: 'room.items',
@@ -8435,11 +8469,14 @@ angular.module('employeeApp').directive('supplyList', [
 					 */
             scope.$watch('query', function (q) {
               if (q) {
-                Supply.query({
-                  q: q,
-                  limit: 10 + q.length * 2,
-                  supplier_id: supplierId
-                }, function (resources) {
+                var options = {
+                    q: q,
+                    limit: 10 + q.length * 2
+                  };
+                if (supplierId) {
+                  options.supplier_id = supplierId;
+                }
+                Supply.query(options, function (resources) {
                   for (var i = 0; i < resources.length; i++) {
                     if (scope.supplies.indexOfById(resources[i].id) == -1) {
                       scope.supplies.push(resources[i]);
@@ -8959,7 +8996,14 @@ angular.module('employeeApp.directives').directive('supply', [
   '$window',
   'scanner',
   'D3',
-  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D3) {
+  '$compile',
+  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D3, $compile) {
+    var subHTML;
+    var promise = $http.get('views/templates/supply-details.html');
+    promise.then(function (response) {
+      subHTML = response.data || response;
+    }, function () {
+    });
     function createChart(data, property, largestSize, className) {
       var box = D3.select('div.' + className + ' .chart').selectAll('div').data(data).enter().append('div').attr('class', 'price-box').style('left', function (d, i) {
           return i * 6 + i + 'em';
@@ -9001,6 +9045,7 @@ angular.module('employeeApp.directives').directive('supply', [
         onSelect: '&'
       },
       link: function postLink(scope, element, attrs) {
+        var fullCompiled = false;
         scope.fetched = false;
         scope.units = angular.copy($rootScope.units);
         scope.types = angular.copy($rootScope.types || []);
@@ -9015,7 +9060,7 @@ angular.module('employeeApp.directives').directive('supply', [
             scope.upcTarget = undefined;
           }
         });
-        var updateLoopActive = false, cancelWatch = angular.noop(), badTypes = [
+        var updateLoopActive = false, timeoutPromise, cancelWatch = angular.noop(), badTypes = [
             'custom',
             null
           ];
@@ -9044,18 +9089,17 @@ angular.module('employeeApp.directives').directive('supply', [
             }
             return supply;
           }, function (newVal, oldVal) {
-            if (!updateLoopActive && oldVal.hasOwnProperty('id') && !angular.equals(newVal, oldVal)) {
-              updateLoopActive = true;
+            if (oldVal.hasOwnProperty('id')) {
+              $timeout.cancel(timeoutPromise);
               timeoutPromise = $timeout(function () {
                 supply = angular.copy(scope.supply);
-                Notification.display('Updating ' + scope.supply.description + '...', false);
+                Notification.display('Saving ' + scope.supply.description + '...', false);
                 supply.$update({ 'country': $rootScope.country }, function () {
-                  updateLoopActive = false;
-                  Notification.display(scope.supply.description + ' updated');
+                  Notification.display(scope.supply.description + ' saved');
                 }, function () {
-                  Notification.display('There was an error in updating ' + scope.supply.description);
+                  Notification.display('There was an error in saving ' + scope.supply.description);
                 });
-              }, 5000);
+              }, 750);
             }
           }, true);
         }
@@ -9091,6 +9135,11 @@ angular.module('employeeApp.directives').directive('supply', [
           }
         };
         scope.activate = function () {
+          if (!fullCompiled) {
+            var html = $compile(subHTML)(scope);
+            angular.element(element.find('.supply-details')).html(html);
+            fullCompiled = true;
+          }
           if (element.hasClass('active')) {
             element.removeClass('active');
             cancelWatch();

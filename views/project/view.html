@@ -72,11 +72,20 @@
 	<!--
         Search Bar
     -->
-	<div data-search-bar></div>
+	<div data-search-bar data-ng-model="query"></div>
 	<!--
         Workspace
     -->
 	<div class="workspace">
-		<div class="grid-style" ng-grid="gridOptions"></div>
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" data-ng-repeat="project in projects | filter:query">
+					<a class="item" ng-class="{'selected':project.$selected}" ng-href="#/project/{{project.id}}">
+						<span class="codename">{{project.codename}}</span>
+						<span class="customer">{{project.customer.name}}</span>
+					</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>

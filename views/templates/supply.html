@@ -15,92 +15,61 @@
 		<span>Loading</span>
 	</div>
 	<div class="supply-details">
+		<!--
 		<div class="supply-menu">
 			<button class="barcode" ng-click="viewStickers()">View</button>
 		</div>
+		
 		<div class="temp">
-			<table class="details">
-				<tbody>
-					<!--
-	                <td><label>Location</label></td>
-	                    <td><input type="text" ng-model="supply.location" ec-blur="update()" /></td>
+			
+	        <table class="details">
+	        	<tbody>
+	                
+	               
+	                
+	                <tr>
+	                    <td><label>Description</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="supply.description" /></td>
 	                </tr>
-	               -->
-					<tr>
-						<td>
-							<label>Description</label>
-						</td>
-						<td>
-							<input class="description" size="40" type="text" ng-model="supply.description" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>Description (Thai)</label>
-						</td>
-						<td>
-							<input size="40" type="text" ng-model="supply.description_th" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>Type</label>
-						</td>
-						<td>
-							<select ng-model="supply.type" ng-options="t | beautify for t in types">
-								<!--
-	        					<option value="fabric">Fabric</option>
-								<option value="metal">Metal</option>
-	        					<option value="wood">Wood</option>
-	        					<option value="foam">Foam</option>
-								<option value="polishing">Polishing</option>
-								<option value="canvas">Canvas</option>
-								<option value="glue">Glue</option>
-								<option value="fiber">Fiber</option>
-								<option value="packaging">Packaging</option>
-								<option value="nail">Nail</option>
-								<option value="screw">Screw</option>
-								<option value="staple">Staple</option>
-									-->
-							</select>
-						</td>
-					</tr>
-					<tr ui-if="showWidth()">
-						<td>
-							<label>Width</label>
-						</td>
-						<td>
-							<input size="6" class="length" type="text" ng-model="supply.width" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-							<select ng-model="supply.width_units" ng-options="key as value for (key, value) in units"></select>
-						</td>
-					</tr>
-					<tr ui-if="showDepth()">
-						<td>
-							<label>Depth</label>
-						</td>
-						<td>
-							<input size="6" class="length" type="text" ng-model="supply.depth" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-							<select ng-model="supply.depth_units" ng-options="key as value for (key, value) in units"></select>
-						</td>
-					</tr>
-					<tr ui-if="showHeight()">
-						<td>
-							<label>Height</label>
-						</td>
-						<td>
-							<input size="6" class="length" type="text" ng-model="supply.height" ec-blur="update()" ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
-							<select ng-model="supply.height_units" ng-options="key as value for (key, value) in units"></select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>Units</label>
-						</td>
-						<td>
-							<select ng-model="supply.units">
-
-								<!--ng-options="key as value for (key, value) in units">-->
-								<option value="pc" selected>Piece</option>
+	                <tr>
+	                    <td><label>Description (Thai)</label></td>
+	                    <td><input size="40" type="text" ng-model="supply.description_th" /></td>
+	                </tr>
+	               
+	        		<tr>
+	        			<td><label>Type</label></td>
+	        			<td>
+	        				<select ng-model="supply.type" ng-options="t | beautify for t in types">
+								
+	        				</select>
+	        			</td>
+	        		</tr>
+	                <tr ui-if="showWidth()">
+	                    <td><label>Width</label></td>
+	                    <td>
+	                    	<input size="6" class="length" type="text" ng-model="supply.width" ec-blur="update()"  ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
+	                    	<select ng-model="supply.width_units" ng-options="key as value for (key, value) in units"></select>
+	                    </td>
+	                </tr>
+	                <tr ui-if="showDepth()">
+	                    <td><label>Depth</label></td>
+	                    <td>
+	                    	<input size="6" class="length" type="text" ng-model="supply.depth" ec-blur="update()"  ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
+	                    	<select ng-model="supply.depth_units" ng-options="key as value for (key, value) in units"></select>
+	                    </td>
+	                </tr>
+	                <tr ui-if="showHeight()">
+	                    <td><label>Height</label></td>
+	                    <td>
+	                    	<input size="6" class="length" type="text" ng-model="supply.height" ec-blur="update()"  ng-pattern="/^[0-9](\d+)?(\.\d{2})?$/" />
+	                    	<select ng-model="supply.height_units" ng-options="key as value for (key, value) in units"></select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td><label>Units</label></td>
+	                    <td>
+	                    	<select ng-model="supply.units"> 
+	                    		<option value="pc" selected>Piece</option>
 								<option value="container">Container</option>
 								<option value="m">Meter</option>
 								<option value="yd">Yard</option>
@@ -112,103 +81,89 @@
 								<option value="cm^2">cm&#0178;</option>
 								<option value="m^2">m&#0178;</option>
 								<option value="in^2">in&#0178;</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>Current Quantity</label>
-						</td>
-						<td>
-							<input class="quantity" type="text" ng-model="supply.quantity">{{supply.units}}</td>
-					</tr>
-					<tr ng-show="currentUser.hasModule('administrator')">
-						<td>
-							<label>Admin Only</label>
-						</td>
-						<td>
-							<input type="checkbox" ng-model="supply.admin_only" ng-change="update()" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>Notes</label>
-						</td>
-						<td>
-							<textarea class="notes" ng-model="supply.notes"></textarea>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="usage usage-chart-supply-{{supply.id}}">
+	                    	</select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td><label>Current Quantity</label></td>
+	                    <td><input class="quantity" type="text" ng-model="supply.quantity"> {{supply.units}}</td>
+	                </tr> 
+	                <tr ng-show="currentUser.hasModule('administrator')">
+	                    <td><label>Admin Only</label></td>
+	                    <td><input type="checkbox" ng-model="supply.admin_only" ng-change="update()" /></td>
+	                </tr> 
+	                <tr>
+	                    <td><label>Notes</label></td>
+	                    <td><textarea class="notes" ng-model="supply.notes"></textarea></td>
+	                </tr> 
+	         	</tbody>       
+	         </table>
+			 
+		 	<div class="usage usage-chart-supply-{{supply.id}}">
 				<div class="chart">
 					<span class="title">Supply Usage</span>
 				</div>
-			</div>
+		 	</div>
+			
+	        
 		</div>
-		<div class="suppliers">
-			<h2>Suppliers</h2>
-			<div class="supplier" ng-repeat="supplier in supply.suppliers">
-				<table>
-					<tr>
-						<td>Name</td>
-						<td>{{supplier.name}}</td>
-					</tr>
-					<tr ng-show="supplier.telephone">
-						<td>Telephone</td>
-						<td>{{supplier.telephone}}</td>
-					</tr>
-					<tr>
-						<td>Reference</td>
-						<td>
-							<input type="text" ng-model="supplier.reference" />
-						</td>
-					</tr>
-					<tr>
-						<td>Purchasing Units</td>
-						<td>
-							<select ng-model="supplier.purchasing_units">
-
-								<!--ng-options="key as value for (key, value) in units">-->
-								<option value="pc" selected>Piece</option>
-								<option value="container">Container</option>
-								<option value="m">Meter</option>
-								<option value="yd">Yard</option>
-								<option value="kg">Kilogram</option>
-								<option value="mm">Millimeter</option>
-								<option value="set">Set</option>
-								<option value="pack">Pack</option>
-								<option value="pack">Box</option>
-								<option value="cm^2">cm&#0178;</option>
-								<option value="m^2">m&#0178;</option>
-								<option value="in^2">in&#0178;</option>
-							</select>
-						</td>
-					</tr>
+        <div class="suppliers">
+        	<h2>Suppliers</h2>
+        	<div class="supplier" ng-repeat="supplier in supply.suppliers">
+        		<table>
+        			<tr>
+        				<td>Name</td>
+        				<td>{{supplier.name}}</td>
+        			</tr>
+        			<tr ng-show="supplier.telephone">
+        				<td>Telephone</td>
+        				<td>{{supplier.telephone}}</td>
+        			</tr>
+        			<tr>
+        				<td>Reference</td>
+        				<td><input type="text" ng-model="supplier.reference"/></td>
+        			</tr>
+        			<tr>
+        				<td>Purchasing Units</td>
+        				<td>
+        					<select ng-model="supplier.purchasing_units"> 
+                    		<option value="pc" selected>Piece</option>
+							<option value="container">Container</option>
+							<option value="m">Meter</option>
+							<option value="yd">Yard</option>
+							<option value="kg">Kilogram</option>
+							<option value="mm">Millimeter</option>
+							<option value="set">Set</option>
+							<option value="pack">Pack</option>
+							<option value="pack">Box</option>
+							<option value="cm^2">cm&#0178;</option>
+							<option value="m^2">m&#0178;</option>
+							<option value="in^2">in&#0178;</option>
+                    	</select>
+                    </td>
+        			</tr>
 					<tr ng-show="supply.units != supplier.purchasing_units">
 						<td>{{supply.units}} per {{supplier.purchasing_units}}</td>
-						<td>
-							<input ng-model="supplier.quantity_per_purchasing_unit" />{{supply.units}}</td>
+						<td><input ng-model="supplier.quantity_per_purchasing_unit" />{{supply.units}}</td>
+						
 					</tr>
-					<tr>
-						<td>Cost</td>
-						<td>
-							<input class="cost" type="text" ng-model="supplier.cost" />
-						</td>
-					</tr>
-					<tr>
-						<td>Lead Time</td>
-						<td>
-							<input class="cost" type="text" ng-model="supplier.lead_time" />days</td>
-					</tr>
-				</table>
+        			<tr>
+        				<td>Cost</td>
+        				<td><input class="cost" type="text" ng-model="supplier.cost"/></td>
+        			</tr>
+        			<tr>
+        				<td>Lead Time</td>
+        				<td><input class="cost" type="text" ng-model="supplier.lead_time"/>days</td>
+        			</tr>
+        		</table>
 				<button class="barcode" ng-class="{'active': upcTarget.id == {{supplier.id}}}" ng-click="addUPC(supplier)">Add</button>
-				<div class="prices price-chart-supplier-{{supplier.id}}">
-					<div class="chart">
-						<span class="title">Cost Changes</span>
-					</div>
-				</div>
-			</div>
-		</div>
+   			 <div class="prices price-chart-supplier-{{supplier.id}}">
+   				<div class="chart">
+   					<span class="title">Cost Changes</span>
+   				</div>
+   			 </div>
+        	</div>
+        </div>
+			-->
 	</div>
 </div>
