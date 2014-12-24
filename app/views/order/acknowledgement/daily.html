@@ -1,0 +1,70 @@
+<div class="viewPage">
+    
+    <!--
+        Sidebar
+    -->
+    
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>
+                    Today's Deliveries
+                </span>
+                
+            </h1>
+            <h2>
+                {{date | date:"MMMM d, yyyy"}}
+            </h2>
+        </header>
+        <nav>
+            <ul class="list">
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    
+    <div class="searchBar" >
+        <input size="40" placeholder="Search" ng-model="query" />
+    </div>
+    
+    <!--
+        Workspace
+    -->
+    
+    <div class="workspace">
+        <div class="listContainer">
+            <div class="list">
+                
+                    <a ng-repeat="ack in ackList" class="row" ng-href="#/acknowledgement/{{ack.id}}">
+                        <div class="cell">
+                            <div class="details">
+                                <div class="details-row">
+                                    <div class="details-title">Ack#:</div>
+                                    <div class="details-data">{{ack.id}}</div>
+                                </div>
+                                <div class="details-row">
+                                    <div class="details-title">Customer:</div>
+                                    <div class="details-data">{{ack.customer.name}}</div>
+                                </div>
+                                <div class="details-row">
+                                    <div class="details-title">Delivery Date:</div>
+                                    <div class="details-data">{{ack.delivery_date | date:"MMMM d, yyyy"}}</div>
+                                </div>
+                                <div class="details-row">
+                                    <div class="details-title">Ordered By:</div>
+                                    <div class="details-data">{{ack.employee}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>

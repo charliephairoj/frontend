@@ -1,0 +1,58 @@
+<div class="equipment-directive">
+	<div class="img-container" ng-click="activate()">
+		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
+
+		<img ng-src="{{equipment.image.url}}" />
+	</div>
+	<div class="short-details details" ng-click="activate()"> 
+		<span class="id">
+			DRE-{{equipment.id}}
+		</span>
+		<span class="description">
+			{{equipment.description}}
+		</span>
+		<span class="brand">
+			{{equipment.brand}}
+		</span>
+		<span class="status">
+			Status: {{equipment.status}}
+		</span>
+	</div>
+	<div class='loading-notification' ng-class="{'active': !fetched}">
+		<span>Loading</span>
+	</div>
+	
+	<div class="supply-details">
+		
+		<div class="temp">
+			
+	        <table class="details">
+	        	<tbody>
+	                
+	               
+	                
+	                <tr>
+	                    <td><label>Description</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="equipment.description" /></td>
+	                </tr>
+	                <tr>
+	                    <td><label>Brand</label></td>
+	                    <td>
+							<select ng-model="equipment.brand" ng-options="b for b in brands">
+							</select>
+						</td>
+		                <tr>
+		                    <td><label>Status</label></td>
+		                    <td>
+								<select ng-model="equipment.status" ng-options="s | beautify for s in statuses">
+								</select>
+							</td>
+	                </tr>
+	               
+	         	</tbody>       
+	         </table>
+		</div>
+        
+	</div>
+		
+</div>

@@ -1,0 +1,96 @@
+<div class="upholstery-details-page" image-drop-target="upload()">
+    
+    <!--
+        Sidebar
+    -->
+    <div class="sidebar">
+        <header>
+            <div class="profilePic" ui-if="uphol.image">
+                <img ng-src="{{uphol.image.url}}" />
+            </div>
+            
+            <h1><span>{{uphol.model.model}}<br />{{uphol.configuration.configuration}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                
+                <li>
+                    <div ng-click="remove()">Delete</div>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+    
+    
+    
+    
+    <form class="workspace">
+        
+        <table class="details">
+            <tr>
+                
+                <tr>
+                    <td><label>Product Number</label></td>
+                    <td>{{uphol.id}}</td>
+                </tr>
+                <tr>
+                    <td><label>Model</label></td>
+                    <td>{{uphol.model.name+' '+uphol.model.model}}</td>
+                </tr>
+                <tr>
+                    <td><label>Configuration</label></td>
+                    <td>{{uphol.configuration.configuration}}</td>
+                </tr>
+                <tr>
+                    <td>Width:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.width" /></td>
+                </tr>
+                <tr>
+                    <td>Depth:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.depth" /></td>
+                </tr>
+                <tr>
+                    <td>Height:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.height" /></td>
+                </tr>
+                <tr>
+                    <td>Back Pillows</td>
+                    <td><input type='text' ec-blur="update()" ng-model="uphol.back_pillow" /></td>
+                </tr>
+                <tr>
+                    <td>Accent Pillows</td>
+                    <td><input type="text" ec-blur="update()" ng-model="uphol.accent_pillow" /></td>
+                </tr>
+                <tr>
+                    <td>Lumbar Pillows</td>
+                    <td><input type="text" ec-blur="update()" ng-model="uphol.lumbar_pillow" /></td>
+                </tr>
+                <tr>
+                    <td>Corner Pillows</td>
+                    <td><input type="text" ec-blur="update()" ng-model="uphol.corner_pillow" /></td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.price" /></td>
+                </tr>
+                <!--
+                <tr>
+                    <td>Retail Price:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.retail_price" /></td>
+                </tr>
+                <tr>
+                    <td>Wholesale Price:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.wholesale_price" /></td>
+                </tr>
+                <tr>
+                    <td>Export Price:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="uphol.export_price" /></td>
+                </tr>
+                -->
+            </table>
+            
+            
+        
+    </form>
+</div>

@@ -1,0 +1,77 @@
+<div class="model-view-page">
+    
+    
+    <div class="sidebar">
+        <header>
+            <h1><span>Models</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <a href="#/product/model/add">Add New Model</a>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+        
+        
+    <div data-search-bar data-ng-model="query"></div>
+    
+    <div class="workspace grid">
+        <div class="header">
+            <div class="row">
+                <div class="cell preview">Preview</div>
+                <div class="cell model">Model</div>
+                <div class="cell name">Name</div>
+                <div class="cell collection">Collection</div>
+            </div>
+        </div>
+        <div class="listContainer">
+                <div class="body"  on-scroll-end="loadNext()">
+                    <a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
+                        
+                        <div class="cell preview">
+                            <img ng-src="{{model.images[0].url}}" />
+                        </div>
+                        
+                        <div class="cell model">{{model.model}}</div>
+                        <div class="cell name">{{model.name}}</div>
+                        <div class="cell collection">{{model.collection}}</div>
+                     
+                    </a>
+                </div>
+        </div>
+        <!--
+        <div class="listContainer">
+            <div class="list">
+                
+                    <a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
+                        <div class="profile-img cell">
+                            <div>
+                                <img fade-load ng-src="{{model.images[0]}}" />
+                            </div>
+                        </div>
+                        <div class="cell">
+                            <div class="details">
+                                <div class="details-row">
+                                    <td class="details-title">Model:</td>
+                                    <td class="details-data">{{model.model}}</td>
+                                </div>
+                                <div class="details-row">
+                                    <td class="details-title">Name:</td>
+                                    <td class="details-data">{{model.name}}</td>
+                                </div>
+                                <div class="details-row">
+                                    <td class="details-title">Collection:</td>
+                                    <td class="details-data">{{model.collection}}</td>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                        
+                
+            </div>
+        </div>-->
+    </div>
+</div>

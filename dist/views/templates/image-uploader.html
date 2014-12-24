@@ -1,0 +1,11 @@
+<div class="image-uploader" ng-init="selection='addImage'">
+	<nav>
+		<div class="start-camera-btn" ng-class="{'active':selection=='takeImage'}" ng-click="selection='takeImage'">Take a Picture</div>
+		<div class="open-upload-btn" ng-class="{'active': selection=='addImage'}" ng-click="selection='addImage'">Upload Image</div>
+	</nav>
+	<div class="image-workspace" ng-switch on="selection">
+		<div ng-switch-when="takeImage" camera on-snapshot="upload($image)"></div>
+		<div image-cropper ng-switch-default on-load="buttonOn()" on-save="upload($image)">
+		</div>
+	</div>
+</div>

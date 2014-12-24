@@ -1,0 +1,53 @@
+    <form name="form" novalidate class="addFabricPage" image-drop-target="upload()">
+        
+        <div class="sidebar">
+            <header>
+                <div class="profilePic" ui-if="imagePreviews"><img ng-src="{{imagePreviews[0].url}}" /></div>
+                <h1><span>Prop</span></h1>
+            </header>
+            <nav>
+                <ul>
+                    <li>
+                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+        
+        
+        
+        <div class="workspace">
+            <table class="inputTable">
+                <tr>
+                    <td><label>Supplier</label></td>
+                    <td><select required tooltip="supplierText", ng-options="supplier.name for supplier in supplierList" ng-model="prop.supplier"></select></td>
+                </tr>
+                <tr>
+                    <td><label>Reference Number</label></td>
+                    <td><input type="text" tooltip="referenceText" ng-model="prop.reference"/></td>
+                </tr>
+               <tr>
+                    <td><label>Width</label></td>
+                    <td><input name="width" type="text" tooltip="widthText" ng-pattern="/^\d+(\.\d{2})?$/" ng-model="prop.width" required/></td>
+                </tr>
+                <tr>
+                    <td><label>Depth</label></td>
+                    <td><input name="width" type="text" tooltip="depthText" ng-pattern="/^\d+(\.\d{2})?$/" ng-model="prop.depth" required/></td>
+                </tr>
+                <tr>
+                    <td><label>Height</label></td>
+                    <td><input name="width" type="text" tooltip="HeightText" ng-pattern="/^\d+(\.\d{2})?$/" ng-model="prop.height" required/></td>
+                </tr>
+                <tr>
+                    <td><label>Cost per Piece</label></td>
+                    <td><input type="text" ng-model="prop.cost" tooltip="costText" ng-pattern="/^\d+(\.\d{2})?$/" required/>{{fabric.supplier.currency}}</td>
+                </tr>
+                
+            </table> 
+        </div>
+        
+        
+        
+    </form>
+    

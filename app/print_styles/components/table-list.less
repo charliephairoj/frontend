@@ -1,0 +1,57 @@
+//Customer Modal
+.table-list{
+    height:80%;
+    width:80%;
+    margin:0;
+    top:10%;
+    left:10%;
+    font-family:proxima;
+    color:#CCC;
+    background-color:#313131;
+    .container{
+        z-index:0;
+        bottom:0em;
+        .search-bar{
+            z-index:1;
+        }
+        .inner-container{
+            overflow-y:scroll;
+            overflow-x:hidden;
+            top:0;
+            bottom:0;
+            width:100%;
+            position:absolute;
+            z-index:0;
+            .table-container{
+                .table{
+                    cursor:pointer;
+                    padding:10px;  
+                    border-bottom:1px solid #282828;
+                    font-size:1em; 
+                    letter-spacing:0.08em;
+                    height:6em;
+                    position:relative;
+                    .image-container{
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        height:100%;
+                        width:12em;
+                        overflow:hidden;
+                        background-color:#CCC;
+                        img{
+                            height:100%;
+                            width:auto;
+                            
+                        }
+                    }
+                    
+                    &.selected{
+                        background-color:orange;
+                    }
+                }
+            }
+        }
+    }
+    
+}

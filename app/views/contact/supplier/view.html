@@ -1,0 +1,44 @@
+<div class="viewSuppliersPage">
+    
+    <!-- 
+        Sidebar
+    -->
+    <div class="sidebar">
+        <header>
+            <h1><span>Suppliers</span></h1>
+        </header>
+        <nav>
+            <ul>
+                
+                <li ui-if="currentUser.hasPermission('add_supplier')">
+                    <a href="#/contact/supplier/add">
+                        Add Supplier
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    <div data-search-bar ng-model="query"></div>
+    
+    <!--
+        Workspace
+    -->
+    
+    <div class="workspace list">
+    	<div class="outer-container" on-scroll-end="loadNext()">
+    		<ul class="inner-container">
+    			<li class="item-container" ng-repeat="supplier in suppliers | filter:query">
+    				<a class="item" ng-href="#/contact/supplier/{{supplier.id}}">
+    					<span class="description">{{supplier.name}}</span>
+    				</a>
+    			</li>
+    		</ul>
+    	</div>
+    </div>
+    
+    
+</div>

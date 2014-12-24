@@ -1,0 +1,81 @@
+/*
+ * LESS file for the project view page
+ */
+
+.project-view-page{
+    .view-page;
+    .modal{
+        &.add-project{
+            .add-project-table{
+                margin:1em;
+                
+                &>tr{
+                    
+                    &>td{
+                        padding:0.2em;
+                        input{
+                            background-color:#CCC;
+                            border-radius:2px;
+                            
+                        }
+                        .ui-datepicker{
+                            border:1px solid #282828;
+                            width:300px;
+                           
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    .workspace{
+        &.grid{
+                .row{
+                    width:100%;
+                    .cell{
+                        padding:0.8em;
+                        &.name{
+                            width:20%
+                        }
+                        &.customer{
+                            width: 40%
+                        }
+                        &.type{
+                            width:10%
+                        }
+                        &.status{
+                            width:10%
+                        }
+                        &.due-date{
+                            width:20%;
+                        }
+                    }
+                }
+                
+                .header{
+                    .grid{
+                        .row{
+                            .row;
+                        }
+                    }
+                }
+                
+                .listContainer{
+                    .list{
+                        width:100%;
+                        .body{
+                            width:100%;
+                            .row{
+                                width:100%;
+                                .row;
+                                
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    
+}

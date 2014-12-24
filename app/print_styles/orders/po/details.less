@@ -1,0 +1,159 @@
+
+
+.po-details-page{
+    .detailsPage;
+    
+    .log-modal{
+        .calendar-modal;
+        height:80%;
+        width:80%;
+        margin:0;
+        top:10%;
+        left:10%;
+        background-color:#313131;
+        .container{
+            overflow-y:scroll;
+            overflow-x:hidden;
+            bottom:45px;
+            .grid{
+                height:auto;
+                width:100%;
+                .view-grid;
+            }
+        }
+    }
+    .workspace{
+        .table{
+            .row{
+                .cell{
+                    text-decoration:none;
+                    &.acknowledged{
+                        color:yellow;
+                    }
+                    &.shipped{
+                        color:#00FF00;
+                    }
+                    
+                    .discount{
+                        width:2em;
+                        text-align:right;
+                    }
+                }
+            }
+        }
+        
+        .order-details{
+        	table{
+				width:100%;
+				
+				tr{
+					td{
+						padding:0.25em 0.5em;
+					}
+				}
+				thead{
+					tr{
+						td{
+							color:#FFF;
+							text-align:center;
+						}
+					}
+				}
+				tbody{
+					font-family:proxima;
+					letter-spacing:0.08em;
+	        		.items{
+						
+						
+						border:1px solid #282828;
+	        			td{
+	        				color:#CCC;
+							text-align:right;
+						
+							&.description{
+								text-align:left;
+							}
+						
+							&.discount{
+								text-align:center;
+								input{
+									text-align:center;
+									width:2em;
+								}
+							}
+						
+							&.quantity{
+								text-align:center;
+								input{
+									text-align:center;
+									width:3em;
+								}
+							}
+						
+							&.unit-cost{
+								padding-right:3em;
+								width:20%;
+							}
+						
+							&.total{
+								padding-right:3em;
+								width:20%;
+							}
+							
+							textarea{
+								width:20em;
+							}
+							
+							.remove-btn{
+								background-color:#313131;
+								border:1px solid #282828;
+								padding:0.25em 1em;
+								border-radius:0.25em;
+								color:white;
+								font-family:proxima;
+								letter-spacing:0.08em;
+								font-size:0.8em;
+								outline:none;
+								.transition(background-color, 100ms, linear);
+								
+								&:hover{
+									background-color:#2D2D2D;
+								}
+								&:active{
+									background-color:#282828;
+								}
+							}
+	        			}
+	        		}
+					
+					.summary{
+						color:#FFF;
+						td{
+							&.title{
+								text-align:right;
+								padding-right:3em;
+							}
+							
+							&.value{
+								text-align:right;
+								padding-right:3em;
+							}
+						}
+					}
+					.subtotal{
+						color:#FFF;
+					}
+					
+					.discount{
+						color:#FFF;
+					}
+				}
+				.totals{
+					
+				}
+        	}
+        }
+        
+		
+    }
+}

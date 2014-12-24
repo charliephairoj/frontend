@@ -1,0 +1,79 @@
+//Upholstery List
+.upholstery-list{
+    position:relative;
+    height:100%;
+    width:100%;
+    margin:0;
+    font-family:proxima;
+    color:#CCC;
+    background-color:#313131;
+    .container{
+        padding:0;
+        bottom:0em;
+        z-index:0;
+        position:relative;
+        .search-bar{
+            z-index:1;
+        }
+        .inner-container{
+            top:0;
+            bottom:0;
+            position:absolute;
+            width:100%;
+            overflow-y:scroll;
+            overflow-x:hidden;
+            z-index:0;
+            .upholstery-container{
+                .upholstery{
+                    cursor:pointer;
+                    padding:10px;  
+                    border-bottom:1px solid #282828;
+                    font-size:1em; 
+                    letter-spacing:0.08em;
+                    height:6em;
+                    position:relative;
+                    
+                    .dimensions{
+                        position:absolute;
+                        left:80%;
+                        color:#CCC;
+                        
+                        tr{
+                            td{
+                                text-align:left;
+                                
+                                &:last-child{
+                                    padding-left:1em;
+                                }
+                            }
+                        }
+                        
+                    }
+                    .image-container{
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        height:100%;
+                        width:12em;
+                        overflow:hidden;
+                        background-color:#CCC;
+                        img{
+                            height:100%;
+                            width:auto;
+                            
+                        }
+                        
+                        
+                    }
+                    
+                    &.selected{
+                        border:1px solid orange;
+                        background-color:orange;
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+}

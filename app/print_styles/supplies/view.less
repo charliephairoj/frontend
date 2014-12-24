@@ -1,0 +1,118 @@
+/*
+ * LESS file for the supply view
+ */
+
+.supply-view-page{
+    .view-page;
+    
+    .sidebar{
+        .scanner-mode{
+            &.on{
+                background-color:orange;
+                color:#313131;
+            }
+        }
+    }
+    
+    
+    
+    .workspace{
+        position:absolute;
+        left:0;
+        top:0;
+        right:0;
+        bottom:0;
+        .outer-container{
+            height:100%;
+            width:100%;
+            overflow-y:scroll;
+            .inner-container{
+                height:auto;
+                width:100%;
+                list-style-type:none;
+                .item-container{
+                    width:100%;
+                    height:5em;
+                    border-bottom:1px solid #282828;
+                    background-color:#313131;
+                    position:relative;
+                    .item{
+                        width:100%;
+                        color:#CCC;
+                        font-family:proxima;
+                        letter-spacing:0.08em;
+                        text-decoration:none;
+                        position:absolute;
+                        top:0;
+                        height:100%;
+                        
+                        .img-container{
+                            position:absolute;
+                            background: #CCC;
+                            height:100%;
+                            width:5em;
+                            overflow:hidden;
+                            
+                            .image-capture{
+                                display:none;
+                            }
+                            
+                            img{ 
+                                height:100%;
+                            }
+                        }
+                        .star{
+                            color:yellow;
+                            position:absolute;
+                            top:1em;
+                            right:1em;
+                            
+                        }
+                        
+                        .details{
+							color:#FFF;
+							text-decoration:none;
+							
+                            .description{
+                                position:absolute;
+                                top:0;
+                                left:5em;
+                                padding:0.5em;
+                                bottom:0;
+                                right:0;
+                                vertical-align:center;
+								
+                                
+                                
+                            }
+                            
+                            .quantity{
+                                position:absolute;
+                                right:0;
+                                top:0;
+                                width:10em;
+                                padding: 2em 0;
+                                padding-right:0.5em;
+                                
+                            }
+                            
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+                        
+                        &.admin-only{
+                            background-color:blue;
+                            
+                            &.selected{
+                                background:purple;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+  

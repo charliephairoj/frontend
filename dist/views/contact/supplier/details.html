@@ -1,0 +1,213 @@
+<div class="supplier-details-page">
+
+	<!--SideBar Section-->
+	<div class="sidebar">
+		<header>
+			<h1><span>New Supplier</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ui-if="currentUser.hasPermission('change_supplier')">
+					<div ng-click="edit=!edit">
+						Edit
+					</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('add_suppliercontact')">
+					<div ng-click="showAddContact=true">
+						Add Contact
+					</div>
+				</li>
+				<li>
+					<div ng-click="viewMap=true">
+						View Map
+					</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_supplier')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div data-modal ng-model="viewMap">
+		<div map>
+			<div id="map_canvas"></div>
+		</div>
+	</div>
+
+	<!--Supplier Contact Section -->
+	<form name="contactForm" novalidate class="addContactModal" ng-show="showAddContact">
+		<div class="title" ng-click="showAddContact=false">Add Supplier Contact</div>
+		<table class="supplier_contact_table">
+			<tr>
+				<td>First Name</td>
+				<td>
+					<input beautify type="text" required ng-model="contact.firstName" />
+				</td>
+			</tr>
+			<tr>
+				<td>Last Name</td>
+				<td>
+					<input beautify type="text" required ng-model="contact.lastName" />
+				</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>
+					<input beautify type="email" required ng-model="contact.email" />
+				</td>
+			</tr>
+			<tr>
+				<td>Telephone</td>
+				<td>
+					<input beautify type="text" required ng-model="contact.telephone" />
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<button type="button" ng-disabled="contactForm.$invalid" ng-click="addContact()">Add Contact</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+
+	<!--Supplier Information Section -->
+	<div class="workspace">
+		<table class="details">
+			<tr>
+				<td>
+					<label>Company Name</label>
+				</td>
+				<td>
+					<input type="text" size="60" ng-model="supplier.name" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Email</label>
+				</td>
+				<td>
+					<input type="text" size="30" ng-model="supplier.email" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Telephone</label>
+				</td>
+				<td>
+					<input type="text" ng-model="supplier.telephone" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Fax</label>
+				</td>
+				<td>
+					<input type="text" ng-model="supplier.fax" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Address 1</label>
+				</td>
+				<td>
+					<input type="text" size="60" ng-model="supplier.address.address1" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Address 2</label>
+				</td>
+				<td>
+					<input type="text" size="60" ng-model="supplier.address.address2" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>City</label>
+				</td>
+				<td>
+					<input type="text" size="40" ng-model="supplier.address.city" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Territory</label>
+				</td>
+				<td>
+					<input type="text" ng-model="supplier.address.territory" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Country</label>
+				</td>
+				<td>
+					<input type="text" ng-model="supplier.address.country" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Zipcode</label>
+				</td>
+				<td>
+					<input type="text" size="12" ng-model="supplier.address.zipcode" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Terms</label>
+				</td>
+				<td>
+					<input type="text" size="3" maxlength="3" ng-model="supplier.terms" ec-blur="update()" />Days</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Discount</label>
+				</td>
+				<td>
+					<input type="text" size="2" maxlength="2" ng-model="supplier.discount" ec-blur="update()" />%</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Currency</label>
+				</td>
+				<td>
+					<select ng-model="supplier.currency" ng-change="update()">
+						<option value="THB">Thai Baht</option>
+						<option value="USD">US Dollar</option>
+						<option value="EUR">Euro</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Notes</label>
+				</td>
+				<td>
+					<textarea ng-model="supplier.notes" ec-blur="update()">
+					</textarea>
+				</td>
+			</tr>
+		</table>
+		<table class="supplierContacts">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Telephone</th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="contact in supplier.contacts">
+				<tr>
+					<td>{{contact.firstName + " " + contact.lastName}}</td>
+					<td>{{contact.email}}</td>
+					<td>{{contact.telephone}}</td>
+					<td>
+						<button ng-click="deleteContact($index)">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

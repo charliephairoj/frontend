@@ -1,0 +1,108 @@
+.camera{
+    position:absolute;
+    text-align:center;
+    font-family:Tahoma;
+    @button-size: 3em;
+    @image-margin: 10%;
+    video{
+        position:absolute;
+        z-index:1;
+        top:@image-margin;
+        left:0;
+        width:100%;
+    }
+    canvas{
+        position:absolute;
+        z-index:0;
+        top:@image-margin;
+        left:0;
+        width:100%;
+        &.active{
+            //z-index:2;
+            
+            &~.camera-video{
+                visibility:hidden;
+            }
+            
+            &~.snapshot-btn{
+                visibility:hidden;
+                display:none;
+            }
+            
+            &~.btn-menu{
+                visibility:visible;
+                display:block;
+            }
+        }
+        
+    }
+    
+    .snapshot-btn{
+        width:@button-size;
+        height:@button-size;
+        border-radius:2em;
+        background:red;
+        z-index: 5;
+        position:absolute;
+        top:auto;
+        bottom:.75em;
+        left:50%;
+        cursor:pointer;
+        margin-left: -(@button-size/2);
+        display:block;
+        @-webkit-keyframes test{
+            from {
+                background:#662021;
+            }
+            50% {
+                background:#DD373A;
+            }
+            to {
+                background:#662021;
+            }
+        }
+        -webkit-animation: test 3s;
+        -webkit-animation-iteration-count: infinite;
+        
+    }
+    
+    .btn-menu{
+        visibility:hidden;
+        display:none;
+        height:1.8em;
+        width:100%;
+        position:absolute;
+        bottom:0;
+        border-top:1px solid #282828;
+        background-color:#282828;
+        overflow:hidden;
+        div{
+            width:49.90%;
+            height:auto;
+            padding: 0.6em 0;
+            float:left;
+            letter-spacing:0.08em;
+            cursor:pointer;
+            font-family:proxima;
+            font-size:0.8em;
+            color:#CCC;
+            position:absolute;
+            bottom:0;
+            background-color:#313131;
+            &:hover{
+                background-color:#474747;
+            }
+            &:active{
+                background-color:#282828;
+            }
+            &.save-btn{
+                left:0;
+            }
+            &.retake-btn{
+                right:0;
+            }          
+           
+        }
+    }
+    
+}

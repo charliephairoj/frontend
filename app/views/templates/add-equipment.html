@@ -1,0 +1,47 @@
+<form name="form" class="add-equipment" modal="visible" title="Add a new Equipment">
+		<div class="container">
+			<table class="details">
+				<tr>
+					<td>Equipment ID</td>
+					<td><input type="text" ng-model="equipment.equipment_id">
+				</tr>
+				<tr>
+					<td>Description</td>
+					<td>
+						<button class="select-description-btn" ng-click="showDescription=true" ng-class="{invalid:!equipment.description}">{{equipment.description || ""}}</button>
+						<div class="description-list" ng-class="{active:showDescription}">
+							<button ng-repeat="d in descriptions" ng-click="selectDescription(d)">
+								<img ng-src="{{d.image}}">
+								{{d.description | beautify}}
+							</button>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Brand</td>
+					<td>
+						<select required ng-model="equipment.brand" ng-options="b | beautify for b in brands">
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Status</td>
+					<td>
+						<select ng-model="equipment.status" ng-options="s | beautify for s in statuses">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Notes</td>
+					<td><textarea ng-model="supply.notes" rows="6" cols="30"></textarea></td>
+				</tr>
+				<tr>
+					<td>Preview</td>
+					<td class="preview"><img ng-src="{{equipment.image.url}}"/></td>
+				</tr>
+			</table>
+			<div image-uploader url='/api/v1/supply/image' on-upload="addImage(data)"></div>
+		</div>
+		<div class="bottom-bar"><button ng-disabled="form.$invalid" ng-click="add(equipment)">Add</button></div>
+	</form>

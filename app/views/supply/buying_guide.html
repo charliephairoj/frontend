@@ -1,0 +1,16 @@
+<div class="supply-log-page">
+	<table> 
+		<thead>
+			<tr>
+				<th>Supply</th>
+				<th>Quantity</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="supply in supplies | orderBy:'description'">
+				<td>{{supply.description}}</td>
+				<td>{{supply.quantity}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

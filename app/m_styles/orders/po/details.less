@@ -1,0 +1,115 @@
+
+
+.po-details-page{
+    .detailsPage;
+    
+    .log-modal{
+        .calendar-modal;
+        height:80%;
+        width:80%;
+        margin:0;
+        top:10%;
+        left:10%;
+        background-color:#313131;
+        .container{
+            overflow-y:scroll;
+            overflow-x:hidden;
+            bottom:45px;
+            .grid{
+                height:auto;
+                width:100%;
+                .view-grid;
+            }
+        }
+    }
+    .workspace{
+        .table{
+            .row{
+                .cell{
+                    text-decoration:none;
+                    &.acknowledged{
+                        color:yellow;
+                    }
+                    &.shipped{
+                        color:#00FF00;
+                    }
+                    
+                    .discount{
+                        width:2em;
+                        text-align:right;
+                    }
+                }
+            }
+        }
+        .products{
+            .table{
+                position:relative;
+                .row{
+                    position:relative;
+                    text-decoration:none;
+                    .cell{
+                        
+                        position:relative;
+                        &.product-img{
+                            height:150px;
+                            width:225px;
+                            position:relative;
+                            overflow:hidden;
+                        }
+                        
+                        .remove-btn{
+                            color:white;
+                            position:absolute;
+                            right:1em;
+                            top:0.8em;
+                            font-family:proxima;
+                            cursor:pointer;
+                            padding:0.1em;
+                            z-index:1;
+                        }
+                        .details{
+                            width:100%;
+                            display:table;
+                            border:none;
+                            .details-row{
+                                width:100%;
+                                display:table-row;
+                                .details-data{
+                                    display:table-cell;
+                                    color:#CCC;
+                                    border:none;
+                                    font-size:1em;
+                                    font-family:proxima;
+                                    padding:0.3em;
+                                    img{
+                                        height:2em;
+                                        width:auto;
+                                    }
+                                    
+                                    .quantity{
+                                        position:absolute;
+                                        right:4em;
+                                        
+                                        input{
+                                            width:5em;
+                                            text-align:right;
+                                            margin-right:0.5em;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        img{
+                            height:100%;
+                            width:auto;
+                            position:absolute;
+                            bottom:0px;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+}

@@ -1,0 +1,32 @@
+<div class="supply-shopping-list-page">
+	<!--
+	<div class="header">
+		<div>Supply</div>
+		<div>Quantity in Stock</div>
+		<div>Quantity Needed</div>
+	</div>
+	<div class="body">
+		<div class="row" ng-repeat="supply in supplies | orderBy:['quantity', 'description']">
+			<div>{{supply.description}}</div>
+			<div class="quantity">{{supply.quantity}}</div>
+			<div class="to-buy">{{supply.quantity_to_buy}}</div>
+		</div>
+	</div>
+-->
+	<table> 
+		<thead>
+			<tr>
+				<th>Supply</th>
+				<th>Quantity in Stock</th>
+				<th>Quantity Needed</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="supply in supplies | orderBy:['quantity', 'description']" ng-class="{'subtract':log.action=='SUBTRACT', 'add':log.action=='ADD'}">
+				<td>{{supply.description}}</td>
+				<td class="quantity">{{supply.quantity}}</td>
+				<td class="to-buy">{{supply.quantity_to_buy}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

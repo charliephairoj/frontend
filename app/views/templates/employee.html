@@ -1,0 +1,130 @@
+<div class="employee-directive">
+	<div class="img-container" ng-click="activate()">
+		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
+
+		<img ng-src="{{supply.image.url}}" />
+	</div>
+	<div class="short-details details" ng-click="activate()"> 
+		<span class="description">
+			{{employee.name}}
+		</span>
+		<span class="quantity">
+			ID: {{employee.id}}
+		</span>
+	</div>
+	<div class='loading-notification' ng-class="{'active': !fetched}">
+		<span>Loading</span>
+	</div>
+	<div class="supply-details">
+		
+		<div class="supply-menu">
+			<button class="barcode" ng-click="viewStickers()">View</button>
+		</div>
+		
+		<div class="temp">
+			
+	        <table class="details">
+	        	<tbody>
+	                
+	               
+	                <!--
+	                <td><label>Location</label></td>
+	                    <td><input type="text" ng-model="supply.location" ec-blur="update()" /></td>
+	                </tr>
+	               -->
+	                <tr>
+	                    <td><label>ID</label></td>
+	                    <td><label>{{employee.id}}</label></td>
+	                </tr>
+	                <tr>
+	                    <td><label>Name</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="employee.name" /></td>
+	                </tr>
+	               
+	               
+	        		<tr>
+	        			<td><label>Department</label></td>
+	        			<td>
+	        				<select ng-model="employee.department" ng-options="t | beautify for t in departments">
+								<!--
+	        					<option value="fabric">Fabric</option>
+								<option value="metal">Metal</option>
+	        					<option value="wood">Wood</option>
+	        					<option value="foam">Foam</option>
+								<option value="polishing">Polishing</option>
+								<option value="canvas">Canvas</option>
+								<option value="glue">Glue</option>
+								<option value="fiber">Fiber</option>
+								<option value="packaging">Packaging</option>
+								<option value="nail">Nail</option>
+								<option value="screw">Screw</option>
+								<option value="staple">Staple</option>
+									-->
+	        				</select>
+	        			</td>
+	        		</tr>
+	                <tr>
+	                    <td><label>Pay Period</label></td>
+	                    <td>
+	                    	<select ng-model="employee.pay_period"> 
+								<option value="daily">Daily</option>
+								<option value="monthly">Monthy</option>
+	                    	</select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td><label>Current Quantity</label></td>
+	                    <td><input class="quantity" type="text" ng-model="employee.wage"> THB</td>
+	                </tr> 
+	               
+	                <tr>
+	                    <td><label>Notes</label></td>
+	                    <td><textarea class="notes" ng-model="supply.notes"></textarea></td>
+	                </tr> 
+					
+	         	</tbody>       
+	         </table>
+			 
+		 	<div class="usage usage-chart-supply-{{supply.id}}">
+				<div class="chart">
+					<span class="title">Supply Usage</span>
+				</div>
+		 	</div>
+			
+	        
+		</div>
+        <div class="suppliers">
+        	<h2>Attendance</h2>
+			<div class="attendance-details">
+				<table>
+					<tr>
+						<td>
+						{{activeAttendance.date | date : 'MMM d, yyyy'}}
+						</td>
+					</tr>
+					<tr>
+						<td>
+						{{activeAttendance.start_time | date: 'H:mm'}} - {{activeAttendance.end_time | date: 'H:mm'}}
+						</td>
+					</tr>
+					<tr>
+						<td><label>Total hours</label></td>
+						<td><span>{{activeAttendance.total_time | number:2}}</span></td>
+					</tr>
+					<tr>
+						<td><label>Regular hours</label></td>
+						<td><span>{{activeAttendance.regular_time | number:2}}</span></td>
+					</tr>
+					<tr>
+						<td><label>Over hours</label></td>
+						<td><span>{{activeAttendance.overtime | number:2}}</span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="attendance-container">
+				<div attendance-chart data="attendances" active="activeAttendance">
+				</div>
+			</div>
+        </div>
+	</div>
+</div>

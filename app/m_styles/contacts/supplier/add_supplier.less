@@ -1,0 +1,97 @@
+
+.addSupplierPage{
+  
+  //Make this a child of Add Page
+  .addPage;
+  
+  /*
+   * Sidebar
+   */
+  .sidebar{
+    
+    .dirty{
+      color:grey;
+      
+      //Dirty Button State
+      &:hover{
+        background-color:@menuItemBGColor;
+      }
+      
+      
+    }
+  }
+  
+  /*
+   * Workspace
+   */
+  .workspace{
+    
+  }
+  
+  /*
+   * Maps
+   */
+  .mapContainer{
+    position:absolute;
+    top:20px;
+    right:10px;
+    left:325px;
+    bottom:10px;
+    min-width:210px;
+    min-height:210px;
+    overflow:hidden;
+    background:#A0A0A0;
+    border-radius:2px;
+  }
+  #map_canvas{
+    
+    top:1px;
+    bottom:1px;
+    left:1px;
+    right:1px;
+    min-width:200px;
+    min-height:200px;
+    position:absolute;
+    
+  }
+  
+  .addContactModal{
+    background:#CECECE;
+    position:absolute;
+    right:10px;
+    bottom:0px;
+    z-index:10;
+    border:1px solid grey;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    
+    .title{
+      background: #3d3d3d; /* Old browsers */
+      background: -moz-linear-gradient(top,  #3d3d3d 1%, #161616 100%); /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#3d3d3d), color-stop(100%,#161616)); /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(top,  #3d3d3d 1%,#161616 100%); /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(top,  #3d3d3d 1%,#161616 100%); /* Opera 11.10+ */
+      background: -ms-linear-gradient(top,  #3d3d3d 1%,#161616 100%); /* IE10+ */
+      background: linear-gradient(to bottom,  #3d3d3d 1%,#161616 100%); /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3d3d3d', endColorstr='#161616',GradientType=0 ); /* IE6-9 */
+      
+      color:#FFFFFF;
+      padding-top:5px;
+      padding-bottom:5px;
+      text-align:center;
+      font-size:14px;
+      border-top-left-radius:5px;
+      border-top-right-radius:5px;
+      cursor:pointer;
+    }
+    
+    .supplier_contact_table{
+      margin:10px;
+    }
+    
+    button{
+      margin:0;
+      float:right;
+    }
+  }
+}

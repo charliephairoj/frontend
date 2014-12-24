@@ -1,0 +1,81 @@
+.supply-details-page{
+    .details-page;
+    
+    letter-spacing:0.08em;
+    font-family:proxima;
+    .modal{
+        &.quantity{
+            height:10em;
+            width:20em;
+            top:50%;
+            left:50%;
+            margin-top: -5em;
+            margin-left: -10em;
+        }
+        
+        &.add-image{
+            width:50%;
+            left:25%;
+            height:90%;
+            top:5%;
+            margin:0;
+            .container{
+                .image-uploader{
+                    height:100%;
+                }
+            }
+        }
+        
+        &.upc{
+            height:10em;
+            width:22em;
+            top:50%;
+            left:50%;
+            margin-top:-5em;
+            margin-left:-11em;
+        }
+    }
+    
+    .workspace{
+        color: #FFF;
+        
+        .supply{
+            font-size: 1em;
+            h2{
+                margin: 1em 0 1em 1em;
+            }
+            table{
+                &.details{
+                  margin-left:1.3em;
+                  width:auto;
+                  border:none;
+                  tbody{
+                      tr{
+                          td{
+                              &:last-child{
+                                  padding:0.25em 1em;
+                              }
+                          }
+                      }
+                  }
+                }
+            }
+        }
+        
+        .suppliers{
+            position:absolute;
+            right:0;
+            top:0;
+            left:50%;
+            padding-right:1em;
+            h2{
+                margin:1em 0;
+            }
+            .supplier{
+                padding:0.25em;
+                border: 1px solid #282828;
+                margin-bottom:0.5em;
+            }
+        }
+    }
+}

@@ -1,0 +1,102 @@
+
+
+.po-view-page{
+    .viewPage;
+    span{
+        font-family:proxima;
+        spacing:0.08em;
+    }
+    left:0;
+    background-color:#313131;
+    
+    
+    
+    .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:200px;
+        .outer-container{
+            height:100%;
+            width:100%;
+            overflow-y:scroll;
+            .inner-container{
+                width:100%;
+                height:auto;
+                .item-container{
+                    @rowHeight: 7em;
+                    width:100%;
+                    position:relative;
+                    height:@rowHeight;
+                    border-bottom:1px solid #282828;
+                    background-color:#313131;
+                   
+                    .item{
+                        width:100%;
+                        position:absolute;
+                        left:0;
+                        font-size:1em;
+                        height: @rowHeight;
+                        text-decoration:none;
+                        color:#E5E5E5;
+                        cursor:pointer;
+                        .transition(all, 150ms, linear);
+                        &:active{
+                            background-color:#D8D8D8;
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+                        
+                        span{
+                            left:1em;
+                            font-size:1em;
+                            position:absolute;
+                            .details{
+                                font-size: 0.8em;
+                                color: #9B9B9B;
+                                left:1.3em;
+                            }
+                            &.description{
+                                top:0.8em;
+                                color:#E5E5E5;
+                            }
+                            
+                            &.customer{
+                                top:2.4em;
+                                .details;
+                            }
+                            &.status{
+                                top:2em;
+                                left:80%;
+                                &.ordered{
+                                    color:#E2A356;
+                                }
+                                &.received{
+                                    color:#97E053;
+                                }
+                                &.paid{
+                                    color:#999;
+                                }
+                            }
+                            &.items{
+                              top:3.6em;
+                              .details;
+                            }
+                            &.receive-date{
+                                top:6em;
+                                .details;
+                            }
+                            &.order-date{
+                                .details;
+                                top:4.8em;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

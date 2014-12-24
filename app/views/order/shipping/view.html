@@ -1,0 +1,52 @@
+<div class="shipping-view-page">
+    
+    <!--
+        Sidebar
+    -->
+    
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Shipping</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_shipping')"><a ng-href="#/order/shipping/create">Create</a></li>
+                <li><a ng-href="#/order/shipping/delivery">View Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/week">View Weekly Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/today">View Today's Deliveries</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    
+    <div data-search-bar ng-model="query"></div> 
+    
+    <!--
+        Workspace
+    -->
+    
+    <div class="workspace">
+    	<div class="shipping-container" on-scroll-end="loadNext()">
+    		<ul class="shippings">
+	        	<li class="shipping" ng-repeat="shipping in shippingList | filter:query" >
+	        		<a ng-href="#/order/shipping/{{shipping.id}}">
+	        			{{shipping.id}}
+		        		<br />
+		        		{{shipping.customer.name}}
+	        		</a>
+	        		
+	        		
+	        	</li>
+	        </ul>
+    	</div>
+        
+        
+    </div>
+    
+</div>

@@ -1,0 +1,85 @@
+<div class="room-details-page">
+	<!--
+        Modals
+    -->
+	<div product-selector="showAddItem" product-selector-add="addProduct(product)"></div>
+	<div modal ng-model="showAddBuildIn">
+		<div class="title">
+			Add Build-In
+		</div>
+		<div class="container">
+			<table class="description">
+				<tr>
+					<td>Description</td>
+					<td>
+						<input type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td>Width</td>
+					<td>
+						<input type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td>Depth</td>
+					<td>
+						<input type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td>Height</td>
+					<td>
+						<input type="text" />
+					</td>
+				</tr>
+			</table>
+			<div file-handler></div>
+		</div>
+		<div class="bottom-bar">
+			<button>Add Build-In</button>
+		</div>
+	</div>
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<h1>
+                <span>Room: {{room.description}}</span>
+            </h1>
+		</header>
+		<nav>
+			<ul class="list">
+				<li>
+					<button ng-click="showAddItem=true">Add a Product</button>
+				</li>
+				<li>
+					<button ng-click="showAddBuildIn=true">Add a Build-In Item</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
+        Workspace
+    -->
+	<div class="workspace">
+		<div class="details">
+			<table>
+				<tr>
+					<td>Room:</td>
+					<td>{{room.description}}</td>
+				</tr>
+				<tr>
+					<td>Reference:</td>
+					<td>{{room.reference}}</td>
+				</tr>
+				<tr>
+					<td>Delivery Date:</td>
+					<td>{{room.delivery | date:"MMMM d, yyyy"}}</td>
+				</tr>
+			</table>
+		</div>
+		<div class="grid-style" ng-grid="gridOptions"></div>
+	</div>
+</div>

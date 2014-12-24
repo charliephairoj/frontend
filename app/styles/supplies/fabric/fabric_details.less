@@ -1,0 +1,178 @@
+/*Model Page*/
+
+.fabricDetailsPage{
+  .detailsPage;
+  
+  //Adding suppliers contacts
+  .d-modal{
+    @modal-width:20em;
+    @modal-height:10em;
+    background:#313131;
+    height:@modal-height;
+    width:@modal-width;
+    top:50%;
+    left:50%;
+    margin-left:-(@modal-width/2);
+    margin-top:-(@modal-height/2);
+    border:5px;
+    
+    .title{
+      border-bottom:1px solid #282828;
+      color:#CCC;
+      padding:0.9em 0em;
+      text-align:center;
+      font-size:1em;
+    }
+    
+    table{
+      margin:0.8em;
+      tr{
+          td{
+              color:#CCC;
+          }
+      }
+    }
+    
+    
+    
+  }
+  
+  .addModal{
+    .d-modal;
+  }
+    
+    
+  .modal{
+      top:50%;
+      left:50%;
+      &.add{
+          height:18em;
+          width:40em;
+          margin-top:-9em;
+          margin-left:-20em;
+          .container{
+              text-align:center;
+              table{
+                  display:inline-block;
+                  margin:0.5em;
+                  td{
+                      &:first-child{
+                          text-align:left;
+                      }
+                       &:last-child{
+                          text-align:left;
+                      }
+                  }
+              }
+          }
+      }
+      &.reserve{
+          height:10em;
+          width:40em;
+          margin-top:-5em;
+          margin-left:-20em; 
+          .container{
+              text-align:center;
+              margin:0.5em;
+              table{
+                  display:inline-block;
+                  margin:0.5em;
+                  td{
+                      &:first-child{
+                          text-align:left;
+                      }
+                     
+                  }
+              }
+          }
+      }
+      &.subtract{
+          .reserve;
+      }
+      &.reset{
+        .add;
+      }
+      &.log{
+          top:10%;
+          right:10%;
+          left:10%;
+          bottom:10%;
+          margin:0;
+          height:auto;
+          width:auto;
+          color:#CCC;
+          .container{
+              overflow-y:scroll;
+              table{
+                  width:100%;
+                  th{
+                      border-top: 1px solid #3c3c3c;
+                      border-bottom: 1px solid #282828;
+                  }
+                  tr{
+                      border-top: 1px solid #3c3c3c;
+                      border-bottom: 1px solid #282828;
+                      .log{
+                          width:30%;
+                      }
+                      .acknowledgement{
+                          width:5%;
+                          text-align:center;
+                      }
+                      .employee{
+                          width:20%;
+                          text-align:center;
+                      }
+                      .quantity{
+                          width:7%;
+                          text-align:right;
+                      }
+                      .remarks{
+                          width:10%;
+                      }
+                      .timestamp{
+                          width:20%;
+                      }
+                  }
+              }
+          }
+      }
+  }
+  
+  .workspace{
+      .details{
+          border:none;
+          margin:1em;
+          width:auto;
+          height:auto;
+          tr{
+              td{
+                  color:#CCC;
+                  &:first-child{
+                      padding-right:0.8em;
+                  }
+                  
+                  input{
+                      width:15em;
+                      border:none;
+                      background:#313131;
+                      color:#CCC;
+                      outline:none;
+                      .transition(all, 250ms, linear);
+                      
+                      &.price{
+                          width:6.25em;
+                      }
+                      
+                      &.length{
+                          width:6.25em;
+                      }
+                      &:focus{
+                          background:#414141;
+                      }
+                  }
+              }
+          }
+      }
+  }
+}

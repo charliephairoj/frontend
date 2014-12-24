@@ -1,0 +1,94 @@
+
+
+.acknowledgementViewPage{
+    .viewPage;
+    span{
+        font-family:proxima;
+        spacing:0.08em;
+    }
+    left:0;
+    background-color:#313131;
+    
+    .nav-bar{
+        display:none;
+    }
+    .workspace{
+        .outer-container{
+            height:100%;
+            width:100%;
+			overflow:visible;
+            .inner-container{
+                width:100%;
+                height:auto;
+                .item-container{
+                    width:100%;
+                    background-color:red;
+                    position:relative;
+                    height:5em;
+                    &:hover{
+                        background-color:red;
+                    }
+                    
+                    .item{
+                        width:100%;
+                        background-color:#313131;
+                        position:absolute;
+                        left:0;
+                        font-size:1em;
+                        height: 5em;
+                        border-bottom:1px solid #282828;
+                        text-decoration:none;
+                        color:#E5E5E5;
+                        cursor:pointer;
+                        .transition(all, 150ms, linear);
+                        &:active{
+                            background-color:#D8D8D8;
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+                        
+                        span{
+                            left:1em;
+                            font-size:1em;
+                            position:absolute;
+                            .details{
+                                font-size: 0.8em;
+                                color: #9B9B9B;
+                                left:1.3em;
+                            }
+                            &.description{
+                                top:0.8em;
+                                color:#E5E5E5;
+                            }
+                            
+                            &.customer{
+                                top:2.4em;
+                                .details;
+                            }
+                            &.status{
+                                top:2em;
+                                left:80%;
+                                &.acknowledged{
+                                    color:#E2A356;
+                                }
+                                &.shipped{
+                                    color:#97E053;
+                                }
+                            }
+                            &.items{
+                              top:3.6em;
+                              .details;
+                            }
+                            &.delivery-date{
+                                top:4.8em;
+                                .details;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+<div class="fabric-selector">
+	<div search-bar data-ng-model="query"></div>
+    <div class="product_container">
+        <div class="product" data-drop-on="product.fabric">
+            <div>{{product.description}}</div>
+            
+            <div class="fabric" ui-if="product.fabric">
+                Fabric:  {{product.fabric.description}}
+                <img ng-src="{{product.fabric.image.url}}" />
+            </div>
+            
+        </div>
+        <div class="pillow" ng-repeat="pillow in product.pillows" data-drop-on="pillow.fabric">
+            <div>{{pillow.type | beautify}} Pillow</div>
+            <div class="fabric">
+                Fabric: {{pillow.fabric.description}}
+                <img ng-src="{{pillow.fabric.image.url}}" />
+            </div>
+        </div>
+    </div>
+    <div class="fabric_container" on-scroll-end="loadNext()">
+        <ul class="fabrics">
+            <li class="fabric" ng-repeat="fabric in fabrics | filter:query " data-drag-on="fabric">
+                <img ng-src="{{fabric.image.url}}" />
+                <div class="details">
+                    Pattern: {{fabric.pattern}}
+                    <br />
+                    Color: {{fabric.color}}
+                </div>
+                
+            </li>
+        </ul>
+    </div>
+    <div class="bottom-bar">
+        <button ng-click="done()">Done</button>
+    </div>
+</div>

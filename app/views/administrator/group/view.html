@@ -1,0 +1,58 @@
+<div class="group-view-page">
+    <div class="sidebar">
+        <header>
+            <h1><span>Groups</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ui-if="currentUser.hasPermission('add_group')">
+                    <a ng-href="#/administrator/group/add">Add Group</a>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+    
+    <div data-search-bar ng-model='query'></div>
+    
+    <div class="workspace grid">
+         <div class="header">
+            <div class="row">
+                <div class="cell id">ID</div>
+                <div class="cell name">Name</div>
+                <div class="cell name">Number of Permissions</div>
+            </div>
+        </div>
+        <div class="listContainer">
+            <div class="grid">
+                <div class="body">
+                    <a class="row" ng-repeat="group in groups | filter:query" ng-href="#/administrator/group/{{group.id}}">
+                        
+                       
+                        
+                        <div class="cell id">{{group.id}}</div>
+                        <div class="cell name">{{group.name}}</div>
+                        <div class="cell name">{{group.permissions.length}}</div>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="listContainer">
+            <div class="list">
+                <a class="row" ng-repeat="group in groupList" ng-href="#/administrator/group/{{group.id}}">
+                    <div class="cell">
+                        <div class="details">
+                            <div class="details-row">
+                                <div class="details-title">Name:</div>
+                                <div class="details-data">{{group.name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>-->
+    </div>
+    
+</div>

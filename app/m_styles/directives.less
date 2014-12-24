@@ -1,0 +1,195 @@
+/* app css stylesheet */
+
+
+
+
+/*Directives-----------------------------------*/
+
+/*
+ * IMG
+ */
+img{
+    //top:0;
+    //left:0;
+    //position:absolute;
+    opacity:1;
+    .transition(opacity, 500ms, ease);
+    &.preloaded{
+        opacity:0;
+    }
+}
+
+/*
+ * INPUT
+ */
+/*
+input[type=text]{
+    outline:none;
+    background:#282828;
+    color:#CCC;
+    border:none;
+    border-radius:2px;
+    &[disabled]{
+        background:#313131;
+    }
+    
+    &.price{
+        width:3em;
+        text-align:right;
+    }
+    
+    &.cost{
+        .price;
+    }
+}
+*/
+
+
+
+/*
+ * UI Date
+ */
+
+        .ui-datepicker{
+            margin:0px;
+            border-radius:2px;
+            .ui-datepicker-header{
+                position:relative;
+                text-align:center;
+                //previous
+                .ui-datepicker-prev{
+                  position:absolute;
+                  left:3px;
+                  top:3px;
+                  cursor:pointer;
+                  color:grey;
+                  .transition(all, 350ms, linear);
+                  &:hover{
+                    color:#FFFFFF;
+                  }
+                }
+                
+                //next
+                .ui-datepicker-next{
+                  position:absolute;
+                  right:3px;
+                  top:3px;
+                  cursor:pointer;
+                  color:grey;
+                  .transition(all, 350ms, linear);
+                  &:hover{
+                    color:#FFFFFF;
+                  }
+                }
+                //title
+                .ui-datepicker-title{
+                  display:inline;
+                  color:#FFFFFF;
+                }
+            }
+            .ui-datepicker-calendar{
+                td{
+                    text-align:center;
+                    padding:12px;
+                    margin:2px;
+                    border:1px solid grey;
+                    cursor:pointer;
+                    padding:12px;
+                    background-color:transparent;
+                    color:#000000;  
+                    
+                    
+                }
+              
+            }
+        }
+
+/*
+ * Drag and Drop Upload 
+ * Component
+ */
+
+.ec-drop-target{
+	position:relative;
+	height:220px;
+	width:440px;
+	font-family: Tahoma, Helvetica, sans-serif, Arial;
+	
+	.dropbox{
+	  position:absolute;
+    height:122px;
+    width:200px;
+    top:5px;
+    left:5px;
+    margin:5px;
+    border:1px dashed #9F9F9F;
+    border-radius:3px;
+    color:#9F9F9F;
+    font-size:18px;
+    text-align:center;
+    padding-top:58px;
+    -webkit-transition: all 325ms ease;
+    -moz-transition: all 325ms ease;
+    -ms-transition: all 325ms ease;
+    -o-transition: all 325ms ease;
+    transition: all 325ms ease;
+    
+    &.active{
+      background-color: #9AFC8F;
+      color: #5BA05B;
+      border-color: #5BA05B;
+    }
+	}
+	
+	.previewContainer{
+	  position:absolute;
+    right:5px;
+    top:0px;
+    height:200px;
+    width:200px;
+    margin: 5px;
+    
+    div{
+      position:relative;
+      height:90px;
+      width:90px;
+      padding: 5px;
+      overflow: hidden;
+      float: left;
+      
+      .closeButton{
+        position:absolute;
+        height:5px;
+        width:35px;
+        top:5px;
+        right:0px;
+        border:1px solid grey;
+        border-radius: 2px;
+        background: black;
+        color:#FFFFFF;
+        padding: 2px;
+        font-size: 10px;
+        padding:6px;
+        padding-top:0px;
+        cursor:pointer;
+      }
+      
+      img{
+        height:100%;
+        width:auto;
+      }
+    }
+	}
+}
+
+
+
+
+
+
+
+/*
+ *Add Model Component 
+ */
+
+

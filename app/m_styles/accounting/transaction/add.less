@@ -1,0 +1,71 @@
+
+.addTransactionPage{
+    .addPage;
+    .workspace{
+        overflow-y:scroll;
+        overflow-x:hidden;
+        margin-bottom:2em;
+        .transaction{
+            position:relative;
+            margin-left:20px;
+            margin-top:40px;
+            color:#FFF;
+            .title{
+                font-size:18px;   
+            }
+            .details{
+                margin-top:20px;
+                tr{
+                    .cell{
+                        font-size:0.9em;
+                        line-height:18px;
+                        
+                        .ui-datepicker{
+                            width:25em;
+                            margin:1em 0em;
+                            border:1px solid #525252;
+                            border-radius:2px;
+                        }
+                        .input{
+                            background:#444444;
+                            margin:0.2em 0em;
+                            font-family:proxima;
+                            font-size:1em;
+                            letter-spacing:0.08em;
+                            outline:none;
+                            border:1px solid transparent;
+                            color:#FFFFFF;
+                            .transition(all, 250ms, linear);
+                            &.ng-invalid{
+                                border:1px solid red;
+                            }
+                            &:focus{
+                                background-color:#282828;
+                            }
+                        }
+                        input{
+                            .input;
+                        }
+                        select{
+                            .input;
+                            border-radius:2px;
+                        }
+                        textarea{
+                            .input;
+                            width:400px;
+                            height:300px
+                        }
+                        //States
+                        &:first-child{
+                            color:#6B6B6B;   
+                        }
+                        &:last-child{
+                            color:#828282;
+                            padding-left:20px;   
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

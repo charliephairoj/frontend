@@ -1,0 +1,13 @@
+<div class="supplier-list" modal="visible" title="Select a Supplier">
+    <div class="container">
+    	<div search-bar data-ng-model="query"></div>
+    	<div class="inner-container"  on-scroll-end="loadNext()">
+	        <ul class="customer-container">
+	            <li class="supplier" ng-class="{'selected':supplier.$selected}" ng-click="select(supplier)" ng-repeat="supplier in suppliers | filter:query | orderBy:'name'">
+	            	{{supplier.name}}
+	            </li>
+	        </ul>
+        </div>
+    </div>
+    
+</div>

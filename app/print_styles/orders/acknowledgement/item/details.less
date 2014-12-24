@@ -1,0 +1,170 @@
+
+
+.ack-item-details-page{
+    .detailsPage;
+    .workspace{
+        .table{
+            .row{
+                .cell{
+                    text-decoration:none;
+                    position:relative;
+                    
+                    &.product-img{
+                        height:10em;
+                        position:relative;
+                        overflow:hidden;
+                        img{
+                            height:100%;
+                            width:auto;
+                        }
+                    }
+                    
+                    &.acknowledged{
+                        color:yellow;
+                    }
+                    &.shipped{
+                        color:#00FF00;
+                    }
+                }
+            }
+        }
+        .products{
+            .table{
+                position:relative;
+                .row{
+                    position:relative;
+                    .cell{
+                        
+                        position:relative;
+                        &.product-img{
+                            height:10em;
+                            position:relative;
+                            overflow:hidden;
+                            
+                            img{
+                                height:100%;
+                                width:auto;
+                            }
+                        }
+                        .details{
+                            width:100%;
+                            display:table;
+                            border:none;
+                            .details-row{
+                                width:100%;
+                                display:table-row;
+                                .details-data{
+                                    display:table-cell;
+                                    color:#CCC;
+                                    border:none;
+                                    font-size:1em;
+                                    font-family:proxima;
+                                    padding:0.3em;
+                                    img{
+                                        height:2em;
+                                        width:auto;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        img{
+                            height:100%;
+                            width:auto;
+                            position:absolute;
+                            bottom:0px;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    /*Status Modal*/
+    .modal{
+        &.status{
+            height:12em;
+            width:25em;
+            margin-top:-6em;
+            margin-left:-12.5em;
+            left:50%;
+            top:50%;
+            text-align:center;
+            table{
+                display:inline-block;
+                margin:0.2em 0em;
+                td{
+                    text-align:left;
+                    padding:0.5em 0.5em;
+                    
+                    
+                }
+            }
+        }
+    }
+    /*Fabric Modal*/
+    .fabric_modal{
+        font-family:proxima;
+        color:#CCC;
+        background-color:#313131;
+        .product_container{
+            position:absolute;
+            top:0em;
+            left:0em;
+            width:60%;
+            bottom:0em;
+            overflow-y:scroll;
+            overflow-x:hidden;
+            border-right:1px solid #282828;
+            .product{
+                min-height:50px;
+                padding:1em;
+                border-bottom:1px solid #282828;
+                .transition(all, 250ms, ease);
+                .fabric{
+                    margin-top:5px;
+                    margin-left:20px;
+                    height:50px;
+                    img{
+                        height:100%;    
+                    }
+                }
+                //States for product
+                &.drag{
+                    background-color:#282828;    
+                }
+            }
+            .pillow{
+                .product;    
+            }
+        }
+        .fabric_container{
+            position:absolute;
+            top:0em;
+            bottom:0em;
+            right:0em;
+            width:40%;
+            overflow-y:scroll;
+            overflow-x:hidden;
+            .list{
+                .item{
+                    cursor:move;
+                    position:relative;
+                    height:75px;
+                    border-bottom:1px solid #282828;
+                    background-color:#313131;
+                    .details{
+                        position:absolute;
+                        margin:16px 20px;
+                        display:inline-table;
+                    }
+                    img{
+                        height:100%;
+                        width:75px;
+                    }
+                }
+            }
+        }
+    }
+}

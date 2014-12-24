@@ -1,0 +1,83 @@
+<div class="supply-view-page">
+	
+	<!--
+		Modals
+	-->
+	<div supply-scanner-modal="scannerMode"></div>
+	
+	<div add-equipment="showAddEquipment"></div>
+    <!--
+        Sidebar
+    -->
+    <div class="sidebar">
+        <header>
+            <h1><span>Supplies</span></h1>
+        </header> 
+        <nav>
+            <ul>
+                <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
+                	<button ng-click="showAddEquipment=true">Add Equipment</button>
+                </li>
+                 <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
+                	<button class="scanner-mode" ng-class="{'on':scannerMode==true, 'off': scannerMode==false}" ng-click="scannerMode=true">Scanner Mode</button>
+                </li>
+                <li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a></li>
+                <li ng-show="currentUser.hasPermission('add_foam')"><a ng-href="#/supply/foam">Foam</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/glue">Glue</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/lumber">Lumber</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/prop">Prop</a></li>
+                <li ng-show="currentUser.hasPermission('add_screw')"><a ng-href="#/supply/screws">Screws</a></li>
+                <li ng-show="currentUser.hasPermission('add_staple')"><a ng-href="#/supply/staple">Staple</a></li>
+                <li ng-show="currentUser.hasPermission('add_sewingthread')"><a ng-href="#/supply/thread">Thread</a></li>
+                <li ng-show="currentUser.hasPermission('add_webbing')"><a ng-href="#/supply/webbing">Webbing</a></li>
+                <li ng-show="currentUser.hasPermission('add_wool')"><a ng-href="#/supply/wool">Wool</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/zipper">Zipper</a></li>
+				<li><a class="log-btn" ng-href="#/supply/log">Log</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    <div data-search-bar data-ng-model="query">
+    </div>
+    
+    
+    <!--
+        Workspace
+    -->
+    
+    <div class="workspace" style="z-index:1;">
+    	<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
+    		<ul class="inner-container">
+    			<li class="item-container" ng-repeat="equipment in equipmentList | filter:query track by equipment.id">
+    				<div equipment="equipment"></div>
+					<!--
+	   				<div class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" touchstart touchmove touchend>
+    					<div class="img-container">
+    						<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
+
+    						<img ng-src="{{supply.image.url}}" />
+    					</div>
+    					<a class="details" ng-href="#/supply/{{supply.id}}" touchselect> 
+    						<span class="description">
+    							{{supply.description}}
+    						</span>
+    						<span class="supplier">
+    							{{supply.supplier.name}}
+    						</span>
+    						<span class="quantity">
+    							Qty: {{supply.quantity}}{{supply.units}}
+    						</span>
+    					</a>
+    					
+    				</div>
+						-->
+    			</li>
+    		</ul>
+    	</div>
+        
+    </div>
+    
+</div>

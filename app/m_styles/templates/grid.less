@@ -1,0 +1,94 @@
+.view-grid{
+    display:table;
+    height:auto;
+    width:100%;
+    font-family:proxima;
+    letter-spacing:0.08em;
+    .header{
+        display:table-header-group;
+        width:100%;
+        height:auto;
+        //position:fixed;
+        height:2.6em;
+        z-index:1;
+        background-color:#313131;
+        .row{
+            display:table-row;
+            width:100%;
+            height:auto;
+            color:#FFFFFF;
+            border:none;
+            height:2.6em;
+            .cell{
+                font-size:1em;
+                display:table-cell;
+                vertical-align:middle;
+                //padding:0.8em;
+                border-bottom:1px solid #313131;
+                color:#FFF;
+                
+            }
+        }
+        
+        &.ui-scrollfix{
+            position:absolute;
+            top:0px;
+        }
+    }
+    .body{
+        display:table-row-group;
+        width:100%;
+        position:absolute;
+        z-index:0;
+        .row{
+            text-decoration:none;
+            display:table-row;
+            width:100%;
+            height:auto;
+            border:none;
+            .cell{
+                display:table-cell;
+                vertical-align:middle;
+                padding:0.8em;
+                border-top: 1px solid #3c3c3c;
+                border-bottom: 1px solid #282828;
+                color:grey;
+                label{
+                  font-size:0.8em;
+                  color:#C1C1C1;
+                  .transition(all, 250ms, linear);
+                }
+            }
+        }
+    }
+    
+    .listContainer{
+        overflow-y:scroll;
+        top:2.6em;
+        bottom:0em;
+        width:100%;
+        position:absolute;
+        //Grid
+        .body{
+            .row{
+              
+              
+              .cell{
+                  
+                  &.status{
+                      &.acknowledged{
+                          color:#FFED68;
+                      }
+                      &.shipped{
+                          color:#7ED136;
+                      }
+                  }
+              }
+           }
+        }
+    }
+}
+
+.grid{
+    .view-grid;
+}

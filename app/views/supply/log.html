@@ -1,0 +1,20 @@
+<div class="supply-log-page">
+	<table> 
+		<thead>
+			<tr>
+				<th>Message</th>
+				<th>Action</th>
+				<th>Quantity</th>
+				<th>Timestamp</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="log in logs | orderBy:'-id'" ng-class="{'subtract':log.action=='SUBTRACT', 'add':log.action=='ADD'}">
+				<td>{{log.message}}</td>
+				<td>{{log.action}}</td>
+				<td>{{log.quantity}}</td>
+				<td>{{log.timestamp}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

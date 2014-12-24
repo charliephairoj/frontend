@@ -1,0 +1,91 @@
+<div class="project-view-page">
+    
+    <!--
+        Modals
+    -->
+    <form name="addForm" novalidate data-modal data-ng-model="showAddProject" class="add-project">
+        <div class="title"></div>
+        <div class="container">
+            <table class="add-project-table">
+                <tr>
+                    <td>Project Name:</td>
+                    <td><input type="text" data-ng-model="project.name"></td>
+                </tr>
+                <tr>
+                    <td>Project Reference:</td>
+                    <td><input type="text" data-ng-model="project.reference"></td>
+                </tr>
+                <tr>
+                    <td>Project Codename:</td>
+                    <td><input type="text" data-ng-model="project.codename"></td>
+                </tr>
+                <tr>
+                    <td>Project Type:</td>
+                    <td>
+                        <select ng-model="project.type">
+                            <option value="condominium">Condominium</option>
+                            <option value="house">House</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>Customer:</td>
+                    <td><select ng-model="project.customer" ng-options="customer.name for customer in customerList"></select></td>
+                </tr>
+                <tr>
+                    <td>Due Date:</td>
+                    <td><div ui-date ng-model="project.due_date"></div></td>
+                </tr>
+            </table>
+        </div>
+        <div class="bottom-bar"><button ng-disabled="addForm.$invalid" data-ng-click="create()">Create Project</button></div>
+    </form>
+    
+    <!--
+        Sidebar
+    -->
+    
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Projects</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ng-show="currentUser.hasPermission('add_project')">
+                    <button ng-click="showAddProject=true">Create</button>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <!--
+        Search Bar
+    -->
+    
+    <div data-search-bar data-ng-model="query"></div>
+    
+    <!--
+        Workspace
+    -->
+    
+    <div class="workspace">
+    	
+    	<div class="outer-container" on-scroll-end="loadNext()"> 
+	    	<ul class="inner-container" >
+	    		<li class="item-container" data-ng-repeat="project in projects | filter:query">
+	    			<a class="item" ng-class="{'selected':project.$selected}" ng-href="#/project/{{project.id}}">
+	    				<span class="codename">{{project.codename}}</span>
+						<span class="customer">{{project.customer.name}}</span>
+	    			</a>
+	    				
+	    		</li>
+	    	</ul>
+    	</div>
+    </div>
+    
+</div>

@@ -1,0 +1,54 @@
+/*
+ * Add Customer Modal
+ */
+.add-customer{
+      background-color:#313131;
+      width:650px;
+      margin:0;
+      top:10%;
+      bottom:10%;
+      left:10%;
+      right:10%;
+      width:auto;
+      height:auto;
+     
+      .container{
+          table{
+              position:absolute;
+              left:15px;
+              top:20px;
+              td{
+                  font-size:0.85em;
+                  padding:0.2em 0em;
+                  letter-spacing:0.08em;
+                  font-family:proxima;
+                  color:#CCC;
+                  
+            
+                  
+                 
+                  //States
+                  &:first-child{
+                      color:#FFFFFF;
+                      padding-right:5px;
+                      
+                  }
+              }
+          }
+          
+          .map_container{
+              position:absolute;
+              top:1em;
+              right:1em;
+              bottom:1em;
+              left:50%;
+              #map_canvas{
+                  position:absolute;
+                  height:100%;
+                  width:100%;
+                  background-color:grey;
+              }
+          }
+          
+      }
+  }

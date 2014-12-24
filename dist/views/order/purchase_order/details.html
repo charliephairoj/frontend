@@ -1,0 +1,180 @@
+<div class="po-details-page">
+	<!--
+    	Modals
+   	-->
+	<div supply-list="showAddItem" supplier="po.supplier" on-select="addItem($supply)"></div>
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="po.receive_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="receive()">Select</button>
+		</div>
+	</div>
+	<!--
+        Sidebar
+    -->
+	<!--
+    <div class="sidebar">
+        <header>
+            <h1><span>Purchase Order</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="update()">Save</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="showAddItem=true">Add Item</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="order()">Order</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="receive()">Receive</div>
+                </li>
+                 <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="pay()">Pay</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_purchaseorder')">
+                    <div ng-click="cancel()">Cancel</div>
+                </li>
+                <li>
+                    <div ng-click="viewPDF()">View PDF</div>
+                </li>
+                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+                    <div ng-click="remove()">Delete</div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+			-->
+	<div class="workspace">
+		<div class="submenu">
+			<button ng-click="save()">Save</button>
+			<button ng-click="viewPDF()">PDF</button>
+		</div>
+		<div class="details">
+			<h2 class="title">Purchase Order</h2>
+			<table class="order-details">
+				<tr class="row">
+					<td class="cell">Purchase Order#:</td>
+					<td class="cell">{{po.id}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Customer</td>
+					<td class="cell">{{po.supplier.name}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Order Date</td>
+					<td class="cell">{{po.created | date:"MMMM d, yyyy"}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Receive Date</td>
+					<td class="cell" ng-click="showCal=true">{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Status</td>
+					<td class="cell" ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">
+						<select ng-model="po.status">
+							<option value='Processed'>Processed</option>
+							<option value='RECEIVED'>Received</option>
+							<option value='PAID'>Paid</option>
+							<option value='CANCELLED'>Cancelled</option>
+						</select>
+					</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Discount</td>
+					<td class="cell">
+						<input class="discount" type="text" ng-model="po.discount" />%
+					</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Deposit</td>
+					<td class="cell">
+						<input class="discount" type="text" ng-model="po.deposit" />%
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="order-details" ng-show="po.items">
+			<h2 class="title">Items</h2>
+			<button class="add-item-btn" ng-click="showAddItem=true">+ Add Item</button>
+			<table>
+				<thead>
+					<tr class='heading'>
+						<td>Description</td>
+						<td>Comments</td>
+						<td>Discount</td>
+						<td>Unit Cost</td>
+						<td>Quantity</td>
+						<td colspan="2">Total</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="items" ng-repeat="item in po.items">
+						<td class='description'>{{item.description}}</td>
+						<td>
+							<textarea ng-model=item.comments row="4"></textarea>
+						</td>
+						<td class='discount'>
+							<input type="text" ng-model="item.discount" />
+						</td>
+						<td class='unit-cost'>
+							<input type="text" ng-model="item.unit_cost" />
+						</td>
+						<td class='quantity'>
+							<input type="text" ng-model="item.quantity" />
+						</td>
+						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity}}</td>
+						<td>
+							<button ng-click="removeItem($index)">Remove</td>
+					</tr>
+					<tr class="summary subtotal">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Subtotal</td>
+						<td class="value">{{subtotal() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary discount" ng-show="po.discount">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Discount {{po.discount}}%</td>
+						<td class="value">-{{discount() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary total" ng-show="po.discount">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Total</td>
+						<td class="value">{{total() | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary vat" ng-show="po.vat">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Vat {{po.vat}}%</td>
+						<td class="value">{{total() * (po.vat / 100) | number:2}}</td>
+						<td></td>
+					</tr>
+					<tr class="summary grand-total" ng-show="po.vat">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="title">Grand Total</td>
+						<td class="value">{{grandTotal() | number:2}}</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,105 @@
+<div class="customer-details-page"  ng-init="showAddContact=false; viewMap=false;">
+    
+    <!--Modals-->
+    <form class="map_modal" data-modal ng-model="viewMap">
+        <div class="title">Edit Email</div>
+        <div class="container">
+            <div class="map_container">
+                <div id="map_canvas" map>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom_bar">
+            <button ng-click="viewMap=false">Close</button>
+        </div>
+    </form>
+    <!--SideBar Section-->
+    
+    <div class="sidebar">
+        <header>
+            <h1><span>{{customer.name}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <div ng-click="viewMap()">
+                        View Map
+                    </div>
+                </li>
+                <li ui-if="currentUser.hasPermission('delete_customer')">
+                    <div ng-click="remove()">Delete</div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    
+    
+    <!--Supplier Information Section -->
+    
+    <div class="workspace">
+        <div class="customer">
+            <table>
+                <tr>
+                    <td>Name</td>
+                    <td>{{customer.name}}</td>
+                </tr>
+                <tr>
+                    <td>Telephone</td>
+                    <td><input ec-blur="update()" ng-model="customer.telephone" /></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><input ec-blur="update()" ng-model="customer.email" /></td>
+                </tr>
+                <tr>
+                    <td>Customer Type</td>
+                    <td>
+                        <select required ng-change="update()" ng-model="customer.type">
+                            <option value="Dealer">Dealer</option>
+                            <option value="Retail">Retail</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Currency</td>
+                    <td>
+                        <select required ng-change="update()" ng-model="customer.currency">
+                            <option value="USD">US Dollar</option>
+                            <option value="EUR">Euro</option>
+                            <option value="THB">Thai Baht</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="address">
+            <div ng-repeat="address in customer.addresses">
+                <table>
+                    <tr>
+                        <td><input type="text" class="address" data-ng-model="address.address1" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" data-ng-model="address.city" />
+                           <input type="text" data-ng-model="address.territory" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>   
+                            <input type="text" data-ng-model="address.country" />
+                            <input type="text" data-ng-model="address.zipcode" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="map-container">
+            <div map id="map_canvas"></div>
+        </div>
+    </div>
+        
+    
+</div>

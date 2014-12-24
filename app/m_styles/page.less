@@ -1,0 +1,245 @@
+/*Model Page*/
+
+@toolbarHeight:60px;
+/*standard add page layout*/
+.addPage{
+  -webkit-box-shadow:  0px 0px 10px 2px rgba(0, 0, 0, 0.5);
+        
+        box-shadow:  0px 0px 10px 2px rgba(0, 0, 0, 0.5);
+  left:200px;
+  right:0px;
+  height:100%;
+  position:absolute;
+  font-family:Helvetica, Tahoma, sans-serif;
+  //background:#D8D8D8;
+  .transition(all, 500ms, linear);
+  
+  
+  
+  .workspace{
+    position:absolute;
+    top:0px;
+    width:100%;
+    bottom:0px;
+    //left:201px;
+    .inputTable{
+      position:absolute;
+      top:20px;
+      left:10px;
+      tr{
+        td{
+          padding:5px;
+          vertical-align:middle;
+          color: grey;
+          input{
+            padding:5px 10px;
+            font-size:12px;
+            border:1px solid #CCCCCC;
+            .transition(border, 250ms, linear);
+            
+            //Input States
+            &:focus{
+              outline:none;
+              border:1px solid grey;
+            }
+          }
+          
+          select{
+            border:1px solid #CCCCCC;
+            //Select States
+            &:focus{
+              outline:none;
+              border:1px solid grey;
+            }
+          }
+          
+        }
+      }
+    }
+  }
+    
+  
+  //States
+  &.fadeIn{
+      
+      left:200px;
+      
+      
+    
+  }
+    
+}
+
+
+/*Create Model*/
+.createModelPage{
+  .addPage;
+}
+
+/*Add Configuration*/
+
+.addConfigPage{
+  .addPage;
+}
+
+/*Add Upholstery*/
+.addUpolPage{
+  .addPage;
+}
+
+/*Add Customer*/
+
+.addCustomerPage{
+  .addPage;
+}
+
+
+
+
+@import "contacts/supplier/add_supplier.less";
+@import "supplies/fabric/add_fabric.less";
+@import "supplies/foam/add_foam.less";
+@import "supplies/glue/add_glue.less";
+@import "supplies/lumber/add_lumber.less";
+@import "supplies/wool/add_wool.less";
+@import "accounting/transaction/add.less";
+
+/*
+ * Orders
+ */
+
+@import "orders/po/create.less";
+@import "orders/acknowledgement/create.less";
+@import "orders/shipping/create.less";
+
+/*
+ * Settings
+ */
+@import "auth/group/add_group.less";
+@import "auth/user/add_user.less";
+
+/*
+ * Details Page
+ */
+
+@font:proxima;
+
+.detailsPage{
+  left:200px;
+  right:0px;
+  top:0;
+  bottom:0;
+  background:#313131;
+  position:absolute;
+  font-family:proxima;
+  
+  .workspace{
+      position:absolute;
+      width:100%;
+      height:100%;
+      background-color:#313131;
+      .details{
+          position:relative;
+          height:auto;
+          width:100%;
+          border-bottom:1px solid #282828;
+          .table{
+              margin:10px;
+              display:table;
+              .row{
+                  display:table-row;
+                  .cell{
+                      display:table-cell;
+                      padding:0.4em;
+                      font-size:0.8em;
+                      color:#CCC;
+                      font-family:@font;
+                      letter-spacing:0.08em;
+                  }
+              }
+          }
+      }
+      .items{
+      position:relative;
+      height:100%;
+      width:100%;
+      overflow-y:scroll;
+      
+      .table{
+          display:table;
+          width:100%;
+          margin-bottom:100px;
+          .row{
+              display:table-row;
+              width:100%;
+              
+              &.header{
+                  position:absolute;
+                  top:0px;
+              }
+              
+              .cell{
+                  color:#CCC;
+                  font-family:@font;
+                  display:table-cell;
+                  font-size:0.8em;
+                  padding:1em;
+                  border-top: 1px solid #3c3c3c;
+                  border-bottom: 1px solid #282828;
+                  letter-spacing:0.08em;
+              }
+          }
+      }
+      
+    }
+  }
+  table{
+    td{
+      padding:3px;
+    }
+  }
+  
+  
+}
+
+.details-page{
+    .detailsPage;
+}
+
+@import 'products/upholstery/details.less';
+@import "auth/user/details.less";
+@import 'auth/group/group_details.less';
+@import 'contacts/supplier/supplier_details.less';
+@import 'contacts/customer/details.less';
+@import 'supplies/fabric/fabric_details.less';
+@import 'supplies/details.less';
+@import 'orders/acknowledgement/details.less';
+@import 'orders/acknowledgement/item/details.less';
+@import 'orders/po/details.less';
+@import 'project/details.less';
+@import 'project/room/details.less';
+/*
+ * View Page Imports 
+ */
+@import "templates/view.less";
+@import "orders/acknowledgement/view.less";
+@import "orders/po/view.less";
+@import "supplies/fabric/view_fabric.less";
+@import "supplies/glue/view_glue.less";
+@import "supplies/view.less";
+@import "contacts/supplier/view_suppliers.less";
+@import "contacts/customer/view.less";
+@import "library/view_library.less";
+@import "accounting/transaction/view.less";
+@import "supplies/prop/view.less";
+@import "supplies/foam/view.less";
+@import "orders/shipping/view.less";
+@import "orders/shipping/delivery.less";
+@import "products/model/view.less";
+@import "products/upholstery/view.less";
+@import "products/inventory.less";
+@import "auth/user/view.less";
+@import "auth/group/view.less";
+@import "project/view.less";
+
+

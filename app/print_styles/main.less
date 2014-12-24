@@ -1,0 +1,221 @@
+/* app css stylesheet */
+
+* { margin:0; padding:0; }
+
+html, body{
+    height:100%;
+    overflow:hidden;
+}
+body{ 
+	background-color:white;
+ 	margin: 0;
+	padding: 0;
+	font-size: 16px;
+}
+
+/* 
+ * Other Modules
+ */
+@import "../components/angular-ui/build/angular-ui.min.css";
+@import "../components/ng-grid/ng-grid.min.css";
+//@import "../components/bootstrap/less/bootstrap.less";
+
+/*Fonts*/
+@import "fonts.less";
+
+/*
+ *Standard Forms layout and designs 
+*/
+
+/*Model Section Form*/
+input{
+    font-family:proxima;
+  	border:none;
+  	border-radius:2px;
+  	background-color: #282828;
+  	font-size:14px;
+  	padding-left: 6px;
+  	padding: 3px;
+  	outline:none;
+  	color:#828282;
+	  &[disabled]{
+        background:#313131;
+        color:#545454;
+    }
+    
+    &.price{
+        width:3em;
+        text-align:right;
+    }
+    
+    &.cost{
+        .price;
+    }
+	  .transition(all, 250ms, linear);
+  	&.ng-invalid{
+  	   background-color:#A54243;
+  	}
+  	
+}
+
+
+
+textarea{
+    outline:none;
+    background:#282828;
+    color:#CCC;
+    border:none;
+    border-radius:2px;
+    width:10em;
+    height:4em;
+    .transition(all, 250ms, ease);
+    &[disabled]{
+        background:#313131;
+    }
+    
+    &:focus{
+        width:20em;
+        height:10em;
+    }
+    
+    &.ng-invalid{
+        background-color:#A54243
+    }
+}
+
+
+select{
+	border:1px solid grey;
+	border-radius:2px;
+	background-color: #FFFFFF;
+	font-size: 14px;
+	outline:none;
+	.transition(all, 500ms, linear);
+	&.ng-invalid{
+	   background-color:#A54243;
+	}
+}
+
+/*
+ * Application wide stuff
+ */
+
+/*general mixins*/
+.transition (@prop: all; @time: 1s; @ease: linear;){
+    -webkit-transition: @prop @time @ease;
+    -moz-transition: @prop @time @ease;
+    -o-transition: @prop @time @ease;
+    -ms-transition: @prop @time @ease;
+    transition: @prop @time @ease;
+}
+
+.opacity(@opacity: 0){
+    opacity: @opacity;
+    
+}
+
+/*Menu
+ * 
+ *Rules:
+ * 
+ * Menus operate in the 10-19 z-index range with 
+ * the base z-index at 10.
+ */
+
+/*Main Menu*/
+@menuHeight:50px;
+@menuSidePadding:8px;
+@import "components/menu.less";
+
+/*Sidemenu*/
+@import "components/sidemenu.less";
+
+/*Notification Rules:
+ *
+ * The notification system will have 
+ * the highest index operating in the 
+ * 100-109 range because of the belief
+ * that communiation with the user is the
+ * most important aspect to make the 
+ * application feel responsive
+ */
+  
+/*Notification system*/
+@import "components/notification.less";
+
+/*Page Rules:
+ * 
+ * All pages and their components in
+ * the z-index range of 0-9 with the base
+ * being 0
+ */
+ 
+/*UI-Datepicker*/
+@import "components/ui-datepicker.less";
+/*Search Bar*/
+@import "components/searchbar.less";
+
+/*Main Container*/
+@import "templates/mainContainer.less";
+
+/*Tooltip*/
+@import "components/tooltip.less";
+
+/*File Handler*/
+@import "components/file-handler.less";
+
+/*File Cropper*/
+@import "components/file-cropper.less";
+
+/*Image Uploader*/
+@import "components/image-uploader.less";
+
+/*Camera*/
+@import "components/camera.less";
+
+/*Grid*/
+@import "components/grid.less";
+
+/*Modal*/
+@import "templates/modal.less";
+@import "components/calendar-modal.less";
+/*
+ * Modal Theming
+ */
+/*Add Supplier*/
+@import "components/add-supplier.less";
+/*Add Customer*/
+@import "components/add-customer.less";
+/*Customer List*/
+@import "components/customer-list.less";
+/*Supplier List*/
+@import "components/supplier-list.less";
+/*Supply List*/
+@import "components/supply-list.less";
+/*Upholstery List*/
+@import "components/upholstery-list.less";
+/*Table List*/
+@import "components/table-list.less";
+/*Fabric Selector*/
+@import "components/fabric-selector.less";
+/*Add Supply*/
+@import "components/add-supply.less";
+/*Product Selector*/
+@import "components/product-selector.less";
+/*
+ * Supply Scanner
+ */
+@import "components/supply-scanner-modal.less";
+
+
+
+/*
+ * imports
+ */
+
+@import "page.less";
+@import "directives.less";
+
+
+
+

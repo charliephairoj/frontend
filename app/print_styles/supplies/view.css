@@ -1,0 +1,7 @@
+/*
+ * LESS file for the supply view
+ */
+.supply-view-page .grid-style .ngRow .image img {
+  height: auto;
+  width: 100%;
+}

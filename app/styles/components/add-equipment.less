@@ -1,0 +1,161 @@
+.add-equipment{
+    left:50%;
+    margin-left:-35em;
+    width: 70em;
+    .details{
+        tr{
+            td{
+				position:relative;
+                padding:0.2em 0em;
+                
+                input{
+                    
+                    &.dimension{
+                        text-align:right;
+                        padding-right:0.2em;
+                        width:4em;
+                        
+                    }
+                    
+                    
+                }
+                
+				.select-description-btn{
+					min-height:1.45em;
+					min-width:10em;
+					padding:0.1em 0.4em;
+					border-radius:0.35em;
+					border:1px solid grey;
+					font-family:Helvetica;
+					font-size:0.9em;
+					background-color:#FFF;
+					color:#000;
+					outline:none;
+					text-align:start;
+					.transition(background-color, 250ms, linear);
+					
+					&.invalid{
+						background-color:#A54243;
+						color:#FFF;
+						
+					}
+				}
+				
+				.description-list{
+					position:absolute;
+					padding:0.25em 0;
+					height:0;
+					top:0;
+					display:none;
+					width:20em;
+					overflow-y:hidden;
+					overflow-x:hidden;
+					border-radius:0.35em;
+					background-color:#FFF;
+					.transition(all, 100ms, linear);
+					
+					&.active{
+						display:block;
+						height:auto;
+						z-index:1;
+					}
+					
+					button{
+						position:relative;
+						border-radius:0;
+						background:#FFF;
+						border:none;
+						width:100%;
+						height:2.5em;
+						text-align:left;
+						padding:0.1em 0 0.1em 4.5em;
+						font-family:Helvetica;
+						font-size:1em;
+						vertical-align:middle;
+						&:hover{
+							background-color:#2A70EA;
+							color:#FFF;
+						}
+						
+						img{
+							position:absolute;
+							left:0.5em;
+							top:0.11em;
+							height:2.3em;
+							width:auto;
+							overflow:hidden;
+						}
+					}
+				}
+				
+                select{
+                	&.description{
+                		option{
+                			background-image:url(http://www.steadiy.com/media/catalog/product/cache/1/image/800x800/9df78eab33525d08d6e5fb8d27136e95/t/n/tn_14038_2.jpg);
+                		}
+                	}
+                }
+                
+                &.preview{
+                    height:5em;
+                    img{
+                        height:100%;
+                        width:auto;
+                    }
+                }
+                
+                
+                &:first-child{
+                    width:10em;
+                }
+                
+                &:last-child{
+                    padding-left:0.4em;
+                }
+            }
+			
+			&.supply{
+				td{
+					padding:1em 0;
+					
+					.supplies{
+						position:relative;
+						height:10em;
+						width:100%;
+						min-width:20em;
+						top:0;
+						left:0;
+						border:1px solid #282828;
+						.container{
+							top:0;
+							.search-bar{
+								width:auto;
+								top:0;
+								right:0;
+								box-shadow:none;
+								padding:0.2em 0 0.2em 0.2em;
+								border:1px solid #282828;
+								input{
+									width:40%;
+								}
+							}
+							
+							.inner-container{
+								top:30px;
+							}
+						}
+					}
+				}
+			}
+        }
+    }
+    
+    .image-uploader{
+        position:absolute;
+        top:0;
+        right:0;
+        width:30em;
+        bottom:0;
+        margin: 0 1em 0 0;
+    }
+}

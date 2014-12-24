@@ -1,0 +1,73 @@
+.grid-workspace {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+.grid-workspace .header {
+  display: table;
+  width: 100%;
+  position: absolute;
+  height: 2.6em;
+  background: #282828;
+}
+.grid-workspace .header .row {
+  display: table-row;
+  width: 100%;
+  height: 100%;
+}
+.grid-workspace .header .row .cell {
+  display: table-cell;
+  font-size: 1em;
+  padding: 0.8em 0.8em;
+}
+.grid-workspace .header .row .cell.id {
+  width: 10%;
+}
+.grid-workspace .header .row .cell.customer {
+  width: 25%;
+}
+.grid-workspace .header .row .cell.order-date {
+  width: 15%;
+}
+.grid-workspace .header .row .cell.delivery-date {
+  width: 15%;
+}
+.grid-workspace .header .row .cell.processed-by {
+  width: 20%;
+}
+.grid-workspace .header .row .cell.status {
+  width: 15%;
+}
+.grid-workspace .listContainer {
+  overflow-y: scroll;
+  top: 2.6em;
+  bottom: 0em;
+  width: 100%;
+  position: absolute;
+}
+.grid-workspace .listContainer .grid .row.acknowledged {
+  background-color: yellow;
+}
+.grid-workspace .listContainer .grid .row.shipped {
+  background-color: green;
+}
+.grid-workspace .listContainer .grid .row .cell.id {
+  width: 10%;
+}
+.grid-workspace .listContainer .grid .row .cell.customer {
+  width: 25%;
+}
+.grid-workspace .listContainer .grid .row .cell.order-date {
+  width: 15%;
+}
+.grid-workspace .listContainer .grid .row .cell.delivery-date {
+  width: 15%;
+}
+.grid-workspace .listContainer .grid .row .cell.processed-by {
+  width: 20%;
+}
+.grid-workspace .listContainer .grid .row .cell.status {
+  width: 15%;
+}

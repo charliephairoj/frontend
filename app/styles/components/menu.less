@@ -1,0 +1,87 @@
+/*This file handles the design of the main menu, 
+ *including the links of the main menu
+ */
+.mainMenu{
+    position:absolute;
+    height:@menuHeight;
+    top:0px;
+    width:100%;
+    font-family:Helvetica, Tahoma, sans-serif;
+    z-index:11;
+    background-color: #313131;
+    border-bottom:1px solid #282828;
+    /*
+    -webkit-box-shadow:  0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    box-shadow:  0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    */
+   
+    .logo{
+        position:relative;
+        height:30px;
+        margin:10px;
+        width:auto;
+        float:left;
+    }
+    //Container for main menu
+    .mainMenuContainer{
+        position:absolute;
+        top:0;
+        width:auto;
+        left:180px;
+        height:100%;
+        display:block;
+		
+        //individual menu items
+        
+        
+        a{
+            position:relative;
+            float:left;
+            color:white;
+            font-family:proxima;
+            letter-spacing:0.08em;
+            text-decoration:none;
+            font-size:1em;
+            padding:1em 1em;
+            background-color:#313131;
+            cursor:pointer;
+			white-space:nowrap;
+			
+            .transition(background-color, 250ms, linear);
+            
+            &:hover{
+                background-color:orange;
+            }
+        }
+    }
+    
+    //Employee area
+    .account_container{
+        color:white;
+        float:right;
+        position:relative;
+        
+        span{
+            height:@menuHeight;
+            position:absolute;
+            top:0px;
+            right:0px;
+        }
+    }
+  
+    .logout{
+        font-family:proxima;
+        position:absolute;
+        padding:1em;
+        font-size:1em;
+        text-decoration:none;
+        color:#FFFFFF;
+        right:20px;
+        top:0px;
+        background-color:#313131;
+        .transition(all, 250ms, linear);
+        &:hover{
+            background-color:orange;
+        }
+    }
+}

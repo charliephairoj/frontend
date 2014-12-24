@@ -1,0 +1,199 @@
+.supply-details-page{
+    .details-page;
+    
+    letter-spacing:0.08em;
+    font-family:proxima;
+    .modal{
+        &.quantity{
+            height:10em;
+            width:20em;
+            top:50%;
+            left:50%;
+            margin-top: -5em;
+            margin-left: -10em;
+        }
+        
+        &.add-image{
+            width:50%;
+            left:25%;
+            height:90%;
+            top:5%;
+            margin:0;
+            .container{
+                .image-uploader{
+                    height:100%;
+                }
+            }
+        }
+        
+        &.upc{
+            height:10em;
+            width:22em;
+            top:50%;
+            left:50%;
+            margin-top:-5em;
+            margin-left:-11em;
+        }
+    }
+    
+    .workspace{
+        color: #FFF;
+        overflow-y:scroll;
+        .supply{
+			width:50%;
+            font-size: 1em;
+            h2{
+                margin: 1em 0 1em 1em;
+            }
+            table{
+                &.details{
+                  margin-left:1.3em;
+                  width:auto;
+                  border:none;
+                  tbody{
+                      tr{
+                          td{
+                              &:last-child{
+                                  padding:0.25em 1em;
+                              }
+                          }
+                      }
+                  }
+                }
+            }
+			
+			.usage{
+				margin-top:2em;
+				width:95%;
+				height:10em;
+				overflow-x:scroll;
+				border:1px solid #000;
+				background-color:#FFF;
+				.chart{
+					position:relative;
+					height:100%;
+					
+					.title{
+						position:absolute;
+						color:#000;
+						top:0.1em;
+						left:0.1em;
+						font-size:1em;
+					}
+					.price-box{
+						width:6em;
+						background-color:red;
+						color:#CCC;
+						margin-left:1em;
+						position:absolute;
+						bottom:0;
+						text-align:center;
+						height:0em;
+						//min-height:0.8em;
+						
+						&:last-child{
+							margin-right:1em;
+							
+						}
+						span{
+							&.price{
+								position:absolute;
+								top:-1em;
+								left:0;
+								width:100%;
+								text-align:center;
+								color:#000;
+							}
+							
+							&.date{
+								position:absolute;
+								bottom:0;
+								left:0;
+								width:100%;
+								text-align:center;
+								font-size:0.75em;
+							}
+						}
+						
+					}
+				}
+			}
+			
+			.prices{
+				.usage;
+			}
+        }
+        
+        .suppliers{
+            position:absolute;
+            right:0;
+            top:0;
+            left:50%;
+            padding-right:1em;
+            h2{
+                margin:1em 0;
+            }
+            .supplier{
+                padding:0.25em;
+                border: 1px solid #282828;
+                margin-bottom:0.5em;
+            }
+			
+			.prices{
+				margin-top:2em;
+				width:100%;
+				height:0em;
+				overflow-x:scroll;
+				//border:1px solid #000; 
+				.chart{
+					position:relative;
+					height:100%;
+					
+					.title{
+						position:absolute;
+						color:#000;
+						top:0.1em;
+						left:0.1em;
+						font-size:1em;
+					}
+					.price-box{
+						width:6em;
+						background-color:red;
+						color:#CCC;
+						margin-left:1em;
+						position:absolute;
+						bottom:0;
+						text-align:center;
+						height:0em;
+						//min-height:0.8em;
+						
+						&:last-child{
+							margin-right:1em;
+						}
+						
+						span{
+							&.price{
+								position:absolute;
+								top:-1em;
+								left:0;
+								width:100%;
+								text-align:center;
+								color:#000;
+							}
+							
+							&.date{
+								position:absolute;
+								bottom:0;
+								left:0;
+								width:100%;
+								text-align:center;
+								font-size:0.75em;
+							}
+						}
+						
+					}
+				}
+			}
+        }
+    }
+}

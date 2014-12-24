@@ -1,0 +1,84 @@
+.add-supplier{
+        left:50%;
+        margin-left:-40%;
+        width: 80%;
+        height:96%;
+        top:2%;
+        .container{
+            overflow-y:scroll;
+            .details{
+                //margin-left:1em;
+                //margin-top:1em;
+                width:65%; 
+                float:left;
+                tr{
+                    td{
+                        padding:0.2em 0em;
+                        
+                        input{
+                            
+                            &.dimension{
+                                text-align:right;
+                                padding-right:0.2em;
+                                width:4em;
+                                
+                            }
+                            
+                           
+                        }
+                        
+                        
+                        
+                        &:first-child{
+                        }
+                        
+                        &:last-child{
+                            padding-left:0.4em;
+                        }
+                    }
+                }
+            }
+            
+            .contacts{
+                width:35%;
+                float:left;
+                table{
+                    tr{
+                        td{
+                            padding:0.2em 0;
+                            font-family:proxima;
+                            &:first-child{
+                                padding-right:0.5em;
+                            }
+                            .add-contact-btn{
+                                width:100%;
+                                padding:0.5em 0;
+                                margin:0.5em 0;
+                                border:1px solid #282828;
+                                border-radius:0.5em;
+                                text-align:center;
+                                cursor:pointer;
+                                &:hover{
+                                    background-color: #282828;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                .added-contacts{
+                    margin-top:1em;
+                    
+                    .contact{
+                        margin:0.5em 0;
+                        border:1px solid #282828;
+                        border-radius:2px;
+                        
+                        span{
+                            margin: 0.1em 0;
+                        }
+                    }
+                }
+            }
+        }
+    }

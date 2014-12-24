@@ -1,0 +1,45 @@
+//Customer Modal
+.customer-list{
+    height:80%;
+    width:80%;
+    margin:0;
+    top:10%;
+    left:10%;
+    font-family:proxima;
+    color:#CCC;
+    background-color:#313131;
+    
+    
+    .container{
+        bottom:0em;
+        z-index:0;
+        padding:0;
+        .search-bar{
+            z-index:1;
+        }
+        .inner-container{
+          overflow-y:scroll;
+          overflow-x:hidden;
+          bottom:0;
+          top:0;
+          position:absolute;
+          width:100%;
+          z-index:0;
+          padding:0;
+          .customer-container{
+              .customer{
+                  cursor:pointer;
+                  padding:10px;  
+                  border-bottom:1px solid #282828;
+                  font-size:1em; 
+                  letter-spacing:0.08em;
+                  
+                  &.selected{
+                      background-color:orange;
+                  }
+              }
+          }
+        }
+    }
+    
+}

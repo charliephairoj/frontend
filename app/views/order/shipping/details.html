@@ -1,0 +1,99 @@
+
+
+<div class="acknowledgementDetailsPage" >
+    
+    
+    <div class="calendar-modal" data-modal  ng-model="showCal">
+        <div ui-date ng-model="shipping.delivery_date"></div>
+        <div class="bottom_bar">
+            <button ng-click="showCal = !showCal">Select</button>
+        </div>
+            
+    </div>
+    <!--
+        Sidebar
+    -->
+    <div class="sidebar">
+        <header>
+            <h1><span>Shipping</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
+                    <div ng-click="save()">Save</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
+                    <div ng-click="showCal=true">Change Delivery Date</div>
+                </li>
+                 <li>
+                    <div ng-click="getPDF()">View PDF</div>
+                </li>
+                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+                    <div ng-click="remove()">Delete</div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="workspace">
+        <div class="details">
+            <div class="table">
+                <div class="row">
+                    <div class="cell">Shipping#:</div>
+                    <div class="cell">{{shipping.id}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Acknowledgement#:</div>
+                    <a ng-href="#/order/acknowledgement/{{shipping.acknowledgement.id}}" class="cell">
+                        {{shipping.acknowledgement.id}}
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="cell">Customer</div>
+                    <div class="cell">{{shipping.customer.name}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Delivery Date</div>
+                    <div class="cell">{{shipping.delivery_date | date:"MMMM d, yyyy"}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Shipped By</div>
+                    <div class="cell">{{shipping.employee}}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="products items">
+            <div class="table">
+                <div class="row" ng-repeat="product in shipping.products">
+                    <div class="cell product-img">
+                        <img ng-show="product.image.url" ng-src="{{product.image.url}}" />
+                    </div>
+                    <div class="cell">
+                        <div class="details">
+                            <div class="details-row">
+                                <div class="details-data">
+                                    {{product.description}}
+                                    
+                                </div>
+                                <div class="details-data">{{product.quantity}}</div>
+                            </div>
+                            <div class="details-row" ng-show="product.fabric">
+                                <div class="details-data">Fabric: {{product.fabric.description}}</div>
+                            </div>
+                            <div class="details-row" ng-repeat="pillow in product.pillows">
+                                <div class="details-data">{{pillow.type | beautify}} Pillow: {{pillow.fabric.description}}</div>
+                                <div class="details-data">{{pillow.quantity}}</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+</div>
+

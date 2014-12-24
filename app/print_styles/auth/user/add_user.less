@@ -1,0 +1,93 @@
+/*Model Page*/
+
+.addUserPage{
+  .addPage;
+  
+  /*
+   * Modal
+   */
+  //Add Profile Picture
+  .modal{
+      &.add-profile-picture{
+          height:40em;
+          width:40em;
+          top:50%;
+          left:50%;
+          margin-top:-20em;
+          margin-left:-20em;
+          
+          .container{
+              padding:0;
+          }
+      }
+  }
+  
+  /*
+   * Sidebar
+   */
+  .sidebar{
+    .dirty{
+      color:grey;
+      
+      
+      //dirty states
+      &:hover{
+        background-color:@menuItemBGColor;
+      }
+    }
+  }
+  
+  .workspace{
+      color: #CCC;
+      font-family:proxima;
+      margin:1em;
+      .new-user-table{
+          tr{
+              td{
+                  padding:0.5em 0;
+                  label{
+                      color:#CCC;
+                      margin-right:1em;
+                  }
+              }
+          }
+      }
+  }
+  
+  
+  //List of available permission
+  .permissionList{
+    height:100%;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    width:200px;
+    position:absolute;
+    right:0px;
+    top:0px;
+    z-index:10;
+    
+       
+    ul{
+      
+      li{
+        
+        
+        .permission{
+          cursor:move;
+          font-size:13px;
+          padding-top:20px;
+          padding-bottom:20px;
+          background:grey;
+          
+          &:hover{
+            background:#6f6f6f;
+          }
+        }
+        
+      }  
+      
+    }
+        
+    
+  }
+}

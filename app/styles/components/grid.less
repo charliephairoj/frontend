@@ -1,0 +1,48 @@
+/*
+ * LESS file for the grid
+ * component: ngGrid
+ */
+
+.grid-style{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    height:100%;
+    width:100%;
+    background-color:transparent;
+    font-family:proxima;
+    color:#CCC;
+    .ngTopPanel{
+        font-size:1em;
+        background-color:#282828;
+        border-bottom:none;
+        text-align:center;
+        .ngVerticalBar{
+            background-color:transparent;
+        }
+    }
+    .ngRow{
+        background:transparent;
+        border-bottom:1px solid #282828;
+        .transition(background-color, 250ms, linear);
+        .ngCell{
+            .ngVerticalBar{
+                background-color:#282828;
+            }
+            
+        }
+        
+        /*
+         * States
+         */
+        &:hover{
+            background-color:orange;
+        }
+    }
+}
+
+.gridStyle{
+    .grid-style;
+}

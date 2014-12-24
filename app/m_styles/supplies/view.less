@@ -1,0 +1,120 @@
+/*
+ * LESS file for the supply view
+ */
+
+.supply-view-page{
+    .view-page;
+    
+    .sidebar{
+        .scanner-mode{
+            &.on{
+                background-color:orange;
+                color:#313131;
+            }
+        }
+    }
+    
+    
+    
+    .workspace{
+        position:absolute;
+        left:0;
+        top:2.5em;
+        right:0;
+        bottom:0;
+        .outer-container{
+            height:100%;
+            width:100%;
+            overflow-y:scroll;
+            .inner-container{
+                height:auto;
+                width:100%;
+                list-style-type:none;
+                .item-container{
+                    width:100%;
+                    height:5em;
+                    border-bottom:1px solid #282828;
+                    background-color:#313131;
+                    position:relative;
+                    .item{
+                        width:100%;
+                        color:#CCC;
+                        font-family:proxima;
+                        letter-spacing:0.08em;
+                        text-decoration:none;
+                        position:absolute;
+                        top:0;
+                        height:100%;
+						background-color:#313131;
+                        .transition(background-color, 100ms, linear);
+						
+                        .img-container{
+                            position:absolute;
+                            background: #CCC;
+                            height:100%;
+                            width:5em;
+                            overflow:hidden;
+                            
+                            .image-capture{
+                                height:100%;
+                                width:100%;
+                                position:absolute;
+                                z-index:10;
+                                opacity:0;
+                            }
+                            img{ 
+                                height:100%;
+                            }
+                        }
+                
+                        .details{
+                            position:absolute;
+                            top:0;
+                            left:5em;
+                            padding:0.5em;
+                            bottom:0;
+                            right:0;
+                            vertical-align:center;
+							color:#FFF;
+							text-decoration:none;
+							
+                            .description{ 
+                                position:absolute;
+                                left:0.5em;
+                                width:50%;
+                                font-size:1em;
+                            }
+                             
+                            .supplier{
+                                
+                            }
+                            .quantity{
+                                position:absolute;
+                                left:65%;
+                                width:auto;
+                                //padding-right:0.25em;
+                                font-size:0.6em;
+                                
+                            }
+                        }
+						
+						/*
+						 * States
+						 */
+						
+						&.touch-start{
+							background-color:orange;
+						}
+						
+                        &.admin-only{
+                            background-color:blue;
+                        }
+						
+						
+                    }
+                }
+            }
+        }
+    }
+}
+  

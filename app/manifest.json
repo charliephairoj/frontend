@@ -1,0 +1,43 @@
+{
+  "name": "Hello World!",
+  "description": "My first Chrome App.",
+  "version": "0.1",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["scripts/background.js"]
+    }
+  },
+ "content_security_policy": "img-src 'self' http://media.dellarobbiathailand.com.s3.amazonaws.com/",
+	"permissions": [
+		"usb",
+		"hid",
+  		{
+  			"usbDevices" : [
+  				  {
+  					  "vendorId": 1452,
+  					  "productId": 4759
+  				  },
+  				  {
+  					  "vendorId": 7290,
+  					  "productId": 1539
+  				  },
+  				  {
+  					  "vendorId": 2303,
+  					  "productId": 9
+  				  }
+  			]
+  	  	},
+		"storage", 
+		"webview", 
+		"geolocation",
+		"fullscreen",
+		"videoCapture",
+		"http://media.dellarobbiathailand.com.s3.amazonaws.com/",
+		"https://data.dellarobbiathailand.com/",
+		"https://ajax.googleapis.com/",
+		"http://ajax.googleapis.com/",
+	  	"http://localhost"]
+    
+}
+

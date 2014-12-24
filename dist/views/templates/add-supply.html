@@ -1,0 +1,166 @@
+<form name="form" class="add-supply" modal="visible" title="Add a new Supply">
+	<div class="title">Add Supply</div>
+	<div class="container">
+		<table class="details">
+			<tr>
+				<td>Supplier</td>
+				<td>
+					<select ng-hide="assignedSupplier" required ng-options="supplier.name for supplier in suppliers | orderBy:'name'" ng-model="supply.supplier"></select>
+					<span ng-show="assignedSupplier">{{supply.supplier.name}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td>New Supply</td>
+				<td>
+					<input type="checkbox" ng-model="supply.new_supply" />
+				</td>
+			</tr>
+			<tr class='supply-row' ng-show="!supply.new_supply">
+				<td>Supply</td>
+				<td>
+					<span ng-show="supply.description">
+							Supply: {{supply.description}}
+						</span>
+					<button ng-show="supply.id" ng-click="supply={}">Change Supply</button>
+					<br/>
+					<div ng-show="!supply.id" supplies on-select="selectSupply($supply)"></div>
+				</td>
+			</tr>
+			<tr ng-if="supply.new_supply">
+				<td>Description</td>
+				<td>
+					<input required ng-model="supply.description" size="40" />
+				</td>
+			</tr>
+			<tr>
+				<td>Reference</td>
+				<td>
+					<input ng-model="supply.supplier.reference" type="text" />
+				</td>
+			</tr>
+			<tr ng-if="supply.new_supply">
+				<td>Type</td>
+				<td>
+					<input type="text" required ng-model="supply.type" list="add-supply-type" />
+					<datalist id="add-supply-type">
+						<select ng-model='selectedType' ng-options="k | beautify as v for (k, v) in types"></select>
+					</datalist>
+					<input ng-if="supply.type == 'custom'" required class="custom-type" type="text" ng-model="supply.custom_type" />
+				</td>
+			</tr ng-if="supply.new_supply">
+			<tr ng-if="showWidth()">
+				<td>Width</td>
+				<td>
+					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.width" />
+					<select required ng-model="supply.width_units">
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
+					</select>
+				</td>
+			</tr>
+			<tr ng-if="showDepth()">
+				<td>Depth</td>
+				<td>
+					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.depth" />
+					<select required ng-model="supply.depth_units">
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+					</select>
+				</td>
+			</tr>
+			<tr ng-if="showHeight()">
+				<td>Height</td>
+				<td>
+					<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.height" />
+					<select required ng-model="supply.height_units">
+						<option value="in">Inch</option>
+						<option value="mm">Millimeter</option>
+						<option value="cm">Centimeter</option>
+						<option value="m">Meter</option>
+					</select>
+				</td>
+			</tr>
+			<tr ng-if="supply.new_supply">
+				<td>Units</td>
+				<td>
+					<select required ng-model="supply.units">
+						<option value="pc" selected>Piece</option>
+						<option value="container">Container</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+						<option value="kg">Kilogram</option>
+						<option value="mm">Millimeter</option>
+						<option value="set">Set</option>
+						<option value="pack">Pack</option>
+						<option value="pack">Box</option>
+						<option value="cm^2">cm&#0178;</option>
+						<option value="m^2">m&#0178;</option>
+						<option value="in^2">in&#0178;</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Purchasing Units</td>
+				<td>
+					<select required ng-model="supply.supplier.purchasing_units">
+						<option value="pc" selected>Piece</option>
+						<option value="container">Container</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+						<option value="kg">Kilogram</option>
+						<option value="mm">Millimeter</option>
+						<option value="set">Set</option>
+						<option value="pack">Pack</option>
+						<option value="pack">Box</option>
+						<option value="cm^2">cm&#0178;</option>
+						<option value="m^2">m&#0178;</option>
+						<option value="in^2">in&#0178;</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="piece-per-pack" ng-if="supply.supplier.purchasing_units == 'pack' || supply.supplier.purchasing_units == 'box'">
+				<td>Pieces per Pack</td>
+				<td>
+					<input required ng-model="supply.piece_per_pack" />
+				</td>
+			</tr>
+			<tr>
+				<td>Price per {{supply.supplier.purchasing_units | beautify}}</td>
+				<td>
+					<input required ng-model="supply.supplier.cost" />{{supply.supplier.currency}}</td>
+			</tr>
+			<tr>
+				<td>Discount</td>
+				<td>
+					<input required maxlength="2" size="2" ng-model="supply.discount" />%</td>
+			</tr>
+			<tr ng-show="currentUser.hasModule('Administrator')">
+				<td>Administrator Only</td>
+				<td>
+					<input type="checkbox" ng-model="supply.supplier.admin_only" />
+				</td>
+			</tr>
+			<tr>
+				<td>Notes</td>
+				<td>
+					<textarea ng-model="supply.notes" rows="6" cols="30"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Preview</td>
+				<td>
+					<img ng-src="{{supply.image.url}}">
+				</td>
+			</tr>
+		</table>
+		<div image-uploader url='/api/v1/supply/image/' on-upload="addImage(data)"></div>
+	</div>
+	<div class="bottom-bar">
+		<button ng-disabled="form.$invalid" ng-click="add()">Add</button>
+	</div>
+</form>

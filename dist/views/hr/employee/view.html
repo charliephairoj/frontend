@@ -1,0 +1,33 @@
+<div class="employee-view-page" ng-init="showAddEmployee=false">
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<h1><span>Employees</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('add_user')">
+					<div data-ng-click="showAddEmployee=true">
+						Add Employee
+					</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
+        Search Bar
+    -->
+	<div data-search-bar data-ng-model="query">
+	</div>
+	<div class="workspace" style="z-index:1;">
+		<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
+					<div employee="employee" on-select="focus($element)"></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

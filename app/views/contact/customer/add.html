@@ -1,0 +1,75 @@
+<div class="addSupplierPage" ui-animate fade-in>
+    
+    
+    
+    <!--
+        Form that adds a new Supplier
+    -->
+    <form name="form" novalidate>
+        <div class="sidebar">
+            <header>
+                <h1><span>New Customer</span></h1>
+            </header>
+            <nav>
+                <ul>
+                    <li>
+                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        
+        <div class="workspace">
+            <table class="inputTable">
+                <tr>
+                    <td><input placeholder="Customer Name" beautify type="text" size="40" required ng-model="customer.name" /></td>
+                </tr>
+                
+                
+                <tr>
+                    <td><input placeholder="Address 1" beautify ec-blur="getPosition()" size="40" type="text" required ng-model="customer.address.address1" /></td>
+                </tr>
+                
+                
+                <tr>
+                    <td><input beautify placeholder="Address 2" ec-blur="getPosition()" size="40" type="text" ng-model="customer.address.address2" /></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="City" beautify ec-blur="getPosition()" type="text" required ng-model="customer.address.city" /></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Territory/Chaengwat" beautify ec-blur="getPosition()" type="text" required ng-model="customer.address.territory" /></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Country" placeholder="required" beautify ec-blur="getPosition()" type="text" required ng-model="customer.address.country" /></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Zipcode" ec-blur="getPosition()" type="text" required ng-model="customer.address.zipcode" /></td>
+                </tr>
+                <tr>
+                    <td><input placeholder="Email" size="30" type="email" ng-model="customer.email" /></td>
+                </tr>
+                <tr>
+                    <td><input telephone placeholder="Telephone" type="text" ng-pattern="/\d+/" ng-model="customer.telephone" /></td>
+                </tr>
+                <tr>
+                    <td><input telephone placeholder="Fax" type="text" ng-pattern="/\d+/"  ng-model="customer.fax" /></td>
+                </tr>
+               
+                
+            </table> 
+            <div class="mapContainer">
+                <div id="map_canvas" map >
+            
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+        
+    </form>
+    
+</div>

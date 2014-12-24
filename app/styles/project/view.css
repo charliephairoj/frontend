@@ -1,0 +1,14 @@
+/*
+ * LESS file for the project view page
+ */
+.project-view-page .modal.add-project table tr td {
+  padding: 0.2em 0em;
+}
+.project-view-page .modal.add-project table tr td input {
+  background-color: #CCC;
+  border-radius: 2px;
+}
+.project-view-page .modal.add-project table tr td .ui-datepicker {
+  border: 1px solid #282828;
+  width: 300px;
+}
