@@ -12,18 +12,7 @@
     
     <div add-supply="showAddSupply" supplier='po.supplier' on-add="addItem($supply)">
     </div>
-    
-    <form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat" title="Vat">
-        <input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
-        <div class="bottom_bar">
-            <button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
-        </div>
-    </form>
-    
-   
-    
-    
-    
+       
     <form class="po" name="form" novalidate>
         <!--
             Sidebar
@@ -141,8 +130,8 @@
 									<option value="amount">Amount</option>
 								</select>
                                 <input type="text" size="6" maxlength="6" ng-model="po.deposit" />
-								<span ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
-								<span ng-show="po.deposit_type=='percent'">%</span>
+								<span class="deposit-currency" ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
+								<span class="deposit-percent" ng-show="po.deposit_type=='percent'">%</span>
 								
                             </td>
                         </tr>

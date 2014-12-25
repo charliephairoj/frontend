@@ -149,14 +149,14 @@ describe('Purchase Order', function () {
 						expect(rows.length).toEqual(1);
 						
 						rows[0].element(by.model('item.quantity')).sendKeys(2);
-						rows[0].element(by.css('.unit-cost')).getText().then(function (value) {
+						rows[0].element(by.model('item.cost')).getAttribute('value').then(function (value) {
 							element(by.binding('subtotal()')).getText().then(function (testValue) {
 								expect(Number(testValue.replace(',', ''))).toEqual(Number(2 * value));
 							});
 						});
 						
 						rows[0].element(by.model('item.discount')).sendKeys(0);
-						rows[0].element(by.css('.unit-cost')).getText().then(function (value) {
+						rows[0].element(by.model('item.cost')).getAttribute('value').then(function (value) {
 							element(by.binding('subtotal()')).getText().then(function (testValue) {
 								expect(Number(testValue.replace(',', ''))).toEqual(Number(2 * value));
 							});
