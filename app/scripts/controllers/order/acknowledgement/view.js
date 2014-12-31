@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', 'Notification', '$location', '$filter', 'KeyboardNavigation',
-function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', 'Notification', '$location', '$filter', 'KeyboardNavigation', '$mdToast',
+function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation, $mdToast) {
 	
 	
 	/*
@@ -12,12 +12,15 @@ function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNav
 	var fetching = true,
 		index = 0,
 		currentSelection;
-	//Display Program Notification
-	Notification.display('Loading Acknowledgements...', false);
+		
+	var loadingToast = $mdToast.show($mdToast
+			.simple()
+			.content('Loading acknowledgements...')
+			.hideDelay(0));
 
 	//Poll the server for acknowledgements
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function (e) {
-		Notification.hide();
+		$mdToast.hide();
 		fetching = false;
 		changeSelection(index);
 	});
@@ -47,13 +50,16 @@ function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNav
 	$scope.loadNext = function () {
 		if (!fetching) {
 			fetching = true;
-			Notification.display("Loading more acknowledgements", false);
+			var moreAckToast = $mdToast.show($mdToast
+					.simple()
+					.hideDelay(0)
+					.content('Loading more acknowledgements...'));
 			Acknowledgement.query({
 				limit: 50, 
 				offset: $scope.acknowledgements.length
 			}, function (resources) {
 				fetching = false;
-				Notification.hide();
+				$mdToast.hide();
 				for (var i = 0; i < resources.length; i++) {
 					$scope.acknowledgements.push(resources[i]);
 				}
