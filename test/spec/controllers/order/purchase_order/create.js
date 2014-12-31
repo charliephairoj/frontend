@@ -167,29 +167,15 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   			$http.flush();
   		});
   		
-  		it('should not save if there is not supplier', function () {
-  			expect(notification.hidden).toBeTruthy()
-  			scope.save();
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual('Please select a supplier');
-  		});
   		
-  		xit('should not save if there are no items in the purchase order', function () {
-  			expect(notification.hidden).toBeTruthy();
-  			scope.po.supplier = {id:3};
-  			scope.save();
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual("Please add items to the purchase order");
-  		});
+  		
+  		
   		
   		it('should not save if items are missing quantities', function () {
-  			expect(notification.hidden).toBeTruthy();
   			scope.po.supplier = {id:3};
 			scope.po.vat = 7;
   			scope.po.items = [{id: 4, description: 'test'}];
   			scope.save();
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual("test is missing a quantity");
   			
   		});
   	});
@@ -278,10 +264,7 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   			scope.po.supplier = {id:3};
 			scope.po.vat = 7;
   			scope.po.items = [{id:4, cost:90, quantity: 1}];
-  			expect(notification.hidden).toBeTruthy();
   			scope.save(); 
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual('Creating purchase order...');
   			$http.flush();
   		});
   		
@@ -290,13 +273,8 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   			scope.po.supplier = {id:4};
 			scope.po.vat = 7;
   			scope.po.items = [{id:4, cost:90, quantity:2}];
-  			expect(notification.hidden).toBeTruthy();
   			scope.save();
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual('Creating purchase order...');
   			$http.flush();
-  			expect(notification.hidden).toBeFalsy();
-  			expect(notification.message).toEqual('There was an error in creating the purchase order.');
   			
   		});
   	})

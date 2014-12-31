@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'Notification', 'KeyboardNavigation', '$location',
-function ($scope, PurchaseOrder, $filter, Notification, KeyboardNavigation, $location) {
+.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', '$mdToast', 'KeyboardNavigation', '$location',
+function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $location) {
 	
 	//Flags and variables
 	var fetching = true,
@@ -9,12 +9,15 @@ function ($scope, PurchaseOrder, $filter, Notification, KeyboardNavigation, $loc
 		currentSelection;
 	
 	//System wide message
-	Notification.display('Loading purchase orders...', false);
+	$mdToast.show($mdToast
+		.simple()
+		.content('Loading purchasing orders...')
+		.hideDelay(0));
 	
 	//Poll Server for pos
 	$scope.poList = PurchaseOrder.query({limit: 20}, function () {
 		fetching = false;
-		Notification.hide();
+		$mdToast.hide();
 		changeSelection(index);
 	}, function () {
 		fetching = false;

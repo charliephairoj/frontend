@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project',
-function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project',
+function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project) {
 	
 	/*
 	 * Setup vars
@@ -190,7 +190,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	$scope.save = function () {
 		try {
 			if ($scope.verifyOrder()) {
-				Notification.display('Creating purchase order...', false);
+				$mdToast.show($mdToast
+					.simple()
+					.content('Creating new purchase order...')
+					.hideDelay(0));
 				
 				/*
 				 * prep the items by moving the supply id to a separate hash
@@ -214,16 +217,23 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					} catch (e) {
 						console.warn(e);
 					}
-					Notification.display('Purchase order created.');
+					$mdToast.show($mdToast
+						.simple()
+						.content('Purchase order created.'));
 				}, function (e) {
-					Notification.display('There was an error in creating the purchase order.');
+					$mdToast.show($mdToast
+						.simple()
+						.content(e));
 				});
 			}
 			else {
 				throw Error;
 			}
 		} catch (e) {
-			Notification.display(e.message);
+			$mdToast.show($mdToast
+				.simple()
+				.content(e)
+				.hideDelay(0));
 		}
 	};
 	

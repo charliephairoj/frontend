@@ -1,18 +1,20 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', 'Notification', '$location', '$window',
-function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window) {
-	
-	Notification.display('Loading purchase order ' + $routeParams.id + '...', false);
-	
-	$scope.po = PurchaseOrder.get({id: $routeParams.id, pdf: true}, function () {
-		Notification.hide();
-	});
+.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window',
+function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
+		
+	$scope.po = PurchaseOrder.get({id: $routeParams.id, pdf: true});
 	
 	$scope.save = function () {
-		Notification.display('Saving changes to Purchase Order for ' + $scope.po.id, false);
+		$mdToast.show($mdToast
+			.simple()
+			.content('Saving changes to purchase order ' + $scope.po.id)
+			.hideDelay(0));
 		$scope.po.$update(function () {
-			Notification.display('Changes to Purchase Order ' + $scope.po.id + ' saved.');
+			$mdToast.show($mdToast
+				.simple()
+				.content('Changes to purchase order ' + $scope.po.id + ' saved.')
+				.hideDelay(0));
 			$window.open($scope.po.pdf.url);
 		}, function (e) {
 			console.error(e);
@@ -69,7 +71,10 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 			delete purchasedItem.id;
 			$scope.po.items.push(purchasedItem);
 		} else {
-			Notification.display('This item is already present in the purchase order');
+			$mdToast.show($mdToast
+				.simple()
+				.content('This item is already present in the purchase order')
+				.hideDelay(2000));
 		}
 	};
 	
@@ -93,7 +98,10 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 	};
 	
 	$scope.order = function () {
-		Notification.display("Updating purchase order...", false);
+		$mdToast.show($mdToast
+			.simple()
+			.content("Updating purchase order...")
+			.hideDelay(0));
 		$scope.showCal = false;
 		//Modify the order
 		$scope.po.status = 'Ordered';
@@ -103,13 +111,18 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 		}
 		
 		$scope.po.$update(function () {
-			Notification.display("Purchase order updated.");
+			$mdToast.show($mdToast
+				.simple()
+				.content("Purchase order updated."));
 		});
 	};
 	
 	$scope.receive = function () {
 		if ($scope.po.receive_date) {
-			Notification.display("Updating purchase order...", false);
+			$mdToast.show($mdToast
+				.simple()
+				.content("Updating purchase order...")
+				.hideDelay(0));
 			$scope.showCal = false;
 			//Modify the order
 			$scope.po.status = 'Received';
@@ -119,7 +132,9 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 			}
 			
 			$scope.po.$update(function () {
-				Notification.display("Purchase order updated.");
+				$mdToast.show($mdToast
+					.simple()
+					.content("Purchase order updated."));
 			});
 			
 		} else {
@@ -128,7 +143,10 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 	};
 	
 	$scope.pay = function () {
-		Notification.display("Updating purchase order...", false);
+		$mdToast.show($mdToast
+			.simple()
+			.content("Updating purchase order...")
+			.hideDelay(0));
 		
 		//Modify the order
 		$scope.po.status = 'Paid';
@@ -139,12 +157,17 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 		}
 		
 		$scope.po.$update(function () {
-			Notification.display("Purchase order updated.");
+			$mdToast.show($mdToast
+				.simple()
+				.content("Purchase order updated."));
 		});
 	};
 	
 	$scope.cancel = function () {
-		Notification.display("Cancelling purchase order...", false);
+		$mdToast.show($mdToast
+			.simple()
+			.content("Updating purchase order...")
+			.hideDelay(0));
 		
 		$scope.po.status = 'Cancelled';
 		
@@ -154,7 +177,9 @@ function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window)
 		}
 		
 		$scope.po.$update(function () {
-			Notification.display("Purchase order " + $scope.po.id + " cancelled.");
+			$mdToast.show($mdToast
+				.simple()
+				.content("Purchase order " + $scope.po.id + " cancelled."));
 			$location.path("order/purchase_order");
 		});
 	};
