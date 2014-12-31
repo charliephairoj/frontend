@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', 'Notification', 'Shipping', '$location', 'scanner',     
-function ($scope, Acknowledgement, $filter, Notification, Shipping, $location, scanner) {
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner',     
+function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner) {
 
 	var fetchingAck = true;
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function () {
@@ -14,9 +14,13 @@ function ($scope, Acknowledgement, $filter, Notification, Shipping, $location, s
     scanner.onscan = function (code) {
         var re = new RegExp(/^A\-(s+)?/);
         if (re.test(code)) {
+			$mdToast.show($mdToast
+				.simple()
+				.content('Retrieving Acknowledgement# ' + code.split('-')[1])
+				.delay(0));
 			Notification.display('Retrieving Acknowledgement# ' + code.split('-')[1], false);
             Acknowledgement.get({id: code.split('-')[1]}, function (response) {
-                Notification.hide();
+                $mdToast.hide();
                 var ack = response;
                 $scope.shipping.acknowledgement = {id: ack.id};
                 $scope.shipping.customer = ack.customer;
@@ -24,7 +28,10 @@ function ($scope, Acknowledgement, $filter, Notification, Shipping, $location, s
                 $scope.shipping.delivery_date = new Date(ack.delivery_date);
             },
             function () {
-                Notification.display('Unable to locate Acknowledgement#' + code.split('-')[1]);
+				$mdToast.show($mdToast
+					.simple()
+					.content('Unable to locate Acknowledgement#' + code.split('-')[1])
+					.delay(0));
             });
         }
     };
@@ -69,19 +76,30 @@ function ($scope, Acknowledgement, $filter, Notification, Shipping, $location, s
     $scope.create = function () {
         
         if ($scope.isValidated()) {
-            Notification.display('Creating Acknowledgement...', false);
+			$mdToast.show($mdToast
+				.simple()
+				.content('Creating shippping manifest...')
+				.hideDelay(0));
             $scope.shipping.$save(function (resource) {
-                Notification.display('Shipping manifest created');
+				$mdToast.show($mdToast
+					.simple()
+					.content('Shipping manifest created')
+					.hideDelay(2000));
                 if (resource.pdf.url) {
 					window.open(resource.pdf.url);
                 }
                 $location.path('/order/shipping');
             }, 
             function () {
-                Notification.display('There was an error in creating the shipping manifest', false);
+				$mdToast.show($mdToast
+					.simple()
+					.content('There was an error in creating the shipping manifest')
+					.hideDelay(0));
             });
         } else {
-            Notification.display('The Order is Not Complete');
+			$mdToast.show($mdToast
+				.simple()
+				.content('The Order is Not Complete'));
         }
         
     };

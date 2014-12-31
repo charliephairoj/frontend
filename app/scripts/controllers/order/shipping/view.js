@@ -2,22 +2,25 @@
  * All shipped orders view
  */
 angular.module('employeeApp')
-.controller('OrderShippingViewCtrl', ['$scope', 'Shipping', '$filter', 'Notification',
-function ($scope, Shipping, $filter, Notification) {
+.controller('OrderShippingViewCtrl', ['$scope', 'Shipping', '$filter', '$mdToast',
+function ($scope, Shipping, $filter, $mdToast) {
 	
 	/*
 	 * Vars and flags
 	 */
 	var fetching = true;
 	
-	Notification.display('Loading shipping manifests...', false);
+	$mdToast.show($mdToast
+		.simple()
+		.content('Loading shipping manifests...')
+		.hideDelay(0));
 	
 	/*
 	 * Get an array of shipping manifests from the server
 	 */
 	$scope.shippingList = Shipping.query(function (resources) {
 		fetching = false;
-		Notification.hide();
+		$mdToast.hide();
 	});
 	
 	/*
@@ -49,12 +52,15 @@ function ($scope, Shipping, $filter, Notification) {
 	 */
 	$scope.loadNext = function () {
 		if (!fetching) {
-			Notification.display('Loading more shipping manifests...', false);
+			$mdToast.show($mdToast
+				.simple()
+				.content('Loading more shipping manifests...')
+				.hideDelay(0));
 			Shipping.query({
 				offset: $scope.shippingList.length,
 				limit: 20
 			}, function (resources) {
-				Notification.hide();
+				$mdToast.hide();
 				for (var i = 0; i < resources.length; i++) {
 					$scope.shippingList.push(resources[i]);
 				}

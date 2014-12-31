@@ -1,11 +1,14 @@
 
 angular.module('employeeApp')
-.controller('OrderShippingDetailsCtrl', ['$scope', 'Shipping', '$routeParams', 'Notification', '$http',
-function ($scope, Shipping, $routeParams, Notification, $http) {
-	Notification.display('Loading Shipping Manifest...', false);
+.controller('OrderShippingDetailsCtrl', ['$scope', 'Shipping', '$routeParams', '$mdToast', '$http',
+function ($scope, Shipping, $routeParams, $mdToast, $http) {
+	$mdToast.show($mdToast
+		.simple()
+		.content('Loading Shipping Manifest...')
+		.hideDelay(0));
 	$scope.showCal = false;
 	$scope.shipping = Shipping.get({'id': $routeParams.id, pdf: true}, function () {
-		Notification.display('Shipping Manifest Loaded');
+		$mdToast.hide();
 	});
 
 	$scope.updateDeliveryDate = function () {
@@ -13,16 +16,24 @@ function ($scope, Shipping, $routeParams, Notification, $http) {
 	};
 
 	$scope.getPDF = function () {
-		Notification.display('Retrieving PDF...', false);
+		$mdToast.show($mdToast
+			.simple()
+			.content('Retrieving PDF...'));
 		if ($scope.shipping.pdf.url) {
 			window.open($scope.shipping.pdf.url);
 		}
 	};
 
 	$scope.save = function () {
-		Notification.display('Saving Shipping Manifest...', false);
+		$mdToast.show($mdToast
+			.simple()
+			.content('Saving Shipping Manifest...')
+			.hideDelay(0));
 		$scope.shipping.$update(function () {
-			Notification.display('Shipping Manifest ' + $scope.shipping.id + ' Saved');
+			$mdToast.show($mdToast
+				.simple()
+				.content('Shipping manifest ' + $scope.shipping.id + ' saved')
+				.hideDelay(0));
 		});
 	};
 }]);
