@@ -1,17 +1,20 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', 'Notification', '$http', '$window',
-function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
+.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast',
+function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
 	
 	//Show system notification
-	Notification.display('Loading Acknowledgement...', false);
-	
+	$mdToast.show($mdToast
+		.simple()
+		.content('Loading acknowledgement...')
+		.hideDelay(0));
+		
 	//Set Vars
 	$scope.showCal = false;
 	
 	//GET request server for Acknowledgements
 	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
-		Notification.display('Acknowledgement Loaded');
+		$mdToast.hide();
 	});
 	
 	//Grid Options
@@ -27,7 +30,11 @@ function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
 			$window.open(address);
 		} catch (e) {
 			var message = "Missing " + type + " pdf for Acknowledgement #" + $scope.acknowledgement.id;
-			Notification.display(message);
+			
+			$mdToast.show($mdToast
+				.simple()
+				.content(message)
+				.hideDelay(0));
 			throw new Error(message);
 		}
 	};
@@ -45,13 +52,23 @@ function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
     
     //Save updates to the server
     $scope.save = function () { 
-        Notification.display('Saving Acknowledgement...', false);
+		
+		$mdToast.show($mdToast
+			.simple()
+			.content('Saving acknowledgement...')
+			.hideDelay(0));
+
         $scope.acknowledgement.$update(function (response) {
             
-            Notification.display('Acknowledgement ' + $scope.acknowledgement.id + ' saved.');
+			$mdToast.show($mdToast
+				.simple()
+				.content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
+				
         }, 
         function () {
-            Notification.display('Failed to save acknowledgement ' + $scope.acknowledgement.id, false);
+			$mdToast.show($mdToast
+				.simple()
+				.content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
         });
     };
 }]);

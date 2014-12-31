@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', 'Notification', '$window', 'Project',
-function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Project) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -47,7 +47,11 @@ function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Pro
         $scope.tempSave();
         try {
             if ($scope.isValidated()) {
-                Notification.display('Creating Acknowledgement...', false);
+				
+				$mdToast.show($mdToast
+					.simple()
+					.content("Creating new acknowledgement...")
+					.hideDelay(0));
 				
 				/*
 				 * Preps for creation of a new project
@@ -61,7 +65,12 @@ function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Pro
 				}
 				
                 $scope.ack.$create(function (response) {
-                    Notification.display('Acknowledgement created');
+					
+                   	$mdToast.show($mdToast
+						.simple()
+						.content("Acknowledgement created with ID: " + $scope.ack.id)
+						.hideDelay(2000));
+						
                     if (response.pdf.acknowledgement) {
 						$window.open(response.pdf.acknowledgement);
                     }
@@ -75,11 +84,17 @@ function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Pro
 					
                 }, function (e) {
                     console.error(e);
-                    Notification.display('There was an error in creating the Acknowledgement', false);
+					$mdToast.show($mdToast
+						.simple()
+						.content(e)
+						.hideDelay(0));
                 });
             }
         } catch (e) {
-            Notification.display(e.message, false);
+			$mdToast.show($mdToast
+				.simple()
+				.content(e)
+				.hideDelay(0));
         }
     };
     
@@ -87,7 +102,6 @@ function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Pro
         $scope.ack = new Acknowledgement();
         $scope.ack.items = [];
         storage.removeItem('acknowledgement-create');
-        Notification.display('Acknowledgement reset.');
     };
     
     //Validations

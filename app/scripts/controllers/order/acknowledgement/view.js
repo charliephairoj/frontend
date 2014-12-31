@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', 'Notification', '$location', '$filter', 'KeyboardNavigation', '$mdToast',
-function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation, $mdToast) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', '$mdToast',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdToast) {
 	
 	
 	/*

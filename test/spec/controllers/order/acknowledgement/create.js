@@ -5,6 +5,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
     // load the controller's module
     beforeEach(module('employeeApp'));
   	beforeEach(module('employeeApp.mocks'));
+	beforeEach(module('material.components.toast', 'ngAnimateMock'));
 
     var OrderAcknowledgementCreateCtrl,
         scope,
@@ -12,8 +13,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
         db,
         $http,
         ctrl, 
-        Ctrl,
-        notification;
+		Ctrl;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($controller, $injector) {
@@ -21,7 +21,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
         		 currentUser: {id:1}};
         $http = $injector.get('$httpBackend');
         Ctrl = $controller;
-        notification = $injector.get('Notification');
     }));
     
     afterEach(function() {
@@ -198,8 +197,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            delete scope.ack.customer;
 	            expect(function(){scope.isValidated()}).toThrow(new TypeError("Please add a customer."));
 	            scope.create();
-	            expect(notification.message).toEqual('Please add a customer.');
-	            expect(notification.hidden).toBeFalsy(); 
 	        });
 	        
 	        it('should not validate if missing products but array is present', function(){
@@ -207,8 +204,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            scope.ack.items = [];
 	            expect(function(){scope.isValidated()}).toThrow(new RangeError("No products added to the order"));
 	            scope.create();
-	            expect(notification.message).toEqual('No products added to the order');
-	            expect(notification.hidden).toBeFalsy();
 	        });
 	        
 	        it('should not validate if missing products', function(){
@@ -216,8 +211,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            delete scope.ack.items;
 	            expect(function(){scope.isValidated()}).toThrow(new TypeError("Products is not an array"));
 	            scope.create();
-	            expect(notification.message).toEqual('Products is not an array');
-	            expect(notification.hidden).toBeFalsy();
 	        });
 	        
 	        it('should not validate if a product is missing a quantity', function(){
@@ -227,8 +220,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	                scope.isValidated();
 	            }).toThrow(new RangeError("Expecting a quantity of at least 1 for AC-1100 Sofa"));
 	            scope.create();
-	            expect(notification.message).toEqual('Expecting a quantity of at least 1 for AC-1100 Sofa');
-	            expect(notification.hidden).toBeFalsy();
 	        });
 	        
 	        it('should not validate if missing vat', function(){
@@ -236,8 +227,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            delete scope.ack.vat;
 	            expect(function(){scope.isValidated()}).toThrow(new TypeError("Please set the vat."));
 	            scope.create();
-	            expect(notification.message).toEqual('Please set the vat.');
-	            expect(notification.hidden).toBeFalsy();
 	        });
 	        
 	        it('should not validate if missing delivery date', function(){
@@ -245,8 +234,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            delete scope.ack.delivery_date;
 	            expect(function(){scope.isValidated()}).toThrow(new TypeError("Please select a preliminary delivery date.")); 
 	            scope.create();
- 	        	expect(notification.message).toEqual('Please select a preliminary delivery date.');
-	        	expect(notification.hidden).toBeFalsy();
 	        });
 	    });
 	    
@@ -320,31 +307,11 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            	acknowledgement: false,
 	            	production: false
 	            }});
-	            expect(notification.hidden).toBeTruthy();
 	            scope.create();
-	            expect(notification.hidden).toBeFalsy();
-	            expect(notification.message).toEqual('Creating Acknowledgement...');
 	            $http.flush();
 	            expect(scope.ack.hasOwnProperty('id')).toBeTruthy();
 	            expect(scope.ack.id).toEqual(1043);
-	            expect(notification.message).toEqual('Acknowledgement created');
 	        });
-	        
-	        it('should show a notification if the requests fails', function () {
-	        	$http.expectPOST('/api/v1/acknowledgement/').respond(function () {
-	        		return [500, {}, {}, {}];
-	        	});
-	        	expect(notification.hidden).toBeTruthy();
-	        	scope.create();
-	        	expect(notification.hidden).toBeFalsy();
-	        	expect(notification.message).toEqual('Creating Acknowledgement...');
-	        	$http.flush();
-	        	expect(notification.hidden).toBeFalsy();
-	        	expect(notification.message).toEqual("There was an error in creating the Acknowledgement");
-	        });
-	        
-	        
-	        
 	    });
 	    
 	    describe('Resetings the order', function() {
@@ -370,7 +337,6 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	    		expect(postResetAck).toBeNull();
 	    	});
 	    });
-    
     });
     
     
