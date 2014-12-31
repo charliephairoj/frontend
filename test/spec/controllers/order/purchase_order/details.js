@@ -75,7 +75,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   						status: 'Processed',
   						pdf:{'url':'test'}
   					});
-  					scope.update();
+  					scope.save();
   					$http.flush();
   				});
   			});
@@ -87,13 +87,13 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   				});
   			});
   			
-  			it('should make a PU call to the server', function () {
+  			it('should make a PUT call to the server', function () {
   				$http.expectPUT('/api/v1/purchase-order/2345/').respond({
   					id:2345,
   					status: 'Processed',
   					'pdf': {'url': 'yayy'}
   				});
-  				scope.update();
+  				scope.save();
   				$http.flush();
   			});
   		});
