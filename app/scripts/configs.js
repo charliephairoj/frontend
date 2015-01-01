@@ -1,7 +1,8 @@
 /*
  * Declare the standard headers
  */
-angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', function ($httpProvider, $resourceProvider) {
+angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', 
+function ($httpProvider, $resourceProvider, $mdThemingProvider) {
 	
     $httpProvider.defaults.headers.post  = {
 		"Cache-Control": "no-cache", 
@@ -25,6 +26,13 @@ angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', func
 		}
 		return data;
 	});
+	
+	/*
+	 * Configure the theme for this application
+	 */
+	console.log($mdThemingProvider);
+	$mdThemingProvider.setDefaultTheme('blue-grey');
+		
 	
 	
 }]);
