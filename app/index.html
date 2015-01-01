@@ -43,7 +43,7 @@
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
-    <div class="mainMenu" ng-click="activate=!activate" ng-class="{activate:activate}">
+    <md-toolbar class="mainMenu md-primary" ng-click="activate=!activate" ng-class="{activate:activate}">
         <img class="logo" src="img/DellaLogo.png" />
         <!--Holds all the different menu options. Determined which are visible based
             on the permissions of the current user-->
@@ -61,24 +61,24 @@
                 <a href="#/hr" touchstart touchmove touchend>HR</a>
 				-->
         	
-                <a href="#/contact" class="menu-item" ng-show="currentUser.hasModule('contacts')">Contacts</a>
-                <a href="#/product" class="menu-item" ng-show="currentUser.hasModule('products')">Products</a>
-                <a href="#/supply" class="menu-item" ng-show="currentUser.hasModule('supplies')">Supplies</a>
-				 <a href="#/equipment" class="menu-item" ng-show="currentUser.hasModule('supplies')">Equipment</a>
-                <a href="#/order" class="menu-item" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">Orders</a>
-                <a href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</a>
+                <md-button href="#/contact" class="menu-item" ng-show="currentUser.hasModule('contacts')">Contacts</md-button>
+                <md-button href="#/product" class="menu-item" ng-show="currentUser.hasModule('products')">Products</md-button>
+                <md-button href="#/supply" class="menu-item" ng-show="currentUser.hasModule('supplies')">Supplies</md-button>
+				 <md-button href="#/equipment" class="menu-item" ng-show="currentUser.hasModule('supplies')">Equipment</md-button>
+                <md-button href="#/order" class="menu-item" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">Orders</md-button>
+                <md-button href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</md-button>
                 <!--
 				<a href="#/project" class="menu-item" ng-show="currentUser.hasModule('projects')">Projects</a>
 					-->
-                <a href="#/project" class="menu-item">Projects</a>
+                <md-button href="#/project" class="menu-item">Projects</md-button>
 
-				<a href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</a>
+				<md-button href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</md-button>
             
-                <a href="#/hr" class="menu-item" ng-show="currentUser.hasModule('administrator')">HR</a>
+                <md-button href="#/hr" class="menu-item" ng-show="currentUser.hasModule('administrator')">HR</md-button>
            
         </div>
-        <a href="/logout" class="logout">Logout</a>
-    </div>
+        <md-button href="/logout" class="logout">Logout</md-button>
+    </md-toolbar>
     
     
     
