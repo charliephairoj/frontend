@@ -22,7 +22,7 @@ angular.module('employeeApp.directives')
 						tElement.addClass('modal hide');
 						if (tAttrs.title) {
 							closeButton = angular.element('<button type="button" class="close">&times;</button>');
-							var title = angular.element('<div class="title"><h4>' + tAttrs.title + '</h4></div>');
+							var title = angular.element('<div class="modal-title"><h4>' + tAttrs.title + '</h4></div>');
 							title.append(closeButton);
 							tElement.append(title);
 						} else {
