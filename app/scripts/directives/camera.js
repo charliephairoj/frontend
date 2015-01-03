@@ -14,7 +14,10 @@ angular.module('employeeApp.directives')
 		restrict: 'EA',
 		replace: true,
 		scope: {
-			onSnapshot: '&'
+			onSnapshot: '&',
+			cropOptions: '=',
+			square: '=',
+			depth: '='
 		},
 		link: function postLink(scope, element, attrs) {
 			//console.log('test');
@@ -25,10 +28,11 @@ angular.module('employeeApp.directives')
 				canvas = element.find('canvas')[0],
 				ctx = canvas.getContext('2d'),
 				video = element.find('video')[0],
-				width = attrs.width || 1280,
-				height = attrs.height || 720;
+				width = scope.width || 1280,
+				height = scope.height || 720;
 				
-								
+				
+				
 			var onSuccess = function (stream) {
 				video.src = window.URL.createObjectURL(stream);
 				
@@ -67,14 +71,19 @@ angular.module('employeeApp.directives')
 			};
 			
 			scope.takeSnapshot = function () {
-				width = video.videoWidth;
+				width = scope.square ? video.videoHeight : video.videoWidth;
 				height = video.videoHeight;
 				
-				canvas.width = width;
-				canvas.height = height;
-				
+				canvas.height = angular.element(video).height();
+				canvas.width = scope.square ? canvas.height : angular.element(video).width();
+				console.log()
 				ctx.fillRect(0, 0, width, height);
-				ctx.drawImage(video, 0, 0, width, height);
+				if (scope.square) {
+					ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height)
+				} else{
+					ctx.drawImage(video, 0, 0, width, height);
+				}
+					
 				$(canvas).addClass('active');
 			};
 		}

@@ -5,7 +5,7 @@
 	</nav>
 	<div class="image-workspace" ng-switch on="selection">
 		
-		<div ng-switch-when="takeImage" camera on-snapshot="upload($image)"></div>
+		<div ng-switch-when="takeImage"  square="square" camera on-snapshot="upload($image)"></div>
 		
 		<div image-cropper ng-switch-default on-load="buttonOn()" on-save="upload($image)">
 			

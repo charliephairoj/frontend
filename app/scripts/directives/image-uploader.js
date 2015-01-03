@@ -7,7 +7,8 @@ angular.module('employeeApp')
 		replace: true,
 		scope: {
 			url: '@url',
-			onUpload: '&'
+			onUpload: '&',
+			square: '=',
 		},
 		link: function postLink(scope, element, attrs) {
 			scope.selection = "addImage";
@@ -19,6 +20,9 @@ angular.module('employeeApp')
 			scope.buttonOff = function () {
 				scope.showUploadButton = false;
 			};
+			
+			console.log(scope.square);
+
 
 			/*
 			* Upload Image
