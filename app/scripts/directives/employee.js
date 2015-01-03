@@ -41,6 +41,11 @@ function ($rootScope, $timeout, Notification, Attendance) {
 			 * General Functions
 			 */
 			
+            scope.addImage = function (data) {
+				var image = data.hasOwnProperty('data') ? data.data : data;
+				scope.employee.image = image;
+            };
+				
 			//Start a watch on the scope for the supply var
 			
 			function startWatch() {

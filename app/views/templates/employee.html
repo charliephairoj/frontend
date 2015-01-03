@@ -2,7 +2,7 @@
 	<div class="img-container" ng-click="activate()">
 		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
 
-		<img ng-src="{{supply.image.url}}" />
+		<img ng-src="{{employee.image.url}}" />
 	</div>
 	<div class="short-details details" ng-click="activate()"> 
 		<span class="description">
@@ -84,16 +84,18 @@
 					
 	         	</tbody>       
 	         </table>
-			 
+				<!--
 		 	<div class="usage usage-chart-supply-{{supply.id}}">
 				<div class="chart">
 					<span class="title">Supply Usage</span>
 				</div>
-		 	</div>
+		 	</div>-->
 			
 	        
 		</div>
         <div class="suppliers">
+			<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)"></div>
+			<!--
         	<h2>Attendance</h2>
 			<div class="attendance-details">
 				<table>
@@ -124,7 +126,7 @@
 			<div class="attendance-container">
 				<div attendance-chart data="attendances" active="activeAttendance">
 				</div>
-			</div>
+			</div>-->
         </div>
 	</div>
 </div>
