@@ -1911,6 +1911,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             if (response.pdf.acknowledgement) {
               $window.open(response.pdf.acknowledgement);
             }
+            if (response.pdf.confirmation) {
+              $window.open(response.pdf.confirmation);
+            }
             if (response.pdf.production) {
               $window.open(response.pdf.production);
             }
@@ -7660,7 +7663,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     }, function () {
       Notification.hide();
     });
-    $scope.update = function () {
+    $scope.save = function () {
       Notification.display('Saving changes to Purchase Order for ' + $scope.po.id, false);
       $scope.po.$update(function () {
         Notification.display('Changes to Purchase Order ' + $scope.po.id + ' saved.');
