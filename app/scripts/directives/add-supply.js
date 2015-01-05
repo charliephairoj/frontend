@@ -31,7 +31,7 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 			
 			scope.$watch('assignedSupplier', function (val){
 				if (val) {
-					scope.supply.supplier = val;
+					scope.supply.supplier = angular.copy(val);
 				}
 			});
 			
@@ -95,6 +95,11 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 							scope.onAdd({$supply:scope.supply});
 							scope.supply = new Supply();
 							Notification.display('Supply created');
+							
+							if (scope.assignedSupplier) {
+								scope.supply.supplier = angular.copy(scope.assignedSupplier);
+							}
+							
 						}, function (reason) {
 							console.error(reason);
 						});
@@ -104,6 +109,11 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 							scope.visible = false;
 							scope.onAdd({$supply:scope.supply});
 							scope.supply = new Supply();
+							
+							if (scope.assignedSupplier) {
+								scope.supply.supplier = angular.copy(scope.assignedSupplier);
+							}
+							
 						}, function (reason) {
 							console.error(reason);
 							Notification.display('There was an error in creating the supply', false);

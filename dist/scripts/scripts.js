@@ -7000,7 +7000,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         });
         scope.$watch('assignedSupplier', function (val) {
           if (val) {
-            scope.supply.supplier = val;
+            scope.supply.supplier = angular.copy(val);
           }
         });
         //Request suppliers via get if not already assigned
@@ -7052,6 +7052,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
                 Notification.display('Supply created');
+                if (scope.assignedSupplier) {
+                  scope.supply.supplier = angular.copy(scope.assignedSupplier);
+                }
               }, function (reason) {
                 console.error(reason);
               });
@@ -7061,6 +7064,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.visible = false;
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
+                if (scope.assignedSupplier) {
+                  scope.supply.supplier = angular.copy(scope.assignedSupplier);
+                }
               }, function (reason) {
                 console.error(reason);
                 Notification.display('There was an error in creating the supply', false);
