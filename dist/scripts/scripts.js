@@ -6908,9 +6908,6 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       if (!$scope.po.hasOwnProperty('supplier')) {
         throw new Error('Please select a supplier');
       }
-      if (!$scope.po.vat) {
-        throw new Error('Please set the vat for this purchase order');
-      }
       if ($scope.po.items.length <= 0) {
         throw new Error('Please add items to the purchase order');
       }
@@ -7663,10 +7660,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$window',
   function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window) {
     Notification.display('Loading purchase order ' + $routeParams.id + '...', false);
-    $scope.po = PurchaseOrder.get({
-      id: $routeParams.id,
-      pdf: true
-    }, function () {
+    $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
       Notification.hide();
     });
     $scope.save = function () {
@@ -7720,7 +7714,16 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         delete purchasedItem.quantity;
         purchasedItem.supply = { id: purchasedItem.id };
         delete purchasedItem.id;
+        console.log(purchasedItem);
+        //set unit cost
+        if (purchasedItem.cost) {
+          purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.cost;
+        } else {
+          purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.suppliers[0].cost;
+        }
+        console.log(purchasedItem);
         $scope.po.items.push(purchasedItem);
+        console.log($scope.po.items);
       } else {
         Notification.display('This item is already present in the purchase order');
       }

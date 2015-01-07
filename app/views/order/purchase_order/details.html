@@ -7,6 +7,8 @@
    	-->
    	
    	<div supply-list="showAddItem" supplier="po.supplier" on-select="addItem($supply)"></div>
+	
+	<div add-supply="showCreateItem" supplier="po.supplier" on-add="addItem($supply)"></div>
     
     <div class="calendar-modal" data-modal  ng-model="showCal">
         <div ui-date ng-model="po.receive_date"></div>
@@ -109,6 +111,7 @@
 		<div class="order-details" ng-show="po.items">
 			<h2 class="title">Items</h2>
 			<button class="add-item-btn" ng-click="showAddItem=true"> + Add Item</button>
+			<button class="create-item-btn" ng-click="showCreateItem=true">Create New Item</button>
 			<table>
 				<thead>
 					<tr class='heading'>
@@ -122,8 +125,8 @@
 				</thead>
 				<tbody>
 					<tr class="items" ng-repeat="item in po.items">
-						<td class='description'>{{item.description}}</td>
-						<td><textarea ng-model=item.comments row="4"></textarea></td>
+						<td class='description'><textarea ng-model="item.description" row="4"></textarea></td>
+						<td><textarea ng-model="item.comments" row="4"></textarea></td>
 						<td class='discount'>
 							<input type="text" ng-model="item.discount"/> 
 						</td>

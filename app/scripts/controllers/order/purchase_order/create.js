@@ -167,10 +167,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			throw new Error("Please select a supplier");
 		}
 		
-		if (!$scope.po.vat) {
-			throw new Error("Please set the vat for this purchase order");
-		}
-		
 		if ($scope.po.items.length <= 0) {
 			throw new Error("Please add items to the purchase order");
 		}
