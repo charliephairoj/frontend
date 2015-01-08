@@ -102,7 +102,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
 					expect(scope.po.items[2].unit_cost).toEqual(89.00);
 				});
 				
-				iit('should correctly move the supply id to the item', function () {
+				it('should correctly move the supply id to the item', function () {
 					var supply = {
 						id: 88,
 						suppliers: [

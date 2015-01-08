@@ -4,39 +4,83 @@
     font-family:Tahoma;
     @button-size: 3em;
     @image-margin: 10%;
-    video{
-        position:absolute;
-        z-index:1;
-        top:@image-margin;
-        left:0;
-        width:100%;
-    }
-    canvas{
-        position:absolute;
-        z-index:0;
-        top:@image-margin;
-        left:0;
-        width:100%;
-        &.active{
-            //z-index:2;
+	
+	&.active{
+		
+		.guide{
+			display:none;
+		}
+		
+		.active-media-area{
+			
+			video{
+				display:none;
+			}
+			
+			canvas{
+				display:block;
+			}
+		}
+		.snapshot-btn{
+			display:none;
+		}
+		
+		.btn-menu{
+			display:block;
+			visibility:visible;
+		}
+	}
+	
+	.active-media-area{
+		position:absolute;
+		top:0;
+		bottom:@button-size;
+		width:100%;
+		display:flex;
+		flex-direction:row;
+		justify-content:center;
+		
+	    video{
+	        position:absolute;
+	        z-index:1;
+	        top:@image-margin;
+	        left:0;
+	        width:100%;
+	    }
+	    canvas{
+			display:none;
+	        position:absolute;
+			top:@image-margin;
+			left:0;
+			width:100%;
+			
+			&.square{
+				position:relative;
+				top:auto;
+				left:auto;
+				width:auto;
+				height:100%;
+			}
+	        &.active{
+	            //z-index:2;
             
-            &~.camera-video{
-                visibility:hidden;
-            }
+	            &~.camera-video{
+	                visibility:hidden;
+	            }
             
-            &~.snapshot-btn{
-                visibility:hidden;
-                display:none;
-            }
+	            &~.snapshot-btn{
+	                visibility:hidden;
+	                display:none;
+	            }
             
-            &~.btn-menu{
-                visibility:visible;
-                display:block;
-            }
-        }
+	            &~.btn-menu{
+	                visibility:visible;
+	                display:block;
+	            }
+	        }
         
-    }
-    
+	    }
+	}
     .snapshot-btn{
         width:@button-size;
         height:@button-size;

@@ -3,8 +3,11 @@ angular.module('employeeApp.directives')
 .directive('camera', ['CameraService', function (CameraService) {
 	return {
 		template: '<div class="camera">' +
-					'<canvas></canvas>' +
-					'<video class="camera-video"></video>' +
+					'<div class="guide"></div>' +
+					'<div class="active-media-area">' +
+						'<canvas></canvas>' +
+						'<video class="camera-video"></video>' +
+					'</div>' +
 					'<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' +
 					'<div class="btn-menu">' +
 						'<div  class="save-btn" ng-click="save()">Save</div>' +
@@ -31,7 +34,9 @@ angular.module('employeeApp.directives')
 				width = scope.width || 1280,
 				height = scope.height || 720;
 				
-				
+			if (scope.square) {
+				angular.element(canvas).addClass('square');
+			}
 				
 			var onSuccess = function (stream) {
 				video.src = window.URL.createObjectURL(stream);
@@ -61,7 +66,7 @@ angular.module('employeeApp.directives')
 			}
 			
 			scope.retake = function () {
-				$(canvas).removeClass('active');
+				$(element).removeClass('active');
 			};
 			
 			scope.save = function () {
@@ -74,17 +79,18 @@ angular.module('employeeApp.directives')
 				width = scope.square ? video.videoHeight : video.videoWidth;
 				height = video.videoHeight;
 				
-				canvas.height = angular.element(video).height();
-				canvas.width = scope.square ? canvas.height : angular.element(video).width();
-				console.log()
+				canvas.height = scope.square ? angular.element(video).height() : height;
+				canvas.width = scope.square ? canvas.height : width;
+
 				ctx.fillRect(0, 0, width, height);
+				
 				if (scope.square) {
 					ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height)
 				} else{
 					ctx.drawImage(video, 0, 0, width, height);
 				}
 					
-				$(canvas).addClass('active');
+				$(element).addClass('active');
 			};
 		}
 	};

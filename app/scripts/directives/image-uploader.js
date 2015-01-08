@@ -20,9 +20,6 @@ angular.module('employeeApp')
 			scope.buttonOff = function () {
 				scope.showUploadButton = false;
 			};
-			
-			console.log(scope.square);
-
 
 			/*
 			* Upload Image
