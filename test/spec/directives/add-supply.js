@@ -210,25 +210,11 @@ describe('Directive: addSupply', function () {
 				scope.supply.supplier = {id: 3, name: 'test'}
 				scope.form = {$valid: true};
 				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating supply...");
+				
 				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('Supply created');
+				
 			});
 			
-			it('should notify the user if the supply fails to be created', function () {
-				expect(notification.hidden).toBeTruthy();
-				$http.whenPOST('/api/v1/supply/').respond(500);
-				scope.supply.supplier = {id: 3, name: 'test'}
-				scope.form = {$valid: true};
-				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating supply...");
-				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('There was an error in creating the supply');
-			});
 			
 			xit('should call the onAdd function', inject(function ($rootScope) {
 				spyOn(rScope, 'testAdd');
