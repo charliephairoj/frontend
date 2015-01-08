@@ -1,6 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addSupplier', ['$rootScope', 'Supplier', 'Notification', function ($rootScope, Supplier, Notification) {
+.directive('addSupplier', ['$rootScope', 'Supplier', '$mdToast', 
+function ($rootScope, Supplier, $mdToast) {
 	return {
 		templateUrl: 'views/templates/add-supplier.html',
 		replace: true,
@@ -56,9 +57,16 @@ angular.module('employeeApp.directives')
 			scope.add = function () {
 				try {
 					if (scope.form.$valid) {
-						Notification.display('Creating supplier...', false);
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(0)
+							.content('Creating supplier...'));
+
 						scope.supplier.$save(function (response) {
-							Notification.display('Supplier created');
+							$mdToast.show($mdToast.simple()
+								.position('top right')
+								.hideDelay(2000)
+								.content('Supplier created.'));
 							
 							//Call on add
 							scope.onAdd({$supplier:scope.supplier});
@@ -68,13 +76,22 @@ angular.module('employeeApp.directives')
 							scope.supplier = new Supplier();
 						}, function (reason) {
 							console.error(reason);
-							Notification.display('There was an error in creating the supplier', false);
+							$mdToast.show($mdToast.simple()
+								.position('top right')
+								.hideDelay(0)
+								.content('There was an error in creating the supplier'));
 						});
 					} else {
-						Notification.display('Please fill out the form properly');
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(0)
+							.content('Please fill out the form properly'));
 					}
 				} catch (e) {
-					Notification.display(e);
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(0)
+						.content(e));
 				}
 			};
 		}
