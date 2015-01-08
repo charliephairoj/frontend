@@ -7,7 +7,8 @@ angular.module('employeeApp')
 		replace: true,
 		scope: {
 			url: '@url',
-			onUpload: '&'
+			onUpload: '&',
+			square: '=',
 		},
 		link: function postLink(scope, element, attrs) {
 			scope.selection = "addImage";
