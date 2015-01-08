@@ -6,6 +6,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
 	//Show system notification
 	$mdToast.show($mdToast
 		.simple()
+		.position('top right')
 		.content('Loading acknowledgement...')
 		.hideDelay(0));
 		
@@ -55,6 +56,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
 		
 		$mdToast.show($mdToast
 			.simple()
+			.position('top right')
 			.content('Saving acknowledgement...')
 			.hideDelay(0));
 
@@ -62,12 +64,14 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
             
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
 				
         }, 
         function () {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
         });
     };
