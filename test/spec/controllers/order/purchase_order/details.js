@@ -76,7 +76,6 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
 						cost: 88.00
 					}
 					scope.addItem(supply);
-					dump(scope.po.items[2]);
 					
 					expect(scope.po.items).toBeDefined();
 					expect(scope.po.items[2].unit_cost).toBeDefined();
@@ -96,7 +95,6 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
 						]
 					}
 					scope.addItem(supply);
-					dump(scope.po.items[2]);
 					
 					expect(scope.po.items).toBeDefined();
 					expect(scope.po.items[2].unit_cost).toBeDefined();

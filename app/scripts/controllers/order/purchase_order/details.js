@@ -4,7 +4,7 @@ angular.module('employeeApp')
 .controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window',
 function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 		
-	$scope.po = PurchaseOrder.get({id: $routeParams.id, pdf: true});
+	$scope.po = PurchaseOrder.get({id: $routeParams.id});
 
 	
 	$scope.save = function () {
