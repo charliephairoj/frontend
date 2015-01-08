@@ -16,7 +16,7 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 			$mdToast.show($mdToast
 				.simple()
 				.content('Changes to purchase order ' + $scope.po.id + ' saved.')
-				.hideDelay(0));
+				.hideDelay(2000));
 			$window.open($scope.po.pdf.url);
 		}, function (e) {
 			console.error(e);
