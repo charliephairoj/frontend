@@ -1,0 +1,36 @@
+<md-dialog class="supply-scanner md-primary">
+	<md-toolbar class="md-toolbar-tools">
+		<h1>Supply Scanner</h1>
+	</md-toolbar>
+	<div class="container">
+		<div class="employee">
+			<div class="img-container">
+			</div>
+			<h2><h2>
+		</div>
+
+		<md-content class="supplies">
+			<md-list>
+				<md-item ng-repeat="supply in supplies">
+					<md-item-content>
+						<div class="img-container">
+							<img ng-src="{{supply.image.url}}" />
+						</div>	
+						<h3>{{supply.description}}</h3>
+						<div class="item-ctrl">
+							<div class="qty-container">
+								<md-text-float label="quantity" ng-model="$$quantity"></md-text-float>
+							</div>
+							<md-button class="md-warn" ng-click="remove($index, supply);">Remove</md-button>
+						</div>
+					</md-item-content>
+					<md-divider ng-if="!$last"></md-divider>
+				</md-item>
+			</md-list>
+		</md-content>
+	</div>
+	<div class="md-actions">
+		<md-button class="md-primary">Checkout</md-button>
+	</div>
+</md-dialog>
+
