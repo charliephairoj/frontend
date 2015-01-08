@@ -7,12 +7,6 @@
 	<div supply-list="showSupplies" supplier="po.supplier" on-select="addItem($supply)"></div>
 	<div add-supply="showAddSupply" supplier='po.supplier' on-add="addItem($supply)">
 	</div>
-	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat" title="Vat">
-		<input ng-model="po.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
-		<div class="bottom_bar">
-			<button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
-		</div>
-	</form>
 	<form class="po" name="form" novalidate>
 		<!--
             Sidebar
@@ -45,8 +39,8 @@
         -->
 		<div class="workspace">
 			<div class="submenu">
-				<button ng-click="save()">Create</button>
-				<button ng-click="reset()">Reset</button>
+				<button class="create" ng-click="save()">Create</button>
+				<button class="reset" ng-click="reset()">Reset</button>
 			</div>
 			<div class="supplier">
 				<h2 class="title">Supplier</h2>
@@ -87,7 +81,7 @@
 					<tr>
 						<td>Vat:</td>
 						<td>
-							<input class="vat" ng-model="po.vat" required maxlength=2>%</td>
+							<input type="number" class="vat" ng-model="po.vat" required maxlength="3" size="3">%</td>
 					</tr>
 					<tr class="currency" ng-show="po.supplier" ng-class="{'active':po.supplier}">
 						<td>Currency:</td>
@@ -106,7 +100,7 @@
 					<tr>
 						<td>Discount:</td>
 						<td>
-							<input type="text" size="2" maxlength="2" ng-model="po.discount" />%
+							<input class="discount" type="number" size="2" maxlength="3" ng-model="po.discount" />%
 						</td>
 					</tr>
 					<tr>
@@ -117,8 +111,8 @@
 								<option value="amount">Amount</option>
 							</select>
 							<input type="text" size="6" maxlength="6" ng-model="po.deposit" />
-							<span ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
-							<span ng-show="po.deposit_type=='percent'">%</span>
+							<span class="deposit-currency" ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
+							<span class="deposit-percent" ng-show="po.deposit_type=='percent'">%</span>
 						</td>
 					</tr>
 					<tr>
@@ -153,13 +147,13 @@
 								<textarea ng-model=item.comments row="4"></textarea>
 							</td>
 							<td class='discount'>
-								<input required type="text" ng-model="item.discount" />
+								<input required type="number" ng-model="item.discount" />
 							</td>
 							<td class='unit-cost'>
-								<input required type="text" ng-model="item.cost" />
+								<input required type="number" ng-model="item.cost" />
 							</td>
 							<td class='quantity'>
-								<input required type="text" ng-model="item.quantity" />
+								<input required type="number" ng-model="item.quantity" />
 							</td>
 							<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
 							<td>

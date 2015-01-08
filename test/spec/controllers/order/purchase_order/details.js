@@ -27,7 +27,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   		});
   		
   		it('should make a call to the server for the item', function () {
-  			$http.expectGET('/api/v1/purchase-order/1234/?pdf=true').respond({id:1234});
+  			$http.expectGET('/api/v1/purchase-order/1234/').respond({id:1234});
   			ctrl = Ctrl('OrderPurchaseOrderDetailsCtrl', {$scope:scope, $routeParams:{id:1234}});
   			$http.flush();
   			
@@ -38,7 +38,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function () {
   		
   		beforeEach(function () {
-  			$http.whenGET('/api/v1/purchase-order/2345/?pdf=true').respond({
+  			$http.whenGET('/api/v1/purchase-order/2345/').respond({
   				id: 2345,
   				supplier: {
   					name: 'LST International'
@@ -84,6 +84,8 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
 				});
 				
 				it('should correctly display the unit cost, even when only supplier cost is defined', function () {
+
+				
 					var supply = {
 						id: 4,
 						suppliers: [

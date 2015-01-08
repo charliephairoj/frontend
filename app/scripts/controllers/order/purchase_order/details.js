@@ -1,9 +1,11 @@
 
 angular.module('employeeApp')
+
 .controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window',
 function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 		
 	$scope.po = PurchaseOrder.get({id: $routeParams.id, pdf: true});
+
 	
 	$scope.save = function () {
 		$mdToast.show($mdToast
@@ -69,7 +71,16 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 			delete purchasedItem.quantity;
 			purchasedItem.supply = {id:purchasedItem.id};
 			delete purchasedItem.id;
+			console.log(purchasedItem);
+			//set unit cost
+			if (purchasedItem.cost) {
+				purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.cost;
+			} else {
+				purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.suppliers[0].cost;
+			}
+			console.log(purchasedItem);
 			$scope.po.items.push(purchasedItem);
+			console.log($scope.po.items);
 		} else {
 			$mdToast.show($mdToast
 				.simple()

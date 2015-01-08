@@ -1911,6 +1911,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             if (response.pdf.acknowledgement) {
               $window.open(response.pdf.acknowledgement);
             }
+            if (response.pdf.confirmation) {
+              $window.open(response.pdf.confirmation);
+            }
             if (response.pdf.production) {
               $window.open(response.pdf.production);
             }
@@ -6905,9 +6908,6 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       if (!$scope.po.hasOwnProperty('supplier')) {
         throw new Error('Please select a supplier');
       }
-      if (!$scope.po.vat) {
-        throw new Error('Please set the vat for this purchase order');
-      }
       if ($scope.po.items.length <= 0) {
         throw new Error('Please add items to the purchase order');
       }
@@ -6997,7 +6997,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         });
         scope.$watch('assignedSupplier', function (val) {
           if (val) {
-            scope.supply.supplier = val;
+            scope.supply.supplier = angular.copy(val);
           }
         });
         //Request suppliers via get if not already assigned
@@ -7049,6 +7049,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
                 Notification.display('Supply created');
+                if (scope.assignedSupplier) {
+                  scope.supply.supplier = angular.copy(scope.assignedSupplier);
+                }
               }, function (reason) {
                 console.error(reason);
               });
@@ -7058,6 +7061,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.visible = false;
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
+                if (scope.assignedSupplier) {
+                  scope.supply.supplier = angular.copy(scope.assignedSupplier);
+                }
               }, function (reason) {
                 console.error(reason);
                 Notification.display('There was an error in creating the supply', false);
@@ -7654,13 +7660,10 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$window',
   function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window) {
     Notification.display('Loading purchase order ' + $routeParams.id + '...', false);
-    $scope.po = PurchaseOrder.get({
-      id: $routeParams.id,
-      pdf: true
-    }, function () {
+    $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
       Notification.hide();
     });
-    $scope.update = function () {
+    $scope.save = function () {
       Notification.display('Saving changes to Purchase Order for ' + $scope.po.id, false);
       $scope.po.$update(function () {
         Notification.display('Changes to Purchase Order ' + $scope.po.id + ' saved.');
@@ -7711,7 +7714,16 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         delete purchasedItem.quantity;
         purchasedItem.supply = { id: purchasedItem.id };
         delete purchasedItem.id;
+        console.log(purchasedItem);
+        //set unit cost
+        if (purchasedItem.cost) {
+          purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.cost;
+        } else {
+          purchasedItem.unit_cost = purchasedItem.unit_cost || purchasedItem.suppliers[0].cost;
+        }
+        console.log(purchasedItem);
         $scope.po.items.push(purchasedItem);
+        console.log($scope.po.items);
       } else {
         Notification.display('This item is already present in the purchase order');
       }
