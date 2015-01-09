@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.directive('customerList', ['Customer', 'Notification', 'KeyboardNavigation', '$rootScope', '$filter',
-function (Customer, Notification, KeyboardNavigation, $rootScope, $filter) {
+.directive('customerList', ['Customer', '$mdToast', 'KeyboardNavigation', '$rootScope', '$filter',
+function (Customer, $mdToast, KeyboardNavigation, $rootScope, $filter) {
 	return {
 		templateUrl: 'views/templates/customer-list.html',
 		replace: true,
