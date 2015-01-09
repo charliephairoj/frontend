@@ -51,7 +51,7 @@ function (Supplier, $mdToast, KeyboardNavigation, $rootScope, $filter) {
 					$mdToast.show($mdToast.simple()
 						.position('right top')
 						.hideDelay(0)
-						.content('Loading more suppliers'));
+						.content('Loading more suppliers...'));
 
 					fetching = true;
 					Supplier.query({

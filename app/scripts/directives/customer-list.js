@@ -48,14 +48,18 @@ function (Customer, Notification, KeyboardNavigation, $rootScope, $filter) {
 			 */
 			scope.loadNext = function () {
 				if (!fetching) {
-					Notification.display("Loading more customers...", false);
+					$mdToast.show($mdToast.simple()
+						.position('right top')
+						.hideDelay(0)
+						.content('Loading customers suppliers...'));
+					
 					fetching = true;
 					Customer.query({
 						offset: scope.customers.length,
 						limit: 50
 					}, function (resources) {
 						fetching = false;
-						Notification.hide();
+						$mdToast.hide();
 						for (var i = 0; i < resources.length; i++) {
 							scope.customers.push(resources[i]);
 						}
