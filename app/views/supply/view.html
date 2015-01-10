@@ -3,13 +3,17 @@
 	<!--
 		Modals
 	-->
+		
 	<div add-supply="showAddSupply"></div>
 	
 	<div add-supplier="showAddSupplier"></div>
 	
+	<!--
 	<div supply-scanner-modal="scannerMode"></div>
-	
+	-->
+		
 	<div add-equipment="showAddEquipment"></div>
+			
     <!--
         Sidebar
     -->
@@ -29,7 +33,7 @@
                 	<button ng-click="showAddEquipment=true">Add Equipment</button>
                 </li>
                  <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
-                	<button class="scanner-mode" ng-class="{'on':scannerMode==true, 'off': scannerMode==false}" ng-click="scannerMode=true">Scanner Mode</button>
+                	<button class="scanner-mode" ng-class="{'on':scannerMode==true, 'off': scannerMode==false}" ng-click="showScanner()">Scanner Mode</button>
                 </li>
                 <li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a></li>
                 <li ng-show="currentUser.hasPermission('add_foam')"><a ng-href="#/supply/foam">Foam</a></li>
