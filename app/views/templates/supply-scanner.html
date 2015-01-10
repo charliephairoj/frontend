@@ -1,0 +1,41 @@
+<md-dialog class="supply-scanner" aria-label="Supply Checkout">
+	<md-subheader>Supply Checkout</md-subheader>
+	<div class="container">
+		<div ng-hide="employee" class="employee-placeholder">
+			<h2>Employee</h2>
+		</div>
+		<div ng-show="employee" class="employee">
+			
+			<div class="img-container">
+				<img ng-src="{{employee.image.url}}" />
+			</div>
+			<h3>{{employee.name}}</h3>
+			<h2>{{employee.department}}</h2>
+		</div>
+		<div ng-hide="supplies.length > 0" class="supplies-placeholder">
+			<h2>Supplies</h2>
+		</div>
+		<md-content ng-show="supplies.length > 0">
+			<md-list>
+				<md-item ng-repeat="supply in supplies">
+					<md-item-content>
+						<div class="img-container">
+							<img ng-src="{{supply.image.url}}" />
+						</div>
+						<h3>{{supply.description}}</h3>
+						<div class="item-ctrl">
+							<md-text-float type="number" label="Quantity" required ng-model="supply.$$quantity"></md-text-float>
+							<md-button class="md-warn" ng-click="remove($index, supply)">Remove<md-button>
+						</div>
+					</md-item-content>
+					<md-divider></md-divider>
+				</md-item>
+			</md-list>
+		</md-content>
+	</div>
+	<md-divider>
+	</md-divider>
+	<md-action>
+		<md-button class="md-accent">Checkout</md-button>
+	</md-action>
+</md-dialog>
