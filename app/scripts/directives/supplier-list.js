@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.directive('supplierList', ['Supplier', 'Notification', 'KeyboardNavigation', '$rootScope', '$filter',
-function (Supplier, Notification, KeyboardNavigation, $rootScope, $filter) {
+.directive('supplierList', ['Supplier', '$mdToast', 'KeyboardNavigation', '$rootScope', '$filter',
+function (Supplier, $mdToast, KeyboardNavigation, $rootScope, $filter) {
 	return {
 		templateUrl: 'views/templates/supplier-list.html',
 		replace: true,
@@ -48,14 +48,18 @@ function (Supplier, Notification, KeyboardNavigation, $rootScope, $filter) {
 			 */
 			scope.loadNext = function () {
 				if (!fetching) {
-					Notification.display("Loading more suppliers...", false);
+					$mdToast.show($mdToast.simple()
+						.position('right top')
+						.hideDelay(0)
+						.content('Loading more suppliers...'));
+
 					fetching = true;
 					Supplier.query({
 						offset: scope.suppliers.length,
 						limit: 50
 					}, function (resources) {
 						fetching = false;
-						Notification.hide();
+						$mdToast.hide();
 						for (var i = 0; i < resources.length; i++) {
 							scope.suppliers.push(resources[i]);
 						}

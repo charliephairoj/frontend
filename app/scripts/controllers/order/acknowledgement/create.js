@@ -50,6 +50,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 				
 				$mdToast.show($mdToast
 					.simple()
+					.position('top right')
 					.content("Creating new acknowledgement...")
 					.hideDelay(0));
 				
@@ -68,6 +69,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 					
                    	$mdToast.show($mdToast
 						.simple()
+						.position('top right')
 						.content("Acknowledgement created with ID: " + $scope.ack.id)
 						.hideDelay(2000));
 						
@@ -96,6 +98,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         } catch (e) {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content(e)
 				.hideDelay(0));
         }

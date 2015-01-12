@@ -10,13 +10,15 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 	$scope.save = function () {
 		$mdToast.show($mdToast
 			.simple()
+			.position('top right')
 			.content('Saving changes to purchase order ' + $scope.po.id)
 			.hideDelay(0));
 		$scope.po.$update(function () {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content('Changes to purchase order ' + $scope.po.id + ' saved.')
-				.hideDelay(0));
+				.hideDelay(2000));
 			$window.open($scope.po.pdf.url);
 		}, function (e) {
 			console.error(e);
@@ -84,6 +86,7 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 		} else {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content('This item is already present in the purchase order')
 				.hideDelay(2000));
 		}

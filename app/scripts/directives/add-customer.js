@@ -1,6 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addCustomer', ['Customer', 'Notification', 'Geocoder', function (Customer, Notification, Geocoder) {
+.directive('addCustomer', ['Customer', '$mdToast', 'Geocoder', 
+function (Customer, $mdToast, Geocoder) {
 	return {
 		templateUrl: 'views/templates/add-customer.html',
 		replace: true,
@@ -57,17 +58,31 @@ angular.module('employeeApp.directives')
 			
             scope.add = function () {
 				if (scope.form.$valid) {
-					Notification.display('Creating customer...', false);
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(0)
+						.content('Creating customer...'));
+
 					scope.customer.$save(function (response) {
-						Notification.display('Customer created');
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(2000)
+							.content('Customer created.'));
+
 						scope.visible = false;
 						scope.customer = new Customer();
 					}, function (reason) {
 						console.error(reason);
-						Notification.display("There was an error in creating the customer");
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(0)
+							.content("There was an error in creating the customer"));
 					});
 				} else {
-					Notification.display('Please fill out the form properly');
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(0)
+						.content('Please fill out the form properly'));
 				}
 			};
 		}

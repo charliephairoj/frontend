@@ -94,23 +94,9 @@ describe('Directive: addSupplier', function () {
 				expect(notification.hidden).toBeTruthy();
 				scope.form.$valid = true;
 				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('Creating supplier...');
+				
 				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('Supplier created');
-			});
-			
-			it('should notify the user if the supplier fails to be created', function () {
-				$http.expectPOST('/api/v1/supplier/').respond(500);
-				expect(notification.hidden).toBeTruthy();
-				scope.form.$valid = true;
-				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('Creating supplier...');
-				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('There was an error in creating the supplier');
+		
 			});
 			
 			it('should call the onAdd link function', inject(function ($rootScope) {

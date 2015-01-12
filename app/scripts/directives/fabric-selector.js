@@ -1,6 +1,7 @@
 
 angular.module('employeeApp')
-.directive('fabricSelector', ['Fabric', 'Notification', '$parse', function (Fabric, Notification, $parse) {
+.directive('fabricSelector', ['Fabric', '$mdToast', '$parse', 
+function (Fabric, $mdToast, $parse) {
 	return {
 		templateUrl: 'views/templates/fabric-selector.html',
 		replace: true,
@@ -43,14 +44,17 @@ angular.module('employeeApp')
 			 */
 			scope.loadNext = function () {
 				if (!fetching) {
-					Notification.display("Loading more fabrics...", false);
+					$mdToast.show($mdToast.simple()
+						.hideDelay(0)
+						.position('top right')
+						.content('Loading more fabrics...'));	
 					fetching = true;
 					Fabric.query({
 						offset: scope.fabrics.length,
 						limit: 50
 					}, function (resources) {
 						fetching = false;
-						Notification.hide();
+						$mdToast.hide();
 						for (var i = 0; i < resources.length; i++) {
 							scope.fabrics.push(resources[i]);
 						}

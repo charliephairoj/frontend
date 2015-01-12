@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.directive('productSelector', ['Upholstery', 'Fabric', 'Table', '$rootScope', 'Notification', 'FileUploader',
-    function (Upholstery, Fabric, Table, $rootScope, Notification, FileUploader) {
+.directive('productSelector', ['Upholstery', 'Fabric', 'Table', '$rootScope', '$mdToast', 'FileUploader',
+    function (Upholstery, Fabric, Table, $rootScope, $mdToast, FileUploader) {
         return {
             templateUrl: 'views/templates/product-selector.html',
             replace: true,
@@ -21,7 +21,10 @@ angular.module('employeeApp')
                 
 				function uploadImage(image, callback) {
                     //Display Notification
-                    Notification.display('Uploading image...', false);
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(0)
+						.content('Uploading image...'));
                     //Set the upload Target
                     
                     //Get new image and add to form data
@@ -31,10 +34,16 @@ angular.module('employeeApp')
 					var promise = FileUploader.upload(image, scope.url || 'upload/images');
 
 					promise.then(function (response) {
-						Notification.display('Image Uploaded');
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(2000)
+							.content('Image uploaded.'));
 						(callback || angular.noop)(response.data);
 					}, function () {
-						Notification.display('Failed to upload image.');
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(0)
+							.content('Failed to upload image'));
 					});
                     
                     /*//Upload the image

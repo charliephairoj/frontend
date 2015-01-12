@@ -15,6 +15,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		
 	var loadingToast = $mdToast.show($mdToast
 			.simple()
+			.position('top right')
 			.content('Loading acknowledgements...')
 			.hideDelay(0));
 
@@ -52,6 +53,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 			fetching = true;
 			var moreAckToast = $mdToast.show($mdToast
 					.simple()
+					.position('top right')
 					.hideDelay(0)
 					.content('Loading more acknowledgements...'));
 			Acknowledgement.query({
