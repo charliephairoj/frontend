@@ -85,7 +85,7 @@ angular.module('employeeApp.directives')
 				ctx.fillRect(0, 0, width, height);
 				
 				if (scope.square) {
-					ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height)
+					ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height);
 				} else{
 					ctx.drawImage(video, 0, 0, width, height);
 				}
