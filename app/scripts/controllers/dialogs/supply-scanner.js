@@ -1,12 +1,10 @@
 'use strict';
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', 'Supply', 'Employee', 'scanner',
-function ($scope, Supply, Employee, scanner) {
-	Employee.query({q:'apaporn'}, function (r) {
-		$scope.employee = r[0];
-	});
-    $scope.supplies = Supply.query({q:'screw'});
+.controller('DialogsSupplyScannerCtrl', ['$scope', 'Supply', 'Employee', 'scanner', '$rootScope', '$mdToast',
+function ($scope, Supply, Employee, scanner, $rootScope, $mdToast) {
+    
+	$scope.supplies = [];
 	
 	$scope.scanner = new scanner('supply-scanner');
 	
@@ -28,18 +26,21 @@ function ($scope, Supply, Employee, scanner) {
 	 * Register the supply code regex
 	 */
 	$scope.scanner.register(/^DRS-\d+$/, function (code) {
-		//Notification.display("Looking up supply...", false);
-
+		$mdToast.show($mdToast.simple()
+			.hideDelay(0)
+			.position('top right')
+			.content('Looking up supply...'));
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
 			$scope.supplies.push(response);
-			//Notification.hide();
+			$mdToast.show($mdToast.simple()
+				.hideDelay(2000)
+				.position('top right')
+				.content('Added ' + response.description + ' to checkout.'));
 		}, function () {
-			//Notification.display('Unable to find supply.', false);
-			/*
-			scope.supply = Supply.get({id:code}, function () {
-				Notification.display('Unable to find supply', false);
-			});
-			*/
+			$mdToast.show($mdToast.simple()
+				.hideDelay(0)
+				.position('top right')
+				.content('Unable to find supply.'));
 		});
 	});
 	/*
