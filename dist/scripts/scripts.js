@@ -8,7 +8,8 @@ angular.module('employeeApp', [
   'employeeApp.directives',
   'employeeApp.filters',
   'employeeApp.services',
-  'ui.date'
+  'ui.date',
+  'ngMaterial'
 ]).config([
   '$routeProvider',
   function ($routeProvider) {
@@ -230,7 +231,8 @@ function merge(permList, groupPerms) {
 angular.module('employeeApp').config([
   '$httpProvider',
   '$resourceProvider',
-  function ($httpProvider, $resourceProvider) {
+  '$mdThemingProvider',
+  function ($httpProvider, $resourceProvider, $mdThemingProvider) {
     $httpProvider.defaults.headers.post = {
       'Cache-Control': 'no-cache',
       'expires': '-1',
@@ -255,6 +257,11 @@ angular.module('employeeApp').config([
       }
       return data;
     });
+    /*
+	 * Configure the theme for this application
+	 */
+    console.log($mdThemingProvider);
+    $mdThemingProvider.setDefaultTheme('blue-grey');
   }
 ]);
 /*
@@ -1857,10 +1864,10 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   'Acknowledgement',
   'Customer',
   '$filter',
-  'Notification',
   '$window',
   'Project',
-  function ($scope, Acknowledgement, Customer, $filter, Notification, $window, Project) {
+  '$mdToast',
+  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -1897,7 +1904,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       $scope.tempSave();
       try {
         if ($scope.isValidated()) {
-          Notification.display('Creating Acknowledgement...', false);
+          $mdToast.show($mdToast.simple().position('top right').content('Creating new acknowledgement...').hideDelay(0));
           /*
 				 * Preps for creation of a new project
 				 */
@@ -1907,7 +1914,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             delete $scope.ack.newProjectName;
           }
           $scope.ack.$create(function (response) {
-            Notification.display('Acknowledgement created');
+            $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement created with ID: ' + $scope.ack.id).hideDelay(2000));
             if (response.pdf.acknowledgement) {
               $window.open(response.pdf.acknowledgement);
             }
@@ -1922,18 +1929,17 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             delete $scope.ack.newProjectName;
           }, function (e) {
             console.error(e);
-            Notification.display('There was an error in creating the Acknowledgement', false);
+            $mdToast.show($mdToast.simple().content(e).hideDelay(0));
           });
         }
       } catch (e) {
-        Notification.display(e.message, false);
+        $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
       }
     };
     $scope.reset = function () {
       $scope.ack = new Acknowledgement();
       $scope.ack.items = [];
       storage.removeItem('acknowledgement-create');
-      Notification.display('Acknowledgement reset.');
     };
     //Validations
     $scope.isValidated = function () {
@@ -2004,22 +2010,21 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
 angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   '$scope',
   'Acknowledgement',
-  'Notification',
   '$location',
   '$filter',
   'KeyboardNavigation',
-  function ($scope, Acknowledgement, Notification, $location, $filter, KeyboardNavigation) {
+  '$mdToast',
+  function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdToast) {
     /*
 	 * Vars
 	 * 
 	 * -fetching: this is a switch to see if there is currently a call being made
 	 */
     var fetching = true, index = 0, currentSelection;
-    //Display Program Notification
-    Notification.display('Loading Acknowledgements...', false);
+    var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
-      Notification.hide();
+      $mdToast.hide();
       fetching = false;
       changeSelection(index);
     });
@@ -2049,13 +2054,13 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     $scope.loadNext = function () {
       if (!fetching) {
         fetching = true;
-        Notification.display('Loading more acknowledgements', false);
+        var moreAckToast = $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more acknowledgements...'));
         Acknowledgement.query({
           limit: 50,
           offset: $scope.acknowledgements.length
         }, function (resources) {
           fetching = false;
-          Notification.hide();
+          $mdToast.hide();
           for (var i = 0; i < resources.length; i++) {
             $scope.acknowledgements.push(resources[i]);
           }
@@ -2448,7 +2453,7 @@ angular.module('employeeApp.directives').directive('modal', [function () {
             tElement.addClass('modal hide');
             if (tAttrs.title) {
               closeButton = angular.element('<button type="button" class="close">&times;</button>');
-              var title = angular.element('<div class="title"><h4>' + tAttrs.title + '</h4></div>');
+              var title = angular.element('<div class="modal-title"><h4>' + tAttrs.title + '</h4></div>');
               title.append(closeButton);
               tElement.append(title);
             } else {
@@ -2545,11 +2550,11 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
   '$scope',
   'Acknowledgement',
   '$filter',
-  'Notification',
+  '$mdToast',
   'Shipping',
   '$location',
   'scanner',
-  function ($scope, Acknowledgement, $filter, Notification, Shipping, $location, scanner) {
+  function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner) {
     var fetchingAck = true;
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function () {
       fetchingAck = false;
@@ -2559,16 +2564,17 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
     scanner.onscan = function (code) {
       var re = new RegExp(/^A\-(s+)?/);
       if (re.test(code)) {
+        $mdToast.show($mdToast.simple().content('Retrieving Acknowledgement# ' + code.split('-')[1]).delay(0));
         Notification.display('Retrieving Acknowledgement# ' + code.split('-')[1], false);
         Acknowledgement.get({ id: code.split('-')[1] }, function (response) {
-          Notification.hide();
+          $mdToast.hide();
           var ack = response;
           $scope.shipping.acknowledgement = { id: ack.id };
           $scope.shipping.customer = ack.customer;
           $scope.shipping.products = ack.products;
           $scope.shipping.delivery_date = new Date(ack.delivery_date);
         }, function () {
-          Notification.display('Unable to locate Acknowledgement#' + code.split('-')[1]);
+          $mdToast.show($mdToast.simple().content('Unable to locate Acknowledgement#' + code.split('-')[1]).delay(0));
         });
       }
     };
@@ -2610,18 +2616,18 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
     };
     $scope.create = function () {
       if ($scope.isValidated()) {
-        Notification.display('Creating Acknowledgement...', false);
+        $mdToast.show($mdToast.simple().content('Creating shippping manifest...').hideDelay(0));
         $scope.shipping.$save(function (resource) {
-          Notification.display('Shipping manifest created');
+          $mdToast.show($mdToast.simple().content('Shipping manifest created').hideDelay(2000));
           if (resource.pdf.url) {
             window.open(resource.pdf.url);
           }
           $location.path('/order/shipping');
         }, function () {
-          Notification.display('There was an error in creating the shipping manifest', false);
+          $mdToast.show($mdToast.simple().content('There was an error in creating the shipping manifest').hideDelay(0));
         });
       } else {
-        Notification.display('The Order is Not Complete');
+        $mdToast.show($mdToast.simple().content('The Order is Not Complete'));
       }
     };
     $scope.removeProduct = function (index) {
@@ -2654,19 +2660,19 @@ angular.module('employeeApp').controller('OrderShippingViewCtrl', [
   '$scope',
   'Shipping',
   '$filter',
-  'Notification',
-  function ($scope, Shipping, $filter, Notification) {
+  '$mdToast',
+  function ($scope, Shipping, $filter, $mdToast) {
     /*
 	 * Vars and flags
 	 */
     var fetching = true;
-    Notification.display('Loading shipping manifests...', false);
+    $mdToast.show($mdToast.simple().content('Loading shipping manifests...').hideDelay(0));
     /*
 	 * Get an array of shipping manifests from the server
 	 */
     $scope.shippingList = Shipping.query(function (resources) {
       fetching = false;
-      Notification.hide();
+      $mdToast.hide();
     });
     /*
 	 * Search the server 
@@ -2699,12 +2705,12 @@ angular.module('employeeApp').controller('OrderShippingViewCtrl', [
 	 */
     $scope.loadNext = function () {
       if (!fetching) {
-        Notification.display('Loading more shipping manifests...', false);
+        $mdToast.show($mdToast.simple().content('Loading more shipping manifests...').hideDelay(0));
         Shipping.query({
           offset: $scope.shippingList.length,
           limit: 20
         }, function (resources) {
-          Notification.hide();
+          $mdToast.hide();
           for (var i = 0; i < resources.length; i++) {
             $scope.shippingList.push(resources[i]);
           }
@@ -4220,12 +4226,12 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$scope',
   'Acknowledgement',
   '$routeParams',
-  'Notification',
   '$http',
   '$window',
-  function ($scope, Acknowledgement, $routeParams, Notification, $http, $window) {
+  '$mdToast',
+  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
     //Show system notification
-    Notification.display('Loading Acknowledgement...', false);
+    $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgement...').hideDelay(0));
     //Set Vars
     $scope.showCal = false;
     //GET request server for Acknowledgements
@@ -4233,7 +4239,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'id': $routeParams.id,
       'pdf': true
     }, function () {
-      Notification.display('Acknowledgement Loaded');
+      $mdToast.hide();
     });
     //Grid Options
     $scope.gridOptions = {
@@ -4250,7 +4256,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         $window.open(address);
       } catch (e) {
         var message = 'Missing ' + type + ' pdf for Acknowledgement #' + $scope.acknowledgement.id;
-        Notification.display(message);
+        $mdToast.show($mdToast.simple().content(message).hideDelay(0));
         throw new Error(message);
       }
     };
@@ -4266,11 +4272,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
     };
     //Save updates to the server
     $scope.save = function () {
-      Notification.display('Saving Acknowledgement...', false);
+      $mdToast.show($mdToast.simple().position('top right').content('Saving acknowledgement...').hideDelay(0));
       $scope.acknowledgement.$update(function (response) {
-        Notification.display('Acknowledgement ' + $scope.acknowledgement.id + ' saved.');
+        $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
       }, function () {
-        Notification.display('Failed to save acknowledgement ' + $scope.acknowledgement.id, false);
+        $mdToast.show($mdToast.simple().position('top right').content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
       });
     };
   }
@@ -4402,30 +4408,30 @@ angular.module('employeeApp').controller('OrderShippingDetailsCtrl', [
   '$scope',
   'Shipping',
   '$routeParams',
-  'Notification',
+  '$mdToast',
   '$http',
-  function ($scope, Shipping, $routeParams, Notification, $http) {
-    Notification.display('Loading Shipping Manifest...', false);
+  function ($scope, Shipping, $routeParams, $mdToast, $http) {
+    $mdToast.show($mdToast.simple().content('Loading Shipping Manifest...').hideDelay(0));
     $scope.showCal = false;
     $scope.shipping = Shipping.get({
       'id': $routeParams.id,
       pdf: true
     }, function () {
-      Notification.display('Shipping Manifest Loaded');
+      $mdToast.hide();
     });
     $scope.updateDeliveryDate = function () {
       $scope.showCal = false;
     };
     $scope.getPDF = function () {
-      Notification.display('Retrieving PDF...', false);
+      $mdToast.show($mdToast.simple().content('Retrieving PDF...'));
       if ($scope.shipping.pdf.url) {
         window.open($scope.shipping.pdf.url);
       }
     };
     $scope.save = function () {
-      Notification.display('Saving Shipping Manifest...', false);
+      $mdToast.show($mdToast.simple().content('Saving Shipping Manifest...').hideDelay(0));
       $scope.shipping.$update(function () {
-        Notification.display('Shipping Manifest ' + $scope.shipping.id + ' Saved');
+        $mdToast.show($mdToast.simple().content('Shipping manifest ' + $scope.shipping.id + ' saved').hideDelay(0));
       });
     };
   }
@@ -6132,9 +6138,9 @@ angular.module('employeeApp').directive('productSelector', [
   'Fabric',
   'Table',
   '$rootScope',
-  'Notification',
+  '$mdToast',
   'FileUploader',
-  function (Upholstery, Fabric, Table, $rootScope, Notification, FileUploader) {
+  function (Upholstery, Fabric, Table, $rootScope, $mdToast, FileUploader) {
     return {
       templateUrl: 'views/templates/product-selector.html',
       replace: true,
@@ -6150,17 +6156,17 @@ angular.module('employeeApp').directive('productSelector', [
         scope.product = {};
         function uploadImage(image, callback) {
           //Display Notification
-          Notification.display('Uploading image...', false);
+          $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Uploading image...'));
           //Set the upload Target
           //Get new image and add to form data
           //var fd = new FormData();
           //fd.append('image', image);
           var promise = FileUploader.upload(image, scope.url || 'upload/images');
           promise.then(function (response) {
-            Notification.display('Image Uploaded');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Image uploaded.'));
             (callback || angular.noop)(response.data);
           }, function () {
-            Notification.display('Failed to upload image.');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Failed to upload image'));
           });  /*//Upload the image
                     jQuery.ajax(scope.url || "upload/images", {
 						type:'POST',
@@ -6647,18 +6653,18 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   '$scope',
   'PurchaseOrder',
   '$filter',
-  'Notification',
+  '$mdToast',
   'KeyboardNavigation',
   '$location',
-  function ($scope, PurchaseOrder, $filter, Notification, KeyboardNavigation, $location) {
+  function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $location) {
     //Flags and variables
     var fetching = true, index = 0, currentSelection;
     //System wide message
-    Notification.display('Loading purchase orders...', false);
+    $mdToast.show($mdToast.simple().position('top right').content('Loading purchasing orders...').hideDelay(0));
     //Poll Server for pos
     $scope.poList = PurchaseOrder.query({ limit: 20 }, function () {
       fetching = false;
-      Notification.hide();
+      $mdToast.hide();
       changeSelection(index);
     }, function () {
       fetching = false;
@@ -6764,12 +6770,12 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   'PurchaseOrder',
   'Supplier',
   'Supply',
-  'Notification',
+  '$mdToast',
   '$filter',
   '$timeout',
   '$window',
   'Project',
-  function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project) {
+  function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project) {
     /*
 	 * Setup vars
 	 */
@@ -6924,7 +6930,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     $scope.save = function () {
       try {
         if ($scope.verifyOrder()) {
-          Notification.display('Creating purchase order...', false);
+          $mdToast.show($mdToast.simple().position('top right').content('Creating new purchase order...').hideDelay(0));
           /*
 				 * prep the items by moving the supply id to a separate hash
 				 */
@@ -6946,15 +6952,15 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
             } catch (e) {
               console.warn(e);
             }
-            Notification.display('Purchase order created.');
+            $mdToast.show($mdToast.simple().position('top right').content('Purchase order created.'));
           }, function (e) {
-            Notification.display('There was an error in creating the purchase order.');
+            $mdToast.show($mdToast.simple().content(e));
           });
         } else {
           throw Error;
         }
       } catch (e) {
-        Notification.display(e.message);
+        $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
       }
     };
     /*
@@ -6970,9 +6976,9 @@ angular.module('employeeApp.directives').directive('addSupply', [
   '$rootScope',
   'Supplier',
   'Supply',
-  'Notification',
+  '$mdToast',
   '$http',
-  function ($rootScope, Supplier, Supply, Notification, $http) {
+  function ($rootScope, Supplier, Supply, $mdToast, $http) {
     return {
       templateUrl: 'views/templates/add-supply.html',
       replace: true,
@@ -7032,7 +7038,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
         };
         scope.add = function () {
           if (scope.form.$valid) {
-            Notification.display('Creating supply...', false);
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Creating supply...'));
             //Moves the supply and adds the the supplier array
             scope.supply.suppliers = scope.supply.suppliers || [];
             if (scope.supply.suppliers.indexOfById(scope.supply.supplier)) {
@@ -7048,7 +7054,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.visible = false;
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
-                Notification.display('Supply created');
+                $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Supply created.'));
                 if (scope.assignedSupplier) {
                   scope.supply.supplier = angular.copy(scope.assignedSupplier);
                 }
@@ -7057,7 +7063,6 @@ angular.module('employeeApp.directives').directive('addSupply', [
               });
             } else {
               scope.supply.$create(function (response) {
-                Notification.display('Supply created');
                 scope.visible = false;
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
@@ -7066,11 +7071,11 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 }
               }, function (reason) {
                 console.error(reason);
-                Notification.display('There was an error in creating the supply', false);
+                $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('There was an error in creating the supply'));
               });
             }
           } else {
-            Notification.display('Please fill out the form properly');
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Please fill out the form properly'));
           }
         };
         scope.addImage = function (data) {
@@ -7083,8 +7088,8 @@ angular.module('employeeApp.directives').directive('addSupply', [
 angular.module('employeeApp.directives').directive('addSupplier', [
   '$rootScope',
   'Supplier',
-  'Notification',
-  function ($rootScope, Supplier, Notification) {
+  '$mdToast',
+  function ($rootScope, Supplier, $mdToast) {
     return {
       templateUrl: 'views/templates/add-supplier.html',
       replace: true,
@@ -7136,9 +7141,9 @@ angular.module('employeeApp.directives').directive('addSupplier', [
         scope.add = function () {
           try {
             if (scope.form.$valid) {
-              Notification.display('Creating supplier...', false);
+              $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Creating supplier...'));
               scope.supplier.$save(function (response) {
-                Notification.display('Supplier created');
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Supplier created.'));
                 //Call on add
                 scope.onAdd({ $supplier: scope.supplier });
                 //Reset to before add
@@ -7146,13 +7151,13 @@ angular.module('employeeApp.directives').directive('addSupplier', [
                 scope.supplier = new Supplier();
               }, function (reason) {
                 console.error(reason);
-                Notification.display('There was an error in creating the supplier', false);
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error in creating the supplier'));
               });
             } else {
-              Notification.display('Please fill out the form properly');
+              $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Please fill out the form properly'));
             }
           } catch (e) {
-            Notification.display(e);
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content(e));
           }
         };
       }
@@ -7192,11 +7197,11 @@ angular.module('employeeApp').directive('onScrollEnd', [function () {
   }]);
 angular.module('employeeApp').directive('customerList', [
   'Customer',
-  'Notification',
+  '$mdToast',
   'KeyboardNavigation',
   '$rootScope',
   '$filter',
-  function (Customer, Notification, KeyboardNavigation, $rootScope, $filter) {
+  function (Customer, $mdToast, KeyboardNavigation, $rootScope, $filter) {
     return {
       templateUrl: 'views/templates/customer-list.html',
       replace: true,
@@ -7242,14 +7247,14 @@ angular.module('employeeApp').directive('customerList', [
 			 */
         scope.loadNext = function () {
           if (!fetching) {
-            Notification.display('Loading more customers...', false);
+            $mdToast.show($mdToast.simple().position('right top').hideDelay(0).content('Loading customers suppliers...'));
             fetching = true;
             Customer.query({
               offset: scope.customers.length,
               limit: 50
             }, function (resources) {
               fetching = false;
-              Notification.hide();
+              $mdToast.hide();
               for (var i = 0; i < resources.length; i++) {
                 scope.customers.push(resources[i]);
               }
@@ -7571,9 +7576,9 @@ angular.module('employeeApp').directive('tableList', [
 ]);
 angular.module('employeeApp').directive('fabricSelector', [
   'Fabric',
-  'Notification',
+  '$mdToast',
   '$parse',
-  function (Fabric, Notification, $parse) {
+  function (Fabric, $mdToast, $parse) {
     return {
       templateUrl: 'views/templates/fabric-selector.html',
       replace: true,
@@ -7616,14 +7621,14 @@ angular.module('employeeApp').directive('fabricSelector', [
 			 */
         scope.loadNext = function () {
           if (!fetching) {
-            Notification.display('Loading more fabrics...', false);
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Loading more fabrics...'));
             fetching = true;
             Fabric.query({
               offset: scope.fabrics.length,
               limit: 50
             }, function (resources) {
               fetching = false;
-              Notification.hide();
+              $mdToast.hide();
               for (var i = 0; i < resources.length; i++) {
                 scope.fabrics.push(resources[i]);
               }
@@ -7655,18 +7660,15 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$scope',
   '$routeParams',
   'PurchaseOrder',
-  'Notification',
+  '$mdToast',
   '$location',
   '$window',
-  function ($scope, $routeParams, PurchaseOrder, Notification, $location, $window) {
-    Notification.display('Loading purchase order ' + $routeParams.id + '...', false);
-    $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
-      Notification.hide();
-    });
+  function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
+    $scope.po = PurchaseOrder.get({ id: $routeParams.id });
     $scope.save = function () {
-      Notification.display('Saving changes to Purchase Order for ' + $scope.po.id, false);
+      $mdToast.show($mdToast.simple().position('top right').content('Saving changes to purchase order ' + $scope.po.id).hideDelay(0));
       $scope.po.$update(function () {
-        Notification.display('Changes to Purchase Order ' + $scope.po.id + ' saved.');
+        $mdToast.show($mdToast.simple().position('top right').content('Changes to purchase order ' + $scope.po.id + ' saved.').hideDelay(2000));
         $window.open($scope.po.pdf.url);
       }, function (e) {
         console.error(e);
@@ -7725,7 +7727,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         $scope.po.items.push(purchasedItem);
         console.log($scope.po.items);
       } else {
-        Notification.display('This item is already present in the purchase order');
+        $mdToast.show($mdToast.simple().position('top right').content('This item is already present in the purchase order').hideDelay(2000));
       }
     };
     /*
@@ -7745,7 +7747,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
       $window.open($scope.po.pdf.url);
     };
     $scope.order = function () {
-      Notification.display('Updating purchase order...', false);
+      $mdToast.show($mdToast.simple().content('Updating purchase order...').hideDelay(0));
       $scope.showCal = false;
       //Modify the order
       $scope.po.status = 'Ordered';
@@ -7754,12 +7756,12 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         $scope.po.items[i].status = 'Ordered';
       }
       $scope.po.$update(function () {
-        Notification.display('Purchase order updated.');
+        $mdToast.show($mdToast.simple().content('Purchase order updated.'));
       });
     };
     $scope.receive = function () {
       if ($scope.po.receive_date) {
-        Notification.display('Updating purchase order...', false);
+        $mdToast.show($mdToast.simple().content('Updating purchase order...').hideDelay(0));
         $scope.showCal = false;
         //Modify the order
         $scope.po.status = 'Received';
@@ -7768,14 +7770,14 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
           $scope.po.items[i].status = 'Received';
         }
         $scope.po.$update(function () {
-          Notification.display('Purchase order updated.');
+          $mdToast.show($mdToast.simple().content('Purchase order updated.'));
         });
       } else {
         $scope.showCal = true;
       }
     };
     $scope.pay = function () {
-      Notification.display('Updating purchase order...', false);
+      $mdToast.show($mdToast.simple().content('Updating purchase order...').hideDelay(0));
       //Modify the order
       $scope.po.status = 'Paid';
       //Pay for the items
@@ -7783,18 +7785,18 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         $scope.po.items[i].status = 'Paid';
       }
       $scope.po.$update(function () {
-        Notification.display('Purchase order updated.');
+        $mdToast.show($mdToast.simple().content('Purchase order updated.'));
       });
     };
     $scope.cancel = function () {
-      Notification.display('Cancelling purchase order...', false);
+      $mdToast.show($mdToast.simple().content('Updating purchase order...').hideDelay(0));
       $scope.po.status = 'Cancelled';
       //Pay for the items
       for (var i = 0; i < $scope.po.items.length; i++) {
         $scope.po.items[i].status = 'Cancelled';
       }
       $scope.po.$update(function () {
-        Notification.display('Purchase order ' + $scope.po.id + ' cancelled.');
+        $mdToast.show($mdToast.simple().content('Purchase order ' + $scope.po.id + ' cancelled.'));
         $location.path('order/purchase_order');
       });
     };
@@ -8111,16 +8113,17 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   }
 ]);
 angular.module('employeeApp').directive('imageUploader', [
-  'Notification',
+  '$mdToast',
   'FileUploader',
-  function (Notification, FileUploader) {
+  function ($mdToast, FileUploader) {
     return {
       templateUrl: 'views/templates/image-uploader.html',
       restrict: 'EA',
       replace: true,
       scope: {
         url: '@url',
-        onUpload: '&'
+        onUpload: '&',
+        square: '='
       },
       link: function postLink(scope, element, attrs) {
         scope.selection = 'addImage';
@@ -8140,14 +8143,14 @@ angular.module('employeeApp').directive('imageUploader', [
         scope.upload = function ($image, callback) {
           var promise = FileUploader.upload($image, scope.url);
           promise.then(function (dataObj) {
-            Notification.display('File was uploaded');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('File was uploaded.'));
             scope.onUpload({
               data: dataObj.data,
               $image: dataObj.data
             });
             (callback || angular.noop)(dataObj.data);
           }, function () {
-            Notification.display('There was an error uploading the file');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error uploading the file'));
           });
         };
       }
@@ -8156,9 +8159,9 @@ angular.module('employeeApp').directive('imageUploader', [
 ]);
 angular.module('employeeApp.directives').directive('addCustomer', [
   'Customer',
-  'Notification',
+  '$mdToast',
   'Geocoder',
-  function (Customer, Notification, Geocoder) {
+  function (Customer, $mdToast, Geocoder) {
     return {
       templateUrl: 'views/templates/add-customer.html',
       replace: true,
@@ -8206,17 +8209,17 @@ angular.module('employeeApp.directives').directive('addCustomer', [
         };
         scope.add = function () {
           if (scope.form.$valid) {
-            Notification.display('Creating customer...', false);
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Creating customer...'));
             scope.customer.$save(function (response) {
-              Notification.display('Customer created');
+              $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Customer created.'));
               scope.visible = false;
               scope.customer = new Customer();
             }, function (reason) {
               console.error(reason);
-              Notification.display('There was an error in creating the customer');
+              $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error in creating the customer'));
             });
           } else {
-            Notification.display('Please fill out the form properly');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Please fill out the form properly'));
           }
         };
       }
@@ -8388,11 +8391,11 @@ angular.module('employeeApp.services').factory('KeyboardNavigation', [
 ]);
 angular.module('employeeApp').directive('supplierList', [
   'Supplier',
-  'Notification',
+  '$mdToast',
   'KeyboardNavigation',
   '$rootScope',
   '$filter',
-  function (Supplier, Notification, KeyboardNavigation, $rootScope, $filter) {
+  function (Supplier, $mdToast, KeyboardNavigation, $rootScope, $filter) {
     return {
       templateUrl: 'views/templates/supplier-list.html',
       replace: true,
@@ -8438,14 +8441,14 @@ angular.module('employeeApp').directive('supplierList', [
 			 */
         scope.loadNext = function () {
           if (!fetching) {
-            Notification.display('Loading more suppliers...', false);
+            $mdToast.show($mdToast.simple().position('right top').hideDelay(0).content('Loading more suppliers...'));
             fetching = true;
             Supplier.query({
               offset: scope.suppliers.length,
               limit: 50
             }, function (resources) {
               fetching = false;
-              Notification.hide();
+              $mdToast.hide();
               for (var i = 0; i < resources.length; i++) {
                 scope.suppliers.push(resources[i]);
               }
@@ -8517,11 +8520,11 @@ angular.module('employeeApp').directive('supplyList', [
   'Supply',
   '$filter',
   'KeyboardNavigation',
-  'Notification',
+  '$mdToast',
   '$rootScope',
   '$http',
   '$compile',
-  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, $compile) {
+  function (Supply, $filter, KeyboardNavigation, $mdToast, $rootScope, $http, $compile) {
     return {
       templateUrl: 'views/templates/supply-list.html',
       replace: true,
@@ -8607,7 +8610,7 @@ angular.module('employeeApp').directive('supplyList', [
             scope.loadNext = function () {
               fetching = false;
               if (!fetching) {
-                Notification.display('Loading more supplies...', false);
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more supplies...'));
                 fetching = true;
                 var options = {
                     offset: scope.supplies.length,
@@ -8620,7 +8623,7 @@ angular.module('employeeApp').directive('supplyList', [
                 Supply.query(options, function (resources) {
                   console.log(resources);
                   fetching = false;
-                  Notification.hide();
+                  $mdToast.hide();
                   for (var i = 0; i < resources.length; i++) {
                     if (scope.supplies.indexOfById(resources[i]) == -1) {
                       scope.supplies.push(resources[i]);
@@ -8708,17 +8711,25 @@ angular.module('employeeApp.directives').directive('camera', [
   'CameraService',
   function (CameraService) {
     return {
-      template: '<div class="camera">' + '<canvas></canvas>' + '<video class="camera-video"></video>' + '<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' + '<div class="btn-menu">' + '<div  class="save-btn" ng-click="save()">Save</div>' + '<div class="retake-btn" ng-click="retake()">Retake</div>' + '</div>' + '</div>',
+      template: '<div class="camera">' + '<div class="guide"></div>' + '<div class="active-media-area">' + '<canvas></canvas>' + '<video class="camera-video"></video>' + '</div>' + '<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' + '<div class="btn-menu">' + '<div  class="save-btn" ng-click="save()">Save</div>' + '<div class="retake-btn" ng-click="retake()">Retake</div>' + '</div>' + '</div>',
       restrict: 'EA',
       replace: true,
-      scope: { onSnapshot: '&' },
+      scope: {
+        onSnapshot: '&',
+        cropOptions: '=',
+        square: '=',
+        depth: '='
+      },
       link: function postLink(scope, element, attrs) {
         //console.log('test');
         //console.log(CameraService.hasUserMedia());
         if (!CameraService.hasUserMedia()) {
           return;
         }
-        var userMedia = CameraService.getUserMedia, canvas = element.find('canvas')[0], ctx = canvas.getContext('2d'), video = element.find('video')[0], width = attrs.width || 1280, height = attrs.height || 720;
+        var userMedia = CameraService.getUserMedia, canvas = element.find('canvas')[0], ctx = canvas.getContext('2d'), video = element.find('video')[0], width = scope.width || 1280, height = scope.height || 720;
+        if (scope.square) {
+          angular.element(canvas).addClass('square');
+        }
         var onSuccess = function (stream) {
           video.src = window.URL.createObjectURL(stream);
           video.play();
@@ -8743,7 +8754,7 @@ angular.module('employeeApp.directives').directive('camera', [
           return new Blob([stream], { type: 'image/jpeg' });
         }
         scope.retake = function () {
-          $(canvas).removeClass('active');
+          $(element).removeClass('active');
         };
         scope.save = function () {
           var img = getImageAsBlob(canvas.toDataURL('image/jpeg'));
@@ -8751,13 +8762,17 @@ angular.module('employeeApp.directives').directive('camera', [
           scope.retake();
         };
         scope.takeSnapshot = function () {
-          width = video.videoWidth;
+          width = scope.square ? video.videoHeight : video.videoWidth;
           height = video.videoHeight;
-          canvas.width = width;
-          canvas.height = height;
+          canvas.height = scope.square ? angular.element(video).height() : height;
+          canvas.width = scope.square ? canvas.height : width;
           ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(video, 0, 0, width, height);
-          $(canvas).addClass('active');
+          if (scope.square) {
+            ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height);
+          } else {
+            ctx.drawImage(video, 0, 0, width, height);
+          }
+          $(element).addClass('active');
         };
       }
     };
@@ -8784,12 +8799,12 @@ angular.module('employeeApp.services').factory('requestError', [
 angular.module('employeeApp.directives').directive('supplyScannerModal', [
   'scanner',
   'Supply',
-  'Notification',
+  '$mdToast',
   'KeyboardNavigation',
   '$timeout',
   '$rootScope',
   'Equipment',
-  function (scanner, Supply, Notification, KeyboardNavigation, $timeout, $rootScope, Equipment) {
+  function (scanner, Supply, $mdToast, KeyboardNavigation, $timeout, $rootScope, Equipment) {
     return {
       templateUrl: 'views/templates/supply-scanner-modal.html',
       restrict: 'A',
@@ -8837,11 +8852,11 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
 			 * Updates the image of the currently selected supply
 			 */
         scope.addImage = function (data) {
-          Notification.display('Updating the supply\'s image', false);
+          $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Updating the supply\'s image'));
           var image = data.hasOwnProperty('data') ? data.data : data;
           scope.supply.image = image;
           scope.supply.$update(function () {
-            Notification.display('Supply\'s image updated.');
+            $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Supply\'s image updated.'));
           });
         };
         scope.interfaceType = 'supply';
@@ -8860,13 +8875,13 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
               scope.supply.quantity += Number(quantity);
             }
             scope.supply.$update({ 'country': $rootScope.country }, function () {
-              Notification.display('Quantity of ' + scope.supply.description + ' changed to ' + scope.supply.quantity);
+              $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Quantity of ' + scope.supply.description + ' changed to ' + scope.supply.quantity));
               scope.quantity = 0;
               $timeout(function () {
                 scope.supply = undefined;
               }, 1500);
             }, function (e) {
-              Notification.display(e);
+              $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(e));
             });
           }
         };
@@ -8874,7 +8889,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
 			 * Register the supply code regex
 			 */
         scope.scanner.register(/^DRS-\d+$/, function (code) {
-          Notification.display('Looking up supply...', false);
+          $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up supply'));
           scope.interfaceType = 'supply';
           scope.supply = Supply.get({
             id: code.split('-')[1],
@@ -8884,7 +8899,7 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             Notification.hide();
             focusOnQuantity();
           }, function () {
-            Notification.display('Unable to find supply.', false);  /*
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Unable to find supply.'));  /*
 					scope.supply = Supply.get({id:code}, function () {
 						Notification.display('Unable to find supply', false);
 					});
@@ -8915,13 +8930,13 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
 			 *  Regiester the equipment code
 			 */
         scope.scanner.register(/^DRE-\d+$/, function (code) {
-          Notification.display('Looking up equipment', false);
+          $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up equipment.'));
           scope.interfaceType = 'equipment';
           scope.equipment = Equipment.get({ id: code.split('-')[1] }, function (response) {
             scope.disabled = false;
-            Notification.hide();
+            $mdToast.hide();
           }, function () {
-            Notification.display('Unable to find equipment.', false);
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Unable to find equipment.'));
           });
         });
         /*
@@ -9123,13 +9138,13 @@ angular.module('employeeApp.directives').directive('supply', [
   '$http',
   'Supply',
   '$rootScope',
-  'Notification',
+  '$mdToast',
   '$timeout',
   '$window',
   'scanner',
   'D3',
   '$compile',
-  function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D3, $compile) {
+  function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile) {
     var subHTML;
     var promise = $http.get('views/templates/supply-details.html');
     promise.then(function (response) {
@@ -9228,11 +9243,11 @@ angular.module('employeeApp.directives').directive('supply', [
               $timeout.cancel(timeoutPromise);
               timeoutPromise = $timeout(function () {
                 var supply = angular.copy(scope.supply);
-                Notification.display('Saving ' + scope.supply.description + '...', false);
+                $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Saving ' + scope.supply.description + '...'));
                 supply.$update({ 'country': $rootScope.country }, function () {
-                  Notification.display(scope.supply.description + ' saved');
+                  $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(scope.supply.description + ' saved'));
                 }, function () {
-                  Notification.display('There was an error in saving ' + scope.supply.description);
+                  $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('There was an error in saving ' + scope.supply.description));
                 });
               }, 750);
             }
@@ -9266,7 +9281,7 @@ angular.module('employeeApp.directives').directive('supply', [
           try {
             $window.open(scope.supply.sticker.url);
           } catch (e) {
-            Notification.display('This supply is missing a sticker');
+            $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('This supply is missing a sticker'));
           }
         };
         scope.activate = function () {
@@ -9385,6 +9400,10 @@ angular.module('employeeApp').directive('employee', [
         /*
 			 * General Functions
 			 */
+        scope.addImage = function (data) {
+          var image = data.hasOwnProperty('data') ? data.data : data;
+          scope.employee.image = image;
+        };
         //Start a watch on the scope for the supply var
         function startWatch() {
           cancelWatch = scope.$watch('employee', function (newVal, oldVal) {
@@ -9552,11 +9571,11 @@ angular.module('employeeApp').directive('supplies', [
   'Supply',
   '$filter',
   'KeyboardNavigation',
-  'Notification',
+  '$mdToast',
   '$rootScope',
   '$http',
   '$compile',
-  function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, $compile) {
+  function (Supply, $filter, KeyboardNavigation, $mdToast, $rootScope, $http, $compile) {
     return {
       templateUrl: 'views/templates/supplies.html',
       replace: true,
@@ -9641,7 +9660,7 @@ angular.module('employeeApp').directive('supplies', [
             scope.loadNext = function () {
               fetching = false;
               if (!fetching) {
-                Notification.display('Loading more supplies...', false);
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more supplies...'));
                 fetching = true;
                 var options = {
                     offset: scope.supplies.length,
@@ -9653,7 +9672,7 @@ angular.module('employeeApp').directive('supplies', [
                 }
                 Supply.query(options, function (resources) {
                   fetching = false;
-                  Notification.hide();
+                  $mdToast.hide();
                   for (var i = 0; i < resources.length; i++) {
                     if (scope.supplies.indexOfById(resources[i]) == -1) {
                       scope.supplies.push(resources[i]);
@@ -10214,11 +10233,11 @@ angular.module('employeeApp').controller('SupplyShoppingListCtrl', [
 ]);
 angular.module('employeeApp').directive('suppliers', [
   'Supplier',
-  'Notification',
+  '$mdToast',
   'KeyboardNavigation',
   '$rootScope',
   '$filter',
-  function (Supplier, Notification, KeyboardNavigation, $rootScope, $filter) {
+  function (Supplier, $mdToast, KeyboardNavigation, $rootScope, $filter) {
     return {
       templateUrl: 'views/templates/suppliers.html',
       replace: true,
@@ -10261,14 +10280,14 @@ angular.module('employeeApp').directive('suppliers', [
 			 */
         scope.loadNext = function () {
           if (!fetching) {
-            Notification.display('Loading more suppliers...', false);
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more suppliers...'));
             fetching = true;
             Supplier.query({
               offset: scope.suppliers.length,
               limit: 50
             }, function (resources) {
               fetching = false;
-              Notification.hide();
+              $mdToast.hide();
               for (var i = 0; i < resources.length; i++) {
                 scope.suppliers.push(resources[i]);
               }

@@ -1,7 +1,7 @@
 <div class="employee-directive">
 	<div class="img-container" ng-click="activate()">
 		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
-		<img ng-src="{{supply.image.url}}" />
+		<img ng-src="{{employee.image.url}}" />
 	</div>
 	<div class="short-details details" ng-click="activate()">
 		<span class="description">
@@ -93,53 +93,47 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="usage usage-chart-supply-{{supply.id}}">
+			<!--
+		 	<div class="usage usage-chart-supply-{{supply.id}}">
 				<div class="chart">
 					<span class="title">Supply Usage</span>
 				</div>
-			</div>
+		 	</div>-->
 		</div>
 		<div class="suppliers">
-			<h2>Attendance</h2>
+			<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)" square="true"></div>
+			<!--
+        	<h2>Attendance</h2>
 			<div class="attendance-details">
 				<table>
 					<tr>
 						<td>
-							{{activeAttendance.date | date : 'MMM d, yyyy'}}
+						{{activeAttendance.date | date : 'MMM d, yyyy'}}
 						</td>
 					</tr>
 					<tr>
 						<td>
-							{{activeAttendance.start_time | date: 'H:mm'}} - {{activeAttendance.end_time | date: 'H:mm'}}
+						{{activeAttendance.start_time | date: 'H:mm'}} - {{activeAttendance.end_time | date: 'H:mm'}}
 						</td>
 					</tr>
 					<tr>
-						<td>
-							<label>Total hours</label>
-						</td>
-						<td><span>{{activeAttendance.total_time | number:2}}</span>
-						</td>
+						<td><label>Total hours</label></td>
+						<td><span>{{activeAttendance.total_time | number:2}}</span></td>
 					</tr>
 					<tr>
-						<td>
-							<label>Regular hours</label>
-						</td>
-						<td><span>{{activeAttendance.regular_time | number:2}}</span>
-						</td>
+						<td><label>Regular hours</label></td>
+						<td><span>{{activeAttendance.regular_time | number:2}}</span></td>
 					</tr>
 					<tr>
-						<td>
-							<label>Over hours</label>
-						</td>
-						<td><span>{{activeAttendance.overtime | number:2}}</span>
-						</td>
+						<td><label>Over hours</label></td>
+						<td><span>{{activeAttendance.overtime | number:2}}</span></td>
 					</tr>
 				</table>
 			</div>
 			<div class="attendance-container">
 				<div attendance-chart data="attendances" active="activeAttendance">
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>

@@ -109,6 +109,7 @@
 						<td>Discount</td>
 						<td>Unit Cost</td>
 						<td>Quantity</td>
+						<td>Units</td>
 						<td colspan="2">Total</td>
 					</tr>
 				</thead>
@@ -128,6 +129,22 @@
 						</td>
 						<td class='quantity'>
 							<input type="text" ng-model="item.quantity" />
+						</td>
+						<td>
+							<select required ng-model="item.suppliers[0].purchasing_units">
+								<option value="pc" selected>Piece</option>
+								<option value="container">Container</option>
+								<option value="m">Meter</option>
+								<option value="yd">Yard</option>
+								<option value="kg">Kilogram</option>
+								<option value="mm">Millimeter</option>
+								<option value="set">Set</option>
+								<option value="pack">Pack</option>
+								<option value="pack">Box</option>
+								<option value="cm^2">cm&#0178;</option>
+								<option value="m^2">m&#0178;</option>
+								<option value="in^2">in&#0178;</option>
+							</select>
 						</td>
 						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity}}</td>
 						<td>
