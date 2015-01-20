@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast',
-function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast) {
+.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http',
+function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http) {
 	
 	/*
 	 * Vars
@@ -145,14 +145,32 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	 *  Regiester the equipment code
 	 */ 
 	$scope.scanner.register(/^DRE-\d+$/, function (code) {
-		Notification.display("Looking up equipment", false);
-		$scope.interfaceType = 'equipment';
 		$scope.equipment = Equipment.get({id: code.split('-')[1]}, function (response) {
 			$scope.disabled = false;
-			Notification.hide();
 		}, function () {
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find equipment.')
+				.hideDelay(0));
+		});
+	});
+	
+	/*
+	 *  Regiester the employee code
+	 */ 
+	$scope.scanner.register(/^DREM-\d+$/, function (code) {
+		
+		//Notifiy the user of action
+		$mdToast.show($mdToast.simple()
+			.content("Looking up employee...")
+			.hideDelay(0));
+		
+		$scope.equipment = Employee.get({id: code.split('-')[1]}, function (response) {
+			$scope.employee = response;
+			$mdToast.hide();
+			
+		}, function () {
+			$mdToast.show($mdToast.simple()
+				.content('Unable to find employee.')
 				.hideDelay(0));
 		});
 	});
@@ -205,6 +223,26 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 			$scope.showAddImage = false;
 		}
 	});
+	
+	$scope.checkout = function () {
+		
+		for (var i = 0; i < $scope.supplies.length; i++) {
+			$scope.supplies[i].employee = angular.copy($scope.employee);
+			$scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
+		}
+		
+		var promise = $http.put('/api/v1/supply/', $scope.supplies);
+		
+		promise.succuss(function () {
+			$scope.supplies = [];
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(2000)
+				.content('Supplies updated.'));
+		}).error(function () {
+			
+		});
+	};
 	
 	$scope.$on('$destroy', function () {
 		keyboardNav.disable();
