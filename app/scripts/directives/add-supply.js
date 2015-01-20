@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addSupply', ['$rootScope', 'Supplier', 'Supply', 'Notification', '$http',
-function ($rootScope, Supplier, Supply, Notification, $http) {
+.directive('addSupply', ['$rootScope', 'Supplier', 'Supply', '$mdToast', '$http',
+function ($rootScope, Supplier, Supply, $mdToast, $http) {
 	return {
 		templateUrl: 'views/templates/add-supply.html',
 		replace: true,
@@ -31,7 +31,7 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 			
 			scope.$watch('assignedSupplier', function (val){
 				if (val) {
-					scope.supply.supplier = val;
+					scope.supply.supplier = angular.copy(val);
 				}
 			});
 			
@@ -77,7 +77,11 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 			
 			scope.add = function () {
 				if (scope.form.$valid) {
-					Notification.display('Creating supply...', false);
+					$mdToast.show($mdToast.simple()
+						.hideDelay(0)
+						.position('top right')
+						.content('Creating supply...'));
+
 					//Moves the supply and adds the the supplier array
 					scope.supply.suppliers = scope.supply.suppliers || [];
 					if (scope.supply.suppliers.indexOfById(scope.supply.supplier)) {
@@ -94,23 +98,43 @@ function ($rootScope, Supplier, Supply, Notification, $http) {
 							scope.visible = false;
 							scope.onAdd({$supply:scope.supply});
 							scope.supply = new Supply();
-							Notification.display('Supply created');
+							
+							$mdToast.show($mdToast.simple()
+								.hideDelay(2000)
+								.position('top right')
+								.content('Supply created.'));
+							
+							if (scope.assignedSupplier) {
+								scope.supply.supplier = angular.copy(scope.assignedSupplier);
+							}
+							
 						}, function (reason) {
 							console.error(reason);
 						});
 					} else {
 						scope.supply.$create(function (response) {
-							Notification.display('Supply created');
+
 							scope.visible = false;
 							scope.onAdd({$supply:scope.supply});
 							scope.supply = new Supply();
+							
+							if (scope.assignedSupplier) {
+								scope.supply.supplier = angular.copy(scope.assignedSupplier);
+							}
+							
 						}, function (reason) {
 							console.error(reason);
-							Notification.display('There was an error in creating the supply', false);
+							$mdToast.show($mdToast.simple()
+								.hideDelay(0)
+								.position('top right')
+								.content('There was an error in creating the supply'));
 						});
 					}
 				} else {
-					Notification.display('Please fill out the form properly');
+					$mdToast.show($mdToast.simple()
+						.hideDelay(0)
+						.position('top right')
+						.content('Please fill out the form properly'));
 				}
 			};
 

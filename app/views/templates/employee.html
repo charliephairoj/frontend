@@ -2,14 +2,14 @@
 	<div class="img-container" ng-click="activate()">
 		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
 
-		<img ng-src="{{supply.image.url}}" />
+		<img ng-src="{{employee.image.url}}" />
 	</div>
 	<div class="short-details details" ng-click="activate()"> 
-		<span class="description">
+		<span class="name">
 			{{employee.name}}
 		</span>
-		<span class="quantity">
-			ID: {{employee.id}}
+		<span class="nickname">
+			ID: {{employee.nickname}}
 		</span>
 	</div>
 	<div class='loading-notification' ng-class="{'active': !fetched}">
@@ -40,8 +40,29 @@
 	                    <td><label>Name</label></td>
 	                    <td><input class="description" size="40" type="text" ng-model="employee.name" /></td>
 	                </tr>
-	               
-	               
+					<tr>
+	                    <td><label>First Name</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="employee.first_name" /></td>
+	                </tr>
+	                <tr>
+	                    <td><label>Last Name</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="employee.last_name" /></td>
+	                </tr>
+	                <tr>
+	                    <td><label>Nickname</label></td>
+	                    <td><input class="description" size="40" type="text" ng-model="employee.nickname" /></td>
+	                </tr>
+	               	<tr>
+						<td><label>Nationality</label></td>
+						<td>
+							<select ng-model="employee.nationality">
+								<option value="thai">Thai</option>
+								<option value="cambodian">Cambodian</option>
+								<option value="loas">Loas</option>
+								<option value="burmese">Burmese</option>
+							</select>
+						</td>
+					</tr>
 	        		<tr>
 	        			<td><label>Department</label></td>
 	        			<td>
@@ -84,16 +105,18 @@
 					
 	         	</tbody>       
 	         </table>
-			 
+				<!--
 		 	<div class="usage usage-chart-supply-{{supply.id}}">
 				<div class="chart">
 					<span class="title">Supply Usage</span>
 				</div>
-		 	</div>
+		 	</div>-->
 			
 	        
 		</div>
         <div class="suppliers">
+			<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)" square="true"></div>
+			<!--
         	<h2>Attendance</h2>
 			<div class="attendance-details">
 				<table>
@@ -124,7 +147,7 @@
 			<div class="attendance-container">
 				<div attendance-chart data="attendances" active="activeAttendance">
 				</div>
-			</div>
+			</div>-->
         </div>
 	</div>
 </div>

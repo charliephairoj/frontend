@@ -3,6 +3,7 @@
     	Modals
    	-->
 	<div supply-list="showAddItem" supplier="po.supplier" on-select="addItem($supply)"></div>
+	<div add-supply="showCreateItem" supplier="po.supplier" on-add="addItem($supply)"></div>
 	<div class="calendar-modal" data-modal ng-model="showCal">
 		<div ui-date ng-model="po.receive_date"></div>
 		<div class="bottom_bar">
@@ -99,6 +100,7 @@
 		<div class="order-details" ng-show="po.items">
 			<h2 class="title">Items</h2>
 			<button class="add-item-btn" ng-click="showAddItem=true">+ Add Item</button>
+			<button class="create-item-btn" ng-click="showCreateItem=true">Create New Item</button>
 			<table>
 				<thead>
 					<tr class='heading'>
@@ -107,14 +109,17 @@
 						<td>Discount</td>
 						<td>Unit Cost</td>
 						<td>Quantity</td>
+						<td>Units</td>
 						<td colspan="2">Total</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr class="items" ng-repeat="item in po.items">
-						<td class='description'>{{item.description}}</td>
+						<td class='description'>
+							<textarea ng-model="item.description" row="4"></textarea>
+						</td>
 						<td>
-							<textarea ng-model=item.comments row="4"></textarea>
+							<textarea ng-model="item.comments" row="4"></textarea>
 						</td>
 						<td class='discount'>
 							<input type="text" ng-model="item.discount" />
@@ -124,6 +129,22 @@
 						</td>
 						<td class='quantity'>
 							<input type="text" ng-model="item.quantity" />
+						</td>
+						<td>
+							<select required ng-model="item.suppliers[0].purchasing_units">
+								<option value="pc" selected>Piece</option>
+								<option value="container">Container</option>
+								<option value="m">Meter</option>
+								<option value="yd">Yard</option>
+								<option value="kg">Kilogram</option>
+								<option value="mm">Millimeter</option>
+								<option value="set">Set</option>
+								<option value="pack">Pack</option>
+								<option value="pack">Box</option>
+								<option value="cm^2">cm&#0178;</option>
+								<option value="m^2">m&#0178;</option>
+								<option value="in^2">in&#0178;</option>
+							</select>
 						</td>
 						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity}}</td>
 						<td>
@@ -139,6 +160,7 @@
 						<td></td>
 					</tr>
 					<tr class="summary discount" ng-show="po.discount">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>

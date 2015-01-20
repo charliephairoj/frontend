@@ -3,8 +3,11 @@ angular.module('employeeApp.directives')
 .directive('camera', ['CameraService', function (CameraService) {
 	return {
 		template: '<div class="camera">' +
-					'<canvas></canvas>' +
-					'<video class="camera-video"></video>' +
+					'<div class="guide"></div>' +
+					'<div class="active-media-area">' +
+						'<canvas></canvas>' +
+						'<video class="camera-video"></video>' +
+					'</div>' +
 					'<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' +
 					'<div class="btn-menu">' +
 						'<div  class="save-btn" ng-click="save()">Save</div>' +
@@ -14,7 +17,10 @@ angular.module('employeeApp.directives')
 		restrict: 'EA',
 		replace: true,
 		scope: {
-			onSnapshot: '&'
+			onSnapshot: '&',
+			cropOptions: '=',
+			square: '=',
+			depth: '='
 		},
 		link: function postLink(scope, element, attrs) {
 			//console.log('test');
@@ -25,10 +31,13 @@ angular.module('employeeApp.directives')
 				canvas = element.find('canvas')[0],
 				ctx = canvas.getContext('2d'),
 				video = element.find('video')[0],
-				width = attrs.width || 1280,
-				height = attrs.height || 720;
+				width = scope.width || 1280,
+				height = scope.height || 720;
 				
-								
+			if (scope.square) {
+				angular.element(canvas).addClass('square');
+			}
+				
 			var onSuccess = function (stream) {
 				video.src = window.URL.createObjectURL(stream);
 				
@@ -57,7 +66,7 @@ angular.module('employeeApp.directives')
 			}
 			
 			scope.retake = function () {
-				$(canvas).removeClass('active');
+				$(element).removeClass('active');
 			};
 			
 			scope.save = function () {
@@ -67,15 +76,21 @@ angular.module('employeeApp.directives')
 			};
 			
 			scope.takeSnapshot = function () {
-				width = video.videoWidth;
+				width = scope.square ? video.videoHeight : video.videoWidth;
 				height = video.videoHeight;
 				
-				canvas.width = width;
-				canvas.height = height;
-				
+				canvas.height = scope.square ? angular.element(video).height() : height;
+				canvas.width = scope.square ? canvas.height : width;
+
 				ctx.fillRect(0, 0, width, height);
-				ctx.drawImage(video, 0, 0, width, height);
-				$(canvas).addClass('active');
+				
+				if (scope.square) {
+					ctx.drawImage(video, (video.videoWidth - width) / 2, 0, width, height, 0, 0, canvas.width, canvas.height);
+				} else{
+					ctx.drawImage(video, 0, 0, width, height);
+				}
+					
+				$(element).addClass('active');
 			};
 		}
 	};

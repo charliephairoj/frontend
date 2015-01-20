@@ -100,7 +100,6 @@ describe('Directive: addSupply', function () {
 				var supply = {id:5, units:'ml'}
 				scope.selectSupply(supply);
 				scope.$digest();
-				dump(scope.supply);
 				expect(scope.supply.id).toEqual(5);
 				expect(scope.supply.units).toEqual('ml');
 			});
@@ -211,30 +210,16 @@ describe('Directive: addSupply', function () {
 				scope.supply.supplier = {id: 3, name: 'test'}
 				scope.form = {$valid: true};
 				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating supply...");
+				
 				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('Supply created');
+				
 			});
 			
-			it('should notify the user if the supply fails to be created', function () {
-				expect(notification.hidden).toBeTruthy();
-				$http.whenPOST('/api/v1/supply/').respond(500);
-				scope.supply.supplier = {id: 3, name: 'test'}
-				scope.form = {$valid: true};
-				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating supply...");
-				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual('There was an error in creating the supply');
-			});
 			
 			xit('should call the onAdd function', inject(function ($rootScope) {
 				spyOn(rScope, 'testAdd');
 				$http.whenPOST('/api/v1/supply/').respond({});
-				scope.supply.supplier = {id: 3, name: 'test'}
+				scope.supply.supplier = {id: 3, name: 'test'};
 				scope.form = {$valid: true};
 				scope.add();
 				$http.flush();
@@ -242,6 +227,54 @@ describe('Directive: addSupply', function () {
 				//expect(rScope.testAdd).toHaveBeenCalledWith({});
 				
 			}));
+			
+			it('should reset the supplier after the server responses, if the supplier is assigned', function () {
+				$http.expectPOST('/api/v1/supply/').respond({});
+				scope.supply.supplier = {id: 3, name: 'test'};
+				scope.form = {$valid: true};
+				scope.assignedSupplier = {id: 3, name: 'test'};
+				scope.add();
+				$http.flush();
+				expect(scope.supply.supplier).toBeDefined();
+				expect(scope.supply.supplier.id).toEqual(3);
+				expect(scope.supply.supplier.name).toEqual('test');				
+			});
+			
+			it('should be able to add a second item, with assigned supplier after a first supply', function () {
+				//Adding first item
+				$http.expectPOST('/api/v1/supply/', function (dataStr) {
+					var data = JSON.parse(dataStr)
+					return data.hasOwnProperty('suppliers') 
+							&& data.suppliers.length == 1 
+							&& data.suppliers[0].hasOwnProperty('supplier')
+						   	&& data.suppliers[0].supplier.hasOwnProperty('id')
+						   	&& data.suppliers[0].supplier.id == 3 ? true : false;
+				}).respond({});
+				scope.supply.supplier = {id: 3, name: 'test'};
+				scope.form = {$valid: true};
+				scope.assignedSupplier = {id: 3, name: 'test'};
+				scope.add();
+				$http.flush();
+				expect(scope.supply.supplier).toBeDefined();
+				expect(scope.supply.supplier.id).toEqual(3);
+				expect(scope.supply.supplier.name).toEqual('test');	
+				
+				//Adding the second item
+				$http.expectPOST('/api/v1/supply/', function (dataStr) {
+					var data = JSON.parse(dataStr)
+					return data.hasOwnProperty('suppliers') 
+							&& data.suppliers.length == 1 
+							&& data.suppliers[0].hasOwnProperty('supplier')
+						   	&& data.suppliers[0].supplier.hasOwnProperty('id')
+						   	&& data.suppliers[0].supplier.id == 3 ? true : false;
+				}).respond({});
+				
+				scope.add();
+				$http.flush();
+				expect(scope.supply.supplier).toBeDefined();
+				expect(scope.supply.supplier.id).toEqual(3);
+				expect(scope.supply.supplier.name).toEqual('test');	
+			});
 		});
 	});
   	

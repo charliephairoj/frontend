@@ -1,0 +1,2495 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-update' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 warn package.json employee@0.0.0 No description
+5 warn package.json employee@0.0.0 No repository field.
+6 warn package.json employee@0.0.0 No README data
+7 verbose readDependencies using package.json deps
+8 verbose install where, deps [ '/Users/Charlie/Sites/employee/frontend',
+8 verbose install   [ 'connect-livereload',
+8 verbose install     'grunt',
+8 verbose install     'grunt-bower-hooks',
+8 verbose install     'grunt-contrib-clean',
+8 verbose install     'grunt-contrib-coffee',
+8 verbose install     'grunt-contrib-compass',
+8 verbose install     'grunt-contrib-concat',
+8 verbose install     'grunt-contrib-connect',
+8 verbose install     'grunt-contrib-copy',
+8 verbose install     'grunt-contrib-cssmin',
+8 verbose install     'grunt-contrib-htmlmin',
+8 verbose install     'grunt-contrib-imagemin',
+8 verbose install     'grunt-contrib-jshint',
+8 verbose install     'grunt-contrib-less',
+8 verbose install     'grunt-contrib-livereload',
+8 verbose install     'grunt-contrib-mincss',
+8 verbose install     'grunt-contrib-uglify',
+8 verbose install     'grunt-contrib-watch',
+8 verbose install     'grunt-google-cdn',
+8 verbose install     'grunt-karma',
+8 verbose install     'grunt-ngmin',
+8 verbose install     'grunt-open',
+8 verbose install     'grunt-prettify',
+8 verbose install     'grunt-protractor-runner',
+8 verbose install     'grunt-recess',
+8 verbose install     'grunt-regarde',
+8 verbose install     'grunt-usemin',
+8 verbose install     'json-proxy',
+8 verbose install     'karma',
+8 verbose install     'karma-chrome-launcher',
+8 verbose install     'karma-coffee-preprocessor',
+8 verbose install     'karma-firefox-launcher',
+8 verbose install     'karma-html2js-preprocessor',
+8 verbose install     'karma-jasmine',
+8 verbose install     'karma-ng-html2js-preprocessor',
+8 verbose install     'karma-phantomjs-launcher',
+8 verbose install     'karma-requirejs',
+8 verbose install     'karma-script-launcher',
+8 verbose install     'matchdep',
+8 verbose install     'requirejs' ] ]
+9 info preinstall employee@0.0.0
+10 verbose readDependencies using package.json deps
+11 verbose cache add [ 'grunt-contrib-connect@0.1.1rc6', null ]
+12 verbose cache add name=undefined spec="grunt-contrib-connect@0.1.1rc6" args=["grunt-contrib-connect@0.1.1rc6",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'grunt-contrib-connect@0.1.1rc6',
+13 verbose parsed url   path: 'grunt-contrib-connect@0.1.1rc6',
+13 verbose parsed url   href: 'grunt-contrib-connect@0.1.1rc6' }
+14 verbose already installed skipping grunt-contrib-copy@0.4.0rc7 /Users/Charlie/Sites/employee/frontend
+15 verbose already installed skipping grunt-contrib-cssmin@^0.9.0 /Users/Charlie/Sites/employee/frontend
+16 verbose already installed skipping grunt-contrib-htmlmin@0.1.1rc7 /Users/Charlie/Sites/employee/frontend
+17 verbose already installed skipping grunt-contrib-imagemin@0.1.1rc8 /Users/Charlie/Sites/employee/frontend
+18 verbose cache add name="grunt-contrib-connect" spec="0.1.1rc6" args=["grunt-contrib-connect","0.1.1rc6"]
+19 verbose parsed url { protocol: null,
+19 verbose parsed url   slashes: null,
+19 verbose parsed url   auth: null,
+19 verbose parsed url   host: null,
+19 verbose parsed url   port: null,
+19 verbose parsed url   hostname: null,
+19 verbose parsed url   hash: null,
+19 verbose parsed url   search: null,
+19 verbose parsed url   query: null,
+19 verbose parsed url   pathname: '0.1.1rc6',
+19 verbose parsed url   path: '0.1.1rc6',
+19 verbose parsed url   href: '0.1.1rc6' }
+20 verbose addNamed [ 'grunt-contrib-connect', '0.1.1rc6' ]
+21 verbose addNamed [ null, null ]
+22 silly lockFile d5eba5ae-grunt-contrib-connect-0-1-1rc6 grunt-contrib-connect@0.1.1rc6
+23 verbose lock grunt-contrib-connect@0.1.1rc6 /Users/Charlie/.npm/d5eba5ae-grunt-contrib-connect-0-1-1rc6.lock
+24 verbose already installed skipping grunt-contrib-jshint@^0.10.0 /Users/Charlie/Sites/employee/frontend
+25 verbose already installed skipping grunt-contrib-less@^0.11.0 /Users/Charlie/Sites/employee/frontend
+26 verbose already installed skipping grunt-contrib-livereload@0.1.0rc8 /Users/Charlie/Sites/employee/frontend
+27 verbose already installed skipping grunt-contrib-mincss@0.4.0rc7 /Users/Charlie/Sites/employee/frontend
+28 verbose request where is /grunt-contrib-connect
+29 verbose request registry https://registry.npmjs.org/
+30 verbose request id a6d67845f0a17d88
+31 verbose url raw /grunt-contrib-connect
+32 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-connect' ]
+33 verbose url resolved https://registry.npmjs.org/grunt-contrib-connect
+34 verbose request where is https://registry.npmjs.org/grunt-contrib-connect
+35 info trying registry request attempt 1 at 08:37:39
+36 verbose etag "7XPVJUS0H0UZMV7YPYI2ZJYP5"
+37 http GET https://registry.npmjs.org/grunt-contrib-connect
+38 verbose already installed skipping grunt-contrib-uglify@0.1.1rc6 /Users/Charlie/Sites/employee/frontend
+39 verbose already installed skipping grunt-contrib-watch@^0.6.1 /Users/Charlie/Sites/employee/frontend
+40 verbose already installed skipping grunt-google-cdn@~0.1.0 /Users/Charlie/Sites/employee/frontend
+41 verbose already installed skipping grunt-karma@~0.7.1 /Users/Charlie/Sites/employee/frontend
+42 verbose already installed skipping grunt-ngmin@~0.0.1 /Users/Charlie/Sites/employee/frontend
+43 verbose already installed skipping grunt-open@~0.1.0 /Users/Charlie/Sites/employee/frontend
+44 verbose already installed skipping grunt-prettify@~0.3.4 /Users/Charlie/Sites/employee/frontend
+45 verbose already installed skipping grunt-protractor-runner@^1.0.0 /Users/Charlie/Sites/employee/frontend
+46 verbose already installed skipping grunt-recess@~0.5.0 /Users/Charlie/Sites/employee/frontend
+47 verbose already installed skipping grunt-regarde@~0.1.1 /Users/Charlie/Sites/employee/frontend
+48 verbose already installed skipping grunt-usemin@~0.1.7 /Users/Charlie/Sites/employee/frontend
+49 verbose already installed skipping json-proxy@^0.1.2 /Users/Charlie/Sites/employee/frontend
+50 verbose already installed skipping karma@>=0.10.9 /Users/Charlie/Sites/employee/frontend
+51 verbose already installed skipping karma-chrome-launcher@~0.1.2 /Users/Charlie/Sites/employee/frontend
+52 verbose already installed skipping karma-coffee-preprocessor@~0.1.2 /Users/Charlie/Sites/employee/frontend
+53 verbose already installed skipping karma-firefox-launcher@~0.1.3 /Users/Charlie/Sites/employee/frontend
+54 verbose already installed skipping karma-html2js-preprocessor@~0.1.0 /Users/Charlie/Sites/employee/frontend
+55 verbose already installed skipping karma-jasmine@~0.1.5 /Users/Charlie/Sites/employee/frontend
+56 verbose already installed skipping karma-ng-html2js-preprocessor@~0.1 /Users/Charlie/Sites/employee/frontend
+57 verbose already installed skipping karma-phantomjs-launcher@~0.1.1 /Users/Charlie/Sites/employee/frontend
+58 verbose already installed skipping karma-requirejs@~0.2.1 /Users/Charlie/Sites/employee/frontend
+59 verbose already installed skipping karma-script-launcher@~0.1.0 /Users/Charlie/Sites/employee/frontend
+60 verbose already installed skipping matchdep@~0.1.1 /Users/Charlie/Sites/employee/frontend
+61 verbose already installed skipping requirejs@~2.1.9 /Users/Charlie/Sites/employee/frontend
+62 verbose already installed skipping connect-livereload@^0.4.0 /Users/Charlie/Sites/employee/frontend
+63 verbose already installed skipping grunt@^0.4.5 /Users/Charlie/Sites/employee/frontend
+64 verbose already installed skipping grunt-bower-hooks@~0.2.0 /Users/Charlie/Sites/employee/frontend
+65 verbose already installed skipping grunt-contrib-clean@0.4.0rc6 /Users/Charlie/Sites/employee/frontend
+66 verbose already installed skipping grunt-contrib-coffee@0.4.0rc7 /Users/Charlie/Sites/employee/frontend
+67 verbose already installed skipping grunt-contrib-compass@0.1.1rc8 /Users/Charlie/Sites/employee/frontend
+68 verbose already installed skipping grunt-contrib-concat@0.1.2rc6 /Users/Charlie/Sites/employee/frontend
+69 http 304 https://registry.npmjs.org/grunt-contrib-connect
+70 silly registry.get cb [ 304,
+70 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:41 GMT',
+70 silly registry.get     server: 'Apache',
+70 silly registry.get     via: '1.1 varnish',
+70 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:42 GMT',
+70 silly registry.get     'cache-control': 'max-age=60',
+70 silly registry.get     etag: '"7XPVJUS0H0UZMV7YPYI2ZJYP5"',
+70 silly registry.get     age: '0',
+70 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+70 silly registry.get     'x-cache': 'MISS',
+70 silly registry.get     'x-cache-hits': '0',
+70 silly registry.get     'x-timer': 'S1420162661.334257,VS0,VE979',
+70 silly registry.get     vary: 'Accept',
+70 silly registry.get     'content-length': '0',
+70 silly registry.get     'keep-alive': 'timeout=10, max=50',
+70 silly registry.get     connection: 'Keep-Alive' } ]
+71 verbose etag https://registry.npmjs.org/grunt-contrib-connect from cache
+72 silly lockFile d5eba5ae-grunt-contrib-connect-0-1-1rc6 grunt-contrib-connect@0.1.1rc6
+73 silly lockFile d5eba5ae-grunt-contrib-connect-0-1-1rc6 grunt-contrib-connect@0.1.1rc6
+74 silly resolved [ { name: 'grunt-contrib-connect',
+74 silly resolved     description: 'Start a connect web server.',
+74 silly resolved     version: '0.1.1-rc6',
+74 silly resolved     homepage: 'https://github.com/gruntjs/grunt-contrib-connect',
+74 silly resolved     author: { name: 'Grunt Team', url: 'http://gruntjs.com/' },
+74 silly resolved     repository:
+74 silly resolved      { type: 'git',
+74 silly resolved        url: 'git://github.com/gruntjs/grunt-contrib-connect.git' },
+74 silly resolved     bugs: { url: 'https://github.com/gruntjs/grunt-contrib-connect/issues' },
+74 silly resolved     licenses: [ [Object] ],
+74 silly resolved     main: 'Gruntfile.js',
+74 silly resolved     engines: { node: '>= 0.8.0' },
+74 silly resolved     scripts: { test: 'grunt test' },
+74 silly resolved     dependencies: { connect: '~2.4.4' },
+74 silly resolved     devDependencies:
+74 silly resolved      { 'grunt-contrib-jshint': '0.1.1rc6',
+74 silly resolved        'grunt-contrib-nodeunit': '0.1.2rc6',
+74 silly resolved        'grunt-contrib-internal': '*',
+74 silly resolved        grunt: '0.4.0rc6' },
+74 silly resolved     keywords: [ 'server', 'connect', 'http' ],
+74 silly resolved     contributors: [ [Object], [Object], [Object] ],
+74 silly resolved     _id: 'grunt-contrib-connect@0.1.1-rc6',
+74 silly resolved     dist:
+74 silly resolved      { shasum: '5824ad9ed5bcc8da790e7c7d6d765d567ca9efde',
+74 silly resolved        tarball: 'http://registry.npmjs.org/grunt-contrib-connect/-/grunt-contrib-connect-0.1.1rc6.tgz' },
+74 silly resolved     _npmVersion: '1.1.70',
+74 silly resolved     _npmUser: { name: 'cowboy', email: 'cowboy@rj3.net' },
+74 silly resolved     maintainers: [ [Object], [Object] ],
+74 silly resolved     directories: {},
+74 silly resolved     _shasum: '5824ad9ed5bcc8da790e7c7d6d765d567ca9efde',
+74 silly resolved     _from: 'grunt-contrib-connect@0.1.1rc6',
+74 silly resolved     _resolved: 'https://registry.npmjs.org/grunt-contrib-connect/-/grunt-contrib-connect-0.1.1rc6.tgz',
+74 silly resolved     readme: 'ERROR: No README data found!' } ]
+75 info install grunt-contrib-connect@0.1.1-rc6 into /Users/Charlie/Sites/employee/frontend
+76 info installOne grunt-contrib-connect@0.1.1-rc6
+77 verbose node_modules/grunt-contrib-connect unbuild
+78 info preuninstall grunt-contrib-connect@0.9.0
+79 info uninstall grunt-contrib-connect@0.9.0
+80 verbose true,/Users/Charlie/Sites/employee/frontend/node_modules,/Users/Charlie/Sites/employee/frontend/node_modules unbuild grunt-contrib-connect@0.9.0
+81 info postuninstall grunt-contrib-connect@0.9.0
+82 verbose tar unpack /Users/Charlie/.npm/grunt-contrib-connect/0.1.1-rc6/package.tgz
+83 silly lockFile 7c83f7da-de-modules-grunt-contrib-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+84 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect /Users/Charlie/.npm/7c83f7da-de-modules-grunt-contrib-connect.lock
+85 silly lockFile ac01942e-ib-connect-0-1-1-rc6-package-tgz tar:///Users/Charlie/.npm/grunt-contrib-connect/0.1.1-rc6/package.tgz
+86 verbose lock tar:///Users/Charlie/.npm/grunt-contrib-connect/0.1.1-rc6/package.tgz /Users/Charlie/.npm/ac01942e-ib-connect-0-1-1-rc6-package-tgz.lock
+87 silly gunzTarPerm modes [ '755', '644' ]
+88 silly gunzTarPerm extractEntry package.json
+89 silly gunzTarPerm extractEntry README.md
+90 silly gunzTarPerm extractEntry .travis.yml
+91 silly gunzTarPerm extractEntry AUTHORS
+92 silly gunzTarPerm extractEntry CHANGELOG
+93 silly gunzTarPerm extractEntry CONTRIBUTING.md
+94 silly gunzTarPerm extractEntry LICENSE-MIT
+95 silly gunzTarPerm extractEntry tasks/connect.js
+96 silly lockFile 7c83f7da-de-modules-grunt-contrib-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+97 silly lockFile 7c83f7da-de-modules-grunt-contrib-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+98 silly lockFile ac01942e-ib-connect-0-1-1-rc6-package-tgz tar:///Users/Charlie/.npm/grunt-contrib-connect/0.1.1-rc6/package.tgz
+99 silly lockFile ac01942e-ib-connect-0-1-1-rc6-package-tgz tar:///Users/Charlie/.npm/grunt-contrib-connect/0.1.1-rc6/package.tgz
+100 info preinstall grunt-contrib-connect@0.1.1-rc6
+101 verbose readDependencies using package.json deps
+102 verbose readDependencies using package.json deps
+103 verbose cache add [ 'connect@~2.4.4', null ]
+104 verbose cache add name=undefined spec="connect@~2.4.4" args=["connect@~2.4.4",null]
+105 verbose parsed url { protocol: null,
+105 verbose parsed url   slashes: null,
+105 verbose parsed url   auth: null,
+105 verbose parsed url   host: null,
+105 verbose parsed url   port: null,
+105 verbose parsed url   hostname: null,
+105 verbose parsed url   hash: null,
+105 verbose parsed url   search: null,
+105 verbose parsed url   query: null,
+105 verbose parsed url   pathname: 'connect@~2.4.4',
+105 verbose parsed url   path: 'connect@~2.4.4',
+105 verbose parsed url   href: 'connect@~2.4.4' }
+106 verbose cache add name="connect" spec="~2.4.4" args=["connect","~2.4.4"]
+107 verbose parsed url { protocol: null,
+107 verbose parsed url   slashes: null,
+107 verbose parsed url   auth: null,
+107 verbose parsed url   host: null,
+107 verbose parsed url   port: null,
+107 verbose parsed url   hostname: null,
+107 verbose parsed url   hash: null,
+107 verbose parsed url   search: null,
+107 verbose parsed url   query: null,
+107 verbose parsed url   pathname: '~2.4.4',
+107 verbose parsed url   path: '~2.4.4',
+107 verbose parsed url   href: '~2.4.4' }
+108 verbose addNamed [ 'connect', '~2.4.4' ]
+109 verbose addNamed [ null, '>=2.4.4-0 <2.5.0-0' ]
+110 silly lockFile b52a1606-connect-2-4-4 connect@~2.4.4
+111 verbose lock connect@~2.4.4 /Users/Charlie/.npm/b52a1606-connect-2-4-4.lock
+112 silly addNameRange { name: 'connect', range: '>=2.4.4-0 <2.5.0-0', hasData: false }
+113 verbose request where is /connect
+114 verbose request registry https://registry.npmjs.org/
+115 verbose url raw /connect
+116 verbose url resolving [ 'https://registry.npmjs.org/', './connect' ]
+117 verbose url resolved https://registry.npmjs.org/connect
+118 verbose request where is https://registry.npmjs.org/connect
+119 info trying registry request attempt 1 at 08:37:42
+120 verbose etag "F0L4LQEF9YC0X7MRS9J9KWJ0Z"
+121 http GET https://registry.npmjs.org/connect
+122 http 304 https://registry.npmjs.org/connect
+123 silly registry.get cb [ 304,
+123 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:42 GMT',
+123 silly registry.get     server: 'Apache',
+123 silly registry.get     via: '1.1 varnish',
+123 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:43 GMT',
+123 silly registry.get     'cache-control': 'max-age=60',
+123 silly registry.get     etag: '"F0L4LQEF9YC0X7MRS9J9KWJ0Z"',
+123 silly registry.get     age: '0',
+123 silly registry.get     'x-served-by': 'cache-sn88-SIN',
+123 silly registry.get     'x-cache': 'HIT',
+123 silly registry.get     'x-cache-hits': '1',
+123 silly registry.get     'x-timer': 'S1420162662.929993,VS0,VE845',
+123 silly registry.get     vary: 'Accept',
+123 silly registry.get     'content-length': '0',
+123 silly registry.get     'keep-alive': 'timeout=10, max=50',
+123 silly registry.get     connection: 'Keep-Alive' } ]
+124 verbose etag https://registry.npmjs.org/connect from cache
+125 silly addNameRange number 2 { name: 'connect', range: '>=2.4.4-0 <2.5.0-0', hasData: true }
+126 silly addNameRange versions [ 'connect',
+126 silly addNameRange   [ '0.0.1',
+126 silly addNameRange     '0.0.2',
+126 silly addNameRange     '0.0.3',
+126 silly addNameRange     '0.0.4',
+126 silly addNameRange     '0.0.5',
+126 silly addNameRange     '0.0.6',
+126 silly addNameRange     '0.1.0',
+126 silly addNameRange     '0.2.0',
+126 silly addNameRange     '0.2.1',
+126 silly addNameRange     '0.2.2',
+126 silly addNameRange     '0.2.3',
+126 silly addNameRange     '0.2.4',
+126 silly addNameRange     '0.2.5',
+126 silly addNameRange     '0.2.6',
+126 silly addNameRange     '0.2.7',
+126 silly addNameRange     '0.3.0',
+126 silly addNameRange     '0.4.0',
+126 silly addNameRange     '0.5.0',
+126 silly addNameRange     '0.5.1',
+126 silly addNameRange     '0.5.2',
+126 silly addNameRange     '0.5.3',
+126 silly addNameRange     '0.5.4',
+126 silly addNameRange     '0.5.5',
+126 silly addNameRange     '0.5.6',
+126 silly addNameRange     '0.5.7',
+126 silly addNameRange     '0.5.8',
+126 silly addNameRange     '0.5.9',
+126 silly addNameRange     '0.5.10',
+126 silly addNameRange     '1.0.0',
+126 silly addNameRange     '1.0.1',
+126 silly addNameRange     '1.0.2',
+126 silly addNameRange     '1.0.3',
+126 silly addNameRange     '1.0.4',
+126 silly addNameRange     '1.0.5',
+126 silly addNameRange     '1.0.6',
+126 silly addNameRange     '1.1.0',
+126 silly addNameRange     '1.1.1',
+126 silly addNameRange     '1.1.2',
+126 silly addNameRange     '1.1.3',
+126 silly addNameRange     '1.1.4',
+126 silly addNameRange     '1.1.5',
+126 silly addNameRange     '1.2.0',
+126 silly addNameRange     '1.2.1',
+126 silly addNameRange     '1.2.2',
+126 silly addNameRange     '1.2.3',
+126 silly addNameRange     '1.3.0',
+126 silly addNameRange     '1.4.0',
+126 silly addNameRange     '1.4.1',
+126 silly addNameRange     '1.4.2',
+126 silly addNameRange     '1.4.3',
+126 silly addNameRange     '1.4.4',
+126 silly addNameRange     '1.4.5',
+126 silly addNameRange     '1.4.6',
+126 silly addNameRange     '1.5.0',
+126 silly addNameRange     '1.5.1',
+126 silly addNameRange     '1.5.2',
+126 silly addNameRange     '1.6.0',
+126 silly addNameRange     '1.6.1',
+126 silly addNameRange     '1.6.2',
+126 silly addNameRange     '1.6.3',
+126 silly addNameRange     '1.6.4',
+126 silly addNameRange     '1.7.0',
+126 silly addNameRange     '1.7.1',
+126 silly addNameRange     '1.7.2',
+126 silly addNameRange     '1.7.3',
+126 silly addNameRange     '1.8.0',
+126 silly addNameRange     '1.8.1',
+126 silly addNameRange     '1.8.2',
+126 silly addNameRange     '1.8.3',
+126 silly addNameRange     '1.8.4',
+126 silly addNameRange     '1.8.5',
+126 silly addNameRange     '2.0.0',
+126 silly addNameRange     '2.0.1',
+126 silly addNameRange     '2.0.2',
+126 silly addNameRange     '2.0.3',
+126 silly addNameRange     '1.8.6',
+126 silly addNameRange     '2.1.0',
+126 silly addNameRange     '2.1.1',
+126 silly addNameRange     '2.1.2',
+126 silly addNameRange     '1.8.7',
+126 silly addNameRange     '2.1.3',
+126 silly addNameRange     '2.2.0',
+126 silly addNameRange     '2.2.1',
+126 silly addNameRange     '2.2.2',
+126 silly addNameRange     '2.3.0',
+126 silly addNameRange     '2.3.1',
+126 silly addNameRange     '2.3.2',
+126 silly addNameRange     '2.3.3',
+126 silly addNameRange     '1.9.0',
+126 silly addNameRange     '1.9.1',
+126 silly addNameRange     '2.3.4',
+126 silly addNameRange     '2.3.5',
+126 silly addNameRange     '2.3.6',
+126 silly addNameRange     '2.3.7',
+126 silly addNameRange     '1.9.2',
+126 silly addNameRange     '2.3.8',
+126 silly addNameRange     '2.3.9',
+126 silly addNameRange     '2.4.0',
+126 silly addNameRange     '2.4.1',
+126 silly addNameRange     '2.4.2',
+126 silly addNameRange     '2.4.3',
+126 silly addNameRange     '2.4.4',
+126 silly addNameRange     '2.4.5',
+126 silly addNameRange     '2.4.6',
+126 silly addNameRange     '2.5.0',
+126 silly addNameRange     '2.6.0',
+126 silly addNameRange     '2.6.1',
+126 silly addNameRange     '2.6.2',
+126 silly addNameRange     '2.7.0',
+126 silly addNameRange     '2.7.1',
+126 silly addNameRange     '2.7.2',
+126 silly addNameRange     '2.7.3',
+126 silly addNameRange     '2.7.4',
+126 silly addNameRange     '2.7.5',
+126 silly addNameRange     '2.7.6',
+126 silly addNameRange     '2.7.7',
+126 silly addNameRange     '2.7.8',
+126 silly addNameRange     '2.7.9',
+126 silly addNameRange     '2.7.10',
+126 silly addNameRange     '2.7.11',
+126 silly addNameRange     '2.8.0',
+126 silly addNameRange     '2.8.1',
+126 silly addNameRange     '2.8.2',
+126 silly addNameRange     '2.8.3',
+126 silly addNameRange     '2.8.4',
+126 silly addNameRange     '2.8.5',
+126 silly addNameRange     '2.8.6',
+126 silly addNameRange     '2.8.7',
+126 silly addNameRange     '2.8.8',
+126 silly addNameRange     '2.9.0',
+126 silly addNameRange     '2.9.1',
+126 silly addNameRange     '2.9.2',
+126 silly addNameRange     '2.10.0',
+126 silly addNameRange     '2.10.1',
+126 silly addNameRange     '2.11.0',
+126 silly addNameRange     '2.11.1',
+126 silly addNameRange     '2.11.2',
+126 silly addNameRange     '2.12.0',
+126 silly addNameRange     '2.13.0',
+126 silly addNameRange     '2.13.1',
+126 silly addNameRange     '2.14.0',
+126 silly addNameRange     '2.14.1',
+126 silly addNameRange     '3.0.0-rc.1',
+126 silly addNameRange     '2.14.2',
+126 silly addNameRange     '2.14.3',
+126 silly addNameRange     '2.14.4',
+126 silly addNameRange     '2.14.5',
+126 silly addNameRange     '2.15.0',
+126 silly addNameRange     '3.0.0-rc.2',
+126 silly addNameRange     '2.16.0',
+126 silly addNameRange     '2.16.1',
+126 silly addNameRange     '2.16.2',
+126 silly addNameRange     '2.17.0',
+126 silly addNameRange     '2.17.1',
+126 silly addNameRange     '2.17.2',
+126 silly addNameRange     '2.17.3',
+126 silly addNameRange     '2.18.0',
+126 silly addNameRange     '3.0.0',
+126 silly addNameRange     '2.19.0',
+126 silly addNameRange     '2.19.1',
+126 silly addNameRange     '2.19.2',
+126 silly addNameRange     '2.19.3',
+126 silly addNameRange     '2.19.4',
+126 silly addNameRange     '2.19.5',
+126 silly addNameRange     '2.19.6',
+126 silly addNameRange     '2.20.0',
+126 silly addNameRange     '2.20.1',
+126 silly addNameRange     '2.20.2',
+126 silly addNameRange     '3.0.1',
+126 silly addNameRange     '2.21.0',
+126 silly addNameRange     '2.21.1',
+126 silly addNameRange     '2.22.0',
+126 silly addNameRange     '2.23.0',
+126 silly addNameRange     '3.0.2',
+126 silly addNameRange     '2.24.0',
+126 silly addNameRange     '3.1.0',
+126 silly addNameRange     '2.24.1',
+126 silly addNameRange     '2.24.2',
+126 silly addNameRange     '2.24.3',
+126 silly addNameRange     '2.25.0',
+126 silly addNameRange     '2.25.1',
+126 silly addNameRange     '2.25.2',
+126 silly addNameRange     '2.25.3',
+126 silly addNameRange     '2.25.4',
+126 silly addNameRange     '3.1.1',
+126 silly addNameRange     '2.25.5',
+126 silly addNameRange     '2.25.6',
+126 silly addNameRange     '2.25.7',
+126 silly addNameRange     '2.25.8',
+126 silly addNameRange     '2.25.9',
+126 silly addNameRange     '2.25.10',
+126 silly addNameRange     '2.26.0',
+126 silly addNameRange     '3.2.0',
+126 silly addNameRange     '2.26.1',
+126 silly addNameRange     '2.26.2',
+126 silly addNameRange     '2.26.3',
+126 silly addNameRange     '2.26.4',
+126 silly addNameRange     '2.26.5',
+126 silly addNameRange     '2.26.6',
+126 silly addNameRange     '2.27.0',
+126 silly addNameRange     '3.3.0',
+126 silly addNameRange     '2.27.1',
+126 silly addNameRange     '3.3.1',
+126 silly addNameRange     '2.27.2',
+126 silly addNameRange     '3.3.2',
+126 silly addNameRange     '2.27.3',
+126 silly addNameRange     '3.3.3',
+126 silly addNameRange     '2.27.4',
+126 silly addNameRange     '2.27.5',
+126 silly addNameRange     '2.27.6' ] ]
+127 verbose addNamed [ 'connect', '2.4.6' ]
+128 verbose addNamed [ '2.4.6', '2.4.6' ]
+129 silly lockFile 5779c636-connect-2-4-6 connect@2.4.6
+130 verbose lock connect@2.4.6 /Users/Charlie/.npm/5779c636-connect-2-4-6.lock
+131 silly lockFile 5779c636-connect-2-4-6 connect@2.4.6
+132 silly lockFile 5779c636-connect-2-4-6 connect@2.4.6
+133 silly lockFile b52a1606-connect-2-4-4 connect@~2.4.4
+134 silly lockFile b52a1606-connect-2-4-4 connect@~2.4.4
+135 silly resolved [ { name: 'connect',
+135 silly resolved     version: '2.4.6',
+135 silly resolved     description: 'High performance middleware framework',
+135 silly resolved     keywords: [ 'framework', 'web', 'middleware', 'connect', 'rack' ],
+135 silly resolved     repository: { type: 'git', url: 'git://github.com/senchalabs/connect.git' },
+135 silly resolved     author:
+135 silly resolved      { name: 'TJ Holowaychuk',
+135 silly resolved        email: 'tj@vision-media.ca',
+135 silly resolved        url: 'http://tjholowaychuk.com' },
+135 silly resolved     dependencies:
+135 silly resolved      { qs: '0.5.1',
+135 silly resolved        formidable: '1.0.11',
+135 silly resolved        crc: '0.2.0',
+135 silly resolved        cookie: '0.0.4',
+135 silly resolved        bytes: '0.1.0',
+135 silly resolved        send: '0.0.4',
+135 silly resolved        fresh: '0.1.0',
+135 silly resolved        pause: '0.0.1',
+135 silly resolved        debug: '*' },
+135 silly resolved     devDependencies: { should: '*', mocha: '*', jade: '*', dox: '*' },
+135 silly resolved     main: 'index',
+135 silly resolved     engines: { node: '>= 0.5.0' },
+135 silly resolved     _id: 'connect@2.4.6',
+135 silly resolved     dist:
+135 silly resolved      { shasum: '012c2fe05018504ed2028668a16903199e6e7ace',
+135 silly resolved        tarball: 'http://registry.npmjs.org/connect/-/connect-2.4.6.tgz' },
+135 silly resolved     _npmVersion: '1.1.61',
+135 silly resolved     _npmUser: { name: 'tjholowaychuk', email: 'tj@vision-media.ca' },
+135 silly resolved     maintainers: [ [Object], [Object] ],
+135 silly resolved     directories: {},
+135 silly resolved     _shasum: '012c2fe05018504ed2028668a16903199e6e7ace',
+135 silly resolved     _from: 'connect@~2.4.4',
+135 silly resolved     _resolved: 'https://registry.npmjs.org/connect/-/connect-2.4.6.tgz',
+135 silly resolved     bugs: { url: 'https://github.com/senchalabs/connect/issues' },
+135 silly resolved     readme: 'ERROR: No README data found!',
+135 silly resolved     homepage: 'https://github.com/senchalabs/connect' } ]
+136 info install connect@2.4.6 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+137 info installOne connect@2.4.6
+138 verbose node_modules/grunt-contrib-connect/node_modules/connect unbuild
+139 verbose tar unpack /Users/Charlie/.npm/connect/2.4.6/package.tgz
+140 silly lockFile 6057c6c8-rib-connect-node-modules-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+141 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect /Users/Charlie/.npm/6057c6c8-rib-connect-node-modules-connect.lock
+142 silly lockFile 0c338dbe-ie-npm-connect-2-4-6-package-tgz tar:///Users/Charlie/.npm/connect/2.4.6/package.tgz
+143 verbose lock tar:///Users/Charlie/.npm/connect/2.4.6/package.tgz /Users/Charlie/.npm/0c338dbe-ie-npm-connect-2-4-6-package-tgz.lock
+144 silly gunzTarPerm modes [ '755', '644' ]
+145 silly gunzTarPerm extractEntry package.json
+146 silly gunzTarPerm extractEntry .npmignore
+147 silly gunzTarPerm extractEntry LICENSE
+148 silly gunzTarPerm extractEntry index.js
+149 silly gunzTarPerm extractEntry test.js
+150 silly gunzTarPerm extractEntry .travis.yml
+151 silly gunzTarPerm extractEntry lib/cache.js
+152 silly gunzTarPerm extractEntry lib/connect.js
+153 silly gunzTarPerm extractEntry lib/index.js
+154 silly gunzTarPerm extractEntry lib/patch.js
+155 silly gunzTarPerm extractEntry lib/proto.js
+156 silly gunzTarPerm extractEntry lib/utils.js
+157 silly gunzTarPerm extractEntry lib/middleware/basicAuth.js
+158 silly gunzTarPerm extractEntry lib/middleware/errorHandler.js
+159 silly gunzTarPerm extractEntry lib/middleware/favicon.js
+160 silly gunzTarPerm extractEntry lib/middleware/json.js
+161 silly gunzTarPerm extractEntry lib/middleware/limit.js
+162 silly gunzTarPerm extractEntry lib/middleware/directory.js
+163 silly gunzTarPerm extractEntry lib/middleware/methodOverride.js
+164 silly gunzTarPerm extractEntry lib/middleware/multipart.js
+165 silly gunzTarPerm extractEntry lib/middleware/query.js
+166 silly gunzTarPerm extractEntry lib/middleware/responseTime.js
+167 silly gunzTarPerm extractEntry lib/middleware/urlencoded.js
+168 silly gunzTarPerm extractEntry lib/middleware/csrf.js
+169 silly gunzTarPerm extractEntry lib/middleware/session.js
+170 silly gunzTarPerm extractEntry lib/middleware/cookieSession.js
+171 silly gunzTarPerm extractEntry lib/middleware/static.js
+172 silly gunzTarPerm extractEntry lib/middleware/cookieParser.js
+173 silly gunzTarPerm extractEntry lib/middleware/staticCache.js
+174 silly gunzTarPerm extractEntry lib/middleware/compress.js
+175 silly gunzTarPerm extractEntry lib/middleware/timeout.js
+176 silly gunzTarPerm extractEntry lib/middleware/bodyParser.js
+177 silly gunzTarPerm extractEntry lib/middleware/vhost.js
+178 silly gunzTarPerm extractEntry lib/middleware/logger.js
+179 silly gunzTarPerm extractEntry lib/middleware/session/cookie.js
+180 silly gunzTarPerm extractEntry lib/middleware/session/memory.js
+181 silly gunzTarPerm extractEntry lib/middleware/session/session.js
+182 silly gunzTarPerm extractEntry lib/middleware/session/store.js
+183 silly gunzTarPerm extractEntry lib/public/directory.html
+184 silly gunzTarPerm extractEntry lib/public/error.html
+185 silly gunzTarPerm extractEntry lib/public/favicon.ico
+186 silly gunzTarPerm extractEntry lib/public/icons/page_white_edit.png
+187 silly gunzTarPerm extractEntry lib/public/icons/page.png
+188 silly gunzTarPerm extractEntry lib/public/icons/page_attach.png
+189 silly gunzTarPerm extractEntry lib/public/icons/page_code.png
+190 silly gunzTarPerm extractEntry lib/public/icons/page_copy.png
+191 silly gunzTarPerm extractEntry lib/public/icons/page_delete.png
+192 silly gunzTarPerm extractEntry lib/public/icons/page_edit.png
+193 silly gunzTarPerm extractEntry lib/public/icons/page_error.png
+194 silly gunzTarPerm extractEntry lib/public/icons/page_excel.png
+195 silly gunzTarPerm extractEntry lib/public/icons/page_find.png
+196 silly gunzTarPerm extractEntry lib/public/icons/page_gear.png
+197 silly gunzTarPerm extractEntry lib/public/icons/page_go.png
+198 silly gunzTarPerm extractEntry lib/public/icons/page_green.png
+199 silly gunzTarPerm extractEntry lib/public/icons/page_key.png
+200 silly gunzTarPerm extractEntry lib/public/icons/page_lightning.png
+201 silly gunzTarPerm extractEntry lib/public/icons/page_link.png
+202 silly gunzTarPerm extractEntry lib/public/icons/page_paintbrush.png
+203 silly gunzTarPerm extractEntry lib/public/icons/page_paste.png
+204 silly gunzTarPerm extractEntry lib/public/icons/page_red.png
+205 silly gunzTarPerm extractEntry lib/public/icons/page_refresh.png
+206 silly gunzTarPerm extractEntry lib/public/icons/page_save.png
+207 silly gunzTarPerm extractEntry lib/public/icons/page_white.png
+208 silly gunzTarPerm extractEntry lib/public/icons/page_white_acrobat.png
+209 silly gunzTarPerm extractEntry lib/public/icons/page_white_actionscript.png
+210 silly gunzTarPerm extractEntry lib/public/icons/page_white_add.png
+211 silly gunzTarPerm extractEntry lib/public/icons/page_white_c.png
+212 silly gunzTarPerm extractEntry lib/public/icons/page_white_camera.png
+213 silly gunzTarPerm extractEntry lib/public/icons/page_white_cd.png
+214 silly gunzTarPerm extractEntry lib/public/icons/page_white_code.png
+215 silly gunzTarPerm extractEntry lib/public/icons/page_white_code_red.png
+216 silly gunzTarPerm extractEntry lib/public/icons/page_white_coldfusion.png
+217 silly gunzTarPerm extractEntry lib/public/icons/page_white_compressed.png
+218 silly gunzTarPerm extractEntry lib/public/icons/page_white_copy.png
+219 silly gunzTarPerm extractEntry lib/public/icons/page_white_cplusplus.png
+220 silly gunzTarPerm extractEntry lib/public/icons/page_white_csharp.png
+221 silly gunzTarPerm extractEntry lib/public/icons/page_white_cup.png
+222 silly gunzTarPerm extractEntry lib/public/icons/page_white_database.png
+223 silly gunzTarPerm extractEntry lib/public/icons/page_white_delete.png
+224 silly gunzTarPerm extractEntry lib/public/icons/page_white_dvd.png
+225 silly gunzTarPerm extractEntry lib/public/icons/page_add.png
+226 silly gunzTarPerm extractEntry lib/public/icons/page_white_error.png
+227 silly gunzTarPerm extractEntry lib/public/icons/page_white_excel.png
+228 silly gunzTarPerm extractEntry lib/public/icons/page_white_find.png
+229 silly gunzTarPerm extractEntry lib/public/icons/page_white_flash.png
+230 silly gunzTarPerm extractEntry lib/public/icons/page_white_freehand.png
+231 silly gunzTarPerm extractEntry lib/public/icons/page_white_gear.png
+232 silly gunzTarPerm extractEntry lib/public/icons/page_white_get.png
+233 silly gunzTarPerm extractEntry lib/public/icons/page_white_go.png
+234 silly gunzTarPerm extractEntry lib/public/icons/page_white_h.png
+235 silly gunzTarPerm extractEntry lib/public/icons/page_white_horizontal.png
+236 silly gunzTarPerm extractEntry lib/public/icons/page_white_key.png
+237 silly gunzTarPerm extractEntry lib/public/icons/page_white_lightning.png
+238 silly gunzTarPerm extractEntry lib/public/icons/page_white_link.png
+239 silly gunzTarPerm extractEntry lib/public/icons/page_white_magnify.png
+240 silly gunzTarPerm extractEntry lib/public/icons/page_white_medal.png
+241 silly gunzTarPerm extractEntry lib/public/icons/page_white_office.png
+242 silly gunzTarPerm extractEntry lib/public/icons/page_white_paint.png
+243 silly gunzTarPerm extractEntry lib/public/icons/page_white_paintbrush.png
+244 silly gunzTarPerm extractEntry lib/public/icons/page_white_paste.png
+245 silly gunzTarPerm extractEntry lib/public/icons/page_white_php.png
+246 silly gunzTarPerm extractEntry lib/public/icons/page_white_picture.png
+247 silly gunzTarPerm extractEntry lib/public/icons/page_white_powerpoint.png
+248 silly gunzTarPerm extractEntry lib/public/icons/page_white_put.png
+249 silly gunzTarPerm extractEntry lib/public/icons/page_white_ruby.png
+250 silly gunzTarPerm extractEntry lib/public/icons/page_white_stack.png
+251 silly gunzTarPerm extractEntry lib/public/icons/page_white_star.png
+252 silly gunzTarPerm extractEntry lib/public/icons/page_white_swoosh.png
+253 silly gunzTarPerm extractEntry lib/public/icons/page_white_text.png
+254 silly gunzTarPerm extractEntry lib/public/icons/page_white_text_width.png
+255 silly gunzTarPerm extractEntry lib/public/icons/page_white_tux.png
+256 silly gunzTarPerm extractEntry lib/public/icons/page_white_vector.png
+257 silly gunzTarPerm extractEntry lib/public/icons/page_white_visualstudio.png
+258 silly gunzTarPerm extractEntry lib/public/icons/page_white_width.png
+259 silly gunzTarPerm extractEntry lib/public/icons/page_white_word.png
+260 silly gunzTarPerm extractEntry lib/public/icons/page_white_world.png
+261 silly gunzTarPerm extractEntry lib/public/icons/page_white_wrench.png
+262 silly gunzTarPerm extractEntry lib/public/icons/page_white_zip.png
+263 silly gunzTarPerm extractEntry lib/public/icons/page_word.png
+264 silly gunzTarPerm extractEntry lib/public/icons/page_world.png
+265 silly gunzTarPerm extractEntry lib/public/style.css
+266 silly gunzTarPerm extractEntry Readme.md
+267 silly lockFile 6057c6c8-rib-connect-node-modules-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+268 silly lockFile 6057c6c8-rib-connect-node-modules-connect tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+269 silly lockFile 0c338dbe-ie-npm-connect-2-4-6-package-tgz tar:///Users/Charlie/.npm/connect/2.4.6/package.tgz
+270 silly lockFile 0c338dbe-ie-npm-connect-2-4-6-package-tgz tar:///Users/Charlie/.npm/connect/2.4.6/package.tgz
+271 info preinstall connect@2.4.6
+272 verbose readDependencies using package.json deps
+273 verbose readDependencies using package.json deps
+274 verbose cache add [ 'qs@0.5.1', null ]
+275 verbose cache add name=undefined spec="qs@0.5.1" args=["qs@0.5.1",null]
+276 verbose parsed url { protocol: null,
+276 verbose parsed url   slashes: null,
+276 verbose parsed url   auth: null,
+276 verbose parsed url   host: null,
+276 verbose parsed url   port: null,
+276 verbose parsed url   hostname: null,
+276 verbose parsed url   hash: null,
+276 verbose parsed url   search: null,
+276 verbose parsed url   query: null,
+276 verbose parsed url   pathname: 'qs@0.5.1',
+276 verbose parsed url   path: 'qs@0.5.1',
+276 verbose parsed url   href: 'qs@0.5.1' }
+277 verbose cache add [ 'formidable@1.0.11', null ]
+278 verbose cache add name=undefined spec="formidable@1.0.11" args=["formidable@1.0.11",null]
+279 verbose parsed url { protocol: null,
+279 verbose parsed url   slashes: null,
+279 verbose parsed url   auth: null,
+279 verbose parsed url   host: null,
+279 verbose parsed url   port: null,
+279 verbose parsed url   hostname: null,
+279 verbose parsed url   hash: null,
+279 verbose parsed url   search: null,
+279 verbose parsed url   query: null,
+279 verbose parsed url   pathname: 'formidable@1.0.11',
+279 verbose parsed url   path: 'formidable@1.0.11',
+279 verbose parsed url   href: 'formidable@1.0.11' }
+280 verbose cache add [ 'crc@0.2.0', null ]
+281 verbose cache add name=undefined spec="crc@0.2.0" args=["crc@0.2.0",null]
+282 verbose parsed url { protocol: null,
+282 verbose parsed url   slashes: null,
+282 verbose parsed url   auth: null,
+282 verbose parsed url   host: null,
+282 verbose parsed url   port: null,
+282 verbose parsed url   hostname: null,
+282 verbose parsed url   hash: null,
+282 verbose parsed url   search: null,
+282 verbose parsed url   query: null,
+282 verbose parsed url   pathname: 'crc@0.2.0',
+282 verbose parsed url   path: 'crc@0.2.0',
+282 verbose parsed url   href: 'crc@0.2.0' }
+283 verbose cache add name="qs" spec="0.5.1" args=["qs","0.5.1"]
+284 verbose parsed url { protocol: null,
+284 verbose parsed url   slashes: null,
+284 verbose parsed url   auth: null,
+284 verbose parsed url   host: null,
+284 verbose parsed url   port: null,
+284 verbose parsed url   hostname: null,
+284 verbose parsed url   hash: null,
+284 verbose parsed url   search: null,
+284 verbose parsed url   query: null,
+284 verbose parsed url   pathname: '0.5.1',
+284 verbose parsed url   path: '0.5.1',
+284 verbose parsed url   href: '0.5.1' }
+285 verbose addNamed [ 'qs', '0.5.1' ]
+286 verbose addNamed [ '0.5.1', '0.5.1' ]
+287 silly lockFile dd3beb89-qs-0-5-1 qs@0.5.1
+288 verbose lock qs@0.5.1 /Users/Charlie/.npm/dd3beb89-qs-0-5-1.lock
+289 verbose cache add name="formidable" spec="1.0.11" args=["formidable","1.0.11"]
+290 verbose parsed url { protocol: null,
+290 verbose parsed url   slashes: null,
+290 verbose parsed url   auth: null,
+290 verbose parsed url   host: null,
+290 verbose parsed url   port: null,
+290 verbose parsed url   hostname: null,
+290 verbose parsed url   hash: null,
+290 verbose parsed url   search: null,
+290 verbose parsed url   query: null,
+290 verbose parsed url   pathname: '1.0.11',
+290 verbose parsed url   path: '1.0.11',
+290 verbose parsed url   href: '1.0.11' }
+291 verbose addNamed [ 'formidable', '1.0.11' ]
+292 verbose addNamed [ '1.0.11', '1.0.11' ]
+293 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+294 verbose lock formidable@1.0.11 /Users/Charlie/.npm/85cafced-formidable-1-0-11.lock
+295 verbose cache add [ 'cookie@0.0.4', null ]
+296 verbose cache add name=undefined spec="cookie@0.0.4" args=["cookie@0.0.4",null]
+297 verbose parsed url { protocol: null,
+297 verbose parsed url   slashes: null,
+297 verbose parsed url   auth: null,
+297 verbose parsed url   host: null,
+297 verbose parsed url   port: null,
+297 verbose parsed url   hostname: null,
+297 verbose parsed url   hash: null,
+297 verbose parsed url   search: null,
+297 verbose parsed url   query: null,
+297 verbose parsed url   pathname: 'cookie@0.0.4',
+297 verbose parsed url   path: 'cookie@0.0.4',
+297 verbose parsed url   href: 'cookie@0.0.4' }
+298 verbose cache add [ 'bytes@0.1.0', null ]
+299 verbose cache add name=undefined spec="bytes@0.1.0" args=["bytes@0.1.0",null]
+300 verbose parsed url { protocol: null,
+300 verbose parsed url   slashes: null,
+300 verbose parsed url   auth: null,
+300 verbose parsed url   host: null,
+300 verbose parsed url   port: null,
+300 verbose parsed url   hostname: null,
+300 verbose parsed url   hash: null,
+300 verbose parsed url   search: null,
+300 verbose parsed url   query: null,
+300 verbose parsed url   pathname: 'bytes@0.1.0',
+300 verbose parsed url   path: 'bytes@0.1.0',
+300 verbose parsed url   href: 'bytes@0.1.0' }
+301 verbose cache add name="crc" spec="0.2.0" args=["crc","0.2.0"]
+302 verbose parsed url { protocol: null,
+302 verbose parsed url   slashes: null,
+302 verbose parsed url   auth: null,
+302 verbose parsed url   host: null,
+302 verbose parsed url   port: null,
+302 verbose parsed url   hostname: null,
+302 verbose parsed url   hash: null,
+302 verbose parsed url   search: null,
+302 verbose parsed url   query: null,
+302 verbose parsed url   pathname: '0.2.0',
+302 verbose parsed url   path: '0.2.0',
+302 verbose parsed url   href: '0.2.0' }
+303 verbose addNamed [ 'crc', '0.2.0' ]
+304 verbose addNamed [ '0.2.0', '0.2.0' ]
+305 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+306 verbose lock crc@0.2.0 /Users/Charlie/.npm/3e4de13a-crc-0-2-0.lock
+307 verbose cache add name="cookie" spec="0.0.4" args=["cookie","0.0.4"]
+308 verbose parsed url { protocol: null,
+308 verbose parsed url   slashes: null,
+308 verbose parsed url   auth: null,
+308 verbose parsed url   host: null,
+308 verbose parsed url   port: null,
+308 verbose parsed url   hostname: null,
+308 verbose parsed url   hash: null,
+308 verbose parsed url   search: null,
+308 verbose parsed url   query: null,
+308 verbose parsed url   pathname: '0.0.4',
+308 verbose parsed url   path: '0.0.4',
+308 verbose parsed url   href: '0.0.4' }
+309 verbose addNamed [ 'cookie', '0.0.4' ]
+310 verbose addNamed [ '0.0.4', '0.0.4' ]
+311 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+312 verbose lock cookie@0.0.4 /Users/Charlie/.npm/c11bcebd-cookie-0-0-4.lock
+313 verbose cache add name="bytes" spec="0.1.0" args=["bytes","0.1.0"]
+314 verbose parsed url { protocol: null,
+314 verbose parsed url   slashes: null,
+314 verbose parsed url   auth: null,
+314 verbose parsed url   host: null,
+314 verbose parsed url   port: null,
+314 verbose parsed url   hostname: null,
+314 verbose parsed url   hash: null,
+314 verbose parsed url   search: null,
+314 verbose parsed url   query: null,
+314 verbose parsed url   pathname: '0.1.0',
+314 verbose parsed url   path: '0.1.0',
+314 verbose parsed url   href: '0.1.0' }
+315 verbose addNamed [ 'bytes', '0.1.0' ]
+316 verbose addNamed [ '0.1.0', '0.1.0' ]
+317 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+318 verbose lock bytes@0.1.0 /Users/Charlie/.npm/d6abeac8-bytes-0-1-0.lock
+319 verbose cache add [ 'send@0.0.4', null ]
+320 verbose cache add name=undefined spec="send@0.0.4" args=["send@0.0.4",null]
+321 verbose parsed url { protocol: null,
+321 verbose parsed url   slashes: null,
+321 verbose parsed url   auth: null,
+321 verbose parsed url   host: null,
+321 verbose parsed url   port: null,
+321 verbose parsed url   hostname: null,
+321 verbose parsed url   hash: null,
+321 verbose parsed url   search: null,
+321 verbose parsed url   query: null,
+321 verbose parsed url   pathname: 'send@0.0.4',
+321 verbose parsed url   path: 'send@0.0.4',
+321 verbose parsed url   href: 'send@0.0.4' }
+322 verbose cache add [ 'fresh@0.1.0', null ]
+323 verbose cache add name=undefined spec="fresh@0.1.0" args=["fresh@0.1.0",null]
+324 verbose parsed url { protocol: null,
+324 verbose parsed url   slashes: null,
+324 verbose parsed url   auth: null,
+324 verbose parsed url   host: null,
+324 verbose parsed url   port: null,
+324 verbose parsed url   hostname: null,
+324 verbose parsed url   hash: null,
+324 verbose parsed url   search: null,
+324 verbose parsed url   query: null,
+324 verbose parsed url   pathname: 'fresh@0.1.0',
+324 verbose parsed url   path: 'fresh@0.1.0',
+324 verbose parsed url   href: 'fresh@0.1.0' }
+325 verbose cache add name="send" spec="0.0.4" args=["send","0.0.4"]
+326 verbose parsed url { protocol: null,
+326 verbose parsed url   slashes: null,
+326 verbose parsed url   auth: null,
+326 verbose parsed url   host: null,
+326 verbose parsed url   port: null,
+326 verbose parsed url   hostname: null,
+326 verbose parsed url   hash: null,
+326 verbose parsed url   search: null,
+326 verbose parsed url   query: null,
+326 verbose parsed url   pathname: '0.0.4',
+326 verbose parsed url   path: '0.0.4',
+326 verbose parsed url   href: '0.0.4' }
+327 verbose addNamed [ 'send', '0.0.4' ]
+328 verbose addNamed [ '0.0.4', '0.0.4' ]
+329 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+330 verbose lock send@0.0.4 /Users/Charlie/.npm/dc770d3b-send-0-0-4.lock
+331 verbose cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+332 verbose parsed url { protocol: null,
+332 verbose parsed url   slashes: null,
+332 verbose parsed url   auth: null,
+332 verbose parsed url   host: null,
+332 verbose parsed url   port: null,
+332 verbose parsed url   hostname: null,
+332 verbose parsed url   hash: null,
+332 verbose parsed url   search: null,
+332 verbose parsed url   query: null,
+332 verbose parsed url   pathname: '0.1.0',
+332 verbose parsed url   path: '0.1.0',
+332 verbose parsed url   href: '0.1.0' }
+333 verbose addNamed [ 'fresh', '0.1.0' ]
+334 verbose addNamed [ '0.1.0', '0.1.0' ]
+335 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+336 verbose lock fresh@0.1.0 /Users/Charlie/.npm/3dea7da8-fresh-0-1-0.lock
+337 verbose cache add [ 'pause@0.0.1', null ]
+338 verbose cache add name=undefined spec="pause@0.0.1" args=["pause@0.0.1",null]
+339 verbose parsed url { protocol: null,
+339 verbose parsed url   slashes: null,
+339 verbose parsed url   auth: null,
+339 verbose parsed url   host: null,
+339 verbose parsed url   port: null,
+339 verbose parsed url   hostname: null,
+339 verbose parsed url   hash: null,
+339 verbose parsed url   search: null,
+339 verbose parsed url   query: null,
+339 verbose parsed url   pathname: 'pause@0.0.1',
+339 verbose parsed url   path: 'pause@0.0.1',
+339 verbose parsed url   href: 'pause@0.0.1' }
+340 verbose cache add [ 'debug@*', null ]
+341 verbose cache add name=undefined spec="debug@*" args=["debug@*",null]
+342 verbose parsed url { protocol: null,
+342 verbose parsed url   slashes: null,
+342 verbose parsed url   auth: null,
+342 verbose parsed url   host: null,
+342 verbose parsed url   port: null,
+342 verbose parsed url   hostname: null,
+342 verbose parsed url   hash: null,
+342 verbose parsed url   search: null,
+342 verbose parsed url   query: null,
+342 verbose parsed url   pathname: 'debug@*',
+342 verbose parsed url   path: 'debug@*',
+342 verbose parsed url   href: 'debug@*' }
+343 verbose cache add name="pause" spec="0.0.1" args=["pause","0.0.1"]
+344 verbose parsed url { protocol: null,
+344 verbose parsed url   slashes: null,
+344 verbose parsed url   auth: null,
+344 verbose parsed url   host: null,
+344 verbose parsed url   port: null,
+344 verbose parsed url   hostname: null,
+344 verbose parsed url   hash: null,
+344 verbose parsed url   search: null,
+344 verbose parsed url   query: null,
+344 verbose parsed url   pathname: '0.0.1',
+344 verbose parsed url   path: '0.0.1',
+344 verbose parsed url   href: '0.0.1' }
+345 verbose addNamed [ 'pause', '0.0.1' ]
+346 verbose addNamed [ '0.0.1', '0.0.1' ]
+347 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+348 verbose lock pause@0.0.1 /Users/Charlie/.npm/c62fc432-pause-0-0-1.lock
+349 verbose cache add name="debug" spec="*" args=["debug","*"]
+350 verbose parsed url { protocol: null,
+350 verbose parsed url   slashes: null,
+350 verbose parsed url   auth: null,
+350 verbose parsed url   host: null,
+350 verbose parsed url   port: null,
+350 verbose parsed url   hostname: null,
+350 verbose parsed url   hash: null,
+350 verbose parsed url   search: null,
+350 verbose parsed url   query: null,
+350 verbose parsed url   pathname: '*',
+350 verbose parsed url   path: '*',
+350 verbose parsed url   href: '*' }
+351 verbose addNamed [ 'debug', '*' ]
+352 verbose addNamed [ null, '*' ]
+353 silly lockFile 3ac45eff-debug debug@*
+354 verbose lock debug@* /Users/Charlie/.npm/3ac45eff-debug.lock
+355 verbose request where is /qs
+356 verbose request registry https://registry.npmjs.org/
+357 verbose url raw /qs
+358 verbose url resolving [ 'https://registry.npmjs.org/', './qs' ]
+359 verbose url resolved https://registry.npmjs.org/qs
+360 verbose request where is https://registry.npmjs.org/qs
+361 info trying registry request attempt 1 at 08:37:44
+362 verbose etag "C2OZKGZKGZ07N353V6XC1PTTE"
+363 http GET https://registry.npmjs.org/qs
+364 silly addNameRange { name: 'debug', range: '*', hasData: false }
+365 verbose request where is /formidable
+366 verbose request registry https://registry.npmjs.org/
+367 verbose url raw /formidable
+368 verbose url resolving [ 'https://registry.npmjs.org/', './formidable' ]
+369 verbose url resolved https://registry.npmjs.org/formidable
+370 verbose request where is https://registry.npmjs.org/formidable
+371 info trying registry request attempt 1 at 08:37:44
+372 verbose etag "F3WXETIHROAUALTEFGHN8DXVW"
+373 http GET https://registry.npmjs.org/formidable
+374 verbose request where is /crc
+375 verbose request registry https://registry.npmjs.org/
+376 verbose url raw /crc
+377 verbose url resolving [ 'https://registry.npmjs.org/', './crc' ]
+378 verbose url resolved https://registry.npmjs.org/crc
+379 verbose request where is https://registry.npmjs.org/crc
+380 info trying registry request attempt 1 at 08:37:44
+381 verbose etag "9ZKH4SNUAHPDUHT594MPGYASN"
+382 http GET https://registry.npmjs.org/crc
+383 verbose request where is /cookie
+384 verbose request registry https://registry.npmjs.org/
+385 verbose url raw /cookie
+386 verbose url resolving [ 'https://registry.npmjs.org/', './cookie' ]
+387 verbose url resolved https://registry.npmjs.org/cookie
+388 verbose request where is https://registry.npmjs.org/cookie
+389 info trying registry request attempt 1 at 08:37:44
+390 verbose etag "3H4OHDWZ7615P8KRS6QQVZZGB"
+391 http GET https://registry.npmjs.org/cookie
+392 verbose request where is /bytes
+393 verbose request registry https://registry.npmjs.org/
+394 verbose url raw /bytes
+395 verbose url resolving [ 'https://registry.npmjs.org/', './bytes' ]
+396 verbose url resolved https://registry.npmjs.org/bytes
+397 verbose request where is https://registry.npmjs.org/bytes
+398 info trying registry request attempt 1 at 08:37:44
+399 verbose etag "3P21LC5J68VH3Y9EJY14XN7VD"
+400 http GET https://registry.npmjs.org/bytes
+401 verbose request where is /send
+402 verbose request registry https://registry.npmjs.org/
+403 verbose url raw /send
+404 verbose url resolving [ 'https://registry.npmjs.org/', './send' ]
+405 verbose url resolved https://registry.npmjs.org/send
+406 verbose request where is https://registry.npmjs.org/send
+407 info trying registry request attempt 1 at 08:37:44
+408 verbose etag "1QS6NIEXA3IUIRT9VB4S3IK5Y"
+409 http GET https://registry.npmjs.org/send
+410 verbose request where is /fresh
+411 verbose request registry https://registry.npmjs.org/
+412 verbose url raw /fresh
+413 verbose url resolving [ 'https://registry.npmjs.org/', './fresh' ]
+414 verbose url resolved https://registry.npmjs.org/fresh
+415 verbose request where is https://registry.npmjs.org/fresh
+416 info trying registry request attempt 1 at 08:37:44
+417 verbose etag "561CLU2944FYBNMBA0DL3S0GR"
+418 http GET https://registry.npmjs.org/fresh
+419 verbose request where is /pause
+420 verbose request registry https://registry.npmjs.org/
+421 verbose url raw /pause
+422 verbose url resolving [ 'https://registry.npmjs.org/', './pause' ]
+423 verbose url resolved https://registry.npmjs.org/pause
+424 verbose request where is https://registry.npmjs.org/pause
+425 info trying registry request attempt 1 at 08:37:44
+426 verbose etag "E9DMFLGA9UVH6WRM7RLYY8WGY"
+427 http GET https://registry.npmjs.org/pause
+428 verbose request where is /debug
+429 verbose request registry https://registry.npmjs.org/
+430 verbose url raw /debug
+431 verbose url resolving [ 'https://registry.npmjs.org/', './debug' ]
+432 verbose url resolved https://registry.npmjs.org/debug
+433 verbose request where is https://registry.npmjs.org/debug
+434 info trying registry request attempt 1 at 08:37:44
+435 verbose etag "9FOUDX6EGRHXY2ZXTG6YF4KI0"
+436 http GET https://registry.npmjs.org/debug
+437 http 304 https://registry.npmjs.org/bytes
+438 silly registry.get cb [ 304,
+438 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+438 silly registry.get     server: 'Apache',
+438 silly registry.get     via: '1.1 varnish',
+438 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:44 GMT',
+438 silly registry.get     'cache-control': 'max-age=60',
+438 silly registry.get     etag: '"3P21LC5J68VH3Y9EJY14XN7VD"',
+438 silly registry.get     age: '0',
+438 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+438 silly registry.get     'x-cache': 'HIT',
+438 silly registry.get     'x-cache-hits': '1',
+438 silly registry.get     'x-timer': 'S1420162664.620803,VS0,VE205',
+438 silly registry.get     vary: 'Accept',
+438 silly registry.get     'content-length': '0',
+438 silly registry.get     'keep-alive': 'timeout=10, max=50',
+438 silly registry.get     connection: 'Keep-Alive' } ]
+439 verbose etag https://registry.npmjs.org/bytes from cache
+440 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+441 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+442 http 304 https://registry.npmjs.org/qs
+443 silly registry.get cb [ 304,
+443 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+443 silly registry.get     server: 'Apache',
+443 silly registry.get     via: '1.1 varnish',
+443 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+443 silly registry.get     'cache-control': 'max-age=60',
+443 silly registry.get     etag: '"C2OZKGZKGZ07N353V6XC1PTTE"',
+443 silly registry.get     age: '0',
+443 silly registry.get     'x-served-by': 'cache-sn89-SIN',
+443 silly registry.get     'x-cache': 'HIT',
+443 silly registry.get     'x-cache-hits': '1',
+443 silly registry.get     'x-timer': 'S1420162664.559130,VS0,VE779',
+443 silly registry.get     vary: 'Accept',
+443 silly registry.get     'content-length': '0',
+443 silly registry.get     'keep-alive': 'timeout=10, max=50',
+443 silly registry.get     connection: 'Keep-Alive' } ]
+444 verbose etag https://registry.npmjs.org/qs from cache
+445 http 304 https://registry.npmjs.org/cookie
+446 silly registry.get cb [ 304,
+446 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+446 silly registry.get     server: 'Apache',
+446 silly registry.get     via: '1.1 varnish',
+446 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+446 silly registry.get     'cache-control': 'max-age=60',
+446 silly registry.get     etag: '"3H4OHDWZ7615P8KRS6QQVZZGB"',
+446 silly registry.get     age: '0',
+446 silly registry.get     'x-served-by': 'cache-sn88-SIN',
+446 silly registry.get     'x-cache': 'HIT',
+446 silly registry.get     'x-cache-hits': '1',
+446 silly registry.get     'x-timer': 'S1420162664.606152,VS0,VE767',
+446 silly registry.get     vary: 'Accept',
+446 silly registry.get     'content-length': '0',
+446 silly registry.get     'keep-alive': 'timeout=10, max=50',
+446 silly registry.get     connection: 'Keep-Alive' } ]
+447 verbose etag https://registry.npmjs.org/cookie from cache
+448 http 304 https://registry.npmjs.org/crc
+449 silly registry.get cb [ 304,
+449 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+449 silly registry.get     server: 'Apache',
+449 silly registry.get     via: '1.1 varnish',
+449 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+449 silly registry.get     'cache-control': 'max-age=60',
+449 silly registry.get     etag: '"9ZKH4SNUAHPDUHT594MPGYASN"',
+449 silly registry.get     age: '0',
+449 silly registry.get     'x-served-by': 'cache-sn89-SIN',
+449 silly registry.get     'x-cache': 'HIT',
+449 silly registry.get     'x-cache-hits': '1',
+449 silly registry.get     'x-timer': 'S1420162664.594298,VS0,VE787',
+449 silly registry.get     vary: 'Accept',
+449 silly registry.get     'content-length': '0',
+449 silly registry.get     'keep-alive': 'timeout=10, max=50',
+449 silly registry.get     connection: 'Keep-Alive' } ]
+450 verbose etag https://registry.npmjs.org/crc from cache
+451 silly lockFile dd3beb89-qs-0-5-1 qs@0.5.1
+452 silly lockFile dd3beb89-qs-0-5-1 qs@0.5.1
+453 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+454 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+455 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+456 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+457 http 304 https://registry.npmjs.org/formidable
+458 silly registry.get cb [ 304,
+458 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+458 silly registry.get     server: 'Apache',
+458 silly registry.get     via: '1.1 varnish',
+458 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+458 silly registry.get     'cache-control': 'max-age=60',
+458 silly registry.get     etag: '"F3WXETIHROAUALTEFGHN8DXVW"',
+458 silly registry.get     age: '0',
+458 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+458 silly registry.get     'x-cache': 'MISS',
+458 silly registry.get     'x-cache-hits': '0',
+458 silly registry.get     'x-timer': 'S1420162664.572559,VS0,VE1075',
+458 silly registry.get     vary: 'Accept',
+458 silly registry.get     'content-length': '0',
+458 silly registry.get     'keep-alive': 'timeout=10, max=50',
+458 silly registry.get     connection: 'Keep-Alive' } ]
+459 verbose etag https://registry.npmjs.org/formidable from cache
+460 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+461 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+462 http 304 https://registry.npmjs.org/debug
+463 silly registry.get cb [ 304,
+463 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:45 GMT',
+463 silly registry.get     server: 'Apache',
+463 silly registry.get     via: '1.1 varnish',
+463 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+463 silly registry.get     'cache-control': 'max-age=60',
+463 silly registry.get     etag: '"9FOUDX6EGRHXY2ZXTG6YF4KI0"',
+463 silly registry.get     age: '0',
+463 silly registry.get     'x-served-by': 'cache-sn89-SIN',
+463 silly registry.get     'x-cache': 'HIT',
+463 silly registry.get     'x-cache-hits': '1',
+463 silly registry.get     'x-timer': 'S1420162665.679913,VS0,VE201',
+463 silly registry.get     vary: 'Accept',
+463 silly registry.get     'content-length': '0',
+463 silly registry.get     'keep-alive': 'timeout=10, max=49',
+463 silly registry.get     connection: 'Keep-Alive' } ]
+464 verbose etag https://registry.npmjs.org/debug from cache
+465 silly addNameRange number 2 { name: 'debug', range: '*', hasData: true }
+466 silly addNameRange versions [ 'debug',
+466 silly addNameRange   [ '0.0.1',
+466 silly addNameRange     '0.1.0',
+466 silly addNameRange     '0.2.0',
+466 silly addNameRange     '0.3.0',
+466 silly addNameRange     '0.4.0',
+466 silly addNameRange     '0.4.1',
+466 silly addNameRange     '0.5.0',
+466 silly addNameRange     '0.6.0',
+466 silly addNameRange     '0.7.0',
+466 silly addNameRange     '0.7.1',
+466 silly addNameRange     '0.7.2',
+466 silly addNameRange     '0.7.3',
+466 silly addNameRange     '0.7.4',
+466 silly addNameRange     '0.8.0',
+466 silly addNameRange     '0.8.1',
+466 silly addNameRange     '1.0.0',
+466 silly addNameRange     '1.0.1',
+466 silly addNameRange     '1.0.2',
+466 silly addNameRange     '1.0.3',
+466 silly addNameRange     '1.0.4',
+466 silly addNameRange     '2.0.0',
+466 silly addNameRange     '2.1.0',
+466 silly addNameRange     '2.1.1' ] ]
+467 verbose addNamed [ 'debug', '2.1.1' ]
+468 verbose addNamed [ '2.1.1', '2.1.1' ]
+469 silly lockFile 656b33b7-debug-2-1-1 debug@2.1.1
+470 verbose lock debug@2.1.1 /Users/Charlie/.npm/656b33b7-debug-2-1-1.lock
+471 silly lockFile 656b33b7-debug-2-1-1 debug@2.1.1
+472 silly lockFile 656b33b7-debug-2-1-1 debug@2.1.1
+473 silly lockFile 3ac45eff-debug debug@*
+474 silly lockFile 3ac45eff-debug debug@*
+475 http 304 https://registry.npmjs.org/send
+476 silly registry.get cb [ 304,
+476 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:44 GMT',
+476 silly registry.get     server: 'Apache',
+476 silly registry.get     via: '1.1 varnish',
+476 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:45 GMT',
+476 silly registry.get     'cache-control': 'max-age=60',
+476 silly registry.get     etag: '"1QS6NIEXA3IUIRT9VB4S3IK5Y"',
+476 silly registry.get     age: '0',
+476 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+476 silly registry.get     'x-cache': 'HIT',
+476 silly registry.get     'x-cache-hits': '1',
+476 silly registry.get     'x-timer': 'S1420162664.927072,VS0,VE976',
+476 silly registry.get     vary: 'Accept',
+476 silly registry.get     'content-length': '0',
+476 silly registry.get     'keep-alive': 'timeout=10, max=49',
+476 silly registry.get     connection: 'Keep-Alive' } ]
+477 verbose etag https://registry.npmjs.org/send from cache
+478 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+479 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+480 http 304 https://registry.npmjs.org/fresh
+481 silly registry.get cb [ 304,
+481 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:45 GMT',
+481 silly registry.get     server: 'Apache',
+481 silly registry.get     via: '1.1 varnish',
+481 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:46 GMT',
+481 silly registry.get     'cache-control': 'max-age=60',
+481 silly registry.get     etag: '"561CLU2944FYBNMBA0DL3S0GR"',
+481 silly registry.get     age: '0',
+481 silly registry.get     'x-served-by': 'cache-sn89-SIN',
+481 silly registry.get     'x-cache': 'HIT',
+481 silly registry.get     'x-cache-hits': '1',
+481 silly registry.get     'x-timer': 'S1420162665.644682,VS0,VE972',
+481 silly registry.get     vary: 'Accept',
+481 silly registry.get     'content-length': '0',
+481 silly registry.get     'keep-alive': 'timeout=10, max=49',
+481 silly registry.get     connection: 'Keep-Alive' } ]
+482 verbose etag https://registry.npmjs.org/fresh from cache
+483 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+484 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+485 http 304 https://registry.npmjs.org/pause
+486 silly registry.get cb [ 304,
+486 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:45 GMT',
+486 silly registry.get     server: 'Apache',
+486 silly registry.get     via: '1.1 varnish',
+486 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:46 GMT',
+486 silly registry.get     'cache-control': 'max-age=60',
+486 silly registry.get     etag: '"E9DMFLGA9UVH6WRM7RLYY8WGY"',
+486 silly registry.get     age: '0',
+486 silly registry.get     'x-served-by': 'cache-sn88-SIN',
+486 silly registry.get     'x-cache': 'HIT',
+486 silly registry.get     'x-cache-hits': '1',
+486 silly registry.get     'x-timer': 'S1420162665.661090,VS0,VE981',
+486 silly registry.get     vary: 'Accept',
+486 silly registry.get     'content-length': '0',
+486 silly registry.get     'keep-alive': 'timeout=10, max=49',
+486 silly registry.get     connection: 'Keep-Alive' } ]
+487 verbose etag https://registry.npmjs.org/pause from cache
+488 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+489 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+490 silly resolved [ { name: 'bytes',
+490 silly resolved     author:
+490 silly resolved      { name: 'TJ Holowaychuk',
+490 silly resolved        email: 'tj@vision-media.ca',
+490 silly resolved        url: 'http://tjholowaychuk.com' },
+490 silly resolved     description: 'byte size string parser / serializer',
+490 silly resolved     version: '0.1.0',
+490 silly resolved     main: 'index.js',
+490 silly resolved     dependencies: {},
+490 silly resolved     devDependencies: { mocha: '*', should: '*' },
+490 silly resolved     component: { scripts: [Object] },
+490 silly resolved     _id: 'bytes@0.1.0',
+490 silly resolved     dist:
+490 silly resolved      { shasum: 'c574812228126d6369d1576925a8579db3f8e5a2',
+490 silly resolved        tarball: 'http://registry.npmjs.org/bytes/-/bytes-0.1.0.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: 'c574812228126d6369d1576925a8579db3f8e5a2',
+490 silly resolved     _from: 'bytes@0.1.0',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/bytes/-/bytes-0.1.0.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!' },
+490 silly resolved   { name: 'qs',
+490 silly resolved     description: 'querystring parser',
+490 silly resolved     version: '0.5.1',
+490 silly resolved     keywords: [ 'query string', 'parser', 'component' ],
+490 silly resolved     repository:
+490 silly resolved      { type: 'git',
+490 silly resolved        url: 'git://github.com/visionmedia/node-querystring.git' },
+490 silly resolved     devDependencies: { mocha: '*', 'expect.js': '*' },
+490 silly resolved     component: { scripts: [Object] },
+490 silly resolved     author:
+490 silly resolved      { name: 'TJ Holowaychuk',
+490 silly resolved        email: 'tj@vision-media.ca',
+490 silly resolved        url: 'http://tjholowaychuk.com' },
+490 silly resolved     main: 'index',
+490 silly resolved     engines: { node: '*' },
+490 silly resolved     _id: 'qs@0.5.1',
+490 silly resolved     dist:
+490 silly resolved      { shasum: '9f6bf5d9ac6c76384e95d36d15b48980e5e4add0',
+490 silly resolved        tarball: 'http://registry.npmjs.org/qs/-/qs-0.5.1.tgz' },
+490 silly resolved     _npmVersion: '1.1.61',
+490 silly resolved     _npmUser: { name: 'tjholowaychuk', email: 'tj@vision-media.ca' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: '9f6bf5d9ac6c76384e95d36d15b48980e5e4add0',
+490 silly resolved     _from: 'qs@0.5.1',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/qs/-/qs-0.5.1.tgz',
+490 silly resolved     bugs: { url: 'https://github.com/visionmedia/node-querystring/issues' },
+490 silly resolved     readme: 'ERROR: No README data found!',
+490 silly resolved     homepage: 'https://github.com/visionmedia/node-querystring' },
+490 silly resolved   { name: 'crc',
+490 silly resolved     version: '0.2.0',
+490 silly resolved     description: 'CRC JavaScript implementation',
+490 silly resolved     author: { name: 'Alex Gorbatchev', email: 'alex.gorbatchev@gmail.com' },
+490 silly resolved     contributors: [],
+490 silly resolved     main: './lib/crc.js',
+490 silly resolved     scripts: {},
+490 silly resolved     directories: {},
+490 silly resolved     devDependencies: { mocha: '*', should: '*' },
+490 silly resolved     repository:
+490 silly resolved      { type: 'git',
+490 silly resolved        url: 'git://github.com/alexgorbatchev/node-crc.git' },
+490 silly resolved     _npmUser: { name: 'alexgorbatchev', email: 'alex.gorbatchev@gmail.com' },
+490 silly resolved     _id: 'crc@0.2.0',
+490 silly resolved     dependencies: {},
+490 silly resolved     engines: { node: '*' },
+490 silly resolved     _engineSupported: true,
+490 silly resolved     _npmVersion: '1.0.106',
+490 silly resolved     _nodeVersion: 'v0.6.1',
+490 silly resolved     _defaultsLoaded: true,
+490 silly resolved     dist:
+490 silly resolved      { shasum: 'f4486b9bf0a12df83c3fca14e31e030fdabd9454',
+490 silly resolved        tarball: 'http://registry.npmjs.org/crc/-/crc-0.2.0.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     _shasum: 'f4486b9bf0a12df83c3fca14e31e030fdabd9454',
+490 silly resolved     _from: 'crc@0.2.0',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/crc/-/crc-0.2.0.tgz',
+490 silly resolved     bugs: { url: 'https://github.com/alexgorbatchev/node-crc/issues' },
+490 silly resolved     readme: 'ERROR: No README data found!',
+490 silly resolved     homepage: 'https://github.com/alexgorbatchev/node-crc' },
+490 silly resolved   { author: { name: 'Roman Shtylman', email: 'shtylman@gmail.com' },
+490 silly resolved     name: 'cookie',
+490 silly resolved     description: 'cookie parsing and serialization',
+490 silly resolved     version: '0.0.4',
+490 silly resolved     repository:
+490 silly resolved      { type: 'git',
+490 silly resolved        url: 'git://github.com/shtylman/node-cookie.git' },
+490 silly resolved     keywords: [ 'cookie', 'cookies' ],
+490 silly resolved     main: 'index.js',
+490 silly resolved     scripts: { test: 'mocha' },
+490 silly resolved     dependencies: {},
+490 silly resolved     devDependencies: { mocha: '1.x.x' },
+490 silly resolved     optionalDependencies: {},
+490 silly resolved     engines: { node: '*' },
+490 silly resolved     _npmUser: { name: 'shtylman', email: 'shtylman@gmail.com' },
+490 silly resolved     _id: 'cookie@0.0.4',
+490 silly resolved     _engineSupported: true,
+490 silly resolved     _npmVersion: '1.1.24',
+490 silly resolved     _nodeVersion: 'v0.6.20-pre',
+490 silly resolved     _defaultsLoaded: true,
+490 silly resolved     dist:
+490 silly resolved      { shasum: '5456bd47aee2666eac976ea80a6105940483fe98',
+490 silly resolved        tarball: 'http://registry.npmjs.org/cookie/-/cookie-0.0.4.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: '5456bd47aee2666eac976ea80a6105940483fe98',
+490 silly resolved     _from: 'cookie@0.0.4',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/cookie/-/cookie-0.0.4.tgz',
+490 silly resolved     bugs: { url: 'https://github.com/shtylman/node-cookie/issues' },
+490 silly resolved     readme: 'ERROR: No README data found!',
+490 silly resolved     homepage: 'https://github.com/shtylman/node-cookie' },
+490 silly resolved   { name: 'formidable',
+490 silly resolved     version: '1.0.11',
+490 silly resolved     dependencies: {},
+490 silly resolved     devDependencies:
+490 silly resolved      { gently: '0.8.0',
+490 silly resolved        findit: '0.1.1',
+490 silly resolved        hashish: '0.0.4',
+490 silly resolved        urun: '0.0.4',
+490 silly resolved        utest: '0.0.3' },
+490 silly resolved     directories: { lib: './lib' },
+490 silly resolved     main: './lib/index',
+490 silly resolved     scripts: { test: 'make test' },
+490 silly resolved     engines: { node: '*' },
+490 silly resolved     optionalDependencies: {},
+490 silly resolved     _npmUser: { name: 'felixge', email: 'felix@debuggable.com' },
+490 silly resolved     _id: 'formidable@1.0.11',
+490 silly resolved     _engineSupported: true,
+490 silly resolved     _npmVersion: '1.1.21',
+490 silly resolved     _nodeVersion: 'v0.6.18-pre',
+490 silly resolved     _defaultsLoaded: true,
+490 silly resolved     dist:
+490 silly resolved      { shasum: '68f63325a035e644b6f7bb3d11243b9761de1b30',
+490 silly resolved        tarball: 'http://registry.npmjs.org/formidable/-/formidable-1.0.11.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     _shasum: '68f63325a035e644b6f7bb3d11243b9761de1b30',
+490 silly resolved     _from: 'formidable@1.0.11',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/formidable/-/formidable-1.0.11.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!' },
+490 silly resolved   { name: 'debug',
+490 silly resolved     version: '2.1.1',
+490 silly resolved     repository: { type: 'git', url: 'git://github.com/visionmedia/debug.git' },
+490 silly resolved     description: 'small debugging utility',
+490 silly resolved     keywords: [ 'debug', 'log', 'debugger' ],
+490 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+490 silly resolved     contributors: [ [Object] ],
+490 silly resolved     license: 'MIT',
+490 silly resolved     dependencies: { ms: '0.6.2' },
+490 silly resolved     devDependencies: { browserify: '6.1.0', mocha: '*' },
+490 silly resolved     main: './node.js',
+490 silly resolved     browser: './browser.js',
+490 silly resolved     component: { scripts: [Object] },
+490 silly resolved     gitHead: '24cc5c04fc8886fa9afcadea4db439f9a6186ca4',
+490 silly resolved     bugs: { url: 'https://github.com/visionmedia/debug/issues' },
+490 silly resolved     homepage: 'https://github.com/visionmedia/debug',
+490 silly resolved     _id: 'debug@2.1.1',
+490 silly resolved     scripts: {},
+490 silly resolved     _shasum: 'e0c548cc607adc22b537540dc3639c4236fdf90c',
+490 silly resolved     _from: 'debug@*',
+490 silly resolved     _npmVersion: '1.4.28',
+490 silly resolved     _npmUser: { name: 'tootallnate', email: 'nathan@tootallnate.net' },
+490 silly resolved     maintainers: [ [Object], [Object] ],
+490 silly resolved     dist:
+490 silly resolved      { shasum: 'e0c548cc607adc22b537540dc3639c4236fdf90c',
+490 silly resolved        tarball: 'http://registry.npmjs.org/debug/-/debug-2.1.1.tgz' },
+490 silly resolved     directories: {},
+490 silly resolved     _resolved: 'https://registry.npmjs.org/debug/-/debug-2.1.1.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!' },
+490 silly resolved   { name: 'send',
+490 silly resolved     version: '0.0.4',
+490 silly resolved     description: 'Better streaming static file server with Range and conditional-GET support',
+490 silly resolved     keywords: [ 'static', 'file', 'server' ],
+490 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+490 silly resolved     dependencies:
+490 silly resolved      { debug: '*',
+490 silly resolved        mime: '1.2.6',
+490 silly resolved        fresh: '0.1.0',
+490 silly resolved        'range-parser': '0.0.4' },
+490 silly resolved     devDependencies: { mocha: '*', should: '*', supertest: '0.0.1', connect: '2.x' },
+490 silly resolved     scripts: { test: 'make test' },
+490 silly resolved     main: 'index',
+490 silly resolved     _id: 'send@0.0.4',
+490 silly resolved     dist:
+490 silly resolved      { shasum: '2d4cf79b189fcd09610e1302510ac9b0e4dde800',
+490 silly resolved        tarball: 'http://registry.npmjs.org/send/-/send-0.0.4.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: '2d4cf79b189fcd09610e1302510ac9b0e4dde800',
+490 silly resolved     _from: 'send@0.0.4',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/send/-/send-0.0.4.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!' },
+490 silly resolved   { name: 'fresh',
+490 silly resolved     author:
+490 silly resolved      { name: 'TJ Holowaychuk',
+490 silly resolved        email: 'tj@vision-media.ca',
+490 silly resolved        url: 'http://tjholowaychuk.com' },
+490 silly resolved     description: 'HTTP response freshness testing',
+490 silly resolved     version: '0.1.0',
+490 silly resolved     main: 'index.js',
+490 silly resolved     dependencies: {},
+490 silly resolved     devDependencies: { mocha: '*', should: '*' },
+490 silly resolved     _npmUser: { name: 'tjholowaychuk', email: 'tj@vision-media.ca' },
+490 silly resolved     _id: 'fresh@0.1.0',
+490 silly resolved     optionalDependencies: {},
+490 silly resolved     engines: { node: '*' },
+490 silly resolved     _engineSupported: true,
+490 silly resolved     _npmVersion: '1.1.24',
+490 silly resolved     _nodeVersion: 'v0.6.19',
+490 silly resolved     _defaultsLoaded: true,
+490 silly resolved     dist:
+490 silly resolved      { shasum: '03e4b0178424e4c2d5d19a54d8814cdc97934850',
+490 silly resolved        tarball: 'http://registry.npmjs.org/fresh/-/fresh-0.1.0.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: '03e4b0178424e4c2d5d19a54d8814cdc97934850',
+490 silly resolved     _from: 'fresh@0.1.0',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/fresh/-/fresh-0.1.0.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!' },
+490 silly resolved   { name: 'pause',
+490 silly resolved     version: '0.0.1',
+490 silly resolved     description: 'Pause streams...',
+490 silly resolved     keywords: [],
+490 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+490 silly resolved     dependencies: {},
+490 silly resolved     devDependencies: { mocha: '*', should: '*' },
+490 silly resolved     main: 'index',
+490 silly resolved     _id: 'pause@0.0.1',
+490 silly resolved     dist:
+490 silly resolved      { shasum: '1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d',
+490 silly resolved        tarball: 'http://registry.npmjs.org/pause/-/pause-0.0.1.tgz' },
+490 silly resolved     maintainers: [ [Object] ],
+490 silly resolved     directories: {},
+490 silly resolved     _shasum: '1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d',
+490 silly resolved     _from: 'pause@0.0.1',
+490 silly resolved     _resolved: 'https://registry.npmjs.org/pause/-/pause-0.0.1.tgz',
+490 silly resolved     readme: 'ERROR: No README data found!',
+490 silly resolved     scripts: {} } ]
+491 info install bytes@0.1.0 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+492 info install qs@0.5.1 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+493 info install crc@0.2.0 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+494 info install cookie@0.0.4 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+495 info install formidable@1.0.11 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+496 info install debug@2.1.1 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+497 info install send@0.0.4 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+498 info install fresh@0.1.0 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+499 info install pause@0.0.1 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+500 info installOne bytes@0.1.0
+501 info installOne qs@0.5.1
+502 info installOne crc@0.2.0
+503 info installOne cookie@0.0.4
+504 info installOne formidable@1.0.11
+505 info installOne debug@2.1.1
+506 info installOne send@0.0.4
+507 info installOne fresh@0.1.0
+508 info installOne pause@0.0.1
+509 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes unbuild
+510 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs unbuild
+511 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc unbuild
+512 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie unbuild
+513 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable unbuild
+514 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug unbuild
+515 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send unbuild
+516 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh unbuild
+517 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause unbuild
+518 verbose tar unpack /Users/Charlie/.npm/bytes/0.1.0/package.tgz
+519 silly lockFile 247846e0-dules-connect-node-modules-bytes tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes
+520 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes /Users/Charlie/.npm/247846e0-dules-connect-node-modules-bytes.lock
+521 silly lockFile 01190efb-rlie-npm-bytes-0-1-0-package-tgz tar:///Users/Charlie/.npm/bytes/0.1.0/package.tgz
+522 verbose lock tar:///Users/Charlie/.npm/bytes/0.1.0/package.tgz /Users/Charlie/.npm/01190efb-rlie-npm-bytes-0-1-0-package-tgz.lock
+523 verbose tar unpack /Users/Charlie/.npm/qs/0.5.1/package.tgz
+524 silly lockFile 46a24a0f--modules-connect-node-modules-qs tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs
+525 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs /Users/Charlie/.npm/46a24a0f--modules-connect-node-modules-qs.lock
+526 silly lockFile 76cd14f6-Charlie-npm-qs-0-5-1-package-tgz tar:///Users/Charlie/.npm/qs/0.5.1/package.tgz
+527 verbose lock tar:///Users/Charlie/.npm/qs/0.5.1/package.tgz /Users/Charlie/.npm/76cd14f6-Charlie-npm-qs-0-5-1-package-tgz.lock
+528 verbose tar unpack /Users/Charlie/.npm/crc/0.2.0/package.tgz
+529 silly lockFile ce0bfe40-modules-connect-node-modules-crc tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc
+530 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc /Users/Charlie/.npm/ce0bfe40-modules-connect-node-modules-crc.lock
+531 silly lockFile 54fd8d08-harlie-npm-crc-0-2-0-package-tgz tar:///Users/Charlie/.npm/crc/0.2.0/package.tgz
+532 verbose lock tar:///Users/Charlie/.npm/crc/0.2.0/package.tgz /Users/Charlie/.npm/54fd8d08-harlie-npm-crc-0-2-0-package-tgz.lock
+533 verbose tar unpack /Users/Charlie/.npm/cookie/0.0.4/package.tgz
+534 silly lockFile 92767adf-ules-connect-node-modules-cookie tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie
+535 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie /Users/Charlie/.npm/92767adf-ules-connect-node-modules-cookie.lock
+536 silly lockFile bdd75e23-lie-npm-cookie-0-0-4-package-tgz tar:///Users/Charlie/.npm/cookie/0.0.4/package.tgz
+537 verbose lock tar:///Users/Charlie/.npm/cookie/0.0.4/package.tgz /Users/Charlie/.npm/bdd75e23-lie-npm-cookie-0-0-4-package-tgz.lock
+538 verbose tar unpack /Users/Charlie/.npm/formidable/1.0.11/package.tgz
+539 silly lockFile 614133db--connect-node-modules-formidable tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable
+540 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable /Users/Charlie/.npm/614133db--connect-node-modules-formidable.lock
+541 silly lockFile 0dddef36-pm-formidable-1-0-11-package-tgz tar:///Users/Charlie/.npm/formidable/1.0.11/package.tgz
+542 verbose lock tar:///Users/Charlie/.npm/formidable/1.0.11/package.tgz /Users/Charlie/.npm/0dddef36-pm-formidable-1-0-11-package-tgz.lock
+543 verbose tar unpack /Users/Charlie/.npm/debug/2.1.1/package.tgz
+544 silly lockFile bd717736-dules-connect-node-modules-debug tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+545 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug /Users/Charlie/.npm/bd717736-dules-connect-node-modules-debug.lock
+546 silly lockFile 5791d967-rlie-npm-debug-2-1-1-package-tgz tar:///Users/Charlie/.npm/debug/2.1.1/package.tgz
+547 verbose lock tar:///Users/Charlie/.npm/debug/2.1.1/package.tgz /Users/Charlie/.npm/5791d967-rlie-npm-debug-2-1-1-package-tgz.lock
+548 verbose tar unpack /Users/Charlie/.npm/send/0.0.4/package.tgz
+549 silly lockFile aa7517fd-odules-connect-node-modules-send tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+550 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send /Users/Charlie/.npm/aa7517fd-odules-connect-node-modules-send.lock
+551 silly lockFile d5b8c029-arlie-npm-send-0-0-4-package-tgz tar:///Users/Charlie/.npm/send/0.0.4/package.tgz
+552 verbose lock tar:///Users/Charlie/.npm/send/0.0.4/package.tgz /Users/Charlie/.npm/d5b8c029-arlie-npm-send-0-0-4-package-tgz.lock
+553 verbose tar unpack /Users/Charlie/.npm/fresh/0.1.0/package.tgz
+554 silly lockFile 24c78692-dules-connect-node-modules-fresh tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh
+555 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh /Users/Charlie/.npm/24c78692-dules-connect-node-modules-fresh.lock
+556 silly lockFile 4f0e1b88-rlie-npm-fresh-0-1-0-package-tgz tar:///Users/Charlie/.npm/fresh/0.1.0/package.tgz
+557 verbose lock tar:///Users/Charlie/.npm/fresh/0.1.0/package.tgz /Users/Charlie/.npm/4f0e1b88-rlie-npm-fresh-0-1-0-package-tgz.lock
+558 verbose tar unpack /Users/Charlie/.npm/pause/0.0.1/package.tgz
+559 silly lockFile 713a5a3a-dules-connect-node-modules-pause tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause
+560 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause /Users/Charlie/.npm/713a5a3a-dules-connect-node-modules-pause.lock
+561 silly lockFile 82a95c20-rlie-npm-pause-0-0-1-package-tgz tar:///Users/Charlie/.npm/pause/0.0.1/package.tgz
+562 verbose lock tar:///Users/Charlie/.npm/pause/0.0.1/package.tgz /Users/Charlie/.npm/82a95c20-rlie-npm-pause-0-0-1-package-tgz.lock
+563 silly gunzTarPerm modes [ '755', '644' ]
+564 silly gunzTarPerm modes [ '755', '644' ]
+565 silly gunzTarPerm modes [ '755', '644' ]
+566 silly gunzTarPerm modes [ '755', '644' ]
+567 silly gunzTarPerm modes [ '755', '644' ]
+568 silly gunzTarPerm modes [ '755', '644' ]
+569 silly gunzTarPerm modes [ '755', '644' ]
+570 silly gunzTarPerm modes [ '755', '644' ]
+571 silly gunzTarPerm modes [ '755', '644' ]
+572 silly gunzTarPerm extractEntry package.json
+573 silly gunzTarPerm extractEntry .gitignore
+574 silly gunzTarPerm extractEntry package.json
+575 silly gunzTarPerm extractEntry package.json
+576 silly gunzTarPerm extractEntry package.json
+577 silly gunzTarPerm extractEntry package.json
+578 silly gunzTarPerm extractEntry package.json
+579 silly gunzTarPerm extractEntry .npmignore
+580 silly gunzTarPerm extractEntry index.js
+581 silly gunzTarPerm extractEntry .gitmodules
+582 silly gunzTarPerm extractEntry Makefile
+583 silly gunzTarPerm extractEntry .npmignore
+584 silly gunzTarPerm extractEntry browser.js
+585 silly gunzTarPerm extractEntry .npmignore
+586 silly gunzTarPerm extractEntry README.md
+587 silly gunzTarPerm extractEntry .npmignore
+588 silly gunzTarPerm extractEntry index.js
+589 silly gunzTarPerm extractEntry .npmignore
+590 silly gunzTarPerm extractEntry index.js
+591 silly gunzTarPerm extractEntry .npmignore
+592 silly gunzTarPerm extractEntry index.js
+593 silly gunzTarPerm extractEntry component.json
+594 silly gunzTarPerm extractEntry History.md
+595 silly gunzTarPerm extractEntry package.json
+596 silly gunzTarPerm extractEntry README.md
+597 silly gunzTarPerm extractEntry index.js
+598 silly gunzTarPerm extractEntry .travis.yml
+599 silly gunzTarPerm extractEntry History.md
+600 silly gunzTarPerm extractEntry Makefile
+601 silly gunzTarPerm extractEntry example/post.js
+602 silly gunzTarPerm extractEntry example/upload.js
+603 silly gunzTarPerm extractEntry debug.js
+604 silly gunzTarPerm extractEntry node.js
+605 silly gunzTarPerm extractEntry History.md
+606 silly gunzTarPerm extractEntry lib/send.js
+607 silly gunzTarPerm extractEntry Makefile
+608 silly gunzTarPerm extractEntry Readme.md
+609 silly gunzTarPerm extractEntry lib/crc.js
+610 silly gunzTarPerm extractEntry test/crc.js
+611 silly gunzTarPerm extractEntry test/parse.js
+612 silly gunzTarPerm extractEntry test/serialize.js
+613 silly gunzTarPerm extractEntry Readme.md
+614 silly gunzTarPerm extractEntry tool/record.js
+615 silly gunzTarPerm extractEntry lib/file.js
+616 silly gunzTarPerm extractEntry .jshintrc
+617 silly gunzTarPerm extractEntry lib/utils.js
+618 silly gunzTarPerm extractEntry Makefile
+619 silly gunzTarPerm extractEntry Readme.md
+620 silly gunzTarPerm extractEntry package.json
+621 silly gunzTarPerm extractEntry lib/incoming_form.js
+622 silly gunzTarPerm extractEntry lib/index.js
+623 silly gunzTarPerm extractEntry lib/multipart_parser.js
+624 silly gunzTarPerm extractEntry lib/querystring_parser.js
+625 silly gunzTarPerm extractEntry lib/util.js
+626 silly gunzTarPerm extractEntry .travis.yml
+627 silly gunzTarPerm extractEntry node-gently/package.json
+628 silly gunzTarPerm extractEntry node-gently/index.js
+629 silly gunzTarPerm extractEntry node-gently/example/dog.js
+630 silly gunzTarPerm extractEntry node-gently/example/event_emitter.js
+631 silly gunzTarPerm extractEntry node-gently/lib/gently/gently.js
+632 silly gunzTarPerm extractEntry node-gently/lib/gently/index.js
+633 silly gunzTarPerm extractEntry node-gently/Makefile
+634 silly gunzTarPerm extractEntry node-gently/Readme.md
+635 silly gunzTarPerm extractEntry node-gently/test/common.js
+636 silly gunzTarPerm extractEntry node-gently/test/simple/test-gently.js
+637 silly gunzTarPerm extractEntry benchmark/bench-multipart-parser.js
+638 silly gunzTarPerm extractEntry Readme.md
+639 silly gunzTarPerm extractEntry test/common.js
+640 silly gunzTarPerm extractEntry test/run.js
+641 silly gunzTarPerm extractEntry test/fixture/multipart.js
+642 silly gunzTarPerm extractEntry test/fixture/file/funkyfilename.txt
+643 silly gunzTarPerm extractEntry test/fixture/file/plain.txt
+644 silly gunzTarPerm extractEntry test/fixture/http/special-chars-in-filename/info.md
+645 silly gunzTarPerm extractEntry test/fixture/js/no-filename.js
+646 silly gunzTarPerm extractEntry test/fixture/js/special-chars-in-filename.js
+647 silly gunzTarPerm extractEntry test/integration/test-fixtures.js
+648 silly gunzTarPerm extractEntry test/legacy/common.js
+649 silly gunzTarPerm extractEntry test/legacy/integration/test-multipart-parser.js
+650 silly gunzTarPerm extractEntry test/legacy/simple/test-file.js
+651 silly gunzTarPerm extractEntry test/legacy/simple/test-incoming-form.js
+652 silly gunzTarPerm extractEntry test/legacy/simple/test-multipart-parser.js
+653 silly gunzTarPerm extractEntry test/legacy/simple/test-querystring-parser.js
+654 silly gunzTarPerm extractEntry test/legacy/system/test-multi-video-upload.js
+655 silly gunzTarPerm extractEntry test/unit/test-incoming-form.js
+656 silly gunzTarPerm extractEntry TODO
+657 silly gunzTarPerm extractEntry Makefile
+658 silly gunzTarPerm extractEntry .npmignore
+659 silly gunzTarPerm extractEntry index.js
+660 silly gunzTarPerm extractEntry test/mocha.opts
+661 silly gunzTarPerm extractEntry History.md
+662 silly gunzTarPerm extractEntry component.json
+663 silly gunzTarPerm extractEntry package.json
+664 silly gunzTarPerm extractEntry benchmark.js
+665 silly gunzTarPerm extractEntry examples.js
+666 silly gunzTarPerm extractEntry .npmignore
+667 silly gunzTarPerm extractEntry index.js
+668 silly gunzTarPerm extractEntry querystring.js
+669 silly gunzTarPerm extractEntry History.md
+670 silly gunzTarPerm extractEntry Makefile
+671 silly gunzTarPerm extractEntry Readme.md
+672 silly gunzTarPerm extractEntry Makefile
+673 silly gunzTarPerm extractEntry Readme.md
+674 silly gunzTarPerm extractEntry .gitmodules
+675 silly gunzTarPerm extractEntry lib/head.js
+676 silly gunzTarPerm extractEntry lib/querystring.js
+677 silly lockFile 713a5a3a-dules-connect-node-modules-pause tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause
+678 silly lockFile 713a5a3a-dules-connect-node-modules-pause tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause
+679 silly lockFile 82a95c20-rlie-npm-pause-0-0-1-package-tgz tar:///Users/Charlie/.npm/pause/0.0.1/package.tgz
+680 silly lockFile 82a95c20-rlie-npm-pause-0-0-1-package-tgz tar:///Users/Charlie/.npm/pause/0.0.1/package.tgz
+681 silly gunzTarPerm extractEntry bower.json
+682 info preinstall pause@0.0.1
+683 verbose readDependencies using package.json deps
+684 silly lockFile 247846e0-dules-connect-node-modules-bytes tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes
+685 silly lockFile 247846e0-dules-connect-node-modules-bytes tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes
+686 silly gunzTarPerm extractEntry lib/tail.js
+687 silly gunzTarPerm extractEntry Makefile
+688 verbose readDependencies using package.json deps
+689 silly resolved []
+690 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause
+691 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/pause
+692 verbose linkStuff [ false,
+692 verbose linkStuff   false,
+692 verbose linkStuff   false,
+692 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+693 info linkStuff pause@0.0.1
+694 verbose linkBins pause@0.0.1
+695 verbose linkMans pause@0.0.1
+696 verbose rebuildBundles pause@0.0.1
+697 silly lockFile 01190efb-rlie-npm-bytes-0-1-0-package-tgz tar:///Users/Charlie/.npm/bytes/0.1.0/package.tgz
+698 silly lockFile 01190efb-rlie-npm-bytes-0-1-0-package-tgz tar:///Users/Charlie/.npm/bytes/0.1.0/package.tgz
+699 info install pause@0.0.1
+700 info postinstall pause@0.0.1
+701 info preinstall bytes@0.1.0
+702 verbose readDependencies using package.json deps
+703 verbose readDependencies using package.json deps
+704 silly resolved []
+705 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes
+706 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/bytes
+707 verbose linkStuff [ false,
+707 verbose linkStuff   false,
+707 verbose linkStuff   false,
+707 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+708 info linkStuff bytes@0.1.0
+709 verbose linkBins bytes@0.1.0
+710 verbose linkMans bytes@0.1.0
+711 verbose rebuildBundles bytes@0.1.0
+712 info install bytes@0.1.0
+713 info postinstall bytes@0.1.0
+714 silly lockFile 92767adf-ules-connect-node-modules-cookie tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie
+715 silly lockFile 92767adf-ules-connect-node-modules-cookie tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie
+716 silly lockFile bdd75e23-lie-npm-cookie-0-0-4-package-tgz tar:///Users/Charlie/.npm/cookie/0.0.4/package.tgz
+717 silly lockFile bdd75e23-lie-npm-cookie-0-0-4-package-tgz tar:///Users/Charlie/.npm/cookie/0.0.4/package.tgz
+718 silly lockFile 24c78692-dules-connect-node-modules-fresh tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh
+719 silly lockFile 24c78692-dules-connect-node-modules-fresh tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh
+720 info preinstall cookie@0.0.4
+721 silly gunzTarPerm extractEntry component.json
+722 silly gunzTarPerm extractEntry .travis.yml
+723 silly lockFile 4f0e1b88-rlie-npm-fresh-0-1-0-package-tgz tar:///Users/Charlie/.npm/fresh/0.1.0/package.tgz
+724 silly lockFile 4f0e1b88-rlie-npm-fresh-0-1-0-package-tgz tar:///Users/Charlie/.npm/fresh/0.1.0/package.tgz
+725 verbose readDependencies using package.json deps
+726 verbose readDependencies using package.json deps
+727 silly resolved []
+728 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie
+729 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/cookie
+730 verbose linkStuff [ false,
+730 verbose linkStuff   false,
+730 verbose linkStuff   false,
+730 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+731 info linkStuff cookie@0.0.4
+732 verbose linkBins cookie@0.0.4
+733 verbose linkMans cookie@0.0.4
+734 verbose rebuildBundles cookie@0.0.4
+735 info preinstall fresh@0.1.0
+736 info install cookie@0.0.4
+737 info postinstall cookie@0.0.4
+738 verbose readDependencies using package.json deps
+739 verbose readDependencies using package.json deps
+740 silly resolved []
+741 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh
+742 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/fresh
+743 verbose linkStuff [ false,
+743 verbose linkStuff   false,
+743 verbose linkStuff   false,
+743 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+744 info linkStuff fresh@0.1.0
+745 verbose linkBins fresh@0.1.0
+746 verbose linkMans fresh@0.1.0
+747 verbose rebuildBundles fresh@0.1.0
+748 info install fresh@0.1.0
+749 silly gunzTarPerm extractEntry Readme.md
+750 silly gunzTarPerm extractEntry test/parse.js
+751 info postinstall fresh@0.1.0
+752 silly lockFile aa7517fd-odules-connect-node-modules-send tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+753 silly lockFile aa7517fd-odules-connect-node-modules-send tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+754 silly lockFile ce0bfe40-modules-connect-node-modules-crc tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc
+755 silly lockFile ce0bfe40-modules-connect-node-modules-crc tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc
+756 silly lockFile d5b8c029-arlie-npm-send-0-0-4-package-tgz tar:///Users/Charlie/.npm/send/0.0.4/package.tgz
+757 silly lockFile d5b8c029-arlie-npm-send-0-0-4-package-tgz tar:///Users/Charlie/.npm/send/0.0.4/package.tgz
+758 silly lockFile 54fd8d08-harlie-npm-crc-0-2-0-package-tgz tar:///Users/Charlie/.npm/crc/0.2.0/package.tgz
+759 silly lockFile 54fd8d08-harlie-npm-crc-0-2-0-package-tgz tar:///Users/Charlie/.npm/crc/0.2.0/package.tgz
+760 silly gunzTarPerm extractEntry test/stringify.js
+761 silly gunzTarPerm extractEntry test/browser/expect.js
+762 info preinstall send@0.0.4
+763 info preinstall crc@0.2.0
+764 verbose readDependencies using package.json deps
+765 verbose readDependencies using package.json deps
+766 verbose readDependencies using package.json deps
+767 verbose readDependencies using package.json deps
+768 silly resolved []
+769 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc
+770 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/crc
+771 verbose linkStuff [ false,
+771 verbose linkStuff   false,
+771 verbose linkStuff   false,
+771 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+772 info linkStuff crc@0.2.0
+773 verbose linkBins crc@0.2.0
+774 verbose linkMans crc@0.2.0
+775 verbose rebuildBundles crc@0.2.0
+776 info install crc@0.2.0
+777 verbose cache add [ 'mime@1.2.6', null ]
+778 verbose cache add name=undefined spec="mime@1.2.6" args=["mime@1.2.6",null]
+779 verbose parsed url { protocol: null,
+779 verbose parsed url   slashes: null,
+779 verbose parsed url   auth: null,
+779 verbose parsed url   host: null,
+779 verbose parsed url   port: null,
+779 verbose parsed url   hostname: null,
+779 verbose parsed url   hash: null,
+779 verbose parsed url   search: null,
+779 verbose parsed url   query: null,
+779 verbose parsed url   pathname: 'mime@1.2.6',
+779 verbose parsed url   path: 'mime@1.2.6',
+779 verbose parsed url   href: 'mime@1.2.6' }
+780 verbose cache add [ 'range-parser@0.0.4', null ]
+781 verbose cache add name=undefined spec="range-parser@0.0.4" args=["range-parser@0.0.4",null]
+782 verbose parsed url { protocol: null,
+782 verbose parsed url   slashes: null,
+782 verbose parsed url   auth: null,
+782 verbose parsed url   host: null,
+782 verbose parsed url   port: null,
+782 verbose parsed url   hostname: null,
+782 verbose parsed url   hash: null,
+782 verbose parsed url   search: null,
+782 verbose parsed url   query: null,
+782 verbose parsed url   pathname: 'range-parser@0.0.4',
+782 verbose parsed url   path: 'range-parser@0.0.4',
+782 verbose parsed url   href: 'range-parser@0.0.4' }
+783 verbose cache add name="mime" spec="1.2.6" args=["mime","1.2.6"]
+784 verbose parsed url { protocol: null,
+784 verbose parsed url   slashes: null,
+784 verbose parsed url   auth: null,
+784 verbose parsed url   host: null,
+784 verbose parsed url   port: null,
+784 verbose parsed url   hostname: null,
+784 verbose parsed url   hash: null,
+784 verbose parsed url   search: null,
+784 verbose parsed url   query: null,
+784 verbose parsed url   pathname: '1.2.6',
+784 verbose parsed url   path: '1.2.6',
+784 verbose parsed url   href: '1.2.6' }
+785 verbose addNamed [ 'mime', '1.2.6' ]
+786 verbose addNamed [ '1.2.6', '1.2.6' ]
+787 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+788 verbose lock mime@1.2.6 /Users/Charlie/.npm/898e3106-mime-1-2-6.lock
+789 verbose cache add name="range-parser" spec="0.0.4" args=["range-parser","0.0.4"]
+790 verbose parsed url { protocol: null,
+790 verbose parsed url   slashes: null,
+790 verbose parsed url   auth: null,
+790 verbose parsed url   host: null,
+790 verbose parsed url   port: null,
+790 verbose parsed url   hostname: null,
+790 verbose parsed url   hash: null,
+790 verbose parsed url   search: null,
+790 verbose parsed url   query: null,
+790 verbose parsed url   pathname: '0.0.4',
+790 verbose parsed url   path: '0.0.4',
+790 verbose parsed url   href: '0.0.4' }
+791 verbose addNamed [ 'range-parser', '0.0.4' ]
+792 verbose addNamed [ '0.0.4', '0.0.4' ]
+793 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+794 verbose lock range-parser@0.0.4 /Users/Charlie/.npm/0760c556-range-parser-0-0-4.lock
+795 info postinstall crc@0.2.0
+796 silly gunzTarPerm extractEntry test/browser/jquery.js
+797 silly gunzTarPerm extractEntry test/browser/mocha.js
+798 silly gunzTarPerm extractEntry test/browser/qs.js
+799 silly gunzTarPerm extractEntry test/browser/index.html
+800 silly gunzTarPerm extractEntry test/browser/mocha.css
+801 silly gunzTarPerm extractEntry test/browser/qs.css
+802 verbose request where is /mime
+803 verbose request registry https://registry.npmjs.org/
+804 verbose url raw /mime
+805 verbose url resolving [ 'https://registry.npmjs.org/', './mime' ]
+806 verbose url resolved https://registry.npmjs.org/mime
+807 verbose request where is https://registry.npmjs.org/mime
+808 info trying registry request attempt 1 at 08:37:46
+809 verbose etag "9SQMRID0SFDWKUINX2BZ7BN44"
+810 http GET https://registry.npmjs.org/mime
+811 verbose request where is /range-parser
+812 verbose request registry https://registry.npmjs.org/
+813 verbose url raw /range-parser
+814 verbose url resolving [ 'https://registry.npmjs.org/', './range-parser' ]
+815 verbose url resolved https://registry.npmjs.org/range-parser
+816 verbose request where is https://registry.npmjs.org/range-parser
+817 info trying registry request attempt 1 at 08:37:46
+818 verbose etag "9KB8HAL85KKIEPQQ0EORNX5XP"
+819 http GET https://registry.npmjs.org/range-parser
+820 silly lockFile bd717736-dules-connect-node-modules-debug tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+821 silly lockFile bd717736-dules-connect-node-modules-debug tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+822 silly lockFile 5791d967-rlie-npm-debug-2-1-1-package-tgz tar:///Users/Charlie/.npm/debug/2.1.1/package.tgz
+823 silly lockFile 5791d967-rlie-npm-debug-2-1-1-package-tgz tar:///Users/Charlie/.npm/debug/2.1.1/package.tgz
+824 info preinstall debug@2.1.1
+825 verbose readDependencies using package.json deps
+826 verbose readDependencies using package.json deps
+827 verbose cache add [ 'ms@0.6.2', null ]
+828 verbose cache add name=undefined spec="ms@0.6.2" args=["ms@0.6.2",null]
+829 verbose parsed url { protocol: null,
+829 verbose parsed url   slashes: null,
+829 verbose parsed url   auth: null,
+829 verbose parsed url   host: null,
+829 verbose parsed url   port: null,
+829 verbose parsed url   hostname: null,
+829 verbose parsed url   hash: null,
+829 verbose parsed url   search: null,
+829 verbose parsed url   query: null,
+829 verbose parsed url   pathname: 'ms@0.6.2',
+829 verbose parsed url   path: 'ms@0.6.2',
+829 verbose parsed url   href: 'ms@0.6.2' }
+830 verbose cache add name="ms" spec="0.6.2" args=["ms","0.6.2"]
+831 verbose parsed url { protocol: null,
+831 verbose parsed url   slashes: null,
+831 verbose parsed url   auth: null,
+831 verbose parsed url   host: null,
+831 verbose parsed url   port: null,
+831 verbose parsed url   hostname: null,
+831 verbose parsed url   hash: null,
+831 verbose parsed url   search: null,
+831 verbose parsed url   query: null,
+831 verbose parsed url   pathname: '0.6.2',
+831 verbose parsed url   path: '0.6.2',
+831 verbose parsed url   href: '0.6.2' }
+832 verbose addNamed [ 'ms', '0.6.2' ]
+833 verbose addNamed [ '0.6.2', '0.6.2' ]
+834 silly lockFile 549cc243-ms-0-6-2 ms@0.6.2
+835 verbose lock ms@0.6.2 /Users/Charlie/.npm/549cc243-ms-0-6-2.lock
+836 verbose request where is /ms
+837 verbose request registry https://registry.npmjs.org/
+838 verbose url raw /ms
+839 verbose url resolving [ 'https://registry.npmjs.org/', './ms' ]
+840 verbose url resolved https://registry.npmjs.org/ms
+841 verbose request where is https://registry.npmjs.org/ms
+842 info trying registry request attempt 1 at 08:37:46
+843 verbose etag "735H5STM8VC1GQQ7K3AOTN8S0"
+844 http GET https://registry.npmjs.org/ms
+845 silly lockFile 614133db--connect-node-modules-formidable tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable
+846 silly lockFile 614133db--connect-node-modules-formidable tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable
+847 silly lockFile 0dddef36-pm-formidable-1-0-11-package-tgz tar:///Users/Charlie/.npm/formidable/1.0.11/package.tgz
+848 silly lockFile 0dddef36-pm-formidable-1-0-11-package-tgz tar:///Users/Charlie/.npm/formidable/1.0.11/package.tgz
+849 info preinstall formidable@1.0.11
+850 verbose readDependencies using package.json deps
+851 verbose readDependencies using package.json deps
+852 silly resolved []
+853 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable
+854 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/formidable
+855 verbose linkStuff [ false,
+855 verbose linkStuff   false,
+855 verbose linkStuff   false,
+855 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+856 info linkStuff formidable@1.0.11
+857 verbose linkBins formidable@1.0.11
+858 verbose linkMans formidable@1.0.11
+859 verbose rebuildBundles formidable@1.0.11
+860 info install formidable@1.0.11
+861 info postinstall formidable@1.0.11
+862 silly lockFile 46a24a0f--modules-connect-node-modules-qs tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs
+863 silly lockFile 46a24a0f--modules-connect-node-modules-qs tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs
+864 silly lockFile 76cd14f6-Charlie-npm-qs-0-5-1-package-tgz tar:///Users/Charlie/.npm/qs/0.5.1/package.tgz
+865 silly lockFile 76cd14f6-Charlie-npm-qs-0-5-1-package-tgz tar:///Users/Charlie/.npm/qs/0.5.1/package.tgz
+866 info preinstall qs@0.5.1
+867 verbose readDependencies using package.json deps
+868 verbose readDependencies using package.json deps
+869 silly resolved []
+870 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs
+871 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/qs
+872 verbose linkStuff [ false,
+872 verbose linkStuff   false,
+872 verbose linkStuff   false,
+872 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+873 info linkStuff qs@0.5.1
+874 verbose linkBins qs@0.5.1
+875 verbose linkMans qs@0.5.1
+876 verbose rebuildBundles qs@0.5.1
+877 info install qs@0.5.1
+878 info postinstall qs@0.5.1
+879 http 304 https://registry.npmjs.org/ms
+880 silly registry.get cb [ 304,
+880 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:47 GMT',
+880 silly registry.get     server: 'Apache',
+880 silly registry.get     via: '1.1 varnish',
+880 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:47 GMT',
+880 silly registry.get     'cache-control': 'max-age=60',
+880 silly registry.get     etag: '"735H5STM8VC1GQQ7K3AOTN8S0"',
+880 silly registry.get     age: '0',
+880 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+880 silly registry.get     'x-cache': 'HIT',
+880 silly registry.get     'x-cache-hits': '1',
+880 silly registry.get     'x-timer': 'S1420162667.223805,VS0,VE196',
+880 silly registry.get     vary: 'Accept',
+880 silly registry.get     'content-length': '0',
+880 silly registry.get     'keep-alive': 'timeout=10, max=50',
+880 silly registry.get     connection: 'Keep-Alive' } ]
+881 verbose etag https://registry.npmjs.org/ms from cache
+882 silly lockFile 549cc243-ms-0-6-2 ms@0.6.2
+883 silly lockFile 549cc243-ms-0-6-2 ms@0.6.2
+884 http 304 https://registry.npmjs.org/mime
+885 silly registry.get cb [ 304,
+885 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:47 GMT',
+885 silly registry.get     server: 'Apache',
+885 silly registry.get     via: '1.1 varnish',
+885 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:47 GMT',
+885 silly registry.get     'cache-control': 'max-age=60',
+885 silly registry.get     etag: '"9SQMRID0SFDWKUINX2BZ7BN44"',
+885 silly registry.get     age: '0',
+885 silly registry.get     'x-served-by': 'cache-sn87-SIN',
+885 silly registry.get     'x-cache': 'HIT',
+885 silly registry.get     'x-cache-hits': '1',
+885 silly registry.get     'x-timer': 'S1420162667.184987,VS0,VE238',
+885 silly registry.get     vary: 'Accept',
+885 silly registry.get     'content-length': '0',
+885 silly registry.get     'keep-alive': 'timeout=10, max=50',
+885 silly registry.get     connection: 'Keep-Alive' } ]
+886 verbose etag https://registry.npmjs.org/mime from cache
+887 silly resolved [ { name: 'ms',
+887 silly resolved     version: '0.6.2',
+887 silly resolved     description: 'Tiny ms conversion utility',
+887 silly resolved     repository: { type: 'git', url: 'git://github.com/guille/ms.js.git' },
+887 silly resolved     main: './index',
+887 silly resolved     devDependencies: { mocha: '*', 'expect.js': '*', serve: '*' },
+887 silly resolved     component: { scripts: [Object] },
+887 silly resolved     bugs: { url: 'https://github.com/guille/ms.js/issues' },
+887 silly resolved     _id: 'ms@0.6.2',
+887 silly resolved     dist:
+887 silly resolved      { shasum: 'd89c2124c6fdc1353d65a8b77bf1aac4b193708c',
+887 silly resolved        tarball: 'http://registry.npmjs.org/ms/-/ms-0.6.2.tgz' },
+887 silly resolved     _from: 'ms@0.6.2',
+887 silly resolved     _npmVersion: '1.2.30',
+887 silly resolved     _npmUser: { name: 'rauchg', email: 'rauchg@gmail.com' },
+887 silly resolved     maintainers: [ [Object] ],
+887 silly resolved     directories: {},
+887 silly resolved     _shasum: 'd89c2124c6fdc1353d65a8b77bf1aac4b193708c',
+887 silly resolved     _resolved: 'https://registry.npmjs.org/ms/-/ms-0.6.2.tgz',
+887 silly resolved     readme: 'ERROR: No README data found!',
+887 silly resolved     homepage: 'https://github.com/guille/ms.js',
+887 silly resolved     scripts: {} } ]
+888 info install ms@0.6.2 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+889 info installOne ms@0.6.2
+890 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms unbuild
+891 verbose tar unpack /Users/Charlie/.npm/ms/0.6.2/package.tgz
+892 silly lockFile eb458ea7-de-modules-debug-node-modules-ms tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms
+893 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms /Users/Charlie/.npm/eb458ea7-de-modules-debug-node-modules-ms.lock
+894 silly lockFile ac099dc1-Charlie-npm-ms-0-6-2-package-tgz tar:///Users/Charlie/.npm/ms/0.6.2/package.tgz
+895 verbose lock tar:///Users/Charlie/.npm/ms/0.6.2/package.tgz /Users/Charlie/.npm/ac099dc1-Charlie-npm-ms-0-6-2-package-tgz.lock
+896 silly gunzTarPerm modes [ '755', '644' ]
+897 silly gunzTarPerm extractEntry package.json
+898 silly gunzTarPerm extractEntry .npmignore
+899 silly gunzTarPerm extractEntry README.md
+900 silly gunzTarPerm extractEntry index.js
+901 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+902 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+903 silly lockFile eb458ea7-de-modules-debug-node-modules-ms tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms
+904 silly lockFile eb458ea7-de-modules-debug-node-modules-ms tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms
+905 silly lockFile ac099dc1-Charlie-npm-ms-0-6-2-package-tgz tar:///Users/Charlie/.npm/ms/0.6.2/package.tgz
+906 silly lockFile ac099dc1-Charlie-npm-ms-0-6-2-package-tgz tar:///Users/Charlie/.npm/ms/0.6.2/package.tgz
+907 info preinstall ms@0.6.2
+908 verbose readDependencies using package.json deps
+909 verbose readDependencies using package.json deps
+910 silly resolved []
+911 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms
+912 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules/ms
+913 verbose linkStuff [ false,
+913 verbose linkStuff   false,
+913 verbose linkStuff   false,
+913 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug/node_modules' ]
+914 info linkStuff ms@0.6.2
+915 verbose linkBins ms@0.6.2
+916 verbose linkMans ms@0.6.2
+917 verbose rebuildBundles ms@0.6.2
+918 info install ms@0.6.2
+919 info postinstall ms@0.6.2
+920 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+921 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/debug
+922 verbose linkStuff [ false,
+922 verbose linkStuff   false,
+922 verbose linkStuff   false,
+922 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+923 info linkStuff debug@2.1.1
+924 verbose linkBins debug@2.1.1
+925 verbose linkMans debug@2.1.1
+926 verbose rebuildBundles debug@2.1.1
+927 verbose rebuildBundles [ 'ms' ]
+928 info install debug@2.1.1
+929 info postinstall debug@2.1.1
+930 http 304 https://registry.npmjs.org/range-parser
+931 silly registry.get cb [ 304,
+931 silly registry.get   { date: 'Fri, 02 Jan 2015 01:37:47 GMT',
+931 silly registry.get     server: 'Apache',
+931 silly registry.get     via: '1.1 varnish',
+931 silly registry.get     'last-modified': 'Fri, 02 Jan 2015 01:37:48 GMT',
+931 silly registry.get     'cache-control': 'max-age=60',
+931 silly registry.get     etag: '"9KB8HAL85KKIEPQQ0EORNX5XP"',
+931 silly registry.get     age: '0',
+931 silly registry.get     'x-served-by': 'cache-sn89-SIN',
+931 silly registry.get     'x-cache': 'HIT',
+931 silly registry.get     'x-cache-hits': '1',
+931 silly registry.get     'x-timer': 'S1420162667.215146,VS0,VE825',
+931 silly registry.get     vary: 'Accept',
+931 silly registry.get     'content-length': '0',
+931 silly registry.get     'keep-alive': 'timeout=10, max=50',
+931 silly registry.get     connection: 'Keep-Alive' } ]
+932 verbose etag https://registry.npmjs.org/range-parser from cache
+933 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+934 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+935 silly resolved [ { author:
+935 silly resolved      { name: 'Robert Kieffer',
+935 silly resolved        email: 'robert@broofa.com',
+935 silly resolved        url: 'http://github.com/broofa' },
+935 silly resolved     contributors: [ [Object] ],
+935 silly resolved     dependencies: {},
+935 silly resolved     description: 'A comprehensive library for mime-type mapping',
+935 silly resolved     devDependencies: {},
+935 silly resolved     keywords: [ 'util', 'mime' ],
+935 silly resolved     main: 'mime.js',
+935 silly resolved     name: 'mime',
+935 silly resolved     repository: { url: 'git://github.com/broofa/node-mime.git', type: 'git' },
+935 silly resolved     version: '1.2.6',
+935 silly resolved     _npmUser: { name: 'bentomas', email: 'benjamin@benjaminthomas.org' },
+935 silly resolved     _id: 'mime@1.2.6',
+935 silly resolved     optionalDependencies: {},
+935 silly resolved     engines: { node: '*' },
+935 silly resolved     _engineSupported: true,
+935 silly resolved     _npmVersion: '1.1.12',
+935 silly resolved     _nodeVersion: 'v0.6.14',
+935 silly resolved     _defaultsLoaded: true,
+935 silly resolved     dist:
+935 silly resolved      { shasum: 'b1f86c768c025fa87b48075f1709f28aeaf20365',
+935 silly resolved        tarball: 'http://registry.npmjs.org/mime/-/mime-1.2.6.tgz' },
+935 silly resolved     readme: '# mime\n\nComprehensive MIME type mapping API. Includes all 600+ types and 800+ extensions defined by the Apache project, plus additional types submitted by the node.js community.\n\n## Install\n\nInstall with [npm](http://github.com/isaacs/npm):\n\n    npm install mime\n\n## API - Queries\n\n### mime.lookup(path)\nGet the mime type associated with a file. Performs a case-insensitive lookup using the extension in `path` (the substring after the last \'/\' or \'.\').  E.g.\n\n    var mime = require(\'mime\');\n\n    mime.lookup(\'/path/to/file.txt\');         // => \'text/plain\'\n    mime.lookup(\'file.txt\');                  // => \'text/plain\'\n    mime.lookup(\'.TXT\');                      // => \'text/plain\'\n    mime.lookup(\'htm\');                       // => \'text/html\'\n\n### mime.extension(type)\nGet the default extension for `type`\n\n    mime.extension(\'text/html\');                 // => \'html\'\n    mime.extension(\'application/octet-stream\');  // => \'bin\'\n\n### mime.charsets.lookup()\n\nMap mime-type to charset\n\n    mime.charsets.lookup(\'text/plain\');        // => \'UTF-8\'\n\n(The logic for charset lookups is pretty rudimentary.  Feel free to suggest improvements.)\n\n## API - Defining Custom Types\n\nThe following APIs allow you to add your own type mappings within your project.  If you feel a type should be included as part of node-mime, see [requesting new types](https://github.com/bentomas/node-mime/wiki/Requesting-New-Types).\n\n### mime.define()\n\nAdd custom mime/extension mappings\n\n    mime.define({\n        \'text/x-some-format\': [\'x-sf\', \'x-sft\', \'x-sfml\'],\n        \'application/x-my-type\': [\'x-mt\', \'x-mtt\'],\n        // etc ...\n    });\n\n    mime.lookup(\'x-sft\');                 // => \'text/x-some-format\'\n\nThe first entry in the extensions array is returned by `mime.extension()`. E.g.\n\n    mime.extension(\'text/x-some-format\'); // => \'x-sf\'\n\n### mime.load(filepath)\n\nLoad mappings from an Apache ".types" format file\n\n    mime.load(\'./my_project.types\');\n\nThe .types file format is simple -  See the `types` dir for examples.\n',
+935 silly resolved     maintainers: [ [Object], [Object] ],
+935 silly resolved     directories: {},
+935 silly resolved     _shasum: 'b1f86c768c025fa87b48075f1709f28aeaf20365',
+935 silly resolved     _from: 'mime@1.2.6',
+935 silly resolved     _resolved: 'https://registry.npmjs.org/mime/-/mime-1.2.6.tgz',
+935 silly resolved     bugs: { url: 'https://github.com/broofa/node-mime/issues' },
+935 silly resolved     homepage: 'https://github.com/broofa/node-mime' },
+935 silly resolved   { name: 'range-parser',
+935 silly resolved     author:
+935 silly resolved      { name: 'TJ Holowaychuk',
+935 silly resolved        email: 'tj@vision-media.ca',
+935 silly resolved        url: 'http://tjholowaychuk.com' },
+935 silly resolved     description: 'Range header field string parser',
+935 silly resolved     version: '0.0.4',
+935 silly resolved     main: 'index.js',
+935 silly resolved     dependencies: {},
+935 silly resolved     devDependencies: { mocha: '*', should: '*' },
+935 silly resolved     _npmUser: { name: 'tjholowaychuk', email: 'tj@vision-media.ca' },
+935 silly resolved     _id: 'range-parser@0.0.4',
+935 silly resolved     optionalDependencies: {},
+935 silly resolved     engines: { node: '*' },
+935 silly resolved     _engineSupported: true,
+935 silly resolved     _npmVersion: '1.1.19',
+935 silly resolved     _nodeVersion: 'v0.6.16',
+935 silly resolved     _defaultsLoaded: true,
+935 silly resolved     dist:
+935 silly resolved      { shasum: 'c0427ffef51c10acba0782a46c9602e744ff620b',
+935 silly resolved        tarball: 'http://registry.npmjs.org/range-parser/-/range-parser-0.0.4.tgz' },
+935 silly resolved     maintainers: [ [Object] ],
+935 silly resolved     directories: {},
+935 silly resolved     _shasum: 'c0427ffef51c10acba0782a46c9602e744ff620b',
+935 silly resolved     _from: 'range-parser@0.0.4',
+935 silly resolved     _resolved: 'https://registry.npmjs.org/range-parser/-/range-parser-0.0.4.tgz',
+935 silly resolved     readme: 'ERROR: No README data found!' } ]
+936 info install mime@1.2.6 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+937 info install range-parser@0.0.4 into /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+938 info installOne mime@1.2.6
+939 info installOne range-parser@0.0.4
+940 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime unbuild
+941 verbose node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser unbuild
+942 verbose tar unpack /Users/Charlie/.npm/mime/1.2.6/package.tgz
+943 silly lockFile 6c9871b3-e-modules-send-node-modules-mime tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime
+944 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime /Users/Charlie/.npm/6c9871b3-e-modules-send-node-modules-mime.lock
+945 silly lockFile ff47147a-arlie-npm-mime-1-2-6-package-tgz tar:///Users/Charlie/.npm/mime/1.2.6/package.tgz
+946 verbose lock tar:///Users/Charlie/.npm/mime/1.2.6/package.tgz /Users/Charlie/.npm/ff47147a-arlie-npm-mime-1-2-6-package-tgz.lock
+947 verbose tar unpack /Users/Charlie/.npm/range-parser/0.0.4/package.tgz
+948 silly lockFile 8febd0b6-s-send-node-modules-range-parser tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser
+949 verbose lock tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser /Users/Charlie/.npm/8febd0b6-s-send-node-modules-range-parser.lock
+950 silly lockFile 2067a2e6-m-range-parser-0-0-4-package-tgz tar:///Users/Charlie/.npm/range-parser/0.0.4/package.tgz
+951 verbose lock tar:///Users/Charlie/.npm/range-parser/0.0.4/package.tgz /Users/Charlie/.npm/2067a2e6-m-range-parser-0-0-4-package-tgz.lock
+952 silly gunzTarPerm modes [ '755', '644' ]
+953 silly gunzTarPerm modes [ '755', '644' ]
+954 silly gunzTarPerm extractEntry package.json
+955 silly gunzTarPerm extractEntry .npmignore
+956 silly gunzTarPerm extractEntry index.js
+957 silly gunzTarPerm extractEntry History.md
+958 silly gunzTarPerm extractEntry Makefile
+959 silly gunzTarPerm extractEntry Readme.md
+960 silly gunzTarPerm extractEntry package.json
+961 silly lockFile 8febd0b6-s-send-node-modules-range-parser tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser
+962 silly lockFile 8febd0b6-s-send-node-modules-range-parser tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser
+963 silly gunzTarPerm extractEntry README.md
+964 silly gunzTarPerm extractEntry types/
+965 silly lockFile 2067a2e6-m-range-parser-0-0-4-package-tgz tar:///Users/Charlie/.npm/range-parser/0.0.4/package.tgz
+966 silly lockFile 2067a2e6-m-range-parser-0-0-4-package-tgz tar:///Users/Charlie/.npm/range-parser/0.0.4/package.tgz
+967 info preinstall range-parser@0.0.4
+968 verbose readDependencies using package.json deps
+969 silly gunzTarPerm extractEntry types/mime.types
+970 silly gunzTarPerm extractEntry types/node.types
+971 silly gunzTarPerm extractEntry test.js
+972 silly gunzTarPerm extractEntry LICENSE
+973 silly gunzTarPerm extractEntry mime.js
+974 verbose readDependencies using package.json deps
+975 silly resolved []
+976 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser
+977 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/range-parser
+978 verbose linkStuff [ false,
+978 verbose linkStuff   false,
+978 verbose linkStuff   false,
+978 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules' ]
+979 info linkStuff range-parser@0.0.4
+980 verbose linkBins range-parser@0.0.4
+981 verbose linkMans range-parser@0.0.4
+982 verbose rebuildBundles range-parser@0.0.4
+983 info install range-parser@0.0.4
+984 info postinstall range-parser@0.0.4
+985 silly lockFile 6c9871b3-e-modules-send-node-modules-mime tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime
+986 silly lockFile 6c9871b3-e-modules-send-node-modules-mime tar:///Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime
+987 silly lockFile ff47147a-arlie-npm-mime-1-2-6-package-tgz tar:///Users/Charlie/.npm/mime/1.2.6/package.tgz
+988 silly lockFile ff47147a-arlie-npm-mime-1-2-6-package-tgz tar:///Users/Charlie/.npm/mime/1.2.6/package.tgz
+989 info preinstall mime@1.2.6
+990 verbose readDependencies using package.json deps
+991 verbose readDependencies using package.json deps
+992 silly resolved []
+993 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime
+994 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules/mime
+995 verbose linkStuff [ false,
+995 verbose linkStuff   false,
+995 verbose linkStuff   false,
+995 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send/node_modules' ]
+996 info linkStuff mime@1.2.6
+997 verbose linkBins mime@1.2.6
+998 verbose linkMans mime@1.2.6
+999 verbose rebuildBundles mime@1.2.6
+1000 info install mime@1.2.6
+1001 info postinstall mime@1.2.6
+1002 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+1003 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules/send
+1004 verbose linkStuff [ false,
+1004 verbose linkStuff   false,
+1004 verbose linkStuff   false,
+1004 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect/node_modules' ]
+1005 info linkStuff send@0.0.4
+1006 verbose linkBins send@0.0.4
+1007 verbose linkMans send@0.0.4
+1008 verbose rebuildBundles send@0.0.4
+1009 verbose rebuildBundles [ 'mime', 'range-parser' ]
+1010 info install send@0.0.4
+1011 info postinstall send@0.0.4
+1012 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+1013 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules/connect
+1014 verbose linkStuff [ false,
+1014 verbose linkStuff   false,
+1014 verbose linkStuff   false,
+1014 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect/node_modules' ]
+1015 info linkStuff connect@2.4.6
+1016 verbose linkBins connect@2.4.6
+1017 verbose linkMans connect@2.4.6
+1018 verbose rebuildBundles connect@2.4.6
+1019 verbose rebuildBundles [ 'bytes',
+1019 verbose rebuildBundles   'cookie',
+1019 verbose rebuildBundles   'crc',
+1019 verbose rebuildBundles   'debug',
+1019 verbose rebuildBundles   'formidable',
+1019 verbose rebuildBundles   'fresh',
+1019 verbose rebuildBundles   'pause',
+1019 verbose rebuildBundles   'qs',
+1019 verbose rebuildBundles   'send' ]
+1020 info install connect@2.4.6
+1021 info postinstall connect@2.4.6
+1022 verbose about to build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+1023 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-contrib-connect
+1024 verbose linkStuff [ false,
+1024 verbose linkStuff   false,
+1024 verbose linkStuff   false,
+1024 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1025 info linkStuff grunt-contrib-connect@0.1.1-rc6
+1026 verbose linkBins grunt-contrib-connect@0.1.1-rc6
+1027 verbose linkMans grunt-contrib-connect@0.1.1-rc6
+1028 verbose rebuildBundles grunt-contrib-connect@0.1.1-rc6
+1029 verbose rebuildBundles [ 'connect' ]
+1030 info install grunt-contrib-connect@0.1.1-rc6
+1031 info postinstall grunt-contrib-connect@0.1.1-rc6
+1032 info build /Users/Charlie/Sites/employee/frontend
+1033 verbose linkStuff [ false, false, false, '/Users/Charlie/Sites/employee' ]
+1034 info linkStuff employee@0.0.0
+1035 verbose linkBins employee@0.0.0
+1036 verbose linkMans employee@0.0.0
+1037 verbose rebuildBundles employee@0.0.0
+1038 verbose rebuildBundles [ '.DS_Store',
+1038 verbose rebuildBundles   '.bin',
+1038 verbose rebuildBundles   'bower',
+1038 verbose rebuildBundles   'connect-livereload',
+1038 verbose rebuildBundles   'generator-angular',
+1038 verbose rebuildBundles   'generator-karma',
+1038 verbose rebuildBundles   'grunt',
+1038 verbose rebuildBundles   'grunt-bower-hooks',
+1038 verbose rebuildBundles   'grunt-cli',
+1038 verbose rebuildBundles   'grunt-connect-proxy',
+1038 verbose rebuildBundles   'grunt-contrib-clean',
+1038 verbose rebuildBundles   'grunt-contrib-coffee',
+1038 verbose rebuildBundles   'grunt-contrib-compass',
+1038 verbose rebuildBundles   'grunt-contrib-concat',
+1038 verbose rebuildBundles   'grunt-contrib-connect',
+1038 verbose rebuildBundles   'grunt-contrib-copy',
+1038 verbose rebuildBundles   'grunt-contrib-cssmin',
+1038 verbose rebuildBundles   'grunt-contrib-htmlmin',
+1038 verbose rebuildBundles   'grunt-contrib-imagemin',
+1038 verbose rebuildBundles   'grunt-contrib-jshint',
+1038 verbose rebuildBundles   'grunt-contrib-less',
+1038 verbose rebuildBundles   'grunt-contrib-livereload',
+1038 verbose rebuildBundles   'grunt-contrib-mincss',
+1038 verbose rebuildBundles   'grunt-contrib-uglify',
+1038 verbose rebuildBundles   'grunt-contrib-watch',
+1038 verbose rebuildBundles   'grunt-google-cdn',
+1038 verbose rebuildBundles   'grunt-karma',
+1038 verbose rebuildBundles   'grunt-ngmin',
+1038 verbose rebuildBundles   'grunt-open',
+1038 verbose rebuildBundles   'grunt-prettify',
+1038 verbose rebuildBundles   'grunt-protractor-runner',
+1038 verbose rebuildBundles   'grunt-proxy',
+1038 verbose rebuildBundles   'grunt-recess',
+1038 verbose rebuildBundles   'grunt-regarde',
+1038 verbose rebuildBundles   'grunt-usemin',
+1038 verbose rebuildBundles   'json-proxy',
+1038 verbose rebuildBundles   'karma',
+1038 verbose rebuildBundles   'karma-chrome-launcher',
+1038 verbose rebuildBundles   'karma-coffee-preprocessor',
+1038 verbose rebuildBundles   'karma-firefox-launcher',
+1038 verbose rebuildBundles   'karma-html2js-preprocessor',
+1038 verbose rebuildBundles   'karma-jasmine',
+1038 verbose rebuildBundles   'karma-ng-html2js-preprocessor',
+1038 verbose rebuildBundles   'karma-phantomjs-launcher',
+1038 verbose rebuildBundles   'karma-requirejs',
+1038 verbose rebuildBundles   'karma-script-launcher',
+1038 verbose rebuildBundles   'matchdep',
+1038 verbose rebuildBundles   'requirejs',
+1038 verbose rebuildBundles   'yo' ]
+1039 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/bower
+1040 info build /Users/Charlie/Sites/employee/frontend/node_modules/bower
+1041 info preinstall bower@1.3.2
+1042 verbose linkStuff [ false,
+1042 verbose linkStuff   false,
+1042 verbose linkStuff   false,
+1042 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1043 info linkStuff bower@1.3.2
+1044 warn prefer global bower@1.3.2 should be installed with -g
+1045 verbose linkBins bower@1.3.2
+1046 verbose link bins [ { bower: 'bin/bower' },
+1046 verbose link bins   '/Users/Charlie/Sites/employee/frontend/node_modules/.bin',
+1046 verbose link bins   false ]
+1047 verbose linkMans bower@1.3.2
+1048 verbose rebuildBundles bower@1.3.2
+1049 verbose rebuildBundles [ '.DS_Store',
+1049 verbose rebuildBundles   '.bin',
+1049 verbose rebuildBundles   'abbrev',
+1049 verbose rebuildBundles   'archy',
+1049 verbose rebuildBundles   'bower-config',
+1049 verbose rebuildBundles   'bower-endpoint-parser',
+1049 verbose rebuildBundles   'bower-json',
+1049 verbose rebuildBundles   'bower-logger',
+1049 verbose rebuildBundles   'bower-registry-client',
+1049 verbose rebuildBundles   'cardinal',
+1049 verbose rebuildBundles   'chalk',
+1049 verbose rebuildBundles   'chmodr',
+1049 verbose rebuildBundles   'decompress-zip',
+1049 verbose rebuildBundles   'fstream',
+1049 verbose rebuildBundles   'fstream-ignore',
+1049 verbose rebuildBundles   'glob',
+1049 verbose rebuildBundles   'graceful-fs',
+1049 verbose rebuildBundles   'handlebars',
+1049 verbose rebuildBundles   'inquirer',
+1049 verbose rebuildBundles   'insight',
+1049 verbose rebuildBundles   'is-root',
+1049 verbose rebuildBundles   'junk',
+1049 verbose rebuildBundles   'lockfile',
+1049 verbose rebuildBundles   'lru-cache',
+1049 verbose rebuildBundles   'mkdirp',
+1049 verbose rebuildBundles   'mout',
+1049 verbose rebuildBundles   'nopt',
+1049 verbose rebuildBundles   'open',
+1049 verbose rebuildBundles   'osenv',
+1049 verbose rebuildBundles   'p-throttler',
+1049 verbose rebuildBundles   'promptly',
+1049 verbose rebuildBundles   'q',
+1049 verbose rebuildBundles   'request',
+1049 verbose rebuildBundles   'request-progress',
+1049 verbose rebuildBundles   'retry',
+1049 verbose rebuildBundles   'rimraf',
+1049 verbose rebuildBundles   'semver',
+1049 verbose rebuildBundles   'shell-quote',
+1049 verbose rebuildBundles   'stringify-object',
+1049 verbose rebuildBundles   'tar',
+1049 verbose rebuildBundles   'tmp',
+1049 verbose rebuildBundles   'update-notifier',
+1049 verbose rebuildBundles   'which' ]
+1050 info install bower@1.3.2
+1051 info postinstall bower@1.3.2
+1052 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/generator-angular
+1053 info build /Users/Charlie/Sites/employee/frontend/node_modules/generator-angular
+1054 info preinstall generator-angular@0.8.0
+1055 verbose linkStuff [ false,
+1055 verbose linkStuff   false,
+1055 verbose linkStuff   false,
+1055 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1056 info linkStuff generator-angular@0.8.0
+1057 verbose linkBins generator-angular@0.8.0
+1058 verbose linkMans generator-angular@0.8.0
+1059 verbose rebuildBundles generator-angular@0.8.0
+1060 verbose rebuildBundles [ 'chalk', 'wiredep', 'yeoman-generator' ]
+1061 info install generator-angular@0.8.0
+1062 info postinstall generator-angular@0.8.0
+1063 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/generator-karma
+1064 info build /Users/Charlie/Sites/employee/frontend/node_modules/generator-karma
+1065 info preinstall generator-karma@0.7.0
+1066 verbose linkStuff [ false,
+1066 verbose linkStuff   false,
+1066 verbose linkStuff   false,
+1066 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1067 info linkStuff generator-karma@0.7.0
+1068 verbose linkBins generator-karma@0.7.0
+1069 verbose linkMans generator-karma@0.7.0
+1070 verbose rebuildBundles generator-karma@0.7.0
+1071 verbose rebuildBundles [ 'yeoman-generator' ]
+1072 info install generator-karma@0.7.0
+1073 info postinstall generator-karma@0.7.0
+1074 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/grunt-cli
+1075 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-cli
+1076 info preinstall grunt-cli@0.1.13
+1077 verbose linkStuff [ false,
+1077 verbose linkStuff   false,
+1077 verbose linkStuff   false,
+1077 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1078 info linkStuff grunt-cli@0.1.13
+1079 warn prefer global grunt-cli@0.1.13 should be installed with -g
+1080 verbose linkBins grunt-cli@0.1.13
+1081 verbose link bins [ { grunt: 'bin/grunt' },
+1081 verbose link bins   '/Users/Charlie/Sites/employee/frontend/node_modules/.bin',
+1081 verbose link bins   false ]
+1082 verbose linkMans grunt-cli@0.1.13
+1083 verbose rebuildBundles grunt-cli@0.1.13
+1084 verbose rebuildBundles [ '.bin', 'findup-sync', 'nopt', 'resolve' ]
+1085 info install grunt-cli@0.1.13
+1086 info postinstall grunt-cli@0.1.13
+1087 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/grunt-connect-proxy
+1088 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-connect-proxy
+1089 info preinstall grunt-connect-proxy@0.1.10
+1090 verbose linkStuff [ false,
+1090 verbose linkStuff   false,
+1090 verbose linkStuff   false,
+1090 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1091 info linkStuff grunt-connect-proxy@0.1.10
+1092 verbose linkBins grunt-connect-proxy@0.1.10
+1093 verbose linkMans grunt-connect-proxy@0.1.10
+1094 verbose rebuildBundles grunt-connect-proxy@0.1.10
+1095 verbose rebuildBundles [ '.bin', 'http-proxy', 'lodash' ]
+1096 info install grunt-connect-proxy@0.1.10
+1097 info postinstall grunt-connect-proxy@0.1.10
+1098 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/grunt-proxy
+1099 info build /Users/Charlie/Sites/employee/frontend/node_modules/grunt-proxy
+1100 info preinstall grunt-proxy@0.0.3
+1101 verbose linkStuff [ false,
+1101 verbose linkStuff   false,
+1101 verbose linkStuff   false,
+1101 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1102 info linkStuff grunt-proxy@0.0.3
+1103 verbose linkBins grunt-proxy@0.0.3
+1104 verbose linkMans grunt-proxy@0.0.3
+1105 verbose rebuildBundles grunt-proxy@0.0.3
+1106 verbose rebuildBundles [ '.bin', 'http-proxy' ]
+1107 info install grunt-proxy@0.0.3
+1108 info postinstall grunt-proxy@0.0.3
+1109 verbose rebuild bundle /Users/Charlie/Sites/employee/frontend/node_modules/yo
+1110 info build /Users/Charlie/Sites/employee/frontend/node_modules/yo
+1111 info preinstall yo@1.1.2
+1112 verbose linkStuff [ false,
+1112 verbose linkStuff   false,
+1112 verbose linkStuff   false,
+1112 verbose linkStuff   '/Users/Charlie/Sites/employee/frontend/node_modules' ]
+1113 info linkStuff yo@1.1.2
+1114 warn prefer global yo@1.1.2 should be installed with -g
+1115 verbose linkBins yo@1.1.2
+1116 verbose link bins [ { yo: 'cli.js' },
+1116 verbose link bins   '/Users/Charlie/Sites/employee/frontend/node_modules/.bin',
+1116 verbose link bins   false ]
+1117 verbose linkMans yo@1.1.2
+1118 verbose rebuildBundles yo@1.1.2
+1119 verbose rebuildBundles [ '.bin',
+1119 verbose rebuildBundles   'async',
+1119 verbose rebuildBundles   'chalk',
+1119 verbose rebuildBundles   'findup',
+1119 verbose rebuildBundles   'insight',
+1119 verbose rebuildBundles   'lodash',
+1119 verbose rebuildBundles   'nopt',
+1119 verbose rebuildBundles   'open',
+1119 verbose rebuildBundles   'shelljs',
+1119 verbose rebuildBundles   'sudo-block',
+1119 verbose rebuildBundles   'update-notifier',
+1119 verbose rebuildBundles   'yeoman-generator' ]
+1120 info install yo@1.1.2
+1121 info postinstall yo@1.1.2
+1122 verbose unsafe-perm in lifecycle false
+1123 info install employee@0.0.0
+1124 info postinstall employee@0.0.0
+1125 info prepublish employee@0.0.0
+1126 error peerinvalid The package karma does not satisfy its siblings' peerDependencies requirements!
+1126 error peerinvalid Peer grunt-karma@0.7.3 wants karma@~0.12.0
+1126 error peerinvalid Peer karma-chrome-launcher@0.1.3 wants karma@>=0.9.3
+1126 error peerinvalid Peer karma-coffee-preprocessor@0.1.3 wants karma@>=0.9
+1126 error peerinvalid Peer karma-firefox-launcher@0.1.3 wants karma@>=0.9
+1126 error peerinvalid Peer karma-html2js-preprocessor@0.1.0 wants karma@>=0.9
+1126 error peerinvalid Peer karma-jasmine@0.1.5 wants karma@>=0.9
+1126 error peerinvalid Peer karma-ng-html2js-preprocessor@0.1.0 wants karma@>=0.9
+1126 error peerinvalid Peer karma-phantomjs-launcher@0.1.4 wants karma@>=0.9
+1126 error peerinvalid Peer karma-requirejs@0.2.1 wants karma@>=0.9
+1126 error peerinvalid Peer karma-script-launcher@0.1.0 wants karma@>=0.9
+1127 error System Darwin 14.0.0
+1128 error command "node" "/usr/local/bin/npm" "install" "-update"
+1129 error cwd /Users/Charlie/Sites/employee/frontend
+1130 error node -v v0.10.33
+1131 error npm -v 1.4.28
+1132 error code EPEERINVALID
+1133 verbose exit [ 1, true ]

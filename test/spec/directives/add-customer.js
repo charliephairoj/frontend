@@ -41,24 +41,12 @@ describe('Directive: addCustomer', function () {
 				expect(notification.hidden).toBeTruthy();
 				scope.form.$valid = true;
 				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating customer...");
+				
 				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Customer created");
+				
 			});
 			
-			it('should notify the user if customer failed to be created', function () {
-				$http.whenPOST('/api/v1/customer/').respond(500);
-				expect(notification.hidden).toBeTruthy();
-				scope.form.$valid = true;
-				scope.add();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("Creating customer...");
-				$http.flush();
-				expect(notification.hidden).toBeFalsy();
-				expect(notification.message).toEqual("There was an error in creating the customer");
-			});
+		
 			
 		});
 	});

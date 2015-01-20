@@ -1,24 +1,51 @@
-'use strict';
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', 'Supply', 'Employee', 'scanner', '$rootScope', '$mdToast',
-function ($scope, Supply, Employee, scanner, $rootScope, $mdToast) {
-    
-	$scope.supplies = [];
+.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http',
+function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http) {
 	
-	$scope.scanner = new scanner('supply-scanner');
+	/*
+	 * Vars
+	 */
+	var keyboardNav = new KeyboardNavigation();
+	$scope.action = 'subtract';
+	$scope.disabled = false;
+	$scope.scanner = new scanner('supply-scanner-modal');
+	$scope.equipment = {description: 'F-50', brand: 'Red King'};
+	$scope.interfaceType = 'equipment';
+	$scope.supplies = Supply.query({q:'screw'});//[];
 	
-	try {
-		window.globalScanner.disable();
-	} catch (e) {
-		
-	}
-	//Enable the scanner and disable the standard codes
-	$scope.scanner.enable();
-	$scope.scanner.disableStandard();
+	var focusOnQuantity = function () {
+		var quantity = element.find('input');
+		quantity.focus();
+		quantity.val('');
+	};
 	
-	//Remove the item from the list
-	$scope.remove = function ($index) {
+	$scope.fractSize = function () {
+		return $scope.supply ? $scope.supply.units == 'pc' ? 0 : 2 : 2;
+	};
+	
+	/*
+	 * Watchers
+	 */
+	/*
+	 * This is a hack to rememdy that I cannot
+	 * add an ng-class to the main tag of this
+	 * directive
+	 */
+	/*
+	$scope.$watch('showAddImage', function (val) {
+		if (val) {
+			element.addClass('add-image');
+		} else {
+			element.removeClass('add-image');
+		}
+	});
+	*/
+	
+	/*
+	 * Remove item from list of supplies
+	 */
+	$scope.remove = function ($index, supply) {
 		$scope.supplies.splice($index, 1);
 	};
 	
@@ -43,13 +70,89 @@ function ($scope, Supply, Employee, scanner, $rootScope, $mdToast) {
 				.content('Unable to find supply.'));
 		});
 	});
+	 /* Add Image
+	 * 
+	 * Updates the image of the currently selected supply
+	 */
+	$scope.addImage = function (data) {
+		Notification.display("Updating the supply's image", false);
+		var image = data.hasOwnProperty('data') ? data.data : data;
+		$scope.supply.image = image;
+		$scope.supply.$update(function () {
+			Notification.display("Supply's image updated.");
+		});
+	};
+	
+	$scope.interfaceType = 'supply';
+	
+	$scope.changeQuantity = function (quantity) {
+		quantity = quantity || $scope.quantity;
+		if ($scope.supply.hasOwnProperty('id') && quantity > 0 && !$scope.disabled) {
+			//Verifies that quantity change will not result in negative quantity
+			if ($scope.action == 'subtract' && $scope.supply.quantity - quantity < 0) {
+				throw Error("Cannot have a negative quantity");
+			}
+			
+			$scope.disabled = true;
+								
+			//Determines wheather to add or subtract quantity from original quantity
+			if ($scope.action == 'subtract') {
+				$scope.supply.quantity -= Number(quantity);
+			} else if ($scope.action == 'add') {
+				$scope.supply.quantity += Number(quantity);
+			}
+			
+			$scope.supply.$update({'country': $root$scope.country}, function () {
+				Notification.display('Quantity of ' + $scope.supply.description + ' changed to ' + $scope.supply.quantity);
+				$scope.quantity = 0;
+				$timeout(function () {
+					$scope.supply = undefined;
+				}, 1500);
+			}, function (e) {
+				$mdToast.show($mdToast.simple()
+					.content(e)
+					.hideDelay(0));
+			});
+		}
+	};
+	
+	/*
+	 * Register the supply code regex
+	 */
+	$scope.scanner.register(/^DRS-\d+$/, function (code) {
+		
+		//Notifiy the user of action
+		$mdToast.show($mdToast.simple()
+			.content("Looking up supply...")
+			.hideDelay(0));
+
+		$scope.supply = Supply.get({id: code.split('-')[1], 'country': $root$scope.country}, function (response) {
+			$scope.supplies = $scope.supplies || [response];
+			$scope.disabled = false;
+			$mdToast.hide();
+			focusOnQuantity();
+		}, function () {
+			$mdToast.show($mdToast.simple()
+				.content("Unable to find supply.")
+				.hideDelay(0));
+			/*
+			$scope.supply = Supply.get({id:code}, function () {
+				Notification.display('Unable to find supply', false);
+			});
+			*/
+		});
+	});
+	
 	/*
 	 * Register the upc regex
 	 */
 	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
-		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
+		$scope.interfaceType = 'supply';
+		Supply.query({upc: code, 'country': $root$scope.country}, function (response) {
+			$scope.disabled = false;
+			focusOnQuantity();
 			try {
-				$scope.supplies.push(response[0]);
+				$scope.supply = response[0];
 			} catch (e) {
 				console.log(e);
 			}
@@ -62,16 +165,109 @@ function ($scope, Supply, Employee, scanner, $rootScope, $mdToast) {
 	 *  Regiester the equipment code
 	 */ 
 	$scope.scanner.register(/^DRE-\d+$/, function (code) {
-		//Notification.display("Looking up equipment", false);
 		$scope.equipment = Equipment.get({id: code.split('-')[1]}, function (response) {
-			//Notification.hide();
+			$scope.disabled = false;
 		}, function () {
-			//Notification.display('Unable to find equipment.', false);
+			$mdToast.show($mdToast.simple()
+				.content('Unable to find equipment.')
+				.hideDelay(0));
 		});
 	});
 	
-	$scope.$on('$destroy', function () {
-		$scope.scanner.disable();
-		window.globalScanner.enable();
+	/*
+	 *  Regiester the employee code
+	 */ 
+	$scope.scanner.register(/^DREM-\d+$/, function (code) {
+		
+		//Notifiy the user of action
+		$mdToast.show($mdToast.simple()
+			.content("Looking up employee...")
+			.hideDelay(0));
+		
+		$scope.equipment = Employee.get({id: code.split('-')[1]}, function (response) {
+			$scope.employee = response;
+			$mdToast.hide();
+			
+		}, function () {
+			$mdToast.show($mdToast.simple()
+				.content('Unable to find employee.')
+				.hideDelay(0));
+		});
 	});
+	
+	/*
+	 * Sets navigation
+	 */
+	function changeAction(action) {
+		if ($scope.$$phase === '$digest' || $scope.$$phase === '$apply') {
+			$scope.action = action;
+		} else {
+			$scope.$apply(function () {
+				$scope.action = action;
+			});
+		}
+		
+	}
+	
+	keyboardNav.onright = function () {
+		changeAction('subtract');
+	};
+	
+	keyboardNav.onleft = function () {
+		changeAction('add');
+	};
+	
+	keyboardNav.onenter = function () {
+		$scope.changeQuantity($scope.quantity);
+	};
+	
+	$scope.$watch('visible', function (val) {
+		if (val) {
+			//Disable the global scanner
+			try {
+				window.globalScanner.disable();
+			} catch (e) {
+				
+			}
+			
+			//Enable the scanner and disable the standard codes
+			$scope.scanner.enable();
+			keyboardNav.enable();
+			$scope.scanner.disableStandard();
+			
+			
+		} else {
+			$scope.scanner.disable();
+			keyboardNav.disable();
+			$scope.scanner.enableStandard();
+			$scope.showAddImage = false;
+		}
+	});
+	
+	$scope.checkout = function () {
+		
+		for (var i = 0; i < $scope.supplies.length; i++) {
+			$scope.supplies[i].employee = angular.copy($scope.employee);
+			$scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
+		}
+		
+		var promise = $http.put('/api/v1/supply/', $scope.supplies);
+		
+		promise.succuss(function () {
+			$scope.supplies = [];
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(2000)
+				.content('Supplies updated.'));
+		}).error(function () {
+			
+		});
+	};
+	
+	$scope.$on('$destroy', function () {
+		keyboardNav.disable();
+		$scope.scanner.disable();
+		$scope.showAddImage = false;
+	});
+	
 }]);

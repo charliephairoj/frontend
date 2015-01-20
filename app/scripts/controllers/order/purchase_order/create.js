@@ -167,10 +167,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			throw new Error("Please select a supplier");
 		}
 		
-		if (!$scope.po.vat) {
-			throw new Error("Please set the vat for this purchase order");
-		}
-		
 		if ($scope.po.items.length <= 0) {
 			throw new Error("Please add items to the purchase order");
 		}
@@ -192,6 +188,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			if ($scope.verifyOrder()) {
 				$mdToast.show($mdToast
 					.simple()
+					.position('top right')
 					.content('Creating new purchase order...')
 					.hideDelay(0));
 				
@@ -219,6 +216,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					}
 					$mdToast.show($mdToast
 						.simple()
+						.position('top right')
 						.content('Purchase order created.'));
 				}, function (e) {
 					$mdToast.show($mdToast
@@ -232,6 +230,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		} catch (e) {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content(e)
 				.hideDelay(0));
 		}

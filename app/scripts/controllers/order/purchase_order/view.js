@@ -11,6 +11,7 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	//System wide message
 	$mdToast.show($mdToast
 		.simple()
+		.position('top right')
 		.content('Loading purchasing orders...')
 		.hideDelay(0));
 	

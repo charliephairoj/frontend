@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('supply', ['$http', 'Supply', '$rootScope', 'Notification', '$timeout', '$window', 'scanner', 'D3', '$compile',
-function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D3, $compile) {
+.directive('supply', ['$http', 'Supply', '$rootScope', '$mdToast', '$timeout', '$window', 'scanner', 'D3', '$compile',
+function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile) {
 	
 	var subHTML;
 	var promise = $http.get('views/templates/supply-details.html');
@@ -102,11 +102,20 @@ function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D
 						
 						timeoutPromise = $timeout(function () {
 							var supply = angular.copy(scope.supply);
-							Notification.display('Saving ' + scope.supply.description + '...', false);
+							$mdToast.show($mdToast.simple()
+								.hideDelay(0)
+								.position('top right')
+								.content("Saving " + scope.supply.description + "..."));
 							supply.$update({'country': $rootScope.country}, function () {
-								Notification.display(scope.supply.description + ' saved');
+								$mdToast.show($mdToast.simple()
+									.hideDelay(2000)
+									.position('top right')
+									.content(scope.supply.description + ' saved'));
 							}, function () {
-								Notification.display("There was an error in saving " + scope.supply.description);
+								$mdToast.show($mdToast.simple()
+									.hideDelay(0)
+									.position('top right')
+									.content("There was an error in saving " + scope.supply.description));
 							});
 						}, 750);
 						
@@ -149,7 +158,10 @@ function ($http, Supply, $rootScope, Notification, $timeout, $window, scanner, D
 				try {
 					$window.open(scope.supply.sticker.url);
 				} catch (e) {
-					Notification.display("This supply is missing a sticker");
+					$mdToast.show($mdToast.simple()
+						.hideDelay(0)
+						.position('top right')
+						.content("This supply is missing a sticker"));
 				}
 			};
 			

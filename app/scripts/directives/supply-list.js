@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.directive('supplyList', ['Supply', '$filter', 'KeyboardNavigation', 'Notification', '$rootScope', '$http', '$compile',
-function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, $compile) {
+.directive('supplyList', ['Supply', '$filter', 'KeyboardNavigation', '$mdToast', '$rootScope', '$http', '$compile',
+function (Supply, $filter, KeyboardNavigation, $mdToast, $rootScope, $http, $compile) {
 	return {
 		templateUrl: 'views/templates/supply-list.html',
 		replace: true,
@@ -95,8 +95,10 @@ function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, 
 					scope.loadNext = function () {
 						fetching = false;
 						if (!fetching) {
-
-							Notification.display("Loading more supplies...", false);
+							$mdToast.show($mdToast.simple()
+								.position('top right')
+								.hideDelay(0)
+								.content('Loading more supplies...'));
 							fetching = true;
 					
 							var options = {
@@ -112,7 +114,7 @@ function (Supply, $filter, KeyboardNavigation, Notification, $rootScope, $http, 
 							Supply.query(options, function (resources) {
 								console.log(resources);
 								fetching = false;
-								Notification.hide();
+								$mdToast.hide();
 								for (var i = 0; i < resources.length; i++) {
 									if (scope.supplies.indexOfById(resources[i]) == -1) {
 										scope.supplies.push(resources[i]);

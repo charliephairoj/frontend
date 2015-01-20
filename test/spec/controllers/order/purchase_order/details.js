@@ -27,7 +27,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   		});
   		
   		it('should make a call to the server for the item', function () {
-  			$http.expectGET('/api/v1/purchase-order/1234/?pdf=true').respond({id:1234});
+  			$http.expectGET('/api/v1/purchase-order/1234/').respond({id:1234});
   			ctrl = Ctrl('OrderPurchaseOrderDetailsCtrl', {$scope:scope, $routeParams:{id:1234}});
   			$http.flush();
   			
@@ -38,7 +38,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function () {
   		
   		beforeEach(function () {
-  			$http.whenGET('/api/v1/purchase-order/2345/?pdf=true').respond({
+  			$http.whenGET('/api/v1/purchase-order/2345/').respond({
   				id: 2345,
   				supplier: {
   					name: 'LST International'
@@ -69,6 +69,59 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   		describe("Updating the purchase order", function () {
   			
   			describe('Adding an item', function () {
+				
+				it('should correctly display the unit cost, even when only cost is defined', function () {
+					var supply = {
+						id: 4,
+						cost: 88.00
+					}
+					scope.addItem(supply);
+					
+					expect(scope.po.items).toBeDefined();
+					expect(scope.po.items[2].unit_cost).toBeDefined();
+					expect(scope.po.items[2].unit_cost).toEqual(88.00);
+				});
+				
+				it('should correctly display the unit cost, even when only supplier cost is defined', function () {
+
+				
+					var supply = {
+						id: 4,
+						suppliers: [
+							{
+								id: 5,
+								cost: 89.00
+							}
+						]
+					}
+					scope.addItem(supply);
+					
+					expect(scope.po.items).toBeDefined();
+					expect(scope.po.items[2].unit_cost).toBeDefined();
+					expect(scope.po.items[2].unit_cost).toEqual(89.00);
+				});
+				
+				it('should correctly move the supply id to the item', function () {
+
+					var supply = {
+						id: 88,
+						suppliers: [
+							{
+								id: 5,
+								cost: 99.00
+							}
+						]
+					}
+					
+					scope.addItem(supply);
+					
+					expect(scope.po.items[2]).toBeDefined();
+					expect(scope.po.items[2].supply).toBeDefined();
+					expect(scope.po.items[2].supply.id).toBeDefined();
+					expect(scope.po.items[2].supply.id).toEqual(88);
+					
+				});
+				
   				it('should add an item to the po and update to the server', function () {
   					$http.expectPUT('/api/v1/purchase-order/2345/').respond({
   						id:2345,

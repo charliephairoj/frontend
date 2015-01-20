@@ -100,7 +100,7 @@
         
                         <tr>
                             <td>Vat:</td>
-                            <td><input class="vat" ng-model="po.vat" required maxlength=2 >%</td>
+                            <td><input type="number" class="vat" ng-model="po.vat" required maxlength="3" size="3" >%</td>
                         </tr>
                         <tr class="currency" ng-show="po.supplier" ng-class="{'active':po.supplier}">
                             <td>Currency:</td>
@@ -119,7 +119,7 @@
                         <tr>
                             <td>Discount:</td>
                             <td>
-                                <input type="text" size="2" maxlength="2" ng-model="po.discount" />%
+                                <input class="discount" type="number" size="2" maxlength="3" ng-model="po.discount" />%
                             </td>
                         </tr>
                         <tr>
@@ -167,11 +167,11 @@
 							<td class='description'>{{item.description}}</td>
 							<td><textarea ng-model=item.comments row="4"></textarea></td>
 							<td class='discount'>
-								<input required type="text" ng-model="item.discount"/> 
+								<input required type="number" ng-model="item.discount"/> 
 							</td>
-							<td class='unit-cost'><input required type="text" ng-model="item.cost" /></td>
+							<td class='unit-cost'><input required type="number" ng-model="item.cost" /></td>
 							<td class='quantity'>
-								<input required type="text" ng-model="item.quantity" />
+								<input required type="number" ng-model="item.quantity" />
 							</td>
 							<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
 							<td><button class="remove-btn" ng-click="removeItem($index)">Remove</td>

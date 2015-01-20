@@ -50,6 +50,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 				
 				$mdToast.show($mdToast
 					.simple()
+					.position('top right')
 					.content("Creating new acknowledgement...")
 					.hideDelay(0));
 				
@@ -68,11 +69,15 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 					
                    	$mdToast.show($mdToast
 						.simple()
+						.position('top right')
 						.content("Acknowledgement created with ID: " + $scope.ack.id)
 						.hideDelay(2000));
 						
                     if (response.pdf.acknowledgement) {
 						$window.open(response.pdf.acknowledgement);
+                    }
+                    if (response.pdf.confirmation) {
+						$window.open(response.pdf.confirmation);
                     }
                     if (response.pdf.production) {
 						$window.open(response.pdf.production);
@@ -93,6 +98,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         } catch (e) {
 			$mdToast.show($mdToast
 				.simple()
+				.position('top right')
 				.content(e)
 				.hideDelay(0));
         }
