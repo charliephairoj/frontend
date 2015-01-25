@@ -24,6 +24,10 @@
 						</div>
 						<h3>{{supply.description}}</h3>
 						<div class="item-ctrl">
+							<md-radio-group ng-model="supply.$$action">
+						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+						      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+						    </md-radio-group>
 							<md-text-float type="number" label="Quantity" required ng-model="supply.$$quantity"></md-text-float>
 							<md-button class="md-warn" ng-click="remove($index, supply)">Remove<md-button>
 						</div>
@@ -37,6 +41,6 @@
 	<md-divider>
 	</md-divider>
 	<md-action>
-		<md-button class="md-accent">Checkout</md-button>
+		<md-button class="md-accent" ng-click="checkout()">Checkout</md-button>
 	</md-action>
 </md-dialog>
