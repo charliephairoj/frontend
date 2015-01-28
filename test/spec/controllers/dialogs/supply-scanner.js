@@ -181,5 +181,34 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
 			$http.flush();
 			
 		});
-	})
+	});
+	
+	describe('Checking out equipment', function () {
+		
+		it('should assign an employee to every checked out equipment', function () {
+			scope.employee = {id: 4, first_name: "John", last_name: "Smith"};
+			scope.equipmentList = [{
+				id:122,
+				description: 'F-50',
+				brand: 'Red King',
+				status: 'Checked Out'
+			}];
+			
+			$http.whenPUT('/api/v1/supply/').respond([]);
+			$http.expectPUT('/api/v1/equipment/', function (dataStr) {
+				var data = JSON.parse(dataStr);
+				
+				if (typeof(data[0]).employee != "object") {
+					return false
+				}
+				
+				return true;
+				
+			}).respond([{}]);
+			
+			scope.checkout();
+			
+			$http.flush();
+		});
+	});
 });

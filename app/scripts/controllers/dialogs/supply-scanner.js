@@ -136,6 +136,10 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	
 	$scope.checkout = function () {
 		
+		/*
+		 * Assign the employee to each supply and calculate the 
+		 * new quantity based on the supply action
+		 */
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			$scope.supplies[i].employee = angular.copy($scope.employee);
 			if ($scope.supplies[i].$$action == 'subtract') {
@@ -145,17 +149,49 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 			}
 		}
 		
+		/* 
+		 * Assign the employee to each equipment
+		 */
+		for (var i = 0; i < $scope.equipmentList.length; i++) {
+			$scope.equipmentList[i].employee = angular.copy($scope.employee);
+		}
+		
+		//Do supply PUT
+		if ($scope.supplies.length > 0) {
 		var promise = $http.put('/api/v1/supply/', $scope.supplies);
 		
 		promise.success(function () {
 			$scope.supplies = [];
+		}).error(function (e) {
+			$scope.checkoutError(e);
+		});
+		
+		//Do equipment PUT
+		if ($scope.equipmentList.length > 0) {
+			var promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+		
+			promise.success(function () {
+				$scope.equipmentList = [];
+			}).error(function (e) {
+				$scope.checkoutError(e);
+			});
+		}
+	};
+	
+	$scope.postCheckout = function () {
+		if ($scope.supplies.length == 0 && $scope.equipmentList.length == 0) {
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(2000)
-				.content('Supplies updated.'));
-		}).error(function (e) {
-			console.error(e);
-		});
+				.content('Checkout complete.'));
+		}
+	};
+	
+	$scope.checkoutError = function (e) {
+		$mdToast.show($mdToast.simple()
+			.position('top right')
+			.hideDelay(0)
+			.content("There was a checkout error"));
 	};
 	
 	$scope.$on('$destroy', function () {
