@@ -30,7 +30,6 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider) {
 	/*
 	 * Configure the theme for this application
 	 */
-	console.log($mdThemingProvider);
 	$mdThemingProvider.setDefaultTheme('blue-grey');
 		
 	
