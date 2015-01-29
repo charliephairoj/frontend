@@ -51,8 +51,8 @@
 				<tr ng-if="showWidth()">
 					<td>Width</td>
 					<td>
-						<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.width" />
-						<select required ng-model="supply.width_units">
+						<input class="dimension"  ng-pattern="/\d+/" ng-model="supply.width" />
+						<select ng-model="supply.width_units">
 							<option value="in">Inch</option>
 							<option value="mm">Millimeter</option>
 							<option value="cm">Centimeter</option>
@@ -63,8 +63,8 @@
 				<tr ng-if="showDepth()">
 					<td>Depth</td>
 					<td>
-						<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.depth" />
-						<select required ng-model="supply.depth_units">
+						<input class="dimension" ng-pattern="/\d+/" ng-model="supply.depth" />
+						<select ng-model="supply.depth_units">
 							<option value="in">Inch</option>
 							<option value="mm">Millimeter</option>
 							<option value="cm">Centimeter</option>
@@ -76,8 +76,8 @@
 				<tr ng-if="showHeight()">
 					<td>Height</td>
 					<td>
-						<input class="dimension" required ng-pattern="/\d+/" ng-model="supply.height" />
-						<select required ng-model="supply.height_units">
+						<input class="dimension" ng-pattern="/\d+/" ng-model="supply.height" />
+						<select ng-model="supply.height_units">
 							<option value="in">Inch</option>
 							<option value="mm">Millimeter</option>
 							<option value="cm">Centimeter</option>
