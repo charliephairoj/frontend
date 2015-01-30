@@ -260,7 +260,6 @@ angular.module('employeeApp').config([
     /*
 	 * Configure the theme for this application
 	 */
-    console.log($mdThemingProvider);
     $mdThemingProvider.setDefaultTheme('blue-grey');
   }
 ]);
@@ -6816,13 +6815,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
 		 */
       purchasedItem.cost = purchasedItem.cost || purchasedItem.unit_cost;
       if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers')) {
-        console.log('no cost');
         for (var i = 0; i < purchasedItem.suppliers.length; i++) {
-          console.log(purchasedItem.suppliers[i]);
           if (purchasedItem.suppliers[i].supplier.id == ($scope.po.supplier.id || $scope.po.supplier.supplier.id)) {
-            console.log(purchasedItem.suppliers[i]);
             purchasedItem.cost = purchasedItem.suppliers[i].cost;
-            console.log(purchasedItem);
           }
         }
       }
@@ -7066,6 +7061,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
                 scope.visible = false;
                 scope.onAdd({ $supply: scope.supply });
                 scope.supply = new Supply();
+                $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Supply created.'));
                 if (scope.assignedSupplier) {
                   scope.supply.supplier = angular.copy(scope.assignedSupplier);
                 }

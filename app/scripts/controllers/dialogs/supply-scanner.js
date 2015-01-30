@@ -228,7 +228,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			$scope.supplies[i].employee = angular.copy($scope.employee);
-			$scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
+			$scope.supplies[i].quantity = $scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
 		}
 		
 		var promise = $http.put('/api/v1/supply/', $scope.supplies);
