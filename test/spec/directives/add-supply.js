@@ -80,7 +80,6 @@ describe('Directive: addSupply', function () {
 			
 			it('should set the supplier in the scope', inject(function ($rootScope) {
 				expect(scope.supplier).not.toBeDefined();
-				
 				$rootScope.supplier = {id: 4};
 				$rootScope.$digest();
 				expect(scope.assignedSupplier).toBeDefined();

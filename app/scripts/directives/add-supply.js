@@ -118,6 +118,11 @@ function ($rootScope, Supplier, Supply, $mdToast, $http) {
 							scope.onAdd({$supply:scope.supply});
 							scope.supply = new Supply();
 							
+							$mdToast.show($mdToast.simple()
+								.hideDelay(2000)
+								.position('top right')
+								.content('Supply created.'));
+							
 							if (scope.assignedSupplier) {
 								scope.supply.supplier = angular.copy(scope.assignedSupplier);
 							}

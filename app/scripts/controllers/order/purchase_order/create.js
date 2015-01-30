@@ -55,13 +55,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		purchasedItem.cost = purchasedItem.cost || purchasedItem.unit_cost;
 		
 		if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers')) {
-			console.log('no cost');
 			for (var i = 0; i < purchasedItem.suppliers.length; i++) {
-				console.log(purchasedItem.suppliers[i]);
 				if (purchasedItem.suppliers[i].supplier.id == ($scope.po.supplier.id || $scope.po.supplier.supplier.id)) {
-					console.log(purchasedItem.suppliers[i]);
 					purchasedItem.cost = purchasedItem.suppliers[i].cost;
-					console.log(purchasedItem);
 				}
 			}
 		}
