@@ -18,6 +18,22 @@ module.exports = function (config) {
 			'app/components/angular-resource/angular-resource.js',
 			'app/components/angular-mocks/angular-mocks.js',
 			//"app/components/ng-grid/ng-grid-2.0.7.min.js",
+			'karma.conf.js',
+			'app/components/jquery/dist/jquery.min.js',
+			'app/components/angular/angular.min.js',
+			'app/components/angular-cookies/angular-cookies.min.js',
+			'app/components/angular-route/angular-route.min.js',
+			'app/components/angular-ui/build/angular-ui.js',
+			'app/components/angular-ui-date/src/date.js',
+			'app/components/angular-resource/angular-resource.js',
+			
+			'app/components/hammerjs/hammer.min.js',
+			
+			'app/components/angular-animate/angular-animate.js',
+			'app/components/angular-aria/angular-aria.js',
+			'app/components/angular-material/angular-material.js',
+			'app/components/angular-mocks/angular-mocks.js',
+			"app/components/ng-grid/ng-grid-2.0.7.min.js",
 			//'app/scripts/*.js',
 			'test/mock/**/*.js',
 			'app/scripts/**/*.js',
@@ -26,16 +42,16 @@ module.exports = function (config) {
 			'app/views/templates/**/*.html'
 	  
 		],
-		plugins: [
+		/*plugins: [
 			"karma-jasmine",
 			"karma-chrome-launcher",
 			"karma-phantomjs-launcher",
 			"karma-ng-html2js-preprocessor"
-		],
+		],*/
 		
-		reporters: ['progress'],
+		reporters: ['dots'],
 		
-		//port:8001,
+		port:8001,
 		
 		preprocessors: {
 			'app/views/templates/**/*.html': ['ng-html2js']
@@ -50,6 +66,9 @@ module.exports = function (config) {
 			moduleName: 'directives'
 		},
 		
+
+		// cli runner port
+		runnerPort: 9100,
 		
 		// enable / disable colors in the output (reporters and logs)
 		colors: true,

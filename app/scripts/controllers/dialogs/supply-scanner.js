@@ -1,46 +1,31 @@
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http',
-function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http) {
+.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment',
+function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment) {
 	
 	/*
 	 * Vars
 	 */
 	var keyboardNav = new KeyboardNavigation();
-	$scope.action = 'subtract';
-	$scope.disabled = false;
 	$scope.scanner = new scanner('supply-scanner-modal');
 	$scope.equipment = {description: 'F-50', brand: 'Red King'};
 	$scope.interfaceType = 'equipment';
-	$scope.supplies = Supply.query({q:'screw'});//[];
+	$scope.supplies = [];
+	$scope.equipmentList = [];
 	
-	var focusOnQuantity = function () {
-		var quantity = element.find('input');
-		quantity.focus();
-		quantity.val('');
-	};
+	$scope.scanner.enable();
+	$scope.scanner.disableStandard();
+	
+	//Disable the global scanner
+	try {
+		window.globalScanner.disable();
+	} catch (e) {
+		
+	}
 	
 	$scope.fractSize = function () {
 		return $scope.supply ? $scope.supply.units == 'pc' ? 0 : 2 : 2;
 	};
-	
-	/*
-	 * Watchers
-	 */
-	/*
-	 * This is a hack to rememdy that I cannot
-	 * add an ng-class to the main tag of this
-	 * directive
-	 */
-	/*
-	$scope.$watch('showAddImage', function (val) {
-		if (val) {
-			element.addClass('add-image');
-		} else {
-			element.removeClass('add-image');
-		}
-	});
-	*/
 	
 	/*
 	 * Remove item from list of supplies
@@ -49,8 +34,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		$scope.supplies.splice($index, 1);
 	};
 	
-	/*
-	 * Add Image
+	 /* Add Image
 	 * 
 	 * Updates the image of the currently selected supply
 	 */
@@ -63,63 +47,29 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		});
 	};
 	
-	$scope.interfaceType = 'supply';
-	
-	$scope.changeQuantity = function (quantity) {
-		quantity = quantity || $scope.quantity;
-		if ($scope.supply.hasOwnProperty('id') && quantity > 0 && !$scope.disabled) {
-			//Verifies that quantity change will not result in negative quantity
-			if ($scope.action == 'subtract' && $scope.supply.quantity - quantity < 0) {
-				throw Error("Cannot have a negative quantity");
-			}
-			
-			$scope.disabled = true;
-								
-			//Determines wheather to add or subtract quantity from original quantity
-			if ($scope.action == 'subtract') {
-				$scope.supply.quantity -= Number(quantity);
-			} else if ($scope.action == 'add') {
-				$scope.supply.quantity += Number(quantity);
-			}
-			
-			$scope.supply.$update({'country': $root$scope.country}, function () {
-				Notification.display('Quantity of ' + $scope.supply.description + ' changed to ' + $scope.supply.quantity);
-				$scope.quantity = 0;
-				$timeout(function () {
-					$scope.supply = undefined;
-				}, 1500);
-			}, function (e) {
-				$mdToast.show($mdToast.simple()
-					.content(e)
-					.hideDelay(0));
-			});
-		}
-	};
-	
 	/*
 	 * Register the supply code regex
 	 */
 	$scope.scanner.register(/^DRS-\d+$/, function (code) {
-		
-		//Notifiy the user of action
-		$mdToast.show($mdToast.simple()
-			.content("Looking up supply...")
-			.hideDelay(0));
 
-		$scope.supply = Supply.get({id: code.split('-')[1], 'country': $root$scope.country}, function (response) {
-			$scope.supplies = $scope.supplies || [response];
-			$scope.disabled = false;
-			$mdToast.hide();
-			focusOnQuantity();
+		$mdToast.show($mdToast.simple()
+			.hideDelay(0)
+			.position('top right')
+			.content('Looking up supply...'));
+			
+		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
+			response.$$action = 'subtract';
+			$scope.supplies.push(response);
+			$mdToast.show($mdToast.simple()
+				.hideDelay(2000)
+				.position('top right')
+				.content('Added ' + response.description + ' to checkout.'));
+				
 		}, function () {
 			$mdToast.show($mdToast.simple()
-				.content("Unable to find supply.")
-				.hideDelay(0));
-			/*
-			$scope.supply = Supply.get({id:code}, function () {
-				Notification.display('Unable to find supply', false);
-			});
-			*/
+				.hideDelay(0)
+				.position('top right')
+				.content('Unable to find supply.'));
 		});
 	});
 	
@@ -127,15 +77,23 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	 * Register the upc regex
 	 */
 	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
-		$scope.interfaceType = 'supply';
-		Supply.query({upc: code, 'country': $root$scope.country}, function (response) {
-			$scope.disabled = false;
-			focusOnQuantity();
-			try {
-				$scope.supply = response[0];
-			} catch (e) {
-				console.log(e);
-			}
+		try {
+			$mdToast.show($mdToast.simple()
+				.hideDelay(0)
+				.position('top right')
+				.content('Looking up supply...'));
+		} catch (e) {
+			
+		}
+		
+		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
+			response[0].$$action == 'subtract';
+			$scope.supplies.push(response[0])
+			$mdToast.show($mdToast.simple()
+				.hideDelay(2000)
+				.position('top right')
+				.content('Added ' + response.description + ' to checkout.'));
+				
 		}, function (reason) {
 			console.log(reason);
 		});
@@ -145,8 +103,9 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	 *  Regiester the equipment code
 	 */ 
 	$scope.scanner.register(/^DRE-\d+$/, function (code) {
-		$scope.equipment = Equipment.get({id: code.split('-')[1]}, function (response) {
-			$scope.disabled = false;
+		Equipment.get({id: code.split('-')[1]}, function (response) {
+			$scope.equipmentList.push(response);
+			
 		}, function () {
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find equipment.')
@@ -175,82 +134,78 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		});
 	});
 	
-	/*
-	 * Sets navigation
-	 */
-	function changeAction(action) {
-		if ($scope.$$phase === '$digest' || $scope.$$phase === '$apply') {
-			$scope.action = action;
-		} else {
-			$scope.$apply(function () {
-				$scope.action = action;
-			});
-		}
-		
-	}
-	
-	keyboardNav.onright = function () {
-		changeAction('subtract');
-	};
-	
-	keyboardNav.onleft = function () {
-		changeAction('add');
-	};
-	
-	keyboardNav.onenter = function () {
-		$scope.changeQuantity($scope.quantity);
-	};
-	
-	$scope.$watch('visible', function (val) {
-		if (val) {
-			//Disable the global scanner
-			try {
-				window.globalScanner.disable();
-			} catch (e) {
-				
-			}
-			
-			//Enable the scanner and disable the standard codes
-			$scope.scanner.enable();
-			keyboardNav.enable();
-			$scope.scanner.disableStandard();
-			
-			
-		} else {
-			$scope.scanner.disable();
-			keyboardNav.disable();
-			$scope.scanner.enableStandard();
-			$scope.showAddImage = false;
-		}
-	});
-	
 	$scope.checkout = function () {
 		
+		/*
+		 * Assign the employee to each supply and calculate the 
+		 * new quantity based on the supply action
+		 */
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			$scope.supplies[i].employee = angular.copy($scope.employee);
+<<<<<<< HEAD
 			$scope.supplies[i].quantity = $scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
+=======
+			if ($scope.supplies[i].$$action == 'subtract') {
+				$scope.supplies[i].quantity -= $scope.supplies[i].$$quantity;
+			} else if ($scope.supplies[i].$$action == 'add') {
+				$scope.supplies[i].quantity += $scope.supplies[i].$$quantity;
+			}
 		}
 		
+		/* 
+		 * Assign the employee to each equipment
+		 */
+		for (var i = 0; i < $scope.equipmentList.length; i++) {
+			$scope.equipmentList[i].employee = angular.copy($scope.employee);
+>>>>>>> material-supply-modal
+		}
+		
+		//Do supply PUT
+		if ($scope.supplies.length > 0) {
 		var promise = $http.put('/api/v1/supply/', $scope.supplies);
 		
-		promise.succuss(function () {
+		promise.success(function () {
 			$scope.supplies = [];
+		}).error(function (e) {
+			$scope.checkoutError(e);
+		});
+		
+		//Do equipment PUT
+		if ($scope.equipmentList.length > 0) {
+			var promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+		
+			promise.success(function () {
+				$scope.equipmentList = [];
+			}).error(function (e) {
+				$scope.checkoutError(e);
+			});
+		}
+	};
+	
+	$scope.postCheckout = function () {
+		if ($scope.supplies.length == 0 && $scope.equipmentList.length == 0) {
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(2000)
-				.content('Supplies updated.'));
-		}).error(function () {
-			
-		});
+				.content('Checkout complete.'));
+		}
+	};
+	
+	$scope.checkoutError = function (e) {
+		$mdToast.show($mdToast.simple()
+			.position('top right')
+			.hideDelay(0)
+			.content("There was a checkout error"));
 	};
 	
 	$scope.$on('$destroy', function () {
-		keyboardNav.disable();
 		$scope.scanner.disable();
-		$scope.showAddImage = false;
+		
+		try {
+			window.globalScanner.enable();
+		} catch (e) {
+			
+		}
 	});
-	
-
-
 	
 }]);

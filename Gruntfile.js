@@ -52,6 +52,18 @@ module.exports = function (grunt) {
 			options: {
 				livereload: 35729
 			}
+
+        
+        //files: [
+          //'<%= yeoman.dist %>/{,*/}*.html',
+          //'{.tmp,<%= yeoman.dist %>}/views/**/*.html',
+          //'{.tmp,<%= yeoman.dist %>}/styles/{,*/}*.css',
+          //'{.tmp,<%= yeoman.dist %>}/styles/**/*.css',
+          //'{.tmp,<%= yeoman.dist %>}/scripts/{,*/}*.js',
+          //'{.tmp,<%= yeoman.dist %>}/scripts/**/*.js',
+          //'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
+        //],
+        //tasks: ['livereload']
       	},
 		
       	less: {
@@ -76,6 +88,7 @@ module.exports = function (grunt) {
 				'karma:unit:run'
 			]
 		}
+
     },
 	
 	
@@ -83,7 +96,8 @@ module.exports = function (grunt) {
 		options: {
 			port: 9001,
 			livereload: 35729,
-			hostname: 'localhost'
+
+			hostname: '0.0.0.0'
 		},
       	livereload: {
         	options: {
@@ -97,7 +111,7 @@ module.exports = function (grunt) {
 		          		require('json-proxy').initialize({
 		            		proxy: {
 		              		  	forward: {
-		              				//'/api/v1/current-user/': ''
+
 					                '/api/': 'http://localhost:8000',
 									'/$': 'http://localhost:8000',
 									'/login': 'http://localhost:8000',
@@ -116,7 +130,7 @@ module.exports = function (grunt) {
         	options: {
 				//hostname: '0.0.0.0',
           	  	port: 8080,
-				keepalive: false,
+	
           	  	middleware: function (connect) {
             		return [
               	  		mountFolder(connect, '.tmp'),
@@ -164,9 +178,9 @@ module.exports = function (grunt) {
     karma: {
 		unit: {
 	      	configFile: 'karma.conf.js',
-			//background: true,
 		
 		}
+      
     },
 	protractor: {
 		options: {
@@ -353,6 +367,7 @@ module.exports = function (grunt) {
     //'open',
     'watch:livereload',
 	'watch:less'
+
   ]);
 	
   grunt.registerTask('e2e', [
@@ -361,10 +376,11 @@ module.exports = function (grunt) {
 	'protractor:run'
   ]);
   grunt.registerTask('test', [
-    //'clean:server',
-	'karma:unit',
-	//'connect:test',
-	//'watch:karma'
+
+    'clean:server',
+    'connect:test',
+    'karma',
+	//'protractor:run'
   ]);
 
   grunt.registerTask('build', [

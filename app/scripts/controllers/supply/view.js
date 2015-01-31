@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyViewCtrl', ['$scope', 'Supply', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', 
-function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout) {
+.controller('SupplyViewCtrl', ['$scope', 'Supply', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', '$mdDialog', 
+function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $mdDialog) {
 	console.log($scope.types);
 	/*
 	* Vars and flags
@@ -27,6 +27,17 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 		Notification.hide();
 		changeSelection(index);
 	});
+	
+	/*
+	 * Show the supply modal
+	 */
+	
+	$scope.showScanner = function () {
+		$mdDialog.show({
+			templateUrl: "views/templates/supply-scanner.html",
+			controller: 'DialogsSupplyScannerCtrl'
+		});
+	};
 	
 	/*
 	*  Focus the list to the active element
