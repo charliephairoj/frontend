@@ -142,9 +142,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		 */
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			$scope.supplies[i].employee = angular.copy($scope.employee);
-<<<<<<< HEAD
-			$scope.supplies[i].quantity = $scope.supplies[i].quantity - $scope.supplies[i].$$quantity;
-=======
+
 			if ($scope.supplies[i].$$action == 'subtract') {
 				$scope.supplies[i].quantity -= $scope.supplies[i].$$quantity;
 			} else if ($scope.supplies[i].$$action == 'add') {
@@ -157,18 +155,18 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		 */
 		for (var i = 0; i < $scope.equipmentList.length; i++) {
 			$scope.equipmentList[i].employee = angular.copy($scope.employee);
->>>>>>> material-supply-modal
 		}
 		
 		//Do supply PUT
 		if ($scope.supplies.length > 0) {
-		var promise = $http.put('/api/v1/supply/', $scope.supplies);
+			var promise = $http.put('/api/v1/supply/', $scope.supplies);
 		
-		promise.success(function () {
-			$scope.supplies = [];
-		}).error(function (e) {
-			$scope.checkoutError(e);
-		});
+			promise.success(function () {
+				$scope.supplies = [];
+			}).error(function (e) {
+				$scope.checkoutError(e);
+			});
+		}
 		
 		//Do equipment PUT
 		if ($scope.equipmentList.length > 0) {
