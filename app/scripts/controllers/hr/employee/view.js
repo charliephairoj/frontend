@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', 
-function ($scope, Employee, Notification) {
+.controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', '$mdDialog',
+function ($scope, Employee, Notification, $mdDialog) {
     
 	var fetching = false;
 	$scope.employees = Employee.query();
@@ -20,6 +20,17 @@ function ($scope, Employee, Notification) {
 		container.animate({
 			scrollTop: container.scrollTop() + $element.offset().top - $('.mainMenu').height()
 		});
+	};
+	
+	/*
+	 * Show add Employee
+	 */
+	$scope.showAddEmployee = function () {
+		console.log('ok');
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-employee.html',
+			controller: 'DialogsAddEmployeeCtrl'
+		})
 	};
 	
 	/*

@@ -78,16 +78,6 @@ module.exports = function (grunt) {
           	  tasks: ['less'],
 		  	 
       	},
-		karma: {
-			
-			files: [
-	  		  	'app/**/*.js',
-	  		  	'test/**/*.js'
-				],
-			tasks: [
-				'karma:unit:run'
-			]
-		}
 
     },
 	
@@ -365,8 +355,7 @@ module.exports = function (grunt) {
     //'livereload-start',
     'connect:livereload',
     //'open',
-    'watch:livereload',
-	'watch:less'
+    'watch',
 
   ]);
 	

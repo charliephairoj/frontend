@@ -1,4 +1,4 @@
-<div class="employee-view-page" ng-init="showAddEmployee=false">
+<div class="employee-view-page">
     
     <!--
         Sidebar
@@ -10,7 +10,7 @@
         <nav>
             <ul>
                 <li ng-show="currentUser.hasPermission('add_user')">
-                    <div data-ng-click="showAddEmployee=true">
+                    <div data-ng-click="showAddEmployee()">
                         Add Employee
                     </div>
                 </li>
