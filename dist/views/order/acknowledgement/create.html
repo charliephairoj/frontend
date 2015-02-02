@@ -1,0 +1,213 @@
+<div class="createAcknowledgementPage" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in>
+	<!--
+        Forms
+    -->
+	<div product-selector="showProducts" product-selector-add="addItem(product)" product-selector-upload-url="api/v1/acknowledgement/item/image"></div>
+	<form name="remarksForm" novalidate class="remarks_modal" data-modal ng-model="showRemarks">
+		<div class="title">Remarks</div>
+		<textarea ng-model="ack.remarks"></textarea>
+		<div class="bottom_bar">
+			<button ng-click="showRemarks=false">Submit</button>
+		</div>
+	</form>
+	<form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat">
+		<div class="title">Vat</div>
+		<input ng-model="ack.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
+		<div class="bottom_bar">
+			<button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
+		</div>
+	</form>
+	<form name="poForm" class="po_modal" novalidate data-modal ng-model="showPO">
+		<div class="title">PO Number</div>
+		<input ng-model="ack.po_id" size="40" />
+		<div class="bottom_bar">
+			<button ng-click="showPO=false">Submit</button>
+		</div>
+	</form>
+	<form class="ack" name="form" ec-droppable="add()" novalidate>
+		<!--
+            Sidebar
+        -->
+		<div class="sidebar">
+			<header>
+				<h1>
+                    <span>Create Ack</span>
+                </h1>
+			</header>
+			<nav>
+				<ul class="list">
+					<li>
+						<div ng-click="create()">Create</div>
+					</li>
+					<li>
+						<div class="customer" checkmark="ack.customer" x="!ack.customer" ng-click="showCustomers=!showCustomers">Add Customer</div>
+					</li>
+					<li>
+						<div class="upholstery" checkmark="ack.items.length>0" x="ack.items.length==0" ng-click="showProducts=true">Add Product</div>
+					</li>
+					<li>
+						<div class="delivery_date" checkmark="ack.delivery_date" x="!ack.delivery_date" ng-click="show_calendar=true">Set Delivery Date</div>
+					</li>
+					<li>
+						<div class="vat" checkmark="ack.vat" x="!ack.vat" ng-click="showVat=true">Set Vat</div>
+					</li>
+					<li>
+						<div class="po" checkmark="ack.po_id" x="!ack.po_id" ng-click="showPO=true">Set Purchase Order</div>
+					</li>
+					<li>
+						<div ng-click="showRemarks=true">Add Remarks</div>
+					</li>
+					<li>
+						<div ng-click="reset()">Reset</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!--
+            Panels
+        -->
+		<div customer-list="showCustomers" on-select="addCustomer(customer);"></div>
+		<div class="calendar_modal" data-modal ng-model="show_calendar">
+			<div ui-date ng-model="ack.delivery_date">
+			</div>
+			<div class="bottom_bar">
+				<button ng-disabled="!ack.delivery_date" ng-click="show_calendar=!show_calendar">Select</button>
+			</div>
+		</div>
+		<!--
+            Workspace
+        -->
+		<div class="workspace">
+			<div class="company">
+				<span class="title">Company</span>
+				<table class="details">
+					<tr>
+						<td>Company:</td>
+						<td>
+							<select ng-model="ack.company" required>
+								<option value="Dellarobbia Thailand" default>Dellarobbia Thailand</option>
+								<option value="Pacific Carpet">Pacific Carpet</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="customer">
+				<span class="title">Customer</span>
+				<table class="details">
+					<tr>
+						<td>Name:</td>
+						<td>{{ack.customer.name}}</td>
+						<tr>
+							<td>Address:</td>
+							<td>
+								{{ack.customer.addresses[0].address1}}
+								<br />{{ack.customer.addresses[0].city}}, {{ack.customer.addresses[0].territory}}
+								<br />{{ack.customer.addresses[0].territory}}, {{ack.customer.addresses[0].country}} {{ack.customer.addresses[0].zipcode}}
+							</td>
+						</tr>
+						<tr>
+							<td>Telephone:</td>
+							<td>{{ack.customer.telephone}}</td>
+						</tr>
+						<tr>
+							<td>Email:</td>
+							<td>{{ack.customer.email}}</td>
+						</tr>
+				</table>
+			</div>
+			<div class="order">
+				<table class="details">
+					<tr>
+						<td>Delivery Date:</td>
+						<td>{{ack.delivery_date | date:"EEEE, MMMM d, yyyy"}}</td>
+					</tr>
+					<tr ui-if="ack.po_id">
+						<td>PO#:</td>
+						<td>{{ack.po_id}}</td>
+					</tr>
+					<tr>
+						<td>Vat:</td>
+						<td>{{ack.vat}}%</td>
+					</tr>
+					<tr>
+						<td>Currency:</td>
+						<td>
+							{{ack.customer.currency}}
+						</td>
+					</tr>
+					<tr class="project">
+						<td>Project:</td>
+						<td>
+							<select ng-options="project.codename for project in projects" ng-model="ack.project" ng-disabled="ack.newProject">
+								<input class="new-project-checkbox" type="checkbox" ng-model="ack.newProject" />New Project
+								<input class="new-project-name" type="text" ng-model="ack.newProjectName" ng-show="ack.newProject">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="products" ng-show="ack.items.length>0">
+				<div class="title">Products</div>
+				<div class="product" ng-repeat="product in ack.items track by $index">
+					{{product.description}}
+					<table class="details">
+						<tr>
+							<td>Qty:</td>
+							<td>{{product.quantity}}</td>
+						</tr>
+						<tr>
+							<td>Custom Price</td>
+							<td>
+								<input type="text" data-ng-model="product.custom_price" />
+							</td>
+						</tr>
+						<tr>
+							<td>Custom Size:</td>
+							<td>
+								<input type="checkbox" ng-model="product.is_custom_size" />
+							</td>
+						</tr>
+						<tr>
+							<td>Width:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.width" />mm</td>
+						</tr>
+						<tr>
+							<td>Depth:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.depth" />mm</td>
+						</tr>
+						<tr>
+							<td>Height:</td>
+							<td>
+								<input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.height" />mm</td>
+						</tr>
+						<tr ui-if="product.fabric">
+							<td>Fabric:</td>
+							<td>
+								{{product.fabric.description}}
+								<img ng-src="{{product.fabric.image.url}}" />
+							</td>
+							<td>
+							</td>
+						</tr>
+						<tr ng-repeat="pillow in product.pillows">
+							<td>{{pillow.type | beautify}} Pillow</td>
+							<td>{{pillow.fabric.description}}
+								<img ng-src="{{pillow.fabric.image.url}}" />
+							</td>
+						</tr>
+						<tr>
+							<td>Comments:</td>
+							<td>
+								<textarea cols="40" rows="4" ng-model="product.comments" ec-blur="tempSave()"></textarea>
+							</td>
+						</tr>
+					</table>
+					<img ng-src="{{product.image.url}}" />
+					<div class="remove_btn" ng-click="removeItem($index)">Remove</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

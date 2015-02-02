@@ -1,0 +1,147 @@
+<form name="form" class="add-supplier" modal="visible" title="Add a new Supplier">
+	<div class="container">
+		<table class="details">
+			<tr>
+				<td><span>Name</span>
+				</td>
+				<td>
+					<input ng-model="supplier.name" required size="50" tooltip="{{nameTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Address 1</span>
+				</td>
+				<td>
+					<input beautify ec-blur="getLocation()" size="40" type="text" required ng-model="supplier.address.address1" tooltip="{{addrTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Address 2</span>
+				</td>
+				<td>
+					<input beautify ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>City/Amphur</span>
+				</td>
+				<td>
+					<input beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.city" tooltip="{{cityTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>TerritoryChaeng Wat</span>
+				</td>
+				<td>
+					<input beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.territory" tooltip="{{territoryTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Country</span>
+				</td>
+				<td>
+					<input placeholder="Country" placeholder="required" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.country" tooltip="{{countryTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Zipcode</span>
+				</td>
+				<td>
+					<input ec-blur="getLocation()" type="text" required ng-model="supplier.address.zipcode" tooltip="{{zipcodetip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Email</span>
+				</td>
+				<td>
+					<input size="30" type="email" ng-model="supplier.email" tooltip="{{emailTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Telephone</span>
+				</td>
+				<td>
+					<input telephone required type="text" ng-pattern="/\d+/" ng-model="supplier.telephone" tooltip="{{telTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Fax</span>
+				</td>
+				<td>
+					<input telephone type="text" ng-pattern="/\d+/" ng-model="supplier.fax" />
+				</td>
+			</tr>
+			<tr>
+				<td><span>Discount</span>
+				</td>
+				<td>
+					<input type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" tooltip='{{discountTip}}' tooltip-trigger="focus" />%</td>
+			</tr>
+			<tr>
+				<td><span>Terms</span>
+				</td>
+				<td>
+					<input size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" required tooltip="{{termsTip}}" tooltip-trigger="focus" />Days</td>
+			</tr>
+			<tr>
+				<td>Currency</td>
+				<td>
+					<select ng-model="supplier.currency" required>
+						<option value="THB">Thai Baht</option>
+						<option value="USD">US Dollar</option>
+						<option value="EUR">Euro</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Notes
+				</td>
+				<td>
+					<textarea ng-model="supplier.notes" cols="30" rows="6"></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="contacts">
+			<table class="new-contact">
+				<tr>
+					<td>Name</td>
+					<td>
+						<input class="contact-name" type="text" size="30" ng-model="contact.name" />
+					</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td>
+						<input class="contact-email" type="text" size="30" ng-model="contact.email" />
+					</td>
+				</tr>
+				<tr>
+					<td>Telephone</td>
+					<td>
+						<input class="contact-tel" type="text" size="30" ng-model="contact.telephone" />
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<div class="add-contact-btn" ng-click="addContact(contact)"=>Add</div>
+					</td>
+				</tr>
+			</table>
+			<div class="added-contacts">
+				<div class="contact" ng-repeat="contact in supplier.contacts">
+					<div class="primary" ng-class="{'not-primary':!contact.primary}"></div>
+					<span>{{contact.name}}</span>
+					<br />
+					<span>{{contact.email}}</span>
+					<br />
+					<span>{{contact.telephone}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-bar">
+		<button ng-disabled="form.$invalid" ng-click="add()">Add</button>
+	</div>
+</form>

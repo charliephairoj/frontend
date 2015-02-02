@@ -1,0 +1,188 @@
+<div class="fabricDetailsPage" ng-init="showAdd=false;showSubtract=false; showReset=false; showLog=false; showReserve=false;" image-drop-target="upload()">
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="fabric.image">
+				<img ng-src="{{fabric.image.url}}" />
+			</div>
+			<h1><span>{{fabric.pattern}}<br />{{fabric.color}}</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<div ng-click="showAdd=!showAdd">Add Length</div>
+				</li>
+				<li>
+					<div ng-click="showSubtract=!showSubtract">Subtract Length</div>
+				</li>
+				<li>
+					<div ng-click="viewLog();showLog=!showLog">View Log</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_fabric')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
+        Add Length Modal
+    -->
+	<form name="addForm" class="add" novalidate modal ng-model="showAdd">
+		<div class="title" ng-click="showAdd=false">Add Fabric Length</div>
+		<div class="container">
+			<table>
+				<tr>
+					<td>Length</td>
+					<td>
+						<input beautify type="text" ng-pattern="/^(\d+)?(\.\d+)?$/" required ng-model="quantity" />
+					</td>
+				</tr>
+				<tr>
+					<td>Remarks</td>
+					<td>
+						<textarea cols="25" rows="8" ng-model="remarks"></textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="bottom-bar">
+			<button type="button" ng-disabled="addForm.$invalid" ng-click="add()">Add</button>
+		</div>
+	</form>
+	<!--
+        Subtract Length Modal
+    -->
+	<form name="subtractForm" class="subtract" novalidate modal ng-model="showSubtract">
+		<div class="title" ng-click="showSubtract=false">Subtract Fabric Length</div>
+		<div class="container">
+			<table>
+				<tr>
+					<td>Length</td>
+					<td>
+						<input beautify type="text" ng-pattern="/^(\d+)?(\.\d+)?$/" required ng-model="quantity" />
+					</td>
+				</tr>
+				<tr>
+					<td>Acknowledgement</td>
+					<td>
+						<input ng-model="remarks" />
+						</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="bottom-bar">
+			<button type="button" ng-disabled="subtractForm.$invalid" ng-click="subtract()">Subtract</button>
+		</div>
+	</form>
+	<div class="log" data-modal data-ng-model="showLog">
+		<div class="container">
+			<table class="log">
+				<thead>
+					<tr>
+						<th class="log">Log</th>
+						<th class="acknowledgement">Ack#</th>
+						<th class="employee">Employee</th>
+						<th class="quantity">Length</th>
+						<th class="remarks">Remarks</th>
+						<th class="timestamp">Timestamp</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="log in logs | orderBy:'-timestamp'">
+						<td class="log">{{log.event}}</td>
+						<td class="acknowledgement">{{log.acknowledgement_id}}</td>
+						<td class="employee">{{log.employee}}</td>
+						<td class="quantity">{{log.quantity}}</td>
+						<td class="remarks">{{log.remarks}}</td>
+						<td class="timestamp">{{log.timestamp}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="bottom-bar">
+			<button data-ng-click="showLog=false">Close</button>
+		</div>
+	</div>
+	<form class="workspace">
+		<table class="details">
+			<tr>
+				<tr>
+					<td>
+						<label>Supplier</label>
+					</td>
+					<td>{{fabric.supplier.name}}</td>
+				</tr>
+				<td>
+					<label>Location</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.location" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Description</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.description" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Reference Number</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.reference" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Pattern</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.pattern" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Color</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.color" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Content</label>
+				</td>
+				<td>
+					<input type="text" ng-model="fabric.content" ec-blur="update()" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Width</label>
+				</td>
+				<td>
+					<input class="length" type="text" ng-model="fabric.width" ec-blur="update()" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Cost per Yard</label>
+				</td>
+				<td>
+					<input class="price" type="text" ng-model="fabric.cost" ec-blur="update()" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Current Length</label>
+				</td>
+				<td>{{fabric.quantity}}</td>
+			</tr>
+		</table>
+	</form>
+</div>
