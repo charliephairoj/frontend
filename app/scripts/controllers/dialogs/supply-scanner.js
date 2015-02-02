@@ -6,7 +6,8 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	/*
 	 * Vars
 	 */
-	var keyboardNav = new KeyboardNavigation();
+	var promise,
+		keyboardNav = new KeyboardNavigation();
 	$scope.scanner = new scanner('supply-scanner-modal');
 	$scope.equipment = {description: 'F-50', brand: 'Red King'};
 	$scope.interfaceType = 'equipment';
@@ -87,8 +88,8 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		}
 		
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
-			response[0].$$action == 'subtract';
-			$scope.supplies.push(response[0])
+			response[0].$$action = 'subtract';
+			$scope.supplies.push(response[0]);
 			$mdToast.show($mdToast.simple()
 				.hideDelay(2000)
 				.position('top right')
@@ -153,13 +154,13 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		/* 
 		 * Assign the employee to each equipment
 		 */
-		for (var i = 0; i < $scope.equipmentList.length; i++) {
-			$scope.equipmentList[i].employee = angular.copy($scope.employee);
+		for (var h = 0; h < $scope.equipmentList.length; h++) {
+			$scope.equipmentList[h].employee = angular.copy($scope.employee);
 		}
 		
 		//Do supply PUT
 		if ($scope.supplies.length > 0) {
-			var promise = $http.put('/api/v1/supply/', $scope.supplies);
+			promise = $http.put('/api/v1/supply/', $scope.supplies);
 		
 			promise.success(function () {
 				$scope.supplies = [];
@@ -170,7 +171,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		
 		//Do equipment PUT
 		if ($scope.equipmentList.length > 0) {
-			var promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+			promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
 		
 			promise.success(function () {
 				$scope.equipmentList = [];
@@ -181,7 +182,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	};
 	
 	$scope.postCheckout = function () {
-		if ($scope.supplies.length == 0 && $scope.equipmentList.length == 0) {
+		if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0) {
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(2000)

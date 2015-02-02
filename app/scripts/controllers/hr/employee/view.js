@@ -30,7 +30,7 @@ function ($scope, Employee, Notification, $mdDialog) {
 		$mdDialog.show({
 			templateUrl: 'views/templates/add-employee.html',
 			controller: 'DialogsAddEmployeeCtrl'
-		})
+		});
 	};
 	
 	/*
