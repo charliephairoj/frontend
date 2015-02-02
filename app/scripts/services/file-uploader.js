@@ -22,7 +22,7 @@ angular.module('employeeApp')
 		var fd = new FormData();
 		//fd = data.isPrototypeOf(FormData) ? data : new FormData();
 	
-		Notification.display('Uploading '+type+'...', false);
+		//Notification.display('Uploading '+type+'...', false);
         
         //Attch the file to be sent
 		fd.append(type.toLowerCase(), file);

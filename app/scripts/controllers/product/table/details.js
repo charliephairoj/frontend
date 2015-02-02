@@ -1,45 +1,43 @@
 
 angular.module('employeeApp')
-.controller('ProductTableDetailsCtrl', ['$scope', 'Table', '$routeParams', 'Notification', '$location',
-function ($scope, Table, $routeParams, Notification, $location) {
+.controller('ProductTableDetailsCtrl', ['$scope', 'Table', '$routeParams', '$mdToast', '$location', 'FileUploader',
+function ($scope, Table, $routeParams, $mdToast, $location, FileUploader) {
 	$scope.table = Table.get({'id': $routeParams.id});    
      
 	//Upload Image
 	$scope.upload = function () {
-		//Notify of uploading image
-		Notification.display('Uploading Image...', false);
-		var fd = new FormData();
-        
-		fd.append('image', $scope.images[0]);
-		jQuery.ajax("/api/v1/upholstery/image", {
-			type: 'POST',
-			data: fd,
-			cache: false,
-            processData: false,
-            contentType: false,
-            success: function (responseData) {
-				Notification.display('Image Updated');
-                $scope.table.image = {};
-                angular.copy(responseData, $scope.table.image);
-                $scope.table.$update();
-                $scope.imagePreviews = null;
-                $scope.images = null;
-                $scope.$apply();
-            }
+		var promise = FileUploader.upload($scope.images[0], "/api/v1/upholstery/image/");
+			promise.then(function (dataObj) {
+				$mdToast.show($mdToast.simple()
+					.position('top right')
+					.hideDelay(3000)
+					.content('File was uploaded.'));
+
+				$scope.table.image = dataObj.data;
+				
+				$scope.update();
+		}, function () {
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(0)
+				.content('There was an error uploading the file'));
 		});
 	};
      
 	$scope.update = function () {
-		Notification.display('Saving Table...', false);
+		//Notification.display('Saving Table...', false);
 		$scope.table.$update(function () {
-			Notification.display('Table Saved');
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(3000)
+				.content('Table saved.'));
 		});
 	};
     
 	$scope.remove = function () {
-		Notification.display('Deleteing Table Product');
+		//Notification.display('Deleteing Table Product');
 		$scope.table.$delete(function () {
-			Notification.display('Table Product Deleted');
+			//Notification.display('Table Product Deleted');
 			$location.path('/product/table');
 		});
 	};

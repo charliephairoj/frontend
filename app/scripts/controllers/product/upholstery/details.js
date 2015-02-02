@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProductUpholsteryDetailsCtrl', ['$scope', 'Upholstery', '$routeParams', 'Notification', '$location', '$timeout',
-function ($scope, Upholstery, $routeParams, Notification, $location, $timeout) {
+.controller('ProductUpholsteryDetailsCtrl', ['$scope', 'Upholstery', '$routeParams', '$mdToast', '$location', '$timeout', 'FileUploader',
+function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader) {
 	
 	$scope.updateLoopActive = true;
 	
@@ -13,10 +13,24 @@ function ($scope, Upholstery, $routeParams, Notification, $location, $timeout) {
     
     //Upload Image
     $scope.upload = function () {
-        //Notify of uploading image
-        Notification.display('Uploading Image...', false);
-        var fd = new FormData();
-        
+        //Notify of uploading image        
+		var promise = FileUploader.upload($scope.images[0], "/api/v1/upholstery/image/");
+			promise.then(function (dataObj) {
+				$mdToast.show($mdToast.simple()
+					.position('top right')
+					.hideDelay(3000)
+					.content('File was uploaded.'));
+
+				$scope.uphol.image = dataObj.data;
+				
+				$scope.update();
+		}, function () {
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(0)
+				.content('There was an error uploading the file'));
+		});
+		/*
         fd.append('image', $scope.images[0]);
 		jQuery.ajax("/api/v1/upholstery/image", {
 			type: 'POST',
@@ -33,7 +47,7 @@ function ($scope, Upholstery, $routeParams, Notification, $location, $timeout) {
 				$scope.images = null;
 				$scope.$apply();
 			}
-		});
+		});*/
 	};
     
     $scope.$watch(function () {
@@ -65,16 +79,19 @@ function ($scope, Upholstery, $routeParams, Notification, $location, $timeout) {
     }, true);
     
     $scope.update = function () {
-        Notification.display('Saving Upholsterty...', false);
+        //Notification.display('Saving Upholsterty...', false);
         $scope.uphol.$update(function () {
-            Notification.display('Upholstery Saved');
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(3000)
+				.content('Upholstery saved.'));
         });
     };
     
     $scope.remove = function () {
-        Notification.display('Deleteing Upholstery Product');
+        //Notification.display('Deleteing Upholstery Product');
         $scope.uphol.$delete(function () { 
-            Notification.display('Upholstery Product Deleted');
+            //Notification.display('Upholstery Product Deleted');
             $location.path('/product/upholstery');
         });
     };
