@@ -10389,10 +10389,6 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     var promise, keyboardNav = new KeyboardNavigation();
     $scope.scanner = new scanner('supply-scanner-modal');
-    $scope.equipment = {
-      description: 'F-50',
-      brand: 'Red King'
-    };
     $scope.interfaceType = 'equipment';
     $scope.supplies = [];
     $scope.equipmentList = [];
@@ -10428,7 +10424,10 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 * Register the supply code regex
 	 */
     $scope.scanner.register(/^DRS-\d+$/, function (code) {
-      $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up supply...'));
+      try {
+        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up supply...'));
+      } catch (e) {
+      }
       Supply.get({
         id: code.split('-')[1],
         'country': $rootScope.country
@@ -10445,7 +10444,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     $scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
       try {
-        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up supply...'));
+        $mdToast.show($mdToast.simple().hideDelay(3000).position('top right').content('Looking up supply...'));
       } catch (e) {
       }
       Supply.query({
@@ -10503,18 +10502,20 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
       }
       //Do supply PUT
       if ($scope.supplies.length > 0) {
-        promise = $http.put('/api/v1/supply/', $scope.supplies);
-        promise.success(function () {
+        var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
+        supplyPromise.success(function () {
           $scope.supplies = [];
+          $scope.postCheckout();
         }).error(function (e) {
           $scope.checkoutError(e);
         });
       }
       //Do equipment PUT
       if ($scope.equipmentList.length > 0) {
-        promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
-        promise.success(function () {
+        var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+        equipPromise.success(function () {
           $scope.equipmentList = [];
+          $scope.postCheckout();
         }).error(function (e) {
           $scope.checkoutError(e);
         });

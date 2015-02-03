@@ -181,6 +181,76 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
 			$http.flush();
 			
 		});
+		
+		it('should reset the supplies and employeeList', function () {
+			$http.expectGET('/api/v1/supply/187/?country=TH').respond({id:187, description: 'T-NUT', quantity: 199.8});
+			
+			//Simulate barcode scanning
+			keypress(76, true);
+			keypress(68);
+			keypress(82);
+			keypress(83);
+			keypress(189);
+			keypress(49);
+			keypress(56);
+			keypress(55);
+			keypress(71, true);
+			
+			$http.flush();
+			expect(scope.supplies).toBeDefined();
+			expect(scope.supplies.length).toEqual(1);
+			
+			$http.expectPUT('/api/v1/supply/').respond([]);
+			scope.checkout();
+			$http.flush();
+			
+			expect(scope.supplies).toEqual(jasmine.any(Array));
+			
+			
+		});
+		
+		it('should reset the supplies and employeeList and be able to work again', function () {
+			$http.expectGET('/api/v1/supply/187/?country=TH').respond({id:187, description: 'T-NUT', quantity: 199.8});
+			
+			//Simulate barcode scanning
+			keypress(76, true);
+			keypress(68);
+			keypress(82);
+			keypress(83);
+			keypress(189);
+			keypress(49);
+			keypress(56);
+			keypress(55);
+			keypress(71, true);
+			
+			$http.flush();
+			expect(scope.supplies).toBeDefined();
+			expect(scope.supplies.length).toEqual(1);
+			
+			$http.expectPUT('/api/v1/supply/').respond([]);
+			scope.checkout();
+			$http.flush();
+			
+			expect(scope.supplies).toEqual(jasmine.any(Array));
+			
+			$http.expectGET('/api/v1/supply/187/?country=TH').respond({id:187, description: 'T-NUT', quantity: 199.8});
+			
+			//Simulate barcode scanning
+			keypress(76, true);
+			keypress(68);
+			keypress(82);
+			keypress(83);
+			keypress(189);
+			keypress(49);
+			keypress(56);
+			keypress(55);
+			keypress(71, true);
+			
+			$http.flush();
+			expect(scope.supplies).toBeDefined();
+			expect(scope.supplies.length).toEqual(1);
+			expect(scope.supplies[0].id).toEqual(187);
+		});
 	});
 	
 	describe('Checking out equipment', function () {

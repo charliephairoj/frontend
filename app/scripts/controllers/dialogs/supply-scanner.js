@@ -51,11 +51,16 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	 * Register the supply code regex
 	 */
 	$scope.scanner.register(/^DRS-\d+$/, function (code) {
-
-		$mdToast.show($mdToast.simple()
-			.hideDelay(0)
-			.position('top right')
-			.content('Looking up supply...'));
+		try {
+			$mdToast.show($mdToast.simple()
+				.hideDelay(0)
+				.position('top right')
+				.content('Looking up supply...'));
+		} catch (e) {
+			
+		}
+			
+		
 			
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
 			response.$$action = 'subtract';
@@ -79,7 +84,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
 		try {
 			$mdToast.show($mdToast.simple()
-				.hideDelay(0)
+				.hideDelay(3000)
 				.position('top right')
 				.content('Looking up supply...'));
 		} catch (e) {
@@ -159,10 +164,11 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		
 		//Do supply PUT
 		if ($scope.supplies.length > 0) {
-			promise = $http.put('/api/v1/supply/', $scope.supplies);
+			var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
 		
-			promise.success(function () {
+			supplyPromise.success(function () {
 				$scope.supplies = [];
+				$scope.postCheckout();
 			}).error(function (e) {
 				$scope.checkoutError(e);
 			});
@@ -170,10 +176,11 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		
 		//Do equipment PUT
 		if ($scope.equipmentList.length > 0) {
-			promise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+			var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
 		
-			promise.success(function () {
+			equipPromise.success(function () {
 				$scope.equipmentList = [];
+				$scope.postCheckout();
 			}).error(function (e) {
 				$scope.checkoutError(e);
 			});
