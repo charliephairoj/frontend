@@ -9,7 +9,6 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	var promise,
 		keyboardNav = new KeyboardNavigation();
 	$scope.scanner = new scanner('supply-scanner-modal');
-	$scope.equipment = {description: 'F-50', brand: 'Red King'};
 	$scope.interfaceType = 'equipment';
 	$scope.supplies = [];
 	$scope.equipmentList = [];
