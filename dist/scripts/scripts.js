@@ -10425,7 +10425,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     $scope.scanner.register(/^DRS-\d+$/, function (code) {
       try {
-        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up supply...'));
+        $mdToast.show($mdToast.simple().hideDelay(3000).position('top right').content('Looking up supply...'));
       } catch (e) {
       }
       Supply.get({
@@ -10453,6 +10453,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
       }, function (response) {
         response[0].$$action = 'subtract';
         $scope.supplies.push(response[0]);
+        $mdToast.hide();
         $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
       }, function (reason) {
         console.log(reason);
@@ -10473,7 +10474,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     $scope.scanner.register(/^DREM-\d+$/, function (code) {
       //Notifiy the user of action
-      $mdToast.show($mdToast.simple().content('Looking up employee...').hideDelay(0));
+      $mdToast.show($mdToast.simple().content('Looking up employee...').hideDelay(3000));
       $scope.equipment = Employee.get({ id: code.split('-')[1] }, function (response) {
         $scope.employee = response;
         $mdToast.hide();
