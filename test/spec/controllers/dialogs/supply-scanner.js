@@ -132,6 +132,65 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
 		});
 	});
 	
+	describe('Requesting purchase order', function () {
+		
+		it('should make a GET call to the server', function () {
+			$http.expectGET('/api/v1/purchase-order/13345/').respond({id: 13345, items: [
+				{
+					id: 1064,
+					supply: 4893,
+					status: "Ordered",
+					quantity: 1
+				},
+				{
+					id: 1063,
+					supply: 4892,
+					status: "Ordered",
+					quantity: 2
+				},
+				{
+					id:1065,
+					supply:5543,
+					status: "Recieved",
+					quantity: 7
+				}
+				
+			]});
+			
+			//Simulate barcode scanning
+			keypress(76, true);
+			keypress(80);
+			keypress(79);
+			keypress(189);
+			keypress(49);
+			keypress(51);
+			keypress(51);
+			keypress(52);
+			keypress(53);
+			keypress(71, true);
+			
+			$http.flush();
+			
+			expect(scope.po).toBeDefined();
+			expect(scope.po.hasOwnProperty('id')).toBeTruthy();
+			expect(scope.po.id).toEqual(13345);
+			expect(scope.po.items).toBeDefined();
+			expect(scope.po.items).toEqual(jasmine.any(Array));
+			expect(scope.po.items.length).toEqual(3);
+			var item1 = scope.po.items[0];
+			expect(item1.hasOwnProperty('id')).toBeTruthy();
+			expect(item1.id).toEqual(1064);
+			expect(item1.quantity).toEqual(1);
+			expect(item1.status).toEqual('Ordered');
+			var item2 = scope.po.items[1];
+			expect(item2.hasOwnProperty('id')).toBeTruthy();
+			expect(item2.id).toEqual(1063);
+			expect(item2.quantity).toEqual(2);
+			expect(item2.status).toEqual('Ordered');
+			
+		});
+	});
+	
  	describe('Checking out supplies', function () {
 		
 		it('should make a PUT call to the server', function () {
@@ -279,6 +338,72 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
 			scope.checkout();
 			
 			$http.flush();
+		});
+	});
+	
+	describe('Checking out Purchase Order', function () {
+		it('should make a PUT call to the server', function () {
+			$http.expectGET('/api/v1/purchase-order/13345/').respond({id: 13345, items: [
+				{
+					id: 1064,
+					supply: 4893,
+					status: "Ordered",
+					quantity: 1
+				},
+				{
+					id: 1063,
+					supply: 4892,
+					status: "Ordered",
+					quantity: 2
+				},
+				{
+					id:1065,
+					supply:5543,
+					status: "Recieved",
+					quantity: 7
+				}
+				
+			]});
+			
+			//Simulate barcode scanning
+			keypress(76, true);
+			keypress(80);
+			keypress(79);
+			keypress(189);
+			keypress(49);
+			keypress(51);
+			keypress(51);
+			keypress(52);
+			keypress(53);
+			keypress(71, true);
+			
+			//Mock response
+			$http.flush();
+			
+			$http.expectPUT('/api/v1/purchase-order/13345/', function (dataStr) {
+				
+				var data = JSON.parse(dataStr);
+				
+				for (var i = 0; i < data.items.length; i++) {
+					if (data.items[i].status.toLowerCase() != "received") {
+						return false;
+					}
+				}
+				
+				if (data.status.toLowerCase() != "received") {
+					return false;
+				}
+				
+				return true;
+			}).respond({});
+			
+			scope.checkout();
+			
+			$http.flush();
+			
+			expect(scope.po).not.toBeDefined();
+			expect(scope.equipmentList.length).toEqual(0);
+			expect(scope.supplies.length).toEqual(0);
 		});
 	});
 });

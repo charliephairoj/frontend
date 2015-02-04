@@ -1,13 +1,11 @@
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'KeyboardNavigation', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment',
-function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment) {
+.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder',
+function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder) {
 	
 	/*
 	 * Vars
 	 */
-	var promise,
-		keyboardNav = new KeyboardNavigation();
 	$scope.scanner = new scanner('supply-scanner-modal');
 	$scope.interfaceType = 'equipment';
 	$scope.supplies = [];
@@ -33,6 +31,13 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	$scope.remove = function ($index, supply) {
 		$scope.supplies.splice($index, 1);
 	};
+	
+	/*
+	 * Remove Purchase Order item from purchase order
+	 */ 
+	$scope.removeItem = function ($index) {
+		$scope.po.items.splice($index, 1);
+	}
 	
 	 /* Add Image
 	 * 
@@ -99,6 +104,30 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 				.hideDelay(2000)
 				.position('top right')
 				.content('Added ' + response.description + ' to checkout.'));
+				
+		}, function (reason) {
+			console.log(reason);
+		});
+	});
+	
+	/*
+	 * Register the Purchase Order regex
+	 */
+	$scope.scanner.register(/^PO-\d+$/, function (code) {
+		try {
+			$mdToast.show($mdToast.simple()
+				.hideDelay(3000)
+				.position('top right')
+				.content('Looking up Purchase Order...'));
+		} catch (e) {
+			
+		}
+		
+		PurchaseOrder.get({id: code.split('-')[1]}, function (response) {
+			$scope.po = response;
+			
+			$mdToast.hide();
+			
 				
 		}, function (reason) {
 			console.log(reason);
@@ -186,10 +215,24 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 				$scope.checkoutError(e);
 			});
 		}
+		
+		//Perform Purchase Order PUT
+		if ($scope.po) {
+			for (var g = 0; g < $scope.po.items.length; g++) {
+				$scope.po.items[g].status = 'Received';
+			}
+			
+			$scope.po.status = "Received";
+			
+			$scope.po.$update(function () {
+				delete $scope.po;
+				$scope.postCheckout();
+			});
+		}
 	};
 	
 	$scope.postCheckout = function () {
-		if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0) {
+		if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0 && !$scope.po) {
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(2000)

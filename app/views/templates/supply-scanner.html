@@ -1,5 +1,6 @@
 <md-dialog class="supply-scanner" aria-label="Supply Checkout">
-	<md-subheader>Supply Checkout</md-subheader>
+	<md-subheader class="supply" ng-hide="po">Supply Checkout</md-subheader>
+	<md-subheader class="po ng-hide" ng-show="po">Check in Purchase Order {{po.id}}</md-subheader>
 	<div class="container">
 		<div ng-hide="employee" class="employee-placeholder">
 			<h2>Employee</h2>
@@ -12,11 +13,31 @@
 			<h3>{{employee.name}}</h3>
 			<h2>{{employee.department}}</h2>
 		</div>
-		<div ng-hide="supplies.length > 0 || equipmentList.length > 0" class="supplies-placeholder">
+		<div ng-hide="supplies.length > 0 || equipmentList.length > 0 || po" class="supplies-placeholder">
 			<h2>Supplies</h2>
 		</div>
-		<md-content ng-show="supplies.length > 0 || equipmentList.length > 0">
+		<md-content ng-show="supplies.length > 0 || equipmentList.length > 0 || po">
 			<md-list>
+				<md-item ng-repeat="item in po.items">
+					<md-item-content>
+						<div class="img-container">
+							<img ng-src="{{item.image.url}}" />
+						</div>
+						<h3>{{item.description}}</h3>
+						<div class="item-ctrl">
+							<!--
+							<md-radio-group ng-model="item.$$action">
+						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+						      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+						    </md-radio-group>
+								-->
+							Quantity: {{item.quantity}}
+							<md-button class="md-warn" ng-click="removeItem($index)">Remove<md-button>
+						</div>
+					</md-item-content>
+					<md-divider></md-divider>
+
+				</md-item>
 				<md-item ng-repeat="equipment in equipmentList">
 					<md-item-content>
 						<h3>
@@ -58,6 +79,8 @@
 	<md-divider>
 	</md-divider>
 	<md-action>
-		<md-button class="md-accent" ng-click="checkout()">Checkout</md-button>
+	 	<md-button class="md-accent" ng-show="po" ng-click="checkout()">Check In</md-button>
+	
+		<md-button class="md-accent" ng-hide="po"  ng-click="checkout()">Checkout</md-button>
 	</md-action>
 </md-dialog>
