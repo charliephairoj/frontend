@@ -51,11 +51,18 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	
 	$scope.loadNext = function () {
 		if (!fetching) {
+			//System wide message
+			$mdToast.show($mdToast
+				.simple()
+				.position('top right')
+				.content('Loading more purchasing orders...')
+				.hideDelay(0));
 			fetching = true;
 			PurchaseOrder.query({
 				limit: 20,
 				offset: $scope.poList.length
 			}, function (resources) {
+				$mdToast.hide();
 				fetching = false;
 				for (var i = 0; i < resources.length; i++) {
 					$scope.poList.push(resources[i]);

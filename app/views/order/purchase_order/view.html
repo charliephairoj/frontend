@@ -29,9 +29,9 @@
     -->
     
     <div class="workspace">
-    	<div class="outer-container">
+    	<div class="outer-container" on-scroll-end="loadNext()">
     		<ul class="inner-container">
-    			<li class="item-container" ng-repeat="po in poList | filter:query">
+    			<li class="item-container" ng-repeat="po in poList">
     				<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/order/purchase_order/{{po.id}}">
     					<span class="description">{{po.id}}</span>
 	    				<span class="customer">{{po.supplier.name}}</span>
