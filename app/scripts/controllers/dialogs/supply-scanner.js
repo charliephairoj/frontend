@@ -36,7 +36,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	 * Remove Purchase Order item from purchase order
 	 */ 
 	$scope.removeItem = function ($index) {
-		$scope.po.items.splice($index, 1);
+		$scope.po.items[$index].$$action = false;
 	}
 	
 	 /* Add Image
@@ -128,6 +128,9 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			
 			$mdToast.hide();
 			
+			for (var j = 0; j < $scope.po.items.length; j++) {
+				$scope.po.items[j].$$action = true;
+			}
 				
 		}, function (reason) {
 			console.log(reason);
@@ -219,7 +222,9 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		//Perform Purchase Order PUT
 		if ($scope.po) {
 			for (var g = 0; g < $scope.po.items.length; g++) {
-				$scope.po.items[g].status = 'Received';
+				if ($scope.po.items[g].$$action) {
+					$scope.po.items[g].status = 'Received';
+				}
 			}
 			
 			$scope.po.status = "Received";
