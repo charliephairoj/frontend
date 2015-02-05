@@ -9,7 +9,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	$scope.showSuppliers = false;
 	$scope.showSupplies = false;
 	//$scope.suppliers = Supplier.query({limit: 0});
-	$scope.projects = Project.query();
+	$scope.projects = Project.query({limit: 0});
 	$scope.po = new PurchaseOrder();
 	
 	

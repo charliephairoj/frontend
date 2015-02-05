@@ -6801,7 +6801,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
     $scope.showSuppliers = false;
     $scope.showSupplies = false;
     //$scope.suppliers = Supplier.query({limit: 0});
-    $scope.projects = Project.query();
+    $scope.projects = Project.query({ limit: 0 });
     $scope.po = new PurchaseOrder();
     /*
 	 * Add a supplier to the purchase order
