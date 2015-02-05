@@ -7,7 +7,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
     $scope.uploading = false;
     $scope.customImageScale = 100;
 	
-	$scope.projects = Project.query();
+	$scope.projects = Project.query({page_size:99999});
     $scope.ack = new Acknowledgement();
     
     var uploadTargets = [];

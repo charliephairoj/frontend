@@ -38,7 +38,7 @@
 						<div class="img-container">
 							<img ng-src="{{supply.image.url}}" />
 						</div>
-						<h3>{{supply.description}}</h3>
+						<h3>{{supply.description}} <br/>  Qty:{{supply.quantity}}</h3>
 						<div class="item-ctrl">
 							<md-radio-group ng-model="supply.$$action">
 								<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>

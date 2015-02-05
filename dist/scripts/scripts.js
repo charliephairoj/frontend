@@ -1878,7 +1878,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     $scope.showFabric = false;
     $scope.uploading = false;
     $scope.customImageScale = 100;
-    $scope.projects = Project.query();
+    $scope.projects = Project.query({ page_size: 99999 });
     $scope.ack = new Acknowledgement();
     var uploadTargets = [];
     var storage = window.localStorage;
