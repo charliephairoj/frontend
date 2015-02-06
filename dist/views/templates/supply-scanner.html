@@ -33,8 +33,8 @@
 						</div>
 					</md-item-content>
 				</md-item>
-				<md-item ng-repeat="supply in supplies">
-					<md-item-content>
+				<md-item>
+					<md-item-content ng-class="{'warn': supply.$$quantity > supply.quantity}" ng-repeat="supply in supplies">
 						<div class="img-container">
 							<img ng-src="{{supply.image.url}}" />
 						</div>

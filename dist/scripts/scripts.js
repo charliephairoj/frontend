@@ -10485,44 +10485,61 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         $mdToast.show($mdToast.simple().content('Unable to find employee.').hideDelay(0));
       });
     });
-    $scope.checkout = function () {
-      /*
-		 * Assign the employee to each supply and calculate the 
-		 * new quantity based on the supply action
-		 */
+    $scope.verify = function () {
+      $mdToast.hide();
       for (var i = 0; i < $scope.supplies.length; i++) {
-        $scope.supplies[i].employee = angular.copy($scope.employee);
         if ($scope.supplies[i].$$action == 'subtract') {
-          $scope.supplies[i].quantity -= $scope.supplies[i].$$quantity;
-        } else if ($scope.supplies[i].$$action == 'add') {
-          $scope.supplies[i].quantity += $scope.supplies[i].$$quantity;
+          if ($scope.supplies[i].$$quantity > $scope.supplies[i].quantity) {
+            throw Error($scope.supplies[i].description + ' quantity cannot be negative');
+          }
         }
       }
-      /* 
-		 * Assign the employee to each equipment
-		 */
-      for (var h = 0; h < $scope.equipmentList.length; h++) {
-        $scope.equipmentList[h].employee = angular.copy($scope.employee);
-      }
-      //Do supply PUT
-      if ($scope.supplies.length > 0) {
-        var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
-        supplyPromise.success(function () {
-          $scope.supplies = [];
-          $scope.postCheckout();
-        }).error(function (e) {
-          $scope.checkoutError(e);
-        });
-      }
-      //Do equipment PUT
-      if ($scope.equipmentList.length > 0) {
-        var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
-        equipPromise.success(function () {
-          $scope.equipmentList = [];
-          $scope.postCheckout();
-        }).error(function (e) {
-          $scope.checkoutError(e);
-        });
+      return true;
+    };
+    $scope.checkout = function () {
+      try {
+        $scope.verify();
+        /*
+			 * Assign the employee to each supply and calculate the 
+			 * new quantity based on the supply action
+			 */
+        for (var i = 0; i < $scope.supplies.length; i++) {
+          $scope.supplies[i].employee = angular.copy($scope.employee);
+          if ($scope.supplies[i].$$action == 'subtract') {
+            $scope.supplies[i].quantity -= $scope.supplies[i].$$quantity;
+          } else if ($scope.supplies[i].$$action == 'add') {
+            $scope.supplies[i].quantity += $scope.supplies[i].$$quantity;
+          }
+        }
+        /* 
+			 * Assign the employee to each equipment
+			 */
+        for (var h = 0; h < $scope.equipmentList.length; h++) {
+          $scope.equipmentList[h].employee = angular.copy($scope.employee);
+        }
+        //Do supply PUT
+        if ($scope.supplies.length > 0) {
+          var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
+          supplyPromise.success(function () {
+            $scope.supplies = [];
+            $scope.postCheckout();
+          }).error(function (e) {
+            $scope.checkoutError(e);
+          });
+        }
+        //Do equipment PUT
+        if ($scope.equipmentList.length > 0) {
+          var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+          equipPromise.success(function () {
+            $scope.equipmentList = [];
+            $scope.postCheckout();
+          }).error(function (e) {
+            $scope.checkoutError(e);
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content(e.message));
       }
     };
     $scope.postCheckout = function () {
