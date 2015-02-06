@@ -33,7 +33,7 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   		
 		it('should make http request and projects', function(){
 			
-			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4, codename:'Ladawan'}]);
+			$http.expectGET('/api/v1/project/?page_size=99999').respond([{id:4, codename:'Ladawan'}]);
 	  		ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
 	  		$http.flush();
 	  		
@@ -45,7 +45,7 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   	describe('Phase: Putting together po', function() {
   		
   		beforeEach(function() {
-			$http.whenGET('/api/v1/project/?limit=0').respond([]);
+			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
   			ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
 			scope.po.items = [];
   			$http.flush();
@@ -161,7 +161,7 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   	
   	describe('Phase: Verification', function () {
   		beforeEach(function () {
-			$http.whenGET('/api/v1/project/?limit=0').respond([]);
+			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
   			$http.whenGET('/api/v1/supplier/?limit=0').respond([]);
   			ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
   			$http.flush();
@@ -181,7 +181,7 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   	});
   	describe('Phase: Saving', function(){
   		beforeEach(function() {
-			$http.whenGET('/api/v1/project/?limit=0').respond([]);
+			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
   			$http.whenGET('/api/v1/supplier/?limit=0').respond([]);
   		    ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});	
   		    $http.flush();
