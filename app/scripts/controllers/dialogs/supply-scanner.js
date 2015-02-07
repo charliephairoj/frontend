@@ -16,6 +16,10 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
 	
+	keyboardNav.onenter = function (e) {
+		e.preventDefault();
+	};
+	
 	//Disable the global scanner
 	try {
 		window.globalScanner.disable();
@@ -46,6 +50,7 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 			Notification.display("Supply's image updated.");
 		});
 	};
+
 	
 	/*
 	 * Register the supply code regex
@@ -63,12 +68,19 @@ function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdT
 		
 			
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
-			response.$$action = 'subtract';
-			$scope.supplies.push(response);
-			$mdToast.show($mdToast.simple()
-				.hideDelay(2000)
-				.position('top right')
-				.content('Added ' + response.description + ' to checkout.'));
+			if ($scope.supplies.indexOfById(response) == -1) {
+				response.$$action = 'subtract';
+				$scope.supplies.push(response);
+				$mdToast.show($mdToast.simple()
+					.hideDelay(2000)
+					.position('top right')
+					.content('Added ' + response.description + ' to checkout.'));
+			} else {
+				$mdToast.show($mdToast.simple()
+					.hideDelay(2000)
+					.position('top right')
+					.content(response.description + ' already in checkout'));
+			}
 				
 		}, function () {
 			$mdToast.show($mdToast.simple()

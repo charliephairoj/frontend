@@ -6433,7 +6433,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
     /*
 	* Vars and flags
 	*/
-    var fetching = true, index = 0, currentSelection, activeQueryLoop = false, masterList = [], q;
+    var fetching = true, index = 0, currentSelection, activeQueryLoop = false, masterList = [], q, keyboardNav = new KeyboardNavigation();
     //system message
     Notification.display('Loading supplies...', false);
     $http.get('/api/v1/supply/type/').success(function (response) {
@@ -6450,6 +6450,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
 	 * Show the supply modal
 	 */
     $scope.showScanner = function () {
+      keyboardNav.disable();
       $mdDialog.show({
         templateUrl: 'views/templates/supply-scanner.html',
         controller: 'DialogsSupplyScannerCtrl'
@@ -6614,7 +6615,6 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
         container.scrollTop(selection.outerHeight() * i);
       }
     }
-    var keyboardNav = new KeyboardNavigation();
     keyboardNav.ondown = function () {
       if (index < filter($scope.supplies).length - 1) {
         index += 1;
@@ -10397,6 +10397,9 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
     $scope.equipmentList = [];
     $scope.scanner.enable();
     $scope.scanner.disableStandard();
+    keyboardNav.onenter = function (e) {
+      e.preventDefault();
+    };
     //Disable the global scanner
     try {
       window.globalScanner.disable();
@@ -10435,9 +10438,13 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         id: code.split('-')[1],
         'country': $rootScope.country
       }, function (response) {
-        response.$$action = 'subtract';
-        $scope.supplies.push(response);
-        $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
+        if ($scope.supplies.indexOfById(response) == -1) {
+          response.$$action = 'subtract';
+          $scope.supplies.push(response);
+          $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
+        } else {
+          $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(response.description + ' already in checkout'));
+        }
       }, function () {
         $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Unable to find supply.'));
       });
