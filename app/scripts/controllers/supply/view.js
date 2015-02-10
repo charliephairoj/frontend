@@ -11,7 +11,9 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 		currentSelection,
 		activeQueryLoop = false,
 		masterList = [],
-		q;
+		q,
+		keyboardNav = new KeyboardNavigation();
+	
 
 	//system message
 	Notification.display('Loading supplies...', false);
@@ -33,6 +35,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 	 */
 	
 	$scope.showScanner = function () {
+		keyboardNav.disable();
 		$mdDialog.show({
 			templateUrl: "views/templates/supply-scanner.html",
 			controller: 'DialogsSupplyScannerCtrl'
@@ -222,7 +225,6 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 				
 	}
 	
-	var keyboardNav = new KeyboardNavigation();
 			
 	keyboardNav.ondown = function () {
 		if (index < filter($scope.supplies).length - 1) {
