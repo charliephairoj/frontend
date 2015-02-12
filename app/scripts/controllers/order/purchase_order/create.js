@@ -214,6 +214,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 						.simple()
 						.position('top right')
 						.content('Purchase order created.'));
+						
+					$scope.reset();
 				}, function (e) {
 					$mdToast.show($mdToast
 						.simple()

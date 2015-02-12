@@ -74,6 +74,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		
 			
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
+			$mdToast.hide();
 			if ($scope.supplies.indexOfById(response) == -1) {
 				response.$$action = 'subtract';
 				$scope.supplies.push(response);
