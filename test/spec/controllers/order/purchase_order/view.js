@@ -51,8 +51,8 @@ describe('Controller: OrderPurchaseOrderViewCtrl', function () {
   		
   		describe('Search mechanism', function () {
   			it('should make a request to server with the query', function () {
-  				$http.expectGET('/api/v1/purchase-order/?limit=5&q=m').respond([{id:4, customer:{name:'Mike'}}]);
-  				scope.query = 'm';
+  				$http.expectGET('/api/v1/purchase-order/?limit=1&q=m').respond([{id:4, customer:{name:'Mike'}}]);
+  				scope.query = {$: {$: 'm'}};
   				expect(scope.poList.length).toEqual(1);
   				scope.$digest();
   				$http.flush();

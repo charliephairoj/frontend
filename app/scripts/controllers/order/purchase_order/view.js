@@ -34,9 +34,10 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	 * The resources are then integrated with the list of 
 	 * PO's so that there are no duplicates
 	 */
-	$scope.$watch('query', function (q) {
+	$scope.$watch('query.$.$', function (q) {
+
 		if (q) {
-			PurchaseOrder.query({limit: 5, q: q}, function (resources) {
+			PurchaseOrder.query({limit: q ? q.length : 5, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.poList.indexOfById(resources[i].id) == -1) {
 						$scope.poList.push(resources[i]);

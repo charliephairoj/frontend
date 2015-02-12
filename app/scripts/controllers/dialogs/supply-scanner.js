@@ -1,11 +1,12 @@
 
 angular.module('employeeApp')
-.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder',
-function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder) {
+.controller('DialogsSupplyScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation',
+function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation) {
 	
 	/*
 	 * Vars
 	 */
+	var keyboardNav = new KeyboardNavigation();
 	$scope.scanner = new scanner('supply-scanner-modal');
 	$scope.interfaceType = 'equipment';
 	$scope.supplies = [];
@@ -41,7 +42,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	 */ 
 	$scope.removeItem = function ($index) {
 		$scope.po.items[$index].$$action = false;
-	}
+	};
 	
 	 /* Add Image
 	 * 

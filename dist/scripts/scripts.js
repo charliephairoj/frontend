@@ -2040,11 +2040,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
 	 * resuls are then integrated with the current list of
 	 * resources;
 	 */
-    $scope.$watch('query', function (q) {
+    $scope.$watch('query.$.$', function (q) {
       if (q) {
         Acknowledgement.query({
           q: q,
-          limit: 5
+          limit: q ? q.length : 5
         }, function (resources) {
           for (var i = 0; i < resources.length; i++) {
             if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
@@ -6695,10 +6695,10 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
 	 * The resources are then integrated with the list of 
 	 * PO's so that there are no duplicates
 	 */
-    $scope.$watch('query', function (q) {
+    $scope.$watch('query.$.$', function (q) {
       if (q) {
         PurchaseOrder.query({
-          limit: 5,
+          limit: q ? q.length : 5,
           q: q
         }, function (resources) {
           for (var i = 0; i < resources.length; i++) {
@@ -10377,7 +10377,6 @@ angular.module('employeeApp').directive('suppliers', [
 angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
   '$scope',
   '$mdDialog',
-  'KeyboardNavigation',
   'scanner',
   '$timeout',
   'Supply',
@@ -10386,11 +10385,13 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
   '$http',
   '$rootScope',
   'Equipment',
-  function ($scope, $mdDialog, KeyboardNavigation, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment) {
+  'PurchaseOrder',
+  'KeyboardNavigation',
+  function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation) {
     /*
 	 * Vars
 	 */
-    var promise, keyboardNav = new KeyboardNavigation();
+    var keyboardNav = new KeyboardNavigation();
     $scope.scanner = new scanner('supply-scanner-modal');
     $scope.interfaceType = 'equipment';
     $scope.supplies = [];
@@ -10413,6 +10414,12 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     $scope.remove = function ($index, supply) {
       $scope.supplies.splice($index, 1);
+    };
+    /*
+	 * Remove Purchase Order item from purchase order
+	 */
+    $scope.removeItem = function ($index) {
+      $scope.po.items[$index].$$action = false;
     };
     /* Add Image
 	 * 
@@ -10465,6 +10472,24 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         $scope.supplies.push(response[0]);
         $mdToast.hide();
         $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
+      }, function (reason) {
+        console.log(reason);
+      });
+    });
+    /*
+	 * Register the Purchase Order regex
+	 */
+    $scope.scanner.register(/^PO-\d+$/, function (code) {
+      try {
+        $mdToast.show($mdToast.simple().hideDelay(3000).position('top right').content('Looking up Purchase Order...'));
+      } catch (e) {
+      }
+      PurchaseOrder.get({ id: code.split('-')[1] }, function (response) {
+        $scope.po = response;
+        $mdToast.hide();
+        for (var j = 0; j < $scope.po.items.length; j++) {
+          $scope.po.items[j].$$action = true;
+        }
       }, function (reason) {
         console.log(reason);
       });
@@ -10548,9 +10573,22 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         console.log(e);
         $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content(e.message));
       }
+      //Perform Purchase Order PUT
+      if ($scope.po) {
+        for (var g = 0; g < $scope.po.items.length; g++) {
+          if ($scope.po.items[g].$$action) {
+            $scope.po.items[g].status = 'Received';
+          }
+        }
+        $scope.po.status = 'Received';
+        $scope.po.$update(function () {
+          delete $scope.po;
+          $scope.postCheckout();
+        });
+      }
     };
     $scope.postCheckout = function () {
-      if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0) {
+      if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0 && !$scope.po) {
         $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Checkout complete.'));
       }
     };

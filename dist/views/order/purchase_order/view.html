@@ -18,14 +18,14 @@
 	<!--
         Search Bar
     -->
-	<div data-search-bar ng-model="query"></div>
+	<div data-search-bar ng-model="query.$.$"></div>
 	<!--
         Workspace
     -->
 	<div class="workspace">
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
-				<li class="item-container" ng-repeat="po in poList">
+				<li class="item-container" ng-repeat="po in poList | filter: query">
 					<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/order/purchase_order/{{po.id}}">
 						<span class="description">{{po.id}}</span>
 						<span class="customer">{{po.supplier.name}}</span>

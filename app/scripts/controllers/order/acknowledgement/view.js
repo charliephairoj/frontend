@@ -32,9 +32,10 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	 * resuls are then integrated with the current list of
 	 * resources;
 	 */
-	$scope.$watch('query', function (q) {
+	$scope.$watch('query.$.$', function (q) {
+		
 		if (q) {
-			Acknowledgement.query({q: q, limit: 5}, function (resources) {
+			Acknowledgement.query({q: q, limit: q ? q.length : 5}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
 						$scope.acknowledgements.push(resources[i]);

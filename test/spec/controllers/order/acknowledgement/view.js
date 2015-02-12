@@ -48,8 +48,8 @@ describe('Controller: OrderAcknowledgementViewCtrl', function () {
   		
   		describe('search the server', function() {
   			it('should send a query to the function with the search string', function() {
-  				$http.expectGET('/api/v1/acknowledgement/?limit=5&q=12').respond([{id:1122}, {id:1222}]);
-  				scope.query = '12'
+  				$http.expectGET('/api/v1/acknowledgement/?limit=2&q=12').respond([{id:1122}, {id:1222}]);
+  				scope.query = {$: {$:'12'}};
   				scope.$digest();
   				expect(scope.acknowledgements.length).toEqual(1);
   				
