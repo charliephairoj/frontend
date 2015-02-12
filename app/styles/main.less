@@ -104,12 +104,16 @@ textarea{
 
 
 select{
-	background-color:#414141;
-	border:none;
+	background-color:#FFF;
+	border:1px solid rgba(0, 0, 0, 0.35);
 	border-radius:2px;
-	color:#CCC;
+	color:rgba(0, 0, 0, 0.73);
 	outline:none;
 	.transition(all, 500ms, linear);
+	
+	&:focus{
+		color:#607d8b;
+	}
 	&.ng-invalid{
 	   background-color:#A54243;
 	}
