@@ -45,10 +45,10 @@ function ($scope, Employee, $mdToast) {
 				
 			$scope.reset();
 		});
-	}
+	};
 	
 	$scope.reset = function () {
 		$scope.employee = new Employee();
-	}
+	};
 	
 }]);

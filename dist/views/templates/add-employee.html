@@ -2,22 +2,65 @@
 	<md-subheader>
 		Create A New Employee
 	</md-subheader>
-	<md-content>
-		<table>
-			<tr>
-				<td>
-					<md-text-float type="text" label="First Name" required ng-model="employee.first_name"></md-text-float>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<md-text-float type="text" label="Last Name" required ng-model="employee.last_name"></md-text-float>
-				</td>
-			</tr>
-		</table>
-		<div image-uploader></div>
-	</md-content>
-	<md-actions>
-		<md-button class="md-actions md-accent" layout="row" ng-click="create()">Create</md-button>
-	</md-actions>
+	<div class="container">
+		<md-content>
+			<table>
+				<tr>
+					<td>
+						<md-text-float type="text" label="First Name" required ng-model="employee.first_name"></md-text-float>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<md-text-float type="text" label="Last Name" required ng-model="employee.last_name"></md-text-float>
+					</td>
+				</tr>
+				<tr class="department">
+					<td>
+						<label>Nationality:</label>
+						<select ng-model="employee.nationality">
+							<option value="thai">Thai</option>
+							<option value="cambodian">Cambodian</option>
+							<option value="loas">Loas</option>
+							<option value="burmese">Burmese</option>
+						</select>
+						<br />
+					</td>
+				</tr>
+				<tr class="department">
+					<td>
+						<label>Department:</label>
+						<select ng-model="employee.department" ng-options="t | beautify for t in departments">
+							<!--
+        					<option value="fabric">Fabric</option>
+							<option value="metal">Metal</option>
+        					<option value="wood">Wood</option>
+        					<option value="foam">Foam</option>
+							<option value="polishing">Polishing</option>
+							<option value="canvas">Canvas</option>
+							<option value="glue">Glue</option>
+							<option value="fiber">Fiber</option>
+							<option value="packaging">Packaging</option>
+							<option value="nail">Nail</option>
+							<option value="screw">Screw</option>
+							<option value="staple">Staple</option>
+								-->
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Profile Image:</label>
+						<div class="img-container">
+							<img ng-src="{{employee.image.url}}">
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)" square="true"></div>
+		</md-content>
+	</div>
+	<md-action>
+		<md-button class="md-actions md-accent" ng-click="create()">Create</md-button>
+	</md-action>
 </md-dialog>
