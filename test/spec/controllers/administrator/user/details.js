@@ -22,7 +22,7 @@ describe('Controller: AdministratorUserDetailsCtrl', function () {
       
         it('should make two GET requests', function(){
             $http.expectGET('/api/v1/group/?limit=0').respond([{id:3}, {id:5}, {id:2}]);
-            $http.expectGET('/api/v1/user/7/').respond({id:7, groups:[{id:3}]});
+            $http.expectGET('/api/v1/user/7/').respond({id:7, groups:[3]});
             ctrl = Ctrl('AdministratorUserDetailsCtrl', {
                 $scope: scope,
                 $routeParams:{id:7}
@@ -64,7 +64,6 @@ describe('Controller: AdministratorUserDetailsCtrl', function () {
                 
                 $http.flush();
                 expect(scope.user.groups.length).toBe(2);
-                 
             });
             
             it('should remove a group from the user', function(){
