@@ -15,85 +15,162 @@
         position:absolute;
         top:0;
         bottom:0;
-        right:0;
         left:200px;
+		right:0;
+		background:#FFF;
+		padding-top:5em;
+		padding-bottom:1em;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		
+		.title-bar{
+			width:90%;
+			display:flex;
+			flex-direction:row;
+			border-bottom: 1px solid #4F6874;
+			
+			div{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				justify-content:space-around;
+				padding:1em;
+				background:#607d8b;
+				color:rgba(255, 255, 255, 1);
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+				&:first-child{
+					border-left:none;
+				}
+				
+				&.id{
+					width:10%;
+				}
+	
+				&.order-date{
+					width:10%;
+				}
+	
+				&.customer{
+					width:25%;
+				}
+				
+				&.project{
+					width:20%;
+				}
+	
+				&.delivery-date{
+					width:10%;
+				}
+				
+				&.total{
+					width:15%;
+				}
+				
+				&.status{
+					width:10%;
+				}
+			}
+		}
+        
         .outer-container{
             height:100%;
-            width:100%;
+            width:90%;
             overflow-y:scroll;
+			
             .inner-container{
                 width:100%;
                 height:auto;
                 .item-container{
-                    @rowHeight: 7em;
                     width:100%;
+                    background-color:red;
                     position:relative;
-                    height:@rowHeight;
-                    border-bottom:1px solid #282828;
-                    background-color:#313131;
-                   
+                    height:3em;
+                    &:hover{
+                        background-color:red;
+                    }
+                    
                     .item{
+						display:flex;
+						flex-direction:row;
                         width:100%;
+                        background-color:#FFF;
                         position:absolute;
                         left:0;
+						top:0;
                         font-size:1em;
-                        height: @rowHeight;
+                        height: 3em;
+                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
                         text-decoration:none;
-                        color:#E5E5E5;
+                        color:#000;
                         cursor:pointer;
                         .transition(all, 150ms, linear);
-                        &:active{
-                            background-color:#D8D8D8;
+                        
+						&:hover{
+                            background-color:#E4EEF4;
                         }
                         
                         &.selected{
                             background-color:orange;
                         }
+						
                         
-                        span{
-                            left:1em;
-                            font-size:1em;
-                            position:absolute;
-                            .details{
-                                font-size: 0.8em;
-                                color: #9B9B9B;
-                                left:1.3em;
-                            }
-                            &.description{
-                                top:0.8em;
-                                color:#E5E5E5;
-                            }
-                            
-                            &.customer{
-                                top:2.4em;
-                                .details;
-                            }
-                            &.status{
-                                top:2em;
-                                left:80%;
-                                &.ordered{
-                                    color:#E2A356;
-                                }
-                                &.received{
-                                    color:#97E053;
-                                }
-                                &.paid{
-                                    color:#999;
-                                }
-                            }
-                            &.items{
-                              top:3.6em;
-                              .details;
-                            }
-                            &.receive-date{
-                                top:6em;
-                                .details;
-                            }
-                            &.order-date{
-                                .details;
-                                top:4.8em;
-                            }
-                        }
+						div{
+							display:flex;
+							flex-direction:row;
+							align-items:center;
+							padding-left:1em;
+							justify-content:flex-start;
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+							&:first-child{
+								border-left:none;
+							}
+							
+							&.id{
+								width:10%;
+							}
+	
+							&.order-date{
+								width:10%;
+							}
+	
+							&.customer{
+								width:25%;
+							}
+							
+							&.project-id{
+								width:3%;
+								padding-left:0.2em;
+							}
+							
+							&.project{
+								width:17%;
+							}
+	
+							&.delivery-date{
+								width:10%;
+							}
+				
+							&.total{
+								width:15%;
+								justify-content:flex-end;
+								padding:0 1em 0 0;
+							}
+				
+							&.status{
+								width:10%;
+								
+								&.processed{
+									color:#0098cd;
+								}
+								
+								&.received{
+									color:#54947A;
+								}
+							}
+						}
                     }
                 }
             }
