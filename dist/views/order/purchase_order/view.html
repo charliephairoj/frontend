@@ -23,20 +23,40 @@
         Workspace
     -->
 	<div class="workspace">
+		<div class="title-bar">
+			<div class="id">ORDER ID</div>
+			<div class="order-date">DATE</div>
+			<div class="customer">CUSTOMER</div>
+			<div class="project">PROJECT</div>
+			<div class="delivery-date">RECEIVE DATE</div>
+			<div class="total">TOTAL</div>
+			<div class="status">STATUS</div>
+		</div>
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="po in poList | filter: query">
 					<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/order/purchase_order/{{po.id}}">
-						<span class="description">{{po.id}}</span>
-						<span class="customer">{{po.supplier.name}}</span>
-						<span class="status" ng-class="{ordered:po.status == 'Ordered',
+						<div class="id">{{po.id}}</div>
+						<div class="order-date">{{po.order_date | date: "MMM d, yyyy"}}</div>
+						<div class="customer">{{po.supplier.name}}</div>
+						<div class="project-id">{{po.project.id}}</div>
+						<div class="project">{{po.project.codename}}</div>
+						<div class="delivery-date">{{po.delivery_date | date: "MMM d, yyyy"}}</div>
+						<div class="total">{{po.grand_total}}</div>
+						<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
+						<!--
+    					<span class="description">{{po.id}}</span>
+	    				<span class="customer">{{po.supplier.name}}</span>
+	    				<span class="status" 
+	    					ng-class="{ordered:po.status == 'Ordered',
 	    							   paid:po.status == 'Paid',
 	    							   received:po.status == 'Received'}">
 	    					{{po.status}}
 	    				</span>
-						<span class="items">{{po.items.length}} Items</span>
-						<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
-						<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
+	    				<span class="items">{{po.items.length}} Items</span>
+	    				<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
+	    				<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
+							-->
 					</a>
 				</li>
 			</ul>

@@ -29,14 +29,28 @@
         Workspace
     -->
 	<div class="workspace">
-		<div class="shipping-container" on-scroll-end="loadNext()">
-			<ul class="shippings">
-				<li class="shipping" ng-repeat="shipping in shippingList | filter:query">
-					<a ng-href="#/order/shipping/{{shipping.id}}">
-	        			{{shipping.id}}
-		        		<br />
-		        		{{shipping.customer.name}}
-	        		</a>
+		<div class="title-bar">
+			<div class="id">SHIPPING ID</div>
+			<div class="ack-id">ACK ID</div>
+			<div class="order-date">DATE</div>
+			<div class="customer">CUSTOMER</div>
+			<div class="project">PROJECT</div>
+			<div class="delivery-date">SHIP DATE</div>
+			<div class="status">STATUS</div>
+		</div>
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="shipping in shippingList | filter:query">
+					<a class="item" ng-href="#/order/shipping/{{shipping.id}}">
+						<div class="id">{{shipping.id}}</div>
+						<div class="ack-id">{{shipping.acknowledgement.id}}</div>
+						<div class="order-date">{{shipping.time_created | date: "MMM d, yyyy"}}</div>
+						<div class="customer">{{shipping.customer.name}}</div>
+						<div class="project-id">{{shipping.acknowledgement.project.id}}</div>
+						<div class="project">{{shipping.acknowledgement.project.codename}}</div>
+						<div class="delivery-date">{{shipping.delivery_date | date: "MMM d, yyyy"}}</div>
+						<div class="status" ng-class="po.status.toLowerCase()">{{shipping.acknowledgement.status}}</div>
+					</a>
 				</li>
 			</ul>
 		</div>
