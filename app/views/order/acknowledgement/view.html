@@ -4,9 +4,17 @@
         Sidebar
     -->
     
-    <div class="nav-bar">
-    	<span class="title">Acknowledgements</span>
-    	<a class="add"ng-href="#/order/acknowledgement/create"><span>Create</span></a>
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Acknowledgements</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_acknowledgement')"><a ng-href="#/order/acknowledgement/create">Create</a></li>
+            </ul>
+        </nav>
     </div>
     
     <!--
@@ -19,11 +27,31 @@
         Workspace
     -->
     
-    <div class="workspace list">
+    <div class="workspace">
+		
+		<div class="title-bar">
+			<div class="id">Order ID</div>
+			<div class="order-date">Date</div>
+			<div class="customer">Customer</div>
+			<div class="project">Project</div>
+			<div class="delivery-date">Delivery Date</div>
+			<div class="total">Total</div>
+			<div class="status">Status</div>
+		</div>
+		
     	<div class="outer-container" on-scroll-end="loadNext()"> 
+			
 	    	<ul class="inner-container" >
-	    		<li class="item-container" data-ng-repeat="ack in acknowledgements | filter:query">
+	    		<li class="item-container" data-ng-repeat="ack in acknowledgements | filter:query">	
 	    			<a class="item" ng-class="{'selected':ack.$selected}" ng-href="#/order/acknowledgement/{{ack.id}}">
+						<div class="id">{{ack.id}}</div>
+						<div class="order-date">{{ack.time_created | date: "MMM d, yyyy"}}</div>
+						<div class="customer">{{ack.customer.name}}</div>
+						<div class="project">{{ack.project.codename}}</div>
+						<div class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
+						<div class="total">{{ack.total}}</div>
+						<div class="status" ng-class="ack.status.toLowerCase()">{{ack.status}}</div>
+						<!--
 	    				<span class="description">{{ack.id}}</span>
 	    				<span class="customer">{{ack.customer.name}}</span>
 	    				<span class="status" ng-class="{acknowledged:ack.status == 'ACKNOWLEDGED', shipped:ack.status == 'SHIPPED'}">
@@ -31,6 +59,7 @@
 	    				</span>
 	    				<span class="items">{{ack.items.length}} Items</span>
 	    				<span class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</span>
+						-->
 	    			</a>
 	    				
 	    		</li>
