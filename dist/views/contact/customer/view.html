@@ -23,12 +23,29 @@
 	<!--
         Workspace
     -->
-	<div class="workspace list">
+	<div class="workspace">
+		<div class="title-bar">
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<!--
+			<div class="address">ADDRESS</div>
+				-->
+			<div class="telephone">TELEPHONE</div>
+			<div class="fax">FAX</div>
+			<div class="email">EMAIL</div>
+		</div>
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="customer in customers | filter:query">
 					<a class="item" ng-href="#/contact/customer/{{customer.id}}">
-						<span class="description">{{customer.name}}</span>
+						<div class="id">{{customer.id}}</div>
+						<div class="name">{{customer.name}}</div>
+						<!--
+						<div class="address">{{supplier.addresses[0].address1}}</div>
+							-->
+						<div class="telephone">{{customer.telephone}}</div>
+						<div class="fax">{{customer.fax}}</div>
+						<div class="email">{{customer.email}}</div>
 					</a>
 				</li>
 			</ul>

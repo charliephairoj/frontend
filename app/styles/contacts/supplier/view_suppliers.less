@@ -5,51 +5,150 @@
     /*
      * Workspace
      */
+	left:0;
+
     .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:200px;
+		right:0;
+		background:#FFF;
+		padding-top:5em;
+		padding-bottom:1em;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		
+		.title-bar{
+			width:90%;
+			display:flex;
+			flex-direction:row;
+			border-bottom: 1px solid #4F6874;
+			
+			div{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				justify-content:space-around;
+				padding:1em 0;
+				background:#607d8b;
+				color:rgba(255, 255, 255, 1);
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				overflow:hidden;
+				
+				&:first-child{
+					border-left:none;
+				}
+				
+				&.id{
+					width:5%;
+				}
+	
+				&.name{
+					width:25%;
+				}
+	
+				&.address{
+					width:35%;
+				}
+				
+				&.telephone{
+					width:25%;
+				}
+	
+				&.fax{
+					width:25%;
+				}
+				
+				&.email{
+					width:20%;
+				}
+			}
+		}
         
-        .cell{
-            .details{
-                font-family:proxima;
-                display:block;
+        .outer-container{
+            height:100%;
+            width:90%;
+            overflow-y:scroll;
+			
+            .inner-container{
                 width:100%;
-                .name{                    
-                    display:block;
-                    color:grey;
-                    font-size:1em;
-                    letter-spacing:0.08em;
-                    margin-bottom:2em
-                }
-                .address{
-                    display:block;
-                    color:grey;
-                    span{
-                        font-size:0.8em;
-                        letter-spacing:0.08em;
-                        line-height:1.4em;
+                height:auto;
+                .item-container{
+                    width:100%;
+                    background-color:red;
+                    position:relative;
+                    height:3em;
+                    &:hover{
+                        background-color:red;
+                    }
+                    
+                    .item{
+						display:flex;
+						flex-direction:row;
+                        width:100%;
+                        background-color:#FFF;
+                        position:absolute;
+                        left:0;
+						top:0;
+                        font-size:1em;
+                        height: 3em;
+                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+                        text-decoration:none;
+                        color:#000;
+                        cursor:pointer;
+                        .transition(all, 150ms, linear);
+                        
+						&:hover{
+                            background-color:#E4EEF4;
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+						
+                        
+						div{
+							display:flex;
+							flex-direction:row;
+							align-items:center;
+							padding-left:1em;
+							justify-content:flex-start;
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							overflow:hidden;
+							
+							&:first-child{
+								border-left:none;
+							}
+							
+							&.id{
+								width:5%;
+							}
+	
+							&.name{
+								width:25%;
+							}
+	
+							&.address{
+								width:35%;
+							}
+				
+							&.telephone{
+								width:25%;
+							}
+	
+							&.fax{
+								width:25%;
+							}
+				
+							&.email{
+								width:20%;
+							}
+						}
                     }
                 }
             }
         }
-       
-        .detailsTable{
-            .name{
-                color:black;
-                td{
-                  color:black;
-                }
-            }
-            .address{
-                td{
-                    padding-top:5px;
-                    padding-left:15px;
-                    font-size:10px;
-                    color:grey;
-                    line-height:15px;
-                }
-            }
-        }
-      
     }
-  
-  
 }

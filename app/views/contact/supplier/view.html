@@ -28,12 +28,32 @@
         Workspace
     -->
     
-    <div class="workspace list">
+    <div class="workspace">
+		
+		<div class="title-bar">
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<!--
+			<div class="address">ADDRESS</div>
+				-->
+			<div class="telephone">TELEPHONE</div>
+			<div class="fax">FAX</div>
+			<div class="email">EMAIL</div>
+		</div>
+		
     	<div class="outer-container" on-scroll-end="loadNext()">
     		<ul class="inner-container">
     			<li class="item-container" ng-repeat="supplier in suppliers | filter:query">
     				<a class="item" ng-href="#/contact/supplier/{{supplier.id}}">
-    					<span class="description">{{supplier.name}}</span>
+						<div class="id">{{supplier.id}}</div>
+						<div class="name">{{supplier.name}}</div>
+						<!--
+						<div class="address">{{supplier.addresses[0].address1}}</div>
+							-->
+						<div class="telephone">{{supplier.telephone}}</div>
+						<div class="fax">{{supplier.fax}}</div>
+						<div class="email">{{supplier.email}}</div>
+					
     				</a>
     			</li>
     		</ul>
