@@ -108,12 +108,82 @@
 				</tr>
 			</table>
 		</div>
-		<div class="items-container">
-			<div class="item" ng-repeat="item in project.items">
+		<md-tabs md-selected="selectedIndex">
+			<md-tab label="Items">
+			</md-tab>
+			<md-tab label="Purchase Orders">
+			</md-tab>
+		</md-tabs>
+		<div class="panel-container">
+			<ng-switch on="selectedIndex">
+				<div ng-switch-when="0" class="items-panel">
+					<div class="title-bar">
+						<div class="preview">PREVIEW</div>
+						<div class="description">DESCRIPTION</div>
+						<div class="width">WIDTH</div>
+						<div class="depth">DEPTH</div>
+						<div class="height">HEIGHT</div>
+						<div class="fabric">FABRIC</div>
+						<div class="status">STATUS</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="item in project.items">
+								<a class="item">
+
+									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+									<div class="preview">
+										<div class="img-container">
+											<img ng-src="{{item.image.url}}" />
+										</div>
+									</div>
+									<div class="description">{{item.description}}</div>
+									<div class="width">{{item.width}}</div>
+									<div class="depth">{{item.depth}}</div>
+									<div class="height">{{item.height}}</div>
+									<div class="fabric">{{item.fabric.description}}</div>
+									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="1" class="po-panel">
+					<div class="title-bar">
+						<div class="id">ORDER ID</div>
+						<div class="order-date">DATE</div>
+						<div class="customer">SUPPLIER</div>
+						<div class="project">PROJECT</div>
+						<div class="delivery-date">RECEIVE DATE</div>
+						<div class="total">TOTAL</div>
+						<div class="status">STATUS</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="po in purchaseOrders">
+								<a class="item" ng-href="#/order/purchase_order/{{po.id}}">
+									<div class="id">{{po.id}}</div>
+									<div class="order-date">{{po.order_date | date: "MMM d, yyyy"}}</div>
+									<div class="customer">{{po.supplier.name}}</div>
+									<div class="project-id">{{po.project.id}}</div>
+									<div class="project">{{po.project.codename}}</div>
+									<div class="delivery-date">{{po.delivery_date | date: "MMM d, yyyy"}}</div>
+									<div class="total">{{po.grand_total}}</div>
+									<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-switch>
+		</div>
+		<!--
+        <div class="items-container">
+            <div class="item" ng-repeat="item in project.items">
 				<span class='description'>{{item.description}}</span>
-				<!--
+				
 				<span class='quantity'>{{item.quantity}}</span>
-				-->
+				
 				<img class='image' ng-src="{{item.image.url}}" />
 				<table class="details">
 					<tr>
@@ -142,16 +212,17 @@
 					</tr>
 				</table>
 			</div>
-		</div>
+        </div>
 		<div class="supply-container">
 			<div class="supply" ng-repeat="supply in project.supplies">
 				<div class="image-container">
-					<img ng-src="{{supply.image.url}}" />
+					<img ng-src="{{supply.image.url}}" /> 
 				</div>
 				<span class="delete-supply-btn" ng-click="removeSupply($index)">x</span>
 				<span class="description">{{supply.description}}</span>
 				<input class="quantity" ng-model="supply.quantity" />
 			</div>
 		</div>
+			-->
 	</div>
 </div>
