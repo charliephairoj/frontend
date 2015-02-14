@@ -77,12 +77,18 @@
         Workspace
     -->
 	<div class="workspace">
+		<div class="title-bar">
+			<div class="id">PROJECT ID</div>
+			<div class="codename">NAME</div>
+			<div class="customer">CUSTOMER</div>
+		</div>
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" data-ng-repeat="project in projects | filter:query">
 					<a class="item" ng-class="{'selected':project.$selected}" ng-href="#/project/{{project.id}}">
-						<span class="codename">{{project.codename}}</span>
-						<span class="customer">{{project.customer.name}}</span>
+						<div class="id">{{project.id}}</div>
+						<div class="codename">{{project.codename}}</div>
+						<div class="customer">{{project.customer.name}}</div>
 					</a>
 				</li>
 			</ul>
