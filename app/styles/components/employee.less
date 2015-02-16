@@ -9,11 +9,13 @@
     top:0;
     height:5em;
 	overflow:hidden;
+	margin-top:-1.1em;
     .transition(all, 350ms, ease);
 	
 	@activeBorderColor: #202020;
 	@activeBackgroundColor: #282828;
 	
+	/*
     .img-container{
         position:absolute;
         background: #CCC;
@@ -28,51 +30,79 @@
         img{ 
             height:100%;
         }
-    }
-	
-    .star{
-        color:yellow;
-        position:absolute;
-        top:1em;
-        right:1em;
-    }
+    }*/
     
     .short-details{
-		position:absolute;
-		height:5em;
-		left:5em;
-		right:0;
+		display:flex;
+		flex-direction:row;
+        width:100%;
+        background-color:#FFF;
+        position:absolute;
+        left:0;
 		top:0;
-		color:#FFF;
-		text-decoration:none;
-		cursor: pointer;
-		
-        .name{
-            position:absolute;
-            top:0;
-            left:0;
-            padding:0.5em;
-            right:0;
-            vertical-align:center;
+        font-size:1em;
+        height: 5em;
+        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+        text-decoration:none;
+        color:#000;
+        cursor:pointer;
+        .transition(all, 150ms, linear);
+        
+		&:hover{
+            background-color:#E4EEF4;
         }
         
-		.barcode{
-			font-family:Barcode;
-			position:absolute;
-			top:3em;
-			left:8em;
-			background:white;
-			color:black;
-			font-size:0.7em;
-		}
-		
-        .nickname{
-            position:absolute;
-            left:0;
-            top:2em;
-            padding:0.5em;
-            
+        &.selected{
+            background-color:orange;
         }
+		
+        
+		div{
+			display:flex;
+			flex-direction:row;
+			align-items:center;
+			padding-left:1em;
+			justify-content:flex-start;
+			border-left:1px dotted rgba(0, 0, 0, 0.35);
+			overflow:hidden;
+			
+			&:first-child{
+				border-left:none;
+			}
+			
+			&.preview{
+				width:10%;
+				height:100%;
+				position:relative;
+				.img-container{
+					height:100%;
+					
+					img{
+						height:100%;
+					}
+				}
+			}
+			
+			&.id{
+				width:10%;
+			}
+
+			&.name{
+				width:25%;
+			}
+			
+			&.first-name{
+				width:20%
+			}
+			
+			&.last-name{
+				width:20%
+			}
+			
+			&.nickname{
+				width:15%;
+			}
+		}
     }
     
     &.selected{
@@ -92,6 +122,10 @@
 		background-color:@activeBackgroundColor;
 		border-bottom:1px solid @activeBorderColor;
 		cursor:default;
+		
+		.supply-details{
+			display:block;
+		}
 	}
        
 	.loading-notification{
@@ -133,6 +167,7 @@
 		width:100%;
 		border-top: 1px solid @activeBorderColor;
 		bottom:0;
+		display:none;
 		.transition(opacity, 500ms, linear);
 		z-index:0;
 		

@@ -1,16 +1,23 @@
 <div class="employee-directive">
+	<!--
 	<div class="img-container" ng-click="activate()">
 		<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
 
 		<img ng-src="{{employee.image.url}}" />
 	</div>
+		-->
 	<div class="short-details details" ng-click="activate()"> 
-		<span class="name">
-			{{employee.name}}
-		</span>
-		<span class="nickname">
-			ID: {{employee.nickname}}
-		</span>
+		<div class="preview">
+			<div class="img-container">
+				<img ng-src="{{employee.image.url}}">
+			</div>
+		</div>
+		<div class="id">{{employee.id}}</div>
+		<div class="name">{{employee.name}}</div>
+		<div class="first-name">{{employee.first_name}}</div>
+		<div class="last-name">{{employee.last_name}}</div>
+		<div class="nickname">{{employee.nickname}}</div>
+		
 	</div>
 	<div class='loading-notification' ng-class="{'active': !fetched}">
 		<span>Loading</span>

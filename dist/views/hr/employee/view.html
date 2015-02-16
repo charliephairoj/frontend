@@ -21,7 +21,15 @@
     -->
 	<div data-search-bar data-ng-model="query">
 	</div>
-	<div class="workspace" style="z-index:1;">
+	<div class="workspace">
+		<div class="title-bar">
+			<div class="preview">PROFILE</div>
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<div class="first-name">FIRST NAME</div>
+			<div class="last-name">LAST NAME</div>
+			<div class="nickname">NICKNAME</div>
+		</div>
 		<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
