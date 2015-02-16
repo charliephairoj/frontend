@@ -7,6 +7,8 @@
             <div class="fabric" ui-if="product.fabric">
                 Fabric:  {{product.fabric.description}}
                 <img ng-src="{{product.fabric.image.url}}" />
+				<br />
+				Fabric Quantity:  <input type=number min="0" ng-model="product.fabric_quantity" />
             </div>
             
         </div>

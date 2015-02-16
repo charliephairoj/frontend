@@ -199,6 +199,14 @@
                             </td>
                             
                         </tr>
+						<tr ui-if="product.fabric">
+							<td>
+								Fabric Quantity: 
+							</td>
+							<td>
+								<input type="number" min="0" data-ng-model="product.fabric_quantity" />
+							</td>
+						</tr>
                         <tr ng-repeat="pillow in product.pillows">
                             <td>{{pillow.type | beautify}} Pillow</td>
                             <td>{{pillow.fabric.description}}<img ng-src="{{pillow.fabric.image.url}}" /></td>
