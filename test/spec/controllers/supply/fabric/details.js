@@ -30,7 +30,8 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
   		
   		it('should make a request to the server for the fabric', function () {
   			$http.expectGET('/api/v1/fabric/4/').respond({id:4, pattern: 'Max', color: 'blue'});
-  			ctrl = Ctrl('SupplyFabricDetailsCtrl', {$scope: scope, $routeParams: params});
+  			$http.expectGET('/api/v1/log/?supply_id=4').respond([]);
+			ctrl = Ctrl('SupplyFabricDetailsCtrl', {$scope: scope, $routeParams: params});
   			$http.flush();
   		});
   	});
@@ -38,6 +39,7 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function () {
   		
   		beforeEach(function () {
+			$http.whenGET('/api/v1/log?supply_id=4').respond([]);
   			$http.whenGET('/api/v1/fabric/4/').respond({id:4, pattern: 'Max', color: 'red', quantity:3.2});
   			ctrl = Ctrl('SupplyFabricDetailsCtrl', {$scope: scope, $routeParams: params});
   			$http.flush();

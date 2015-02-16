@@ -109,56 +109,76 @@
         </div>
     </div>
     
-    <form class="workspace">
+    <div class="workspace">
         
         <table class="details">
+        	<tr>
+                
             <tr>
-                
-                <tr>
-                    <td><label>Supplier</label></td>
-                    <td>{{fabric.supplier.name}}</td>
-                </tr>
-                <td><label>Location</label></td>
-                    <td><input type="text" ng-model="fabric.location" ec-blur="update()" /></td>
-                </tr>
-                <tr>
-                    <td><label>Description</label></td>
-                    <td><input type="text" ng-model="fabric.description" ec-blur="update()" /></td>
-                </tr>
-                <tr>
-                    <td><label>Reference Number</label></td>
-                    <td><input type="text" ng-model="fabric.reference" ec-blur="update()" /></td>
-                </tr>
-                <tr>
-                    <td><label>Pattern</label></td>
-                    <td><input type="text" ng-model="fabric.pattern" ec-blur="update()" /></td>
-                </tr>
-                
-                <tr>
-                    <td><label>Color</label></td>
-                    <td><input type="text" ng-model="fabric.color" ec-blur="update()" /></td>  
-                </tr>
-                <tr>
-                    <td><label>Content</label></td>
-                    <td><input type="text" ng-model="fabric.content" ec-blur="update()" /></td>  
-                </tr>
-                <tr>
-                    <td><label>Width</label></td>
-                    <td><input class="length" type="text" ng-model="fabric.width" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
-                </tr>
-                <tr>
-                    <td><label>Cost per Yard</label></td>
-                    <td><input class="price" type="text" ng-model="fabric.cost" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
-                </tr>
-                <tr>
-                    <td><label>Current Length</label></td>
-                    <td>{{fabric.quantity}}</td>
-                </tr> 
-                
-                
-            </table>
+                <td><label>Supplier</label></td>
+                <td>{{fabric.supplier.name}}</td>
+            </tr>
+            <td><label>Location</label></td>
+                <td><input type="text" ng-model="fabric.location" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Description</label></td>
+                <td><input type="text" ng-model="fabric.description" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Reference Number</label></td>
+                <td><input type="text" ng-model="fabric.reference" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Pattern</label></td>
+                <td><input type="text" ng-model="fabric.pattern" ec-blur="update()" /></td>
+            </tr>
+            
+            <tr>
+                <td><label>Color</label></td>
+                <td><input type="text" ng-model="fabric.color" ec-blur="update()" /></td>  
+            </tr>
+            <tr>
+                <td><label>Content</label></td>
+                <td><input type="text" ng-model="fabric.content" ec-blur="update()" /></td>  
+            </tr>
+            <tr>
+                <td><label>Width</label></td>
+                <td><input class="length" type="text" ng-model="fabric.width" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
+            </tr>
+            <tr>
+                <td><label>Cost per Yard</label></td>
+                <td><input class="price" type="text" ng-model="fabric.cost" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
+            </tr>
+            <tr>
+                <td><label>Current Length</label></td>
+                <td>{{fabric.quantity}}</td>
+            </tr> 
+            
+            
+		</table>
+		
+		<div class="title-bar">
+			<div class="message">MESSAGE</div>
+			<div class="date">DATE</div>
+		</div>
+		
+		<div class="outer-container">
+			<ul class="inner-container">
+				<li class="item-container">
+					<div class="item" ng-repeat="log in logs">
+						<div class="message">{{log.message}}</div>
+						<div class="date">{{log.timestamp | date: "MMM d, yyyy"}}</div>
+						
+					</div>
+				</li>
+			</ul>
+			
+		</div>
             
             
         
-    </form>
+    </div>
+	
+	
 </div>

@@ -1,9 +1,9 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', '$http',
-function ($scope, Fabric, $routeParams, $location, Notification, $http) {
+.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', '$http', 'SupplyLog',
+function ($scope, Fabric, $routeParams, $location, Notification, $http, SupplyLog) {
     $scope.fabric = Fabric.get({'id': $routeParams.id});
-    
+    $scope.logs = SupplyLog.query({supply_id: $routeParams.id});
     //Uploads Profie Image
     $scope.upload = function () {
         //display notification
