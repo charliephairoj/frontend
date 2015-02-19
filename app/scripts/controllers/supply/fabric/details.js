@@ -1,42 +1,9 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', '$http', 'SupplyLog',
-function ($scope, Fabric, $routeParams, $location, Notification, $http, SupplyLog) {
+.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast',
+function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast) {
     $scope.fabric = Fabric.get({'id': $routeParams.id});
     $scope.logs = SupplyLog.query({supply_id: $routeParams.id});
-    //Uploads Profie Image
-    $scope.upload = function () {
-        //display notification
-        Notification.display('Uploading Image...', false);
-        
-        var fd = new FormData();
-        
-        fd.append('image', $scope.images[0]);
-        
-        //clear the form
-        $scope.addLength = null;
-        $scope.addRemark = null;
-        
-        jQuery.ajax("fabric/" + $scope.fabric.id + "/image", {
-			type: 'POST',
-			data: fd,
-			processData: false,
-			contentType: false,
-			success: function (responseData) {
-				//display success mesage
-				Notification.display('Image Updated');
-				$scope.fabric.image = {};
-				angular.copy(responseData, $scope.fabric.image);
-				$scope.fabric.$save();
-				//Set new profile pic
-				$scope.profileImageUrl = $scope.fabric.image.url;
-				//Clear upload images and clear previews
-				$scope.imagePreviews = null;
-				$scope.images = null;
-				$scope.$apply();
-			}
-		});
-	};
     
     //Create fabric actions
     var DEFAULT_ACTIONS = ['reserve', 'add', 'subtract', 'reset'];
@@ -60,17 +27,6 @@ function ($scope, Fabric, $routeParams, $location, Notification, $http, SupplyLo
 		$scope.quantity = null;
 	};
    
-    $scope.viewLog = function () {
-        
-        $http.get("fabric/" + $scope.fabric.id + "/log").success(function (data) {
-			$scope.logs = [];
-			angular.forEach(data, function (item) {
-				$scope.logs.push(item);
-			});
-		});
-    };
-    
-    
     $scope.remove = function () {
         //Notify
         Notification.display('Deleting Fabric...');
@@ -89,4 +45,41 @@ function ($scope, Fabric, $routeParams, $location, Notification, $http, SupplyLo
         Notification.display('Updating Fabric...', false);
         $scope.fabric.$update(Notification.display('Fabric Updated'));
     };
+	
+	$scope.updateLog = function ($index) {
+		var log = $scope.logs[$index];
+		
+		if (log.action == "RESERVE" || log.action == "CUT"){
+			
+			
+			$mdToast.show($mdToast
+				.simple()
+				.position('top right')
+				.content('Updating ' + $scope.fabric.description + ' for Ack #'+ log.acknowledgement_id + '.')
+				.hideDelay(0));
+			
+			$scope.logs[$index].$update(function (response) {
+				
+				if (response.supply) {
+					$scope.fabric.quantity = response.supply.quantity;
+				}
+				
+				$mdToast.hide();
+				$mdToast.show($mdToast
+					.simple()
+					.position('top right')
+					.content('Updated.')
+					.hideDelay(2000));
+			}), function (e) {
+				$mdToast.hide();
+				$mdToast.show($mdToast
+					.simple()
+					.position('top right')
+					.content(e)
+					.hideDelay(0));
+			};
+		}
+		
+		
+	}
 }]);

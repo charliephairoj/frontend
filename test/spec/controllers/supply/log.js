@@ -24,7 +24,7 @@ describe('Controller: SupplyLogCtrl', function () {
 	});
 	
   	it('should make a request for logs', function () {
-    	$http.expectGET('/api/v1/supply/log').respond([{id:1, message:'ok'}]);
+    	$http.expectGET('/api/v1/log/').respond([{id:1, message:'ok'}]);
 		$http.flush();
 		expect(scope.logs).toEqual(jasmine.any(Array));
   	});

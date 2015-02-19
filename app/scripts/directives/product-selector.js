@@ -112,6 +112,8 @@ angular.module('employeeApp')
                 
                 scope.setQuantity = function (quantity) {
                     scope.product.quantity = quantity;
+					scope.selection = 'fabric';
+					/*
                     if (scope.product.type.toLowerCase() == 'upholstery') {
                         scope.selection = 'fabric';
                     } else {
@@ -120,6 +122,7 @@ angular.module('employeeApp')
                         scope.reset();
                         scope.add({product: newProduct});
                     }
+					*/
                 };
                 
                 scope.setFabric = function () {

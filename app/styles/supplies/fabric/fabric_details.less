@@ -138,25 +138,27 @@
           }
       }
   }
-
- 	.workspace{
-        position:absolute;
-        top:0;
-        bottom:0;
-        left:0;
+	
+  	.workspace{
+      	position:absolute;
+      	top:0;
+      	bottom:0;
+      	left:0;
 		right:0;
+		padding:24em 0 1em 0;
 		background:#FFF;
-		padding-top:5em;
-		padding-bottom:1em;
 		display:flex;
 		flex-direction:column;
 		align-items:center;
 		
       	.details{
           	border:none;
-          	margin:1em 1em 3em 1em;
+          	margin:1em 5%;
+			top:1em;
           	width:90%;
           	height:auto;
+			position:absolute;
+			margin:1em;
           	tr{	
               	td{
                   	color:rgba(0, 0, 0, 1);
@@ -176,7 +178,7 @@
                      	 &.price{
                      		 width:6.25em;
                      	 }
-                  
+                  	   	 
                       	 &.length{
                          	 width:6.25em;
                       	}
@@ -193,6 +195,7 @@
 			display:flex;
 			flex-direction:row;
 			border-bottom: 1px solid #4F6874;
+			padding-right:15px;
 			
 			div{
 				display:flex;
@@ -203,38 +206,50 @@
 				background:#607d8b;
 				color:rgba(255, 255, 255, 1);
 				border-left:1px dotted rgba(0, 0, 0, 0.35);
-				
+	
 				&:first-child{
 					border-left:none;
 				}
-				
+	
 				&.message{
-					width:75%;
+					width:45%;
+				}
+
+				&.date{
+					width:15%;
+				}
+
+				&.ack-id{
+					width:15%;
+				}
+				
+				&.action{
+					width:12.5%
 				}
 	
-				&.date{
-					width:25%;
+				&.quantity{
+					width:12.5%;
 				}
 			}
 		}
-        
+
         .outer-container{
             height:100%;
             width:90%;
             overflow-y:scroll;
-			
+
             .inner-container{
                 width:100%;
                 height:auto;
                 .item-container{
                     width:100%;
-                    background-color:red;
+                    //background-color:red;
                     position:relative;
                     height:3em;
                     &:hover{
-                        background-color:red;
+                        //background-color:red;
                     }
-                    
+          
                     .item{
 						display:flex;
 						flex-direction:row;
@@ -249,16 +264,16 @@
                         text-decoration:none;
                         color:#000;
                         .transition(all, 150ms, linear);
-                        
+              
 						&:hover{
                             background-color:#E4EEF4;
                         }
-                        
+              
                         &.selected{
                             background-color:orange;
                         }
-						
-                        
+			
+              
 						div{
 							display:flex;
 							flex-direction:row;
@@ -266,22 +281,47 @@
 							padding-left:1em;
 							justify-content:flex-start;
 							border-left:1px dotted rgba(0, 0, 0, 0.35);
-							
+				
 							&:first-child{
 								border-left:none;
 							}
-							
+				
 							&.message{
-								width:75%;
+								width:45%;
+								
+								.save-btn{
+									background-color:#7A9CAD;
+									color:#FFF;
+									margin-right:1em;
+								}
+							}
+
+							&.date{
+								width:15%;
+							}
+
+							&.ack-id{
+								width:15%;
+							}
+				
+							&.action{
+								width:12.5%
 							}
 	
-							&.date{
-								width:25%;
+							&.quantity{
+								width:12.5%;
+								
+								input{
+									border:1px solid #7A9CAD;
+									width:4em;
+									color:rgba(0, 0, 0, 1);
+									background:rgba(0, 0, 0, 0);
+								}
 							}
 						}
                     }
                 }
             }
-        }
-  	}
+        }	
+	}
 }

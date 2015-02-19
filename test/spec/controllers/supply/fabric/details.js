@@ -39,7 +39,23 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function () {
   		
   		beforeEach(function () {
-			$http.whenGET('/api/v1/log?supply_id=4').respond([]);
+			$http.whenGET('/api/v1/log/?supply_id=4').respond([
+				{
+					id:5, 
+					message:'price change', 
+					action: 'PRICE CHANGE'
+				}, {
+					id:6,
+					message: 'reserve 6yd',
+					action: 'RESERVE',
+					quantity: 6,
+					acknowledgmeent_id: 555
+				}, {
+					id:7,
+					message: 'cut 9yd',
+					action: 'SUBTRACT'
+				}
+				]);
   			$http.whenGET('/api/v1/fabric/4/').respond({id:4, pattern: 'Max', color: 'red', quantity:3.2});
   			ctrl = Ctrl('SupplyFabricDetailsCtrl', {$scope: scope, $routeParams: params});
   			$http.flush();
@@ -50,6 +66,38 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
   			$http.verifyNoOutstandingRequest();
   		});
   		
+		describe('Updating a log', function () {
+			
+			it('should not update if type is not reserve or subtract', function () {
+				scope.updateLog(0);
+				$http.verifyNoOutstandingRequest();
+			});
+			
+			it('should send a PUT request if updating reserved to cut log', function () {
+				var log = scope.logs[1];
+				log.quantity = 4;
+				log.action = 'CUT';
+				
+				$http.expectPUT('/api/v1/log/6/').respond({
+					id: 6,
+					action: 'SUBTRACT',
+					quantity: 4,
+					message: 'Subtract 4yd for acknowledgement 555',
+					acknowledgement_id: 555 
+				});
+				
+				scope.updateLog(1);
+				$http.flush();
+				
+				var log = scope.logs[1];
+				expect(log.id).toEqual(6);
+				expect(log.quantity).toEqual(4);
+				expect(log.action).toEqual('SUBTRACT');
+				expect(log.message).toEqual('Subtract 4yd for acknowledgement 555');
+				expect(log.acknowledgement_id, 555);
+				
+			});
+		});
 		/*
 		 * We no longer use spectial endpoint for changing quantity. 
 		 * Instad we will now change the quantity then submit entire 

@@ -15,7 +15,9 @@
         </header>
         <nav>
             <ul>
-                
+				<li>
+					<div ng-click="update()">Save</div>
+                <!--
                 <li>
                     <div ng-click="showAdd=!showAdd">Add Length</div>
                 </li>
@@ -29,6 +31,7 @@
                 <li ui-if="currentUser.hasPermission('delete_fabric')">
                     <div ng-click="remove()">Delete</div>
                 </li>
+					-->
                     
             </ul>
         </nav>
@@ -142,6 +145,27 @@
                 <td><label>Content</label></td>
                 <td><input type="text" ng-model="fabric.content" ec-blur="update()" /></td>  
             </tr>
+			<tr>
+				<td>
+					<label>Units</label>
+				</td>
+				<td>
+					<select required ng-model="fabric.units">
+						<option value="pc" selected>Piece</option>
+						<option value="container">Container</option>
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+						<option value="kg">Kilogram</option>
+						<option value="mm">Millimeter</option>
+						<option value="set">Set</option>
+						<option value="pack">Pack</option>
+						<option value="pack">Box</option>
+						<option value="cm^2">cm&#0178;</option>
+						<option value="m^2">m&#0178;</option>
+						<option value="in^2">in&#0178;</option>
+					</select>
+				</td>
+			</tr>
             <tr>
                 <td><label>Width</label></td>
                 <td><input class="length" type="text" ng-model="fabric.width" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
@@ -152,7 +176,7 @@
             </tr>
             <tr>
                 <td><label>Current Length</label></td>
-                <td>{{fabric.quantity}}</td>
+                <td><input type="number" ng-model="fabric.quantity"></td>
             </tr> 
             
             
@@ -161,15 +185,35 @@
 		<div class="title-bar">
 			<div class="message">MESSAGE</div>
 			<div class="date">DATE</div>
+			<div class="ack-id">ACKNOWLEDGEMENT</div>
+			<div class="action">ACTION</div>
+			<div class="quantity">QUANTITY</div>
 		</div>
 		
 		<div class="outer-container">
 			<ul class="inner-container">
-				<li class="item-container">
-					<div class="item" ng-repeat="log in logs">
-						<div class="message">{{log.message}}</div>
-						<div class="date">{{log.timestamp | date: "MMM d, yyyy"}}</div>
-						
+				<li class="item-container"  ng-repeat="log in logs">
+					<div class="item">
+						<div class="message">
+							<md-button class="save-btn"  ng-show="log.action == 'CUT'" ng-click="updateLog($index)">
+								SAVE
+							</md-button>
+							{{log.message}}
+						</div>
+						<div class="date">{{log.timestamp | date: "MMM d, yyyy HH:MM"}}</div>
+						<div class="ack-id">{{log.acknowledgement_id}}</div>
+						<div class="action">
+							<select ng-show="log.action == 'RESERVE'" ng-model="log.action">
+								<option value="CUT">CUT</option>
+								<option value="RESERVE">RESERVE</opiton>
+							</select>
+							
+							<span ng-hide="log.action == 'RESERVE'">{{log.action}}</span>
+						</div>
+						<div class="quantity">
+							<span ng-hide="log.action == 'CUT'">{{log.quantity}}</span>
+							<input ng-show="log.action == 'CUT'" type="number" min="0" ng-model="log.quantity">
+						</div>
 					</div>
 				</li>
 			</ul>
