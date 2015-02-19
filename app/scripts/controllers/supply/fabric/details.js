@@ -70,16 +70,16 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 					.position('top right')
 					.content('Updated.')
 					.hideDelay(2000));
-			}), function (e) {
+			}, function (e) {
 				$mdToast.hide();
 				$mdToast.show($mdToast
 					.simple()
 					.position('top right')
 					.content(e)
 					.hideDelay(0));
-			};
+			});
 		}
 		
 		
-	}
+	};
 }]);

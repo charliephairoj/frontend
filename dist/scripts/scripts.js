@@ -3177,38 +3177,11 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
   '$routeParams',
   '$location',
   'Notification',
-  '$http',
-  function ($scope, Fabric, $routeParams, $location, Notification, $http) {
+  'SupplyLog',
+  '$mdToast',
+  function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast) {
     $scope.fabric = Fabric.get({ 'id': $routeParams.id });
-    //Uploads Profie Image
-    $scope.upload = function () {
-      //display notification
-      Notification.display('Uploading Image...', false);
-      var fd = new FormData();
-      fd.append('image', $scope.images[0]);
-      //clear the form
-      $scope.addLength = null;
-      $scope.addRemark = null;
-      jQuery.ajax('fabric/' + $scope.fabric.id + '/image', {
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (responseData) {
-          //display success mesage
-          Notification.display('Image Updated');
-          $scope.fabric.image = {};
-          angular.copy(responseData, $scope.fabric.image);
-          $scope.fabric.$save();
-          //Set new profile pic
-          $scope.profileImageUrl = $scope.fabric.image.url;
-          //Clear upload images and clear previews
-          $scope.imagePreviews = null;
-          $scope.images = null;
-          $scope.$apply();
-        }
-      });
-    };
+    $scope.logs = SupplyLog.query({ supply_id: $routeParams.id });
     //Create fabric actions
     var DEFAULT_ACTIONS = [
         'reserve',
@@ -3231,14 +3204,6 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
       $scope.showSubtract = false;
       $scope.quantity = null;
     };
-    $scope.viewLog = function () {
-      $http.get('fabric/' + $scope.fabric.id + '/log').success(function (data) {
-        $scope.logs = [];
-        angular.forEach(data, function (item) {
-          $scope.logs.push(item);
-        });
-      });
-    };
     $scope.remove = function () {
       //Notify
       Notification.display('Deleting Fabric...');
@@ -3253,6 +3218,22 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
     $scope.update = function () {
       Notification.display('Updating Fabric...', false);
       $scope.fabric.$update(Notification.display('Fabric Updated'));
+    };
+    $scope.updateLog = function ($index) {
+      var log = $scope.logs[$index];
+      if (log.action == 'RESERVE' || log.action == 'CUT' || log.action == 'CANCEL') {
+        $mdToast.show($mdToast.simple().position('top right').content('Updating ' + $scope.fabric.description + ' for Ack #' + log.acknowledgement_id + '.').hideDelay(0));
+        $scope.logs[$index].$update(function (response) {
+          if (response.supply) {
+            $scope.fabric.quantity = response.supply.quantity;
+          }
+          $mdToast.hide();
+          $mdToast.show($mdToast.simple().position('top right').content('Updated.').hideDelay(2000));
+        }, function (e) {
+          $mdToast.hide();
+          $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
+        });
+      }
     };
   }
 ]);
@@ -6235,14 +6216,16 @@ angular.module('employeeApp').directive('productSelector', [
         };
         scope.setQuantity = function (quantity) {
           scope.product.quantity = quantity;
-          if (scope.product.type.toLowerCase() == 'upholstery') {
-            scope.selection = 'fabric';
-          } else {
-            scope.visible = false;
-            var newProduct = angular.copy(scope.product);
-            scope.reset();
-            scope.add({ product: newProduct });
-          }
+          scope.selection = 'fabric';  /*
+                    if (scope.product.type.toLowerCase() == 'upholstery') {
+                        scope.selection = 'fabric';
+                    } else {
+                        scope.visible = false;
+                        var newProduct = angular.copy(scope.product); 
+                        scope.reset();
+                        scope.add({product: newProduct});
+                    }
+					*/
         };
         scope.setFabric = function () {
           scope.visible = false;
@@ -9119,17 +9102,18 @@ angular.module('employeeApp').directive('touchselect', [
 angular.module('employeeApp').controller('SupplyLogCtrl', [
   '$scope',
   '$http',
-  function ($scope, $http) {
-    var promise = $http.get('/api/v1/supply/log');
-    promise.then(function (response) {
-      $scope.logs = response.data;
-    });
+  'SupplyLog',
+  function ($scope, $http, SupplyLog) {
+    $scope.logs = SupplyLog.query();
   }
 ]);
 angular.module('employeeApp').factory('SupplyLog', [
   '$resource',
   function ($resource) {
-    return $resource('/api/v1/supply/:id/:action', { id: '@id' }, {});
+    return $resource('/api/v1/log/:id/', { id: '@id' }, {
+      create: { method: 'POST' },
+      update: { method: 'PUT' }
+    });
   }
 ]);
 angular.module('employeeApp').controller('SupplyBuyingGuideCtrl', [
