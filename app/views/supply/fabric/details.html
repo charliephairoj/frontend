@@ -122,28 +122,28 @@
                 <td>{{fabric.supplier.name}}</td>
             </tr>
             <td><label>Location</label></td>
-                <td><input type="text" ng-model="fabric.location" ec-blur="update()" /></td>
+                <td><input type="text" ng-model="fabric.location" /></td>
             </tr>
             <tr>
                 <td><label>Description</label></td>
-                <td><input type="text" ng-model="fabric.description" ec-blur="update()" /></td>
+                <td><input type="text" ng-model="fabric.description" /></td>
             </tr>
             <tr>
                 <td><label>Reference Number</label></td>
-                <td><input type="text" ng-model="fabric.reference" ec-blur="update()" /></td>
+                <td><input type="text" ng-model="fabric.reference" /></td>
             </tr>
             <tr>
                 <td><label>Pattern</label></td>
-                <td><input type="text" ng-model="fabric.pattern" ec-blur="update()" /></td>
+                <td><input type="text" ng-model="fabric.pattern" /></td>
             </tr>
             
             <tr>
                 <td><label>Color</label></td>
-                <td><input type="text" ng-model="fabric.color" ec-blur="update()" /></td>  
+                <td><input type="text" ng-model="fabric.color" /></td>  
             </tr>
             <tr>
                 <td><label>Content</label></td>
-                <td><input type="text" ng-model="fabric.content" ec-blur="update()" /></td>  
+                <td><input type="text" ng-model="fabric.content" /></td>  
             </tr>
 			<tr>
 				<td>
@@ -168,11 +168,11 @@
 			</tr>
             <tr>
                 <td><label>Width</label></td>
-                <td><input class="length" type="text" ng-model="fabric.width" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
+                <td><input class="length" type="text" ng-model="fabric.width"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
             </tr>
             <tr>
                 <td><label>Cost per Yard</label></td>
-                <td><input class="price" type="text" ng-model="fabric.cost" ec-blur="update()"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
+                <td><input class="price" type="text" ng-model="fabric.cost"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
             </tr>
             <tr>
                 <td><label>Current Length</label></td>
@@ -195,7 +195,7 @@
 				<li class="item-container"  ng-repeat="log in logs">
 					<div class="item">
 						<div class="message">
-							<md-button class="save-btn"  ng-show="log.action == 'CUT'" ng-click="updateLog($index)">
+							<md-button class="save-btn"  ng-show="log.action == 'CUT' || log.action == 'CANCEL'" ng-click="updateLog($index)">
 								SAVE
 							</md-button>
 							{{log.message}}
@@ -206,6 +206,7 @@
 							<select ng-show="log.action == 'RESERVE'" ng-model="log.action">
 								<option value="CUT">CUT</option>
 								<option value="RESERVE">RESERVE</opiton>
+								<option value="CANCEL">CANCEL</option>
 							</select>
 							
 							<span ng-hide="log.action == 'RESERVE'">{{log.action}}</span>

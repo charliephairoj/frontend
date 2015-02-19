@@ -49,7 +49,7 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 	$scope.updateLog = function ($index) {
 		var log = $scope.logs[$index];
 		
-		if (log.action == "RESERVE" || log.action == "CUT"){
+		if (log.action == "RESERVE" || log.action == "CUT" || log.action == "CANCEL"){
 			
 			
 			$mdToast.show($mdToast
