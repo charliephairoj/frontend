@@ -274,7 +274,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 							.content('There was an error uploading the file'));
 					});
 				}
-			})
+			});
   	  	}
 	};
 }]);
