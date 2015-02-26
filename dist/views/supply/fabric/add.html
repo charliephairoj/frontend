@@ -50,10 +50,21 @@
 			</tr>
 			<tr>
 				<td>
+					<label>Units</label>
+				</td>
+				<td>
+					<select required ng-model="fabric.units">
+						<option value="m">Meter</option>
+						<option value="yd">Yard</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<label>Width</label>
 				</td>
 				<td>
-					<input name="width" type="text" tooltip="widthText" ng-pattern="/^\d+(\.\d{2})?$/" ng-model="fabric.width" required/>
+					<input name="width" type="number" type="0" tooltip="widthText" ng-model="fabric.width" required/>
 				</td>
 			</tr>
 			<tr>
@@ -61,14 +72,14 @@
 					<label>Cost per Yard</label>
 				</td>
 				<td>
-					<input type="text" ng-model="fabric.cost" tooltip="costText" ng-pattern="/^\d+(\.\d{2})?$/" required/>{{fabric.supplier.currency}}</td>
+					<input type="number" min="0" ng-model="fabric.cost" tooltip="costText" required/>{{fabric.supplier.currency}}</td>
 			</tr>
 			<tr>
 				<td>
 					<label>Current Length</label>
 				</td>
 				<td>
-					<input type="text" ng-model="fabric.current_length" tooltip="lengthText" ng-pattern="/^\d+(\.\d{2})?$/" required />
+					<input type="number" min="0" ng-model="fabric.quantity" tooltip="lengthText" required />
 				</td>
 			</tr>
 		</table>

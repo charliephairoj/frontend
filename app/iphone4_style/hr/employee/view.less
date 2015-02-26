@@ -1,0 +1,96 @@
+/*
+ * LESS file for the supply view
+ */
+
+.employee-view-page{
+    .view-page;
+    
+    .sidebar{
+        .scanner-mode{
+            &.on{
+                background-color:orange;
+                color:#313131;
+            }
+        }
+    }
+    
+	left:0;
+
+    .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:200px;
+		right:0;
+		background:#FFF;
+		padding-top:5em;
+		padding-bottom:1em;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		
+		.title-bar{
+			width:90%;
+			display:flex;
+			flex-direction:row;
+			border-bottom: 1px solid #4F6874;
+			
+			div{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				justify-content:space-around;
+				padding:1em 0;
+				background:#607d8b;
+				color:rgba(255, 255, 255, 1);
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				overflow:hidden;
+				
+				&:first-child{
+					border-left:none;
+				}
+				
+				&.preview{
+					width:15%;
+				}
+				
+				&.id{
+					width:10%;
+				}
+
+				&.name{
+					width:25%;
+				}
+			
+				&.first-name{
+					width:20%
+				}
+			
+				&.last-name{
+					width:20%
+				}
+			
+				&.nickname{
+					width:10%;
+				}
+			}
+		}
+        
+        .outer-container{
+            height:100%;
+            width:90%;
+            overflow-y:scroll;
+			
+            .inner-container{
+                width:100%;
+                height:auto;
+                .item-container{
+                    width:100%;
+                    position:relative;
+                    height:auto;
+                }
+            }
+        }
+    }
+}
+  

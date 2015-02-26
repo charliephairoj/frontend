@@ -1,0 +1,142 @@
+/*
+ * LESS for supply scanner modal
+ */
+
+.supply-scanner{
+    height:80%;
+	width:90%;
+	overflow:hidden;
+	
+	.md-subheader{
+		background:#607d8b;
+		color:#FFF;
+		margin:0;
+	}
+	
+	.container{
+		height:100%;
+		width:100%;
+		display:flex;
+		flex-direction:row;
+		
+		.employee-placeholder{
+			bottom:0;
+			width:20%;
+			border-right:1px solid rgba(0, 0, 0, .50);
+			display:flex;
+			flex-direction:column;
+			align-items:center;
+			justify-content:center;
+			
+			h2{
+				color:rgba(0, 0, 0, .35);
+			}
+		}
+		
+		.employee{
+			bottom:0;
+			width:20%;
+			border-right:1px solid rgba(0, 0, 0, .50);
+			display:flex;
+			flex-direction:column;
+			align-items:center;
+			
+			.img-container{
+				height:auto;
+				width:80%;
+				margin-top:1em;
+				background:pink;
+				border-radius:50%;
+				overflow:hidden;
+				
+				img{
+					width:100%;
+					height:auto;
+				}
+			}
+			
+			h2{
+				
+			}
+		}
+		
+		.supplies-placeholder{
+			width:80%;
+			bottom:0;
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			
+			h2{
+				color:rgba(0, 0, 0, .35);
+			}
+		}
+		
+		md-content{
+			width:80%;
+			bottom:0;
+			padding:0;
+			
+			md-list{
+			
+				md-item{
+				
+					md-item-content{
+						
+						&.warn{
+							background:#F5B2B2;
+						}
+						
+						display:flex;
+						flex-direction:row;
+						flex-wrap:norwap;
+						justify-content:space-between;
+						align-items:center;
+						padding:1em 0;
+						
+						h3{
+							//white-space:nowrap;
+						}
+						.img-container{
+							height:10em;
+							width:10em;
+							overflow:hidden;
+							border-radius:5em;
+							margin-left:1em;
+							
+							img{
+								height:100%;
+								width:auto;
+							}
+						}
+					
+						.item-ctrl{
+							display:flex;
+							flex-wrap:nowrap;
+							flex-direction:row;
+							justify-content:space-between;
+							align-items:center;
+							
+							.switch-container{
+							}
+						}
+					
+					}
+				}
+			}
+		}
+	}
+	md-divider{
+		border-top-color:rgba(0, 0, 0, .50);
+	}
+	md-action{
+		display:flex;
+		justify-content:flex-end;
+		padding:1em;
+		color:#607d8b;
+		
+		button{
+			color:#607d8b;
+		}
+	}
+}

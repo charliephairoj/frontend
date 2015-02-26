@@ -43,6 +43,8 @@ module.exports = function (grunt) {
 	      	  	'{.tmp,<%= yeoman.app %>}/m_styles/**/*.css',
 		  	  	'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.css',
 		  	  	'{.tmp,<%= yeoman.app %>}/print_styles/**/*.css',
+  		  		'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.css',
+          		'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.css',
 	          	'{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
 	          	'{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
 	          	'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
@@ -70,6 +72,8 @@ module.exports = function (grunt) {
           	files: [
           		'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.less',
           		'{.tmp,<%= yeoman.app %>}/styles/**/*.less',
+      			'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.less',
+      			'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.less',
       			'{.tmp,<%= yeoman.app %>}/m_styles/{,*/}*.less',
       			'{.tmp,<%= yeoman.app %>}/m_styles/**/*.less',
 	  			'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.less',
@@ -242,6 +246,7 @@ module.exports = function (grunt) {
     			'<%= yeoman.app %>/styles/main.css' : '<%= yeoman.app %>/styles/main.less',
 				'<%= yeoman.app %>/m_styles/main.css' : '<%= yeoman.app %>/m_styles/main.less',
     			'<%= yeoman.app %>/print_styles/main.css' : '<%= yeoman.app %>/print_styles/main.less',
+				'<%= yeoman.app %>/iphone4_style/main.css' : '<%= yeoman.app %>/iphone4_style/main.less',
     		}
     	}
     },

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('supply', ['$http', 'Supply', '$rootScope', '$mdToast', '$timeout', '$window', 'scanner', 'D3', '$compile',
-function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile) {
+.directive('supply', ['$http', 'Supply', '$rootScope', '$mdToast', '$timeout', '$window', 'scanner', 'D3', '$compile', 'FileUploader',
+function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile, FileUploader) {
 	
 	var subHTML;
 	var promise = $http.get('views/templates/supply-details.html');
@@ -232,6 +232,49 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				scope.upcTarget = supplier;
 				scope.scanner.enable();
 			};
+			
+			var imgCapture = element.find('.image-capture')[0];
+			angular.element(imgCapture).on('change', function (evt) {
+				
+				if (evt.target.files.length > 0) {
+					var image = evt.target.files[0];
+					var promise = FileUploader.upload(image, "/api/v1/supply/image/");
+					
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(0)
+						.content('Uploading file...'));
+					
+					promise.then(function (dataObj) {
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(3000)
+							.content('File was uploaded.'));
+
+						scope.supply.image = dataObj.data;
+						
+						scope.supply.$update({'country': $rootScope.country}, function () {
+							$mdToast.show($mdToast.simple()
+								.position('top right')
+								.hideDelay(3000)
+								.content(scope.supply.description + ' was updated.'));
+							
+						}, function (e) {
+							$mdToast.show($mdToast.simple()
+								.position('top right')
+								.hideDelay(3000)
+								.content(e));
+							
+						});
+						
+					}, function () {
+						$mdToast.show($mdToast.simple()
+							.position('top right')
+							.hideDelay(0)
+							.content('There was an error uploading the file'));
+					});
+				}
+			})
   	  	}
 	};
 }]);

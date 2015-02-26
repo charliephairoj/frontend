@@ -1,0 +1,23 @@
+.AddTransactionPage .workspace .transaction {
+  position: relative;
+  margin-left: 20px;
+  margin-top: 40px;
+  color: #FFF;
+}
+.AddTransactionPage .workspace .transaction .title {
+  font-size: 18px;
+}
+.AddTransactionPage .workspace .transaction .details {
+  margin-top: 20px;
+}
+.AddTransactionPage .workspace .transaction .details tr td {
+  font-size: 12px;
+  line-height: 18px;
+}
+.AddTransactionPage .workspace .transaction .details tr td:first-child {
+  color: #6B6B6B;
+}
+.AddTransactionPage .workspace .transaction .details tr td:last-child {
+  color: #828282;
+  padding-left: 20px;
+}

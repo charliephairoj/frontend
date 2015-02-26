@@ -1,0 +1,42 @@
+.room-details-page{
+    .details-page;
+    
+    .workspace{
+        .details{
+            width:100%;
+            height:6em;
+            color:#CCC;
+            table{
+                
+            }
+        }
+        
+        .gridStyle{
+            position:absolute;
+            top:6em;
+            bottom:0px;
+            width:100%;
+            background-color:transparent;
+            font-family:proxima;
+            color:#CCC;
+            .ngTopPanel{
+                font-size:1.2em;
+                background-color:#282828;
+            }
+            .ngRow{
+                background:transparent;
+                border-bottom:1px solid #282828;
+                .ngCell{
+                    .file-handler{
+                        .transition(height, 250ms, linear);
+                        &.drag-over{
+                            height:6em;
+                        }
+                    }
+                }
+            }
+        }
+    
+    }
+    
+}

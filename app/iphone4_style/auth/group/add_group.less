@@ -1,0 +1,74 @@
+/*Model Page*/
+
+.addGroupPage{
+  .addPage;
+  
+  .workspace{
+    div{
+      float:left;
+    }
+    
+    .groupDetails{
+      padding-left:10px;
+      padding-right:10px
+    }
+    
+    .groupPermissions{
+      height:100%;
+      width:200px;
+      overflow-x:scroll;
+      
+      .permission{
+        
+        border-right:1px solid grey;
+        border-left:1px solid grey;
+        border-bottom:1px solid grey;
+        
+        td{
+          padding-top:4px;
+          padding-bottom:4px;
+        }
+        &:first-child{
+          border-top:1px solid grey;
+        }
+      }
+    }
+  }
+  
+  
+  //List of available permission
+  .permissionList{
+    height:100%;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    width:200px;
+    position:absolute;
+    right:0px;
+    top:0px;
+    z-index:10;
+    
+       
+    ul{
+      
+      li{
+        
+        
+        .permission{
+          cursor:move;
+          font-size:13px;
+          padding-top:20px;
+          padding-bottom:20px;
+          background:grey;
+          
+          &:hover{
+            background:#6f6f6f;
+          }
+        }
+        
+      }  
+      
+    }
+        
+    
+  }
+}

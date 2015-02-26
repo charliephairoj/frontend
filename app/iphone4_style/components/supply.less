@@ -1,0 +1,78 @@
+.supply-directive{
+	background-color:#FFF;
+	cursor:pointer;
+    width:100%;
+    color:rgba(0, 0, 0, 1);
+    font-family:proxima;
+    letter-spacing:0.08em;
+    text-decoration:none;
+    position:relative;
+    top:0;
+    height:5em;
+	overflow:hidden;
+	border-bottom:1px dotted #607d8b;
+    .transition(all, 350ms, ease);
+	
+	@activeBorderColor: #202020;
+	@activeBackgroundColor: #282828;
+	
+    .img-container{
+        position:absolute;
+        background: #CCC;
+        height:5em;
+        width:5em;
+        overflow:hidden;
+        
+        .image-capture{
+            display:block;
+			position:absolute;
+			top:0;
+			left:0;
+			height:100%;
+			width:100%;
+			background:rgba(0, 0, 0, 0);
+			opacity:0;
+			cursor:pointer;
+        }
+        
+        img{ 
+            height:100%;
+        }
+    }
+    
+    .short-details{
+		margin-left:5em;
+		color:rgba(0, 0, 0, 1);
+		text-decoration:none;
+		display:flex;
+		flex-direction:column;
+		align-items:flex-start;
+		justify-content:space-around;
+		
+        .description{
+            padding:0.5em;
+        }
+		
+        .quantity{
+            position:absolute;
+            padding:0.5em;
+        }
+    }
+    
+	/*
+	&.active{
+		height:40em;
+		background-color:@activeBackgroundColor;
+		border-bottom:1px solid @activeBorderColor;
+		cursor:default;
+	}
+	*/
+	
+	.loading-notification{
+		display:none;
+	}
+	
+	.supply-details{
+		display:none;
+	}
+}

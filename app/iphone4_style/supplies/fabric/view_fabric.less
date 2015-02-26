@@ -1,0 +1,148 @@
+
+
+
+.viewFabricPage{
+  	.viewPage;
+  	
+	left:0;
+	
+    .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:200px;
+		right:0;
+		background:#FFF;
+		padding-top:5em;
+		padding-bottom:1em;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		
+		.title-bar{
+			display:flex;
+			flex-direction:row;
+			border-bottom: 1px solid #4F6874;
+			
+			div{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				justify-content:space-around;
+				padding:1em;
+				background:#607d8b;
+				color:rgba(255, 255, 255, 1);
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+				&:first-child{
+					border-left:none;
+				}
+				
+				&.preview{
+					width:15%;
+				}
+	
+				&.id{
+					width:10%;
+				}
+				
+				&.pattern{
+					width:30%;
+				}
+	
+				&.color{
+					width:30%;
+				}
+				
+				&.quantity{
+					width:15%;
+				}
+			}
+		}
+        
+        .outer-container{
+            height:100%;
+            overflow-y:scroll;
+			
+            .inner-container{
+                width:100%;
+                height:auto;
+                .item-container{
+                    width:100%;
+                    background-color:red;
+                    position:relative;
+                    height:5em;
+                    &:hover{
+                        background-color:red;
+                    }
+                    
+                    .item{
+						display:flex;
+						flex-direction:row;
+                        width:100%;
+                        background-color:#FFF;
+                        position:absolute;
+                        left:0;
+						top:0;
+                        font-size:1em;
+                        height: 5em;
+                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+                        text-decoration:none;
+                        color:#000;
+                        cursor:pointer;
+                        .transition(all, 150ms, linear);
+                        
+						&:hover{
+                            background-color:#E4EEF4;
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+						
+                        
+						div{
+							display:flex;
+							flex-direction:row;
+							align-items:center;
+							padding-left:1em;
+							justify-content:flex-start;
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+							&:first-child{
+								border-left:none;
+							}
+							
+							&.preview{
+								width:15%;
+								padding:0;
+								overflow:hidden;
+								
+								img{
+									height:auto;
+									width:100%;
+								}
+							}
+	
+							&.id{
+								width:10%;
+							}
+				
+							&.pattern{
+								width:30%;
+							}
+	
+							&.color{
+								width:30%;
+							}
+				
+							&.quantity{
+								width:15%;
+							}
+						}
+                    }
+                }
+            }
+        }
+    }
+}
