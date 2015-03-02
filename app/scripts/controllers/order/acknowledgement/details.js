@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast',
-function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
+.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader',
+function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader) { 
 	
 	//Show system notification
 	$mdToast.show($mdToast
@@ -51,6 +51,31 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
 		});
 	};
     
+	$scope.addFiles = function (files) {
+		$scope.acknowledgement.files = $scope.acknowledgement.files || []; 
+		
+		/* jshint ignore:start */
+		for (var i = 0; i < files.length; i++) {
+			$scope.acknowledgement.files.push({filename: files[i].name});
+			
+			var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+			promise.then(function (result) {
+				var data = result.data || result;
+				for (var h = 0; h < $scope.acknowledgement.files.length; h++) {
+					if (data.filename == $scope.acknowledgement.files[h].filename) {
+						angular.extend($scope.acknowledgement.files[h], data);
+					}
+				}
+				$scope.acknowledgement.$update();
+				
+			}, function () {
+				
+			})
+		}
+		/* jshint ignore:end */
+		
+	};
+	
     //Save updates to the server
     $scope.save = function () { 
 		

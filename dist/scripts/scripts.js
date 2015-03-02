@@ -1873,7 +1873,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   '$window',
   'Project',
   '$mdToast',
-  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast) {
+  'FileUploader',
+  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -1904,6 +1905,23 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     $scope.removeItem = function (index) {
       $scope.ack.items.splice(index, 1);
       $scope.tempSave();
+    };
+    $scope.addFiles = function (files) {
+      $scope.ack.files = $scope.ack.files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < files.length; i++) {
+        $scope.ack.files.push({ filename: files[i].name });
+        var promise = FileUploader.upload(files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          for (var h = 0; h < $scope.ack.files.length; h++) {
+            if (data.filename == $scope.ack.files[h].filename) {
+              angular.extend($scope.ack.files[h], data);
+            }
+          }
+        }, function () {
+        });
+      }  /* jshint ignore:end */
     };
     $scope.create = function () {
       $scope.ack.employee = $scope.currentUser;
@@ -4217,7 +4235,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$http',
   '$window',
   '$mdToast',
-  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast) {
+  'FileUploader',
+  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader) {
     //Show system notification
     $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgement...').hideDelay(0));
     //Set Vars
@@ -4257,6 +4276,24 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
           $scope.showLog = true;
         });
       });
+    };
+    $scope.addFiles = function (files) {
+      $scope.acknowledgement.files = $scope.acknowledgement.files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < files.length; i++) {
+        $scope.acknowledgement.files.push({ filename: files[i].name });
+        var promise = FileUploader.upload(files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          for (var h = 0; h < $scope.acknowledgement.files.length; h++) {
+            if (data.filename == $scope.acknowledgement.files[h].filename) {
+              angular.extend($scope.acknowledgement.files[h], data);
+            }
+          }
+          $scope.acknowledgement.$update();
+        }, function () {
+        });
+      }  /* jshint ignore:end */
     };
     //Save updates to the server
     $scope.save = function () {
@@ -10657,3 +10694,60 @@ angular.module('employeeApp').controller('DialogsAddEmployeeCtrl', [
     };
   }
 ]);
+/**
+ * @ngdoc directive
+ * @name frontendApp.directive:fileDrop
+ * @description
+ * # fileDrop
+ */
+angular.module('employeeApp').directive('fileDrop', function () {
+  return {
+    restrict: 'EA',
+    scope: { onDrop: '&fileDrop' },
+    link: function postLink(scope, element, attrs) {
+      /*
+             * Create Objects and Functions to be used
+             */
+      //File Reader
+      var fileReader = new FileReader();
+      fileReader.onload = function (evt) {
+        scope.onDrop({ $file: evt.target.result });
+      };
+      /*
+             * Add functions to deal with the drag enter,leave and
+             * over actions of the user
+             */
+      //Drag Enter
+      element.bind('dragenter', function (evt) {
+        evt.preventDefault();
+        element.addClass('active');
+      });
+      //Drag Leave
+      element.bind('dragleave', function (evt) {
+        evt.preventDefault();
+        element.removeClass('active');
+      });
+      //Drag over
+      element.bind('dragover', function (evt) {
+        evt.preventDefault();
+        element.addClass('active');
+      });
+      /*
+             * This Section deals with the Dropping of the file, 
+             * checking if it is an image, and adding it to the array
+             * "scope.images"
+             */
+      element.bind('drop', function (evt) {
+        //prevent default
+        evt.preventDefault();
+        evt.stopPropagation();
+        element.removeClass('active');
+        //Get original evt within jquery evt
+        var e = evt.originalEvent;
+        //Get the files
+        var files = e.dataTransfer.files;
+        scope.onDrop({ $files: files });
+      });
+    }
+  };
+});

@@ -109,6 +109,51 @@
             padding-bottom:50px;
             z-index:1;
             bottom:auto;
+			
+			.files{
+				position:absolute;
+				width:30em;
+				height:auto;
+				right:1em;
+				top:40px;
+				color:#FFF;
+				padding:1em;
+				z-index:2;
+				
+                .title{
+                    font-size:18px; 
+					margin-bottom:1em;  
+                }
+				
+				.file{
+					margin:0.5em 0;
+					padding-left:0.5em;
+					background:#575757;
+					height:2em;
+					display:flex;
+					color:#FFF;
+					font-family:proxima;
+					flex-direction:row;
+					align-items:center;
+					justify-content:space-between;
+					text-decoration:none;
+					
+					.progress{
+						display:none;
+					}
+					
+					.checkmark{
+						margin-right:0.75em;
+					}
+					&.uploading{
+						
+						.progress{
+							display:block;
+						}
+					}
+				}				
+			}
+			
             .customer{
                 position:relative;
                 margin-left:20px;

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -41,6 +41,28 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         $scope.ack.items.splice(index, 1);
         $scope.tempSave();
     };
+	
+	$scope.addFiles = function (files) {
+		$scope.ack.files = $scope.ack.files || []; 
+		
+		/* jshint ignore:start */
+		for (var i = 0; i < files.length; i++) {
+			$scope.ack.files.push({filename: files[i].name});
+			
+			var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+			promise.then(function (result) {
+				var data = result.data || result;
+				for (var h = 0; h < $scope.ack.files.length; h++) {
+					if (data.filename == $scope.ack.files[h].filename) {
+						angular.extend($scope.ack.files[h], data);
+					}
+				}
+			}, function () {
+				
+			})
+		}
+		/* jshint ignore:end */
+	};
     
     $scope.create = function () {
 		$scope.ack.employee = $scope.currentUser;

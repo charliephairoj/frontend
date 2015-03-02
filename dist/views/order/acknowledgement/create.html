@@ -1,4 +1,4 @@
-<div class="createAcknowledgementPage" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in>
+<div class="createAcknowledgementPage" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in file-drop="addFiles($files)">
 	<!--
         Forms
     -->
@@ -78,6 +78,13 @@
             Workspace
         -->
 		<div class="workspace">
+			<div class="files">
+				<span class="title">Attachments</span>
+				<a class="file" ng-repeat="file in ack.files" ng-class="{'uploading': !file.url}" checkmark="file.id" ng-href="{{file.url}}" target="_blank">
+						{{file.filename}}
+						<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+					</a>
+			</div>
 			<div class="company">
 				<span class="title">Company</span>
 				<table class="details">
