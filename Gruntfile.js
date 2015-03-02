@@ -344,7 +344,8 @@ module.exports = function (grunt) {
             'img/**/*',
             'fonts/**/*',
             'styles/main.css',
-			'm_styles/main.css'
+			'm_styles/main.css',
+			'iphone4_style/main.css'
           ]
         }]
       }
