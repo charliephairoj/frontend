@@ -8,7 +8,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
     $scope.flag = false;
     $scope.project = Project.get({id: $routeParams.id});
     $scope.room = {};
-	$scope.purchaseOrders = PurchaseOrder.query({limit:0, project_id:19});
+	$scope.purchaseOrders = PurchaseOrder.query({limit:0, project_id:$routeParams.id});
     
 	$scope.addCustomer = function (customer) {
 		$scope.showCustomers = false;

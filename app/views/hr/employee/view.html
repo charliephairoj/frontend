@@ -3,6 +3,7 @@
     <!--
         Sidebar
     -->
+	<!--
     <div class="sidebar">
         <header>
             <h1><span>Employees</span></h1>
@@ -17,7 +18,7 @@
             </ul>
         </nav>
     </div>  
-    
+    -->
     <!--
         Search Bar
     -->
@@ -26,6 +27,11 @@
     
     <div class="workspace">
 
+		<nav>
+			<h2>Employees</h2>
+			<md-button class="add-btn md-accent" ng-show="currentUser.hasPermission('add_user')" ng-click="showAddEmployee()">New Employee</md-button>
+		</nav>
+		
 		<div class="title-bar">
 			<div class="preview">PROFILE</div>
 			<div class="id">ID</div>

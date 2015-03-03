@@ -5971,7 +5971,7 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
     $scope.room = {};
     $scope.purchaseOrders = PurchaseOrder.query({
       limit: 0,
-      project_id: 19
+      project_id: $routeParams.id
     });
     $scope.addCustomer = function (customer) {
       $scope.showCustomers = false;

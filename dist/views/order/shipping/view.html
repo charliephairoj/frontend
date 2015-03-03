@@ -2,25 +2,24 @@
 	<!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1>
+	<!--
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Shipping</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ui-if="currentUser.hasPermission('add_shipping')"><a ng-href="#/order/shipping/create">Create</a>
-				</li>
-				<li><a ng-href="#/order/shipping/delivery">View Deliveries</a>
-				</li>
-				<li><a ng-href="#/order/shipping/deliveries/week">View Weekly Deliveries</a>
-				</li>
-				<li><a ng-href="#/order/shipping/deliveries/today">View Today's Deliveries</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_shipping')"><a ng-href="#/order/shipping/create">Create</a></li>
+                <li><a ng-href="#/order/shipping/delivery">View Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/week">View Weekly Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/today">View Today's Deliveries</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+    -->
 	<!--
         Search Bar
     -->
@@ -29,6 +28,10 @@
         Workspace
     -->
 	<div class="workspace">
+		<nav>
+			<h2>Shipping</h2>
+			<md-button class="add-btn md-accent" ui-if="currentUser.hasPermission('add_shipping')" ng-href="#/order/shipping/create">New Shipping</md-button>
+		</nav>
 		<div class="title-bar">
 			<div class="id">SHIPPING ID</div>
 			<div class="ack-id">ACK ID</div>
