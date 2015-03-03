@@ -2,19 +2,20 @@
 	<!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1>
+	<!--
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Acknowledgements</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ui-if="currentUser.hasPermission('add_acknowledgement')"><a ng-href="#/order/acknowledgement/create">Create</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_acknowledgement')"><a ng-href="#/order/acknowledgement/create">Create</a></li>
+            </ul>
+        </nav>
+    </div>
+    -->
 	<!--
         Search Bar
     -->
@@ -23,6 +24,10 @@
         Workspace
     -->
 	<div class="workspace">
+		<nav>
+			<h2>Acknowledgements</h2>
+			<md-button class="add-btn md-accent" ui-if="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">Add</md-button>
+		</nav>
 		<div class="title-bar">
 			<div class="id">ORDER ID</div>
 			<div class="order-date">DATE</div>

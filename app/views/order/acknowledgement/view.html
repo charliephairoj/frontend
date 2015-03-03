@@ -4,6 +4,7 @@
         Sidebar
     -->
     
+	<!--
     <div class="sidebar">
         <header>
             <h1>
@@ -16,7 +17,7 @@
             </ul>
         </nav>
     </div>
-    
+    -->
     <!--
         Search Bar
     -->
@@ -28,6 +29,11 @@
     -->
     
     <div class="workspace">
+		
+		<nav>
+			<h2>Acknowledgements</h2>
+			<md-button class="add-btn md-accent" ui-if="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">Add</md-button>
+		</nav>
 		
 		<div class="title-bar">
 			<div class="id">ORDER ID</div>
