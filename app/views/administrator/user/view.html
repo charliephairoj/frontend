@@ -7,7 +7,7 @@
     -->
     <div class="sidebar">
         <header>
-            <h1><span>Suppliers</span></h1>
+            <h1><span>Users</span></h1>
         </header>
         <nav>
             <ul>
@@ -22,59 +22,31 @@
     
     <div data-search-bar ng-model="query"></div>
     
-    <div class="workspace grid">
-        <div class="header">
-            <div class="row">
-                <div class="cell id">ID</div>
-                <div class="cell name">Name</div>
-                <div class="cell email">Email</div>
-                <div class="cell last-login">Last Login</div>
-            </div>
-        </div>
-        <div class="listContainer">
-            <div class="grid">
-                <div class="body">
-                    <a ng-repeat="user in users | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-                        
-                       
-                        
-                        <div class="cell id"><img ng-src="{{user.image.url}}" /></div>
-                        <div class="cell name">{{user.first_name+' '+user.last_name}}</div>
-                        <div class="cell email">{{user.email}}</div>
-                        <div class="cell last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-                        
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!--
-        <div class="listContainer">
-            <div class="list">
-                    <a ng-repeat="user in userList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-                        <div class="cell">
-                            <div class="details">
-                                <div class="details-row">
-                                    <div class="details-title">Name:</div>
-                                    <div class="details-data">{{user.first_name+' '+user.last_name}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Username:</div>
-                                    <div class="details-data">{{user.username}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Email:</div>
-                                    <div class="details-data">{{user.email}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Last Login:</div>
-                                    <div class="details-data">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-            </div>
-        </div>-->
+    <div class="workspace">
+		<div class="title-bar">
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<div class="email">EMAIL</div>
+			<div class="email">LAST LOGIN</div>
+			
+		</div>
+    	<div class="outer-container" on-scroll-end="loadNext()"> 
+	    	<ul class="inner-container" >
+	    		<li class="item-container" data-ng-repeat="user in users | filter:query">
+	    			<a class="item" ng-href="#/administrator/user/{{user.id}}">
+						<div class="id">{{user.id}}</div>
+						<div class="name">{{user.first_name+' '+user.last_name}}</div>
+						<div class="email">{{user.email}}</div>
+						<div class="last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
+						
+	    			</a>
+	    				
+	    		</li>
+	    	</ul>
+    	</div>
     </div>
-    
+    <div class="cell id"><img ng-src="{{user.image.url}}" /></div>
+    <div class="cell name">{{user.first_name+' '+user.last_name}}</div>
+    <div class="cell email">{{user.email}}</div>
+    <div class="cell last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
 </div>

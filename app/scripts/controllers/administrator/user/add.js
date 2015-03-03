@@ -4,8 +4,10 @@ angular.module('employeeApp')
 function ($scope, User, Group, $location) {
 	$scope.user = new User();
 	$scope.user.groups = [];
-	$scope.groups = Group.query({limit: 0});
-	
+	$scope.groups = Group.query({limit: 0}, function () {
+		
+	});
+
 	/*
 	 * Add Profile Image
 	 * 
@@ -28,7 +30,7 @@ function ($scope, User, Group, $location) {
 			* checked off are then added to the user groups
 			*/
 			for (var i = 0; i < $scope.groups.length; i++) {
-				if ($scope.groups[i].$checked) {
+				if ($scope.groups[i].$$checked) {
 					$scope.user.groups.push(angular.copy($scope.groups[i]));
 				}
 			}

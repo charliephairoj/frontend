@@ -5,8 +5,7 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
   	// load the controller's module
   	beforeEach(module('employeeApp'));
 
-  	var SupplyFabricDetailsCtrl,
-  		Ctrl,
+  	var Ctrl,
   		ctrl,
   		$http,
   		params,
@@ -88,7 +87,7 @@ describe('Controller: SupplyFabricDetailsCtrl', function () {
 				
 				scope.updateLog(1);
 				$http.flush();
-				
+
 				var log = scope.logs[1];
 				expect(log.id).toEqual(6);
 				expect(log.quantity).toEqual(4);

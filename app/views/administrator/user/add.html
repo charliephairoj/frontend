@@ -63,12 +63,14 @@
 	        <tr>
 	            <td><label>Password</label></td>
 	            <td><input required type="password"  ng-model="user.password" /></td>
-	        </tr>
-	        <tr ng-repeat="group in user.groups"><td>{{group.name}}</td></tr>
-	            
+	        </tr>	            
 	    </table> 
 	    <table>
-	        <tr ng-repeat = "group in groups"><td>{{group.name}}</td></tr>
+	        <tr ng-repeat = "group in groups">
+				<td>
+					<input type="checkbox" ng-model="group.$$checked" value="group.name" name="group.name"> {{group.name}}
+				</td>
+			</tr>
 	    </table>
     </div>
     
