@@ -1,6 +1,6 @@
 <md-dialog class="supply-scanner" aria-label="Supply Checkout">
-	<md-subheader class="supply" ng-hide="po">Supply Checkout</md-subheader>
-	<md-subheader class="po ng-hide" ng-show="po">Check in Purchase Order {{po.id}}</md-subheader>
+	<md-subheader class="supply" ui-if="!po">Supply Checkout</md-subheader>
+	<md-subheader class="po ng-hide" ui-if="po">Check in Purchase Order {{po.id}}</md-subheader>
 	<div class="container">
 		<div ng-hide="employee" class="employee-placeholder">
 			<h2>Employee</h2>
@@ -37,7 +37,7 @@
 					</md-item-content>
 					<md-divider></md-divider>
 				</md-item>
-				<md-item ng-repeat="equipment in equipmentList">
+				<md-item class="equipment" ng-repeat="equipment in equipmentList">
 					<md-item-content>
 						<h3>
 							{{equipment.brand}} {{equipment.description}} 
@@ -70,7 +70,6 @@
 								<md-button>
 						</div>
 					</md-item-content>
-					<md-divider></md-divider>
 				</md-item>
 			</md-list>
 		</md-content>
@@ -78,6 +77,7 @@
 	<md-divider>
 	</md-divider>
 	<md-action>
+		<select ng-options="po.id for po in poList" ng-model="po"></select>
 		<md-button class="md-accent" ng-show="po" ng-click="checkout()">Check In</md-button>
 		<md-button class="md-accent" ng-hide="po" ng-click="checkout()">Checkout</md-button>
 	</md-action>

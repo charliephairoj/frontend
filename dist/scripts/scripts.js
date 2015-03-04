@@ -10455,6 +10455,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
     $scope.interfaceType = 'equipment';
     $scope.supplies = [];
     $scope.equipmentList = [];
+    $scope.poList = PurchaseOrder.query();
     $scope.scanner.enable();
     $scope.scanner.disableStandard();
     keyboardNav.onenter = function (e) {
@@ -10558,10 +10559,12 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 *  Regiester the equipment code
 	 */
     $scope.scanner.register(/^DRE-\d+$/, function (code) {
+      $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up Equipment...'));
       Equipment.get({ id: code.split('-')[1] }, function (response) {
+        $mdToast.hide();
         $scope.equipmentList.push(response);
       }, function () {
-        $mdToast.show($mdToast.simple().content('Unable to find equipment.').hideDelay(0));
+        $mdToast.show($mdToast.simple().content('Unable to find equipment.').position('top right').hideDelay(0));
       });
     });
     /*
@@ -10569,12 +10572,12 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 */
     $scope.scanner.register(/^DREM-\d+$/, function (code) {
       //Notifiy the user of action
-      $mdToast.show($mdToast.simple().content('Looking up employee...').hideDelay(3000));
+      $mdToast.show($mdToast.simple().content('Looking up employee...').position('top right').hideDelay(0));
       $scope.equipment = Employee.get({ id: code.split('-')[1] }, function (response) {
         $scope.employee = response;
         $mdToast.hide();
       }, function () {
-        $mdToast.show($mdToast.simple().content('Unable to find employee.').hideDelay(0));
+        $mdToast.show($mdToast.simple().content('Unable to find employee.').position('top right').hideDelay(0));
       });
     });
     $scope.verify = function () {
@@ -10649,6 +10652,8 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
     };
     $scope.postCheckout = function () {
       if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0 && !$scope.po) {
+        //Reset employee
+        $scope.employee = undefined;
         $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Checkout complete.'));
       }
     };

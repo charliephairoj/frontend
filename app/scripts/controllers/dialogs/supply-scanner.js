@@ -11,6 +11,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	$scope.interfaceType = 'equipment';
 	$scope.supplies = [];
 	$scope.equipmentList = [];
+	$scope.poList = PurchaseOrder.query();
 	
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
@@ -155,12 +156,19 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	 *  Regiester the equipment code
 	 */ 
 	$scope.scanner.register(/^DRE-\d+$/, function (code) {
+		$mdToast.show($mdToast.simple()
+			.hideDelay(0)
+			.position('top right')
+			.content('Looking up Equipment...'));
+		
 		Equipment.get({id: code.split('-')[1]}, function (response) {
+			$mdToast.hide();
 			$scope.equipmentList.push(response);
 			
 		}, function () {
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find equipment.')
+				.position('top right')
 				.hideDelay(0));
 		});
 	});
@@ -173,7 +181,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		//Notifiy the user of action
 		$mdToast.show($mdToast.simple()
 			.content("Looking up employee...")
-			.hideDelay(3000));
+			.position('top right')
+			.hideDelay(0));
 		
 		$scope.equipment = Employee.get({id: code.split('-')[1]}, function (response) {
 			$scope.employee = response;
@@ -182,6 +191,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		}, function () {
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find employee.')
+				.position('top right')
 				.hideDelay(0));
 		});
 	});
@@ -229,7 +239,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			//Do supply PUT
 			if ($scope.supplies.length > 0) {
 				var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
-		
+				
 				supplyPromise.success(function () {
 					$scope.supplies = [];
 					$scope.postCheckout();
@@ -276,6 +286,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	
 	$scope.postCheckout = function () {
 		if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0 && !$scope.po) {
+			//Reset employee
+			$scope.employee = undefined;
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(2000)

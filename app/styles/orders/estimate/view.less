@@ -1,0 +1,213 @@
+
+
+.estimate-view-page{
+    .viewPage;
+    span{
+        font-family:proxima;
+        spacing:0.08em;
+    }
+    left:0;
+    background-color:rgba(0, 0, 0, 0);
+    
+    .nav-bar{
+        height:2em;
+        top:0;
+        background-color:black;
+        .add{
+            position:absolute;
+            right:1em;
+            color:white;
+            text-decoration:none;
+            margin:0.5em 0;
+            &:active{
+              color:blue;
+            }
+        }
+    }
+    .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+		right:0;
+		background:#FFF;
+		padding-top:3em;
+		padding-bottom:1em;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		
+		nav{
+			width:95%;
+			display:flex;
+			flex-direction:row;
+			justify-content:space-between;
+			align-items:center;
+			margin-bottom:2em;
+			
+			.title{
+				
+			}
+			.add-btn{
+				align-self:flex-end;
+				text-decoration:none;
+				font-family:proxima;
+				background:#607d8b;
+				color:#FFF;
+				padding:1em;
+				width:10em;
+			}
+		}
+		
+		.title-bar{
+			display:flex;
+			flex-direction:row;
+			border-bottom: 1px solid #4F6874;
+			
+			div{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				justify-content:space-around;
+				padding:1em;
+				background:#607d8b;
+				color:rgba(255, 255, 255, 1);
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+				&:first-child{
+					border-left:none;
+				}
+				
+				&.id{
+					width:10%;
+				}
+	
+				&.order-date{
+					width:10%;
+				}
+	
+				&.customer{
+					width:25%;
+				}
+				
+				&.project{
+					width:15%;
+				}
+	
+				&.delivery-date{
+					width:10%;
+				}
+				
+				&.total{
+					width:15%;
+				}
+				
+				&.status{
+					width:15%;
+				}
+			}
+		}
+		
+        .outer-container{
+            height:100%;
+            overflow-y:scroll;
+			
+			
+            .inner-container{
+                width:100%;
+                height:auto;
+                .item-container{
+                    width:100%;
+                    background-color:red;
+                    position:relative;
+                    height:3em;
+                    &:hover{
+                        background-color:red;
+                    }
+                    
+                    .item{
+						display:flex;
+						flex-direction:row;
+                        width:100%;
+                        background-color:#FFF;
+                        position:absolute;
+                        left:0;
+						top:0;
+                        font-size:1em;
+                        height: 3em;
+                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+                        text-decoration:none;
+                        color:#000;
+                        cursor:pointer;
+                        .transition(all, 150ms, linear);
+                        
+						&:hover{
+                            background-color:#E4EEF4;
+                        }
+                        
+                        &.selected{
+                            background-color:orange;
+                        }
+						
+                        
+						div{
+							display:flex;
+							flex-direction:row;
+							align-items:center;
+							padding-left:1em;
+							justify-content:flex-start;
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+							&:first-child{
+								border-left:none;
+							}
+							
+							&.id{
+								width:10%;
+							}
+	
+							&.order-date{
+								width:10%;
+							}
+	
+							&.customer{
+								width:25%;
+							}
+				
+							&.project-id{
+								width:3%;
+								padding-left:0.2em;
+							}
+							
+							&.project{
+								width:12%;
+							}
+	
+							&.delivery-date{
+								width:10%;
+							}
+				
+							&.total{
+								width:15%;
+								justify-content:flex-end;
+								padding:0 1em 0 0;
+							}
+				
+							&.status{
+								width:15%;
+								
+								&.acknowledged{
+									color:#0098cd;
+								}
+								
+								&.shipped{
+									color:#54947A;
+								}
+							}
+						}
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,137 @@
+<div class="estimate-details-page">
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="estimate.delivery_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="showCal=false">Select</button>
+		</div>
+	</div>
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<h1><span>Estimate</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="save()">Save</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="showCal=true">Change Delivery Date</div>
+				</li>
+				<li>
+					<a ng-href="{{estimate.pdf}}" target="_blank">View PDF</a>
+				</li>
+				<!--
+                <li>
+                    <div ng-click="viewLog()">View Log</div>
+                </li>
+					-->
+				<li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<div class="details">
+			<table>
+				<tr>
+					<td>Order #:</td>
+					<td>{{estimate.id}}</td>
+				</tr>
+				<tr class="customer">
+					<td>Customer:</td>
+					<td>{{estimate.customer.name}}</td>
+				</tr>
+				<tr class="due-date">
+					<td>Order Date:</td>
+					<td>{{estimate.time_created | date:"MMMM d, yyyy"}}</td>
+				</tr>
+			</table>
+			<table>
+				<tr class="due-date">
+					<td>Devlivery Date:</td>
+					<td>{{estimate.delivery_date | date:"MMMM d, yyyy"}}</td>
+				</tr>
+				<tr class="due-date">
+					<td>Status:</td>
+					<td>{{estimate.status}}</td>
+				</tr>
+				<tr>
+					<td>Total Items:</td>
+					<td>{{estimate.items.length}}</td>
+				</tr>
+			</table>
+		</div>
+		<md-tabs md-selected="selectedIndex">
+			<md-tab label="Items">
+			</md-tab>
+			<!--
+			<md-tab label="Attachments">
+				
+			</md-tab>
+			-->
+		</md-tabs>
+		<div class="panel-container">
+			<ng-switch on="selectedIndex">
+				<div ng-switch-when="0" class="items-panel">
+					<div class="title-bar">
+						<div class="preview">PREVIEW</div>
+						<div class="description">DESCRIPTION</div>
+						<div class="width">WIDTH</div>
+						<div class="depth">DEPTH</div>
+						<div class="height">HEIGHT</div>
+						<div class="fabric">FABRIC</div>
+						<div class="status">STATUS</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="item in estimate.items">
+								<a class="item">
+
+									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+									<div class="preview">
+										<div class="img-container">
+											<img ng-src="{{item.image.url}}" />
+										</div>
+									</div>
+									<div class="description">{{item.description}}</div>
+									<div class="width">{{item.width}}</div>
+									<div class="depth">{{item.depth}}</div>
+									<div class="height">{{item.height}}</div>
+									<div class="fabric">{{item.fabric.description}}</div>
+									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--
+				<div ng-switch-when="1" class="file-panel">
+					<div class="title-bar">
+						<div class="filename">
+							FILENAME
+							
+						</div>
+						<div class="type">TYPE</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="file in acknowledgement.files">
+								<a class="item" ng-href="{{file.url}}" target="_blank">
+									<div class="filename">
+										{{file.filename}}
+										<md-progress-linear ng-show="!file.id" class="progress md-hue-2" md-mode="indeterminate"></md-progress-linear>
+									</div>
+									<div class="type">{{file.type}}</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+					-->
+			</ng-switch>
+		</div>
+	</div>
