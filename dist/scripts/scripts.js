@@ -199,6 +199,15 @@ angular.module('employeeApp', [
     }).when('/equipment', {
       templateUrl: 'views/equipment/view.html',
       controller: 'EquipmentViewCtrl'
+    }).when('/order/estimate', {
+      templateUrl: 'views/order/estimate/view.html',
+      controller: 'OrderEstimateViewCtrl'
+    }).when('/order/estimate/create', {
+      templateUrl: 'views/order/estimate/create.html',
+      controller: 'OrderEstimateCreateCtrl'
+    }).when('/order/estimate/:id', {
+      templateUrl: 'views/order/estimate/details.html',
+      controller: 'OrderEstimateDetailsCtrl'
     }).otherwise({ redirectTo: '/' });
   }
 ]);
@@ -6843,6 +6852,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       }
       $scope.po.supplier = supplier;
       $scope.po.discount = supplier.discount;
+      $scope.po.terms = supplier.terms;
       $scope.supplies = $filter('filter')(Supply.query({ supplier_id: supplier.id }, function (response) {
         $scope.supplies = $filter('filter')(response, supplier.name);
       }), supplier.name);
@@ -10752,3 +10762,345 @@ angular.module('employeeApp').directive('fileDrop', function () {
     }
   };
 });
+angular.module('employeeApp').controller('OrderEstimateViewCtrl', [
+  '$scope',
+  'Estimate',
+  '$location',
+  '$filter',
+  'KeyboardNavigation',
+  '$mdToast',
+  function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast) {
+    /*
+	 * Vars
+	 * 
+	 * -fetching: this is a switch to see if there is currently a call being made
+	 */
+    var fetching = true, index = 0, currentSelection;
+    var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading estimates...').hideDelay(0));
+    //Poll the server for acknowledgements
+    $scope.estimates = Estimate.query({ limit: 20 }, function (e) {
+      $mdToast.hide();
+      fetching = false;
+      changeSelection(index);
+    });
+    /*
+	 * Take the query in the searchbar and then sends 
+	 * the query to the server to get more results. The
+	 * resuls are then integrated with the current list of
+	 * resources;
+	 */
+    $scope.$watch('query.$.$', function (q) {
+      if (q) {
+        Estimate.query({
+          q: q,
+          limit: q ? q.length : 5
+        }, function (resources) {
+          for (var i = 0; i < resources.length; i++) {
+            if ($scope.estimates.indexOfById(resources[i].id) == -1) {
+              $scope.estimates.push(resources[i]);
+            }
+          }
+          index = 0;
+          changeSelection(index);
+        });
+      }
+    });
+    //Loads the next set of data
+    $scope.loadNext = function () {
+      if (!fetching) {
+        fetching = true;
+        var moreAckToast = $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more acknowledgements...'));
+        Estimate.query({
+          limit: 50,
+          offset: $scope.estimates.length
+        }, function (resources) {
+          fetching = false;
+          $mdToast.hide();
+          for (var i = 0; i < resources.length; i++) {
+            $scope.estimates.push(resources[i]);
+          }
+        });
+      }
+    };
+    function filter(array) {
+      return $filter('filter')(array, $scope.query);
+    }
+    function changeSelection(i) {
+      $scope.safeApply(function () {
+        if (currentSelection) {
+          currentSelection.$selected = false;
+        }
+        currentSelection = filter($scope.estimates)[i];
+        if (currentSelection) {
+          currentSelection.$selected = true;
+        }
+      });
+      var selection = $('.item.selected');
+      var container = selection.parents('.outer-container');
+      var scrollTop = container.scrollTop();
+      var cHeight = container.innerHeight();
+      if (scrollTop > selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      } else if (scrollTop + cHeight < selection.outerHeight() * i) {
+        container.scrollTop(selection.outerHeight() * i);
+      }
+    }
+    var keyboardNav = new KeyboardNavigation();
+    keyboardNav.ondown = function () {
+      if (index < filter($scope.estimates).length - 1) {
+        index += 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onup = function () {
+      if (index !== 0) {
+        index -= 1;
+        changeSelection(index);
+      }
+    };
+    keyboardNav.onenter = function () {
+      $scope.safeApply(function () {
+        $location.path('/order/acknowledgement/' + currentSelection.id);
+      });
+    };
+    keyboardNav.enable();
+    $scope.$on('$destroy', function () {
+      keyboardNav.disable();
+    });
+  }
+]);
+angular.module('employeeApp.services').factory('Estimate', [
+  '$resource',
+  '$http',
+  function ($resource, $http) {
+    return $resource('/api/v1/estimate/:id/', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }
+]);
+angular.module('employeeApp').controller('OrderEstimateCreateCtrl', [
+  '$scope',
+  'Estimate',
+  'Customer',
+  '$filter',
+  '$window',
+  'Project',
+  '$mdToast',
+  'FileUploader',
+  function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileUploader) {
+    //Vars
+    $scope.showFabric = false;
+    $scope.uploading = false;
+    $scope.customImageScale = 100;
+    $scope.projects = Project.query({ page_size: 99999 });
+    $scope.estimate = new Estimate();
+    var uploadTargets = [];
+    var storage = window.localStorage;
+    if (storage.getItem('estimate-create')) {
+      angular.extend($scope.estimate, JSON.parse(storage.getItem('estimate-create')));
+    }
+    $scope.estimate.items = $scope.estimate.items || [];
+    $scope.employee = { id: $scope.currentUser.id };
+    $scope.tempSave = function () {
+      storage.setItem('estimate-create', JSON.stringify($scope.estimate));
+    };
+    $scope.addCustomer = function (customer) {
+      //Set Customer
+      $scope.estimate.customer = customer;
+      //Hide Customer Panel
+      $scope.showCustomers = false;
+      $scope.tempSave();
+    };
+    $scope.addItem = function (product) {
+      $scope.estimate.items.push(product);
+      $scope.tempSave();
+    };
+    $scope.removeItem = function (index) {
+      $scope.estimate.items.splice(index, 1);
+      $scope.tempSave();
+    };
+    $scope.addFiles = function (files) {
+      $scope.estimate.files = $scope.estimate.files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < files.length; i++) {
+        $scope.estimate.files.push({ filename: files[i].name });
+        var promise = FileUploader.upload(files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          for (var h = 0; h < $scope.estimate.files.length; h++) {
+            if (data.filename == $scope.estimate.files[h].filename) {
+              angular.extend($scope.estimate.files[h], data);
+            }
+          }
+        }, function () {
+        });
+      }  /* jshint ignore:end */
+    };
+    $scope.create = function () {
+      $scope.estimate.employee = $scope.currentUser;
+      $scope.tempSave();
+      try {
+        if ($scope.isValidated()) {
+          $mdToast.show($mdToast.simple().position('top right').content('Creating new acknowledgement...').hideDelay(0));
+          /*
+				 * Preps for creation of a new project
+				 */
+          if ($scope.estimate.newProject) {
+            $scope.estimate.project = { codename: $scope.estimate.newProjectName };
+            delete $scope.estimate.newProject;
+            delete $scope.estimate.newProjectName;
+          }
+          $scope.estimate.$create(function (response) {
+            $mdToast.show($mdToast.simple().position('top right').content('Estimate created with ID: ' + $scope.estimate.id).hideDelay(2000));
+            if (response.pdf) {
+              $window.open(response.pdf);
+            }
+            angular.extend($scope.estimate, JSON.parse(storage.getItem('estimate-create')));
+            delete $scope.estimate.newProject;
+            delete $scope.estimate.newProjectName;
+          }, function (e) {
+            console.error(e);
+            $mdToast.show($mdToast.simple().content(e).hideDelay(0));
+          });
+        }
+      } catch (e) {
+        $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
+      }
+    };
+    $scope.reset = function () {
+      $scope.estimate = new Estimate();
+      $scope.estimate.items = [];
+      storage.removeItem('estimate-create');
+    };
+    //Validations
+    $scope.isValidated = function () {
+      /*
+         * The following are test to see if
+         * The property has already been added
+         */
+      if (!$scope.estimate.customer) {
+        throw new TypeError('Please add a customer.');
+      } else {
+        if (!$scope.estimate.customer.hasOwnProperty('id')) {
+          throw new ReferenceError('Missin customer ID');
+        }
+      }
+      //Validate ordered Items
+      if (!$scope.estimate.items) {
+        throw new TypeError('Products is not an array');
+      } else {
+        //Verifies that there are items ordered
+        if ($scope.estimate.items.length <= 0) {
+          throw new RangeError('No products added to the order');
+        } else {
+          for (var i = 0; i < $scope.estimate.items.length; i++) {
+            var item = $scope.estimate.items[i];
+            /*
+                     * Check that there is a quantity 
+                     * for each piece of product
+                     */
+            if (!$scope.estimate.items[i].hasOwnProperty('quantity') || !$scope.estimate.items[i].quantity) {
+              throw new RangeError('Expecting a quantity of at least 1 for ' + $scope.estimate.items[i].description);
+            }
+            /*
+                     * Validates that every item has a price
+                     */
+            if (!$scope.estimate.items[i].hasOwnProperty('has_price')) {
+            } else {
+              if (!$scope.estimate.items[i].has_price) {
+              }
+            }
+            /*
+                     * Validates custom items
+                     */
+            if (!item.hasOwnProperty('id')) {
+              if (!item.is_custom) {
+                throw new TypeError('Item without id is not custom. Please contact an Administrator.');
+              }
+            }
+          }
+        }
+      }
+      //Validate Delivery Date
+      if (!$scope.estimate.delivery_date) {
+        throw new TypeError('Please select a preliminary delivery date.');
+      }
+      //Validate vat
+      if ($scope.estimate.vat === undefined || $scope.estimate.vat === null) {
+        throw new TypeError('Please set the vat.');
+      }
+      //Return true for form validated
+      return true;
+    };
+  }
+]);
+angular.module('employeeApp').controller('OrderEstimateDetailsCtrl', [
+  '$scope',
+  'Estimate',
+  '$routeParams',
+  '$http',
+  '$window',
+  '$mdToast',
+  'FileUploader',
+  function ($scope, Estimate, $routeParams, $http, $window, $mdToast, FileUploader) {
+    //Show system notification
+    $mdToast.show($mdToast.simple().position('top right').content('Loading estimate...').hideDelay(0));
+    //Set Vars
+    $scope.showCal = false;
+    //GET request server for Acknowledgements
+    $scope.estimate = Estimate.get({
+      'id': $routeParams.id,
+      'pdf': true
+    }, function () {
+      $mdToast.hide();
+    });
+    //Grid Options
+    $scope.gridOptions = {
+      data: 'acknowledgement.products',
+      columnDefs: [{
+          field: 'image',
+          displayName: 'Image'
+        }]
+    };
+    //Request log data for acknowledgement
+    /*
+    $scope.viewLog = function () {
+        $http.get("acknowledgement/" + $scope.estimate.id + "/log").success(function (data) {
+			angular.forEach(data, function (log) {
+				$scope.logs = $scope.logs || [];
+				$scope.logs.push(log);
+				$scope.showLog = true;
+			});
+		});
+	};
+    */
+    $scope.addFiles = function (files) {
+      $scope.estimate.files = $scope.estimate.files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < files.length; i++) {
+        $scope.estimate.files.push({ filename: files[i].name });
+        var promise = FileUploader.upload(files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          for (var h = 0; h < $scope.estimate.files.length; h++) {
+            if (data.filename == $scope.estimate.files[h].filename) {
+              angular.extend($scope.estimate.files[h], data);
+            }
+          }
+          $scope.estimate.$update();
+        }, function () {
+        });
+      }  /* jshint ignore:end */
+    };
+    //Save updates to the server
+    $scope.save = function () {
+      $mdToast.show($mdToast.simple().position('top right').content('Saving acknowledgement...').hideDelay(0));
+      $scope.estimate.$update(function (response) {
+        $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement ' + $scope.estimate.id + ' saved.'));
+      }, function () {
+        $mdToast.show($mdToast.simple().position('top right').content('Failed to save acknowledgement ' + $scope.estimate.id));
+      });
+    };
+  }
+]);

@@ -295,6 +295,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'employeeAp
         templateUrl: 'views/order/estimate/create.html',
         controller: 'OrderEstimateCreateCtrl'
       })
+      .when('/order/estimate/:id', {
+        templateUrl: 'views/order/estimate/details.html',
+        controller: 'OrderEstimateDetailsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
 	});

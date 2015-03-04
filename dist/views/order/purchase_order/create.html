@@ -79,48 +79,52 @@
 				<h2 class="title">Order Particulars</h2>
 				<table class="details">
 					<tr>
-						<td>Vat:</td>
+						<td>Terms:</td>
 						<td>
-							<input type="number" class="vat" ng-model="po.vat" required maxlength="3" size="3">%</td>
-					</tr>
-					<tr class="currency" ng-show="po.supplier" ng-class="{'active':po.supplier}">
-						<td>Currency:</td>
-						<td>
-							{{po.supplier.currency}}
-						</td>
-					</tr>
-					<tr>
-						<td>Project:</td>
-						<td>
-							<select ng-options="project.codename for project in projects" ng-model="po.project" ng-disabled="po.newProject">
-								<input class="new-project-checkbox" type="checkbox" ng-model="po.newProject" />New Project
-								<input class="new-project-name" type="text" ng-model="po.newProjectName" ng-show="po.newProject">
-						</td>
-					</tr>
-					<tr>
-						<td>Discount:</td>
-						<td>
-							<input class="discount" type="number" size="2" maxlength="3" ng-model="po.discount" />%
-						</td>
-					</tr>
-					<tr>
-						<td>Deposit:</td>
-						<td>
-							<select ng-model="po.deposit_type">
-								<option value="percent">Percent</option>
-								<option value="amount">Amount</option>
-							</select>
-							<input type="text" size="6" maxlength="6" ng-model="po.deposit" />
-							<span class="deposit-currency" ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
-							<span class="deposit-percent" ng-show="po.deposit_type=='percent'">%</span>
-						</td>
-					</tr>
-					<tr>
-						<td>Comments:</td>
-						<td>
-							<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
-						</td>
-					</tr>
+							<input type="number" class="vat" ng-model="po.terms" required maxlength="3" size="3">Days</td>
+						<tr>
+							<td>Vat:</td>
+							<td>
+								<input type="number" class="vat" ng-model="po.vat" required maxlength="3" size="3">%</td>
+						</tr>
+						<tr class="currency" ng-show="po.supplier" ng-class="{'active':po.supplier}">
+							<td>Currency:</td>
+							<td>
+								{{po.supplier.currency}}
+							</td>
+						</tr>
+						<tr>
+							<td>Project:</td>
+							<td>
+								<select ng-options="project.codename for project in projects" ng-model="po.project" ng-disabled="po.newProject">
+									<input class="new-project-checkbox" type="checkbox" ng-model="po.newProject" />New Project
+									<input class="new-project-name" type="text" ng-model="po.newProjectName" ng-show="po.newProject">
+							</td>
+						</tr>
+						<tr>
+							<td>Discount:</td>
+							<td>
+								<input class="discount" type="number" size="2" maxlength="3" ng-model="po.discount" />%
+							</td>
+						</tr>
+						<tr>
+							<td>Deposit:</td>
+							<td>
+								<select ng-model="po.deposit_type">
+									<option value="percent">Percent</option>
+									<option value="amount">Amount</option>
+								</select>
+								<input type="text" size="6" maxlength="6" ng-model="po.deposit" />
+								<span class="deposit-currency" ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
+								<span class="deposit-percent" ng-show="po.deposit_type=='percent'">%</span>
+							</td>
+						</tr>
+						<tr>
+							<td>Comments:</td>
+							<td>
+								<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
+							</td>
+						</tr>
 				</table>
 			</div>
 			<div class="order-details">
