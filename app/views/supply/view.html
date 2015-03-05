@@ -71,6 +71,16 @@
     -->
     
     <div class="workspace" style="z-index:1;">
+		
+		<div class="title-bar">
+			<div class="preview">PREVIEW</div>
+			<div class="id">ID</div>
+			<div class="description">DESCRIPTION</div>
+			<div class="quantity">QUANTITY</div>
+			<div class="units">UNITS</div>
+			<div class="nickname">NICKNAME</div>
+		</div>
+		
     	<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
     		<ul class="inner-container">
     			<li class="item-container" ng-repeat="supply in supplies | filter:query track by supply.id">

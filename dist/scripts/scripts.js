@@ -10571,6 +10571,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 *  Regiester the employee code
 	 */
     $scope.scanner.register(/^DREM-\d+$/, function (code) {
+      $mdToast.hide();
       //Notifiy the user of action
       $mdToast.show($mdToast.simple().content('Looking up employee...').position('top right').hideDelay(0));
       $scope.equipment = Employee.get({ id: code.split('-')[1] }, function (response) {

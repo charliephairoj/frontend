@@ -1,6 +1,6 @@
 <md-dialog class="supply-scanner" aria-label="Supply Checkout">
-	<md-subheader class="supply" ui-if="!po">Supply Checkout</md-subheader>
-	<md-subheader class="po ng-hide" ui-if="po">Check in Purchase Order {{po.id}}</md-subheader>
+	<md-subheader class="supply" ui-if="!po.id">Supply Checkout</md-subheader>
+	<md-subheader class="po ng-hide" ui-if="po.id">Check in Purchase Order {{po.id}}</md-subheader>
 	<div class="container">
 		<div ng-hide="employee" class="employee-placeholder">
 			<h2>Employee</h2>

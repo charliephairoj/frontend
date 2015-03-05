@@ -177,7 +177,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	 *  Regiester the employee code
 	 */ 
 	$scope.scanner.register(/^DREM-\d+$/, function (code) {
-		
+		$mdToast.hide();
 		//Notifiy the user of action
 		$mdToast.show($mdToast.simple()
 			.content("Looking up employee...")
