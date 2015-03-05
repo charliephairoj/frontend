@@ -4,7 +4,13 @@ angular.module('employeeApp')
 .controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window',
 function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 		
-	$scope.po = PurchaseOrder.get({id: $routeParams.id});
+	$scope.po = PurchaseOrder.get({id: $routeParams.id}, function () {
+		for (var i = 0; i < $scope.po.items.length; i++) {
+			var item = $scope.po.items[i];
+			item.unit_cost = Number(item.unit_cost);
+			item.quantity = Number(item.quantity);
+		}
+	});
 
 	
 	$scope.save = function () {

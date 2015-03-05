@@ -57,7 +57,7 @@
     </div>
 			-->
 
-    <div class="workspace">
+    <form name="form" class="workspace">
 		<div class="submenu">
 			<button ng-click="save()">Save</button>
 			<button ng-click="viewPDF()">PDF</button>
@@ -131,9 +131,11 @@
 						<td class='discount'>
 							<input type="text" ng-model="item.discount"/> 
 						</td>
-						<td class='unit-cost'><input type="text" ng-model="item.unit_cost"/></td>
+						<td class='unit-cost'>
+							<input type="number" min="0" ng-model="item.unit_cost"/>
+						</td>
 						<td class='quantity'>
-							<input type="text" ng-model="item.quantity" />
+							<input type="number" min="0" ng-model="item.quantity" />
 						</td>
 						<td>
 							<select required ng-model="item.suppliers[0].purchasing_units">
@@ -206,7 +208,7 @@
 
         
 	
-    </div>
+	</form>
     
     
     
