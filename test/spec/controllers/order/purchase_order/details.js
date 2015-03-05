@@ -27,7 +27,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   		});
   		
   		it('should make a call to the server for the item', function () {
-  			$http.expectGET('/api/v1/purchase-order/1234/').respond({id:1234});
+  			$http.expectGET('/api/v1/purchase-order/1234/').respond({id:1234, items: []});
   			ctrl = Ctrl('OrderPurchaseOrderDetailsCtrl', {$scope:scope, $routeParams:{id:1234}});
   			$http.flush();
   			

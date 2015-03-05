@@ -25,6 +25,8 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
   	// Initialize the controller and a mock scope
   	beforeEach(inject(function ($controller, $rootScope, $injector) {
 		$http = $injector.get('$httpBackend');
+		$http.whenGET('/api/v1/purchase-order/').respond([]);
+		
     	scope = $rootScope.$new();
     	DialogsSupplyScannerCtrl = $controller('DialogsSupplyScannerCtrl', {
       		$scope: scope

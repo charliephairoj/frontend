@@ -59,15 +59,15 @@
 				</div>
                 <div class="supplier">
                     <h2 class="title">Supplier</h2>
-					<button class="add" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
+					<md-button class="add md-accent" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
 						Select Supplier
-					</button>
-					<button class="change" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
+					</md-button>
+					<md-button class="change md-accent" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
 						Change Supplier
-					</button>
-					<button class="create-supplier" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
+					</md-button>
+					<md-button class="create-supplier md-accent" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
 						Create New Supplier
-					</button>
+					</md-button>
                     <table class="details" ng-class="{'active':po.supplier}">
                         <tr>
                             <td>Name:</td>

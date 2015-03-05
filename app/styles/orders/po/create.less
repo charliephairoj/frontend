@@ -1,16 +1,12 @@
 
 
 .create-po-page{
-    opacity:0;
-	left:0;
-	padding-left:2em;
-    .transition(opacity, 1s, linear);
-    
-    
     .addPage;
+	color:rgba(0, 0, 0, 1);
     /*
     *For Panels containing the suppliers and the supplies
     */
+	
     .suppliers  {
         background-color:#313131;
         .container{
@@ -44,382 +40,280 @@
     .supplies{
         .suppliers;
     }
-    
-    .quantity_modal{
-        width:200px;
-        margin-left:-100px;
-        height:125px;
-        top:150px;
-        .title{
-            text-align:center;
-            min-height:0px;
-            padding:0.4em;
-        }
-        input{
-            width:100px;
-            position:absolute;
-            top:50px;
-            left:50px;
-            border:none;
-            outline:none;
-            padding:0px;
-            text-align:center;
-        }
-    }
-    
-    
-    .quantity_modal{
-        width:200px;
-        top:50%;
-        left:50%;
-        margin-left:-100px;
-        margin-top:-100px;
-        height:125px;
-        background-color:#313131;
-        .title{
 
-            text-align:center;
-            padding:0.2em 0em;
-        }
-        
-        input{
-            width:100px;
-            position:absolute;
-            top:50px;
-            left:50px;
-            border:none;
-            outline:none;
-            padding:0px;
-            text-align:center;
-        }
-    }
+	.po{
+		overflow-y:scroll;
+	    overflow-x:hidden;
+	    position:absolute;
+	    top:0px;
+	    bottom:0px;
+	    left:0px;
+	    right:0px;
+	    background:rgba(255, 255, 255, 1);
     
-    .vat_modal{
-        height:9em;
-        top:50%;
-        left:50%;
-        width:20em;
-        margin-top:-4.5em;
-        margin-left:-10em;
-        
-        input{
-            width:100px;
-            position:absolute;
-            top:5em;
-            left:100px;
-            border:none;
-            outline:none;
-            padding:0.5em 0;
-            text-align:center;
-        }
-        span{
-            top:4.75em;
-            position:absolute;
-            right:90px;
-            text-align:left;
-            color:#FFFFFF;
-        }
-    }
-    
-    
-
-.po{
-    
-    overflow-y:scroll;
-    overflow-x:hidden;
-    position:absolute;
-    top:0px;
-    bottom:0px;
-    left:0px;
-    right:0px;
-    background:#313131;
-    
-    
-    
-    
-    .workspace{
-        
-        height:100%;
-        width:100%;
-        z-index:1;
-        padding-bottom:50px;
+	    .workspace{
+	        height:100%;
+	        width:100%;
+	        z-index:1;
+	        padding-bottom:50px;
 		
-		.submenu{
-			margin-top:2em;
-			margin-left:1em;
+			.submenu{
+				margin-top:2em;
+				margin-left:1em;
 			
-			button{
-				font-size:1.25em;
-				margin-right:0.5em;
-			}
-		}
-      	
-      	.supplier{
-          	position:relative;
-          	margin-left:1em;
-          	margin-top:2em;
-          	color:#FFF;
-		  
-          	.title{
-           		font-family:proxima;
-          	}
-		  
-		  	button{
-			  	position:absolute;
-			  	top:4.5em;
-			  	opacity:0;
-			  	padding:0.5em;
-			  	border-radius:2px;
-			  	z-index:-1;
-			  	background-color:#414141;
-			  	border:none;
-			  	color:#CCC;
-			  	outline:none;
-			  	.transition(background-color, 75ms, linear);
-			  
-			  	&:hover{
-			  	  	background-color:#272727;
-			  	}
-			  	&:active{
-			  	  	background-color:orange;
-			  	}
-			  
-			  	&.add{
-				  	&.active{
-					  	opacity:1;
-					  	z-index:0;
-				  	}
-			  	}
-			  
-			  	&.change{
-				  	&.active{
-					  	opacity:1;
-					  	z-index:0;
-				  	}
-			  	}
-				
-				&.create-supplier{
-					left:9em;
-					opacity:1;
-					z-index:0;
+				button{
+					font-size:1.25em;
+					margin-right:0.5em;
+					background-color:#607d8b;
 				}
-		  	}
-          .details{
-			  opacity:0;
-			  z-index:-1;
-              margin-top:7em;
-			  height:0;
-			  .transition(all, 250ms, linear);
+			}
+      	
+	      	.supplier{
+	          	position:relative;
+	          	margin-left:1em;
+	          	margin-top:2em;
+		  
+	          	.title{
+	           		font-family:proxima;
+	          	}
+		  
+			  	button{
+				  	position:absolute;
+				  	top:4.5em;
+				  	opacity:0;
+				  	z-index:-1;
+				  	background-color:#607d8b;
+			  	  	color: rgba(255, 255, 255, 1);
+					
+				  	&.add{
+					  	&.active{
+						  	opacity:1;
+						  	z-index:0;
+					  	}
+				  	}
 			  
-			  &.active{
-				  height:auto;
-				  opacity:1;
-				  z-index:0;
-			  }
-              tr{
-                  td{
-                      line-height:1.6em;
-                      font-size:0.8em;
-                      font-family:proxima;
-                      letter-spacing:0.08em;
-                      //States
-                      &:first-child{
-                          color:#6B6B6B;   
-                      }
-                      &:last-child{
-                          color:#828282;
-                          padding-left:20px;   
-                      }
-                  }
-              }
-          }
-      }
-      .order{
-          .supplier;
-          .details{
-			  margin-top:1.5em;
-			  opacity:1;
-			  z-index:0;
+				  	&.change{
+					  	&.active{
+						  	opacity:1;
+						  	z-index:0;
+					  	}
+				  	}
+				
+					&.create-supplier{
+						left:9em;
+						opacity:1;
+						z-index:0;
+					}
+			  	}
+	          	.details{
+				  	opacity:0;
+				  	z-index:-1;
+	              	margin-top:7em;
+				  	height:0;
+				  	.transition(all, 250ms, linear);
 			  
-			  
-			  
-	          tr{
-				  
-				  &.currency{
-					  opacity:0;
-					  .transition(all, 250ms, linear);
-					  
-					  &.active{
-						  opacity:1;
-					  }
-				  }
-				  
-	              td{
-	                  padding:0.25em 0;
-				  
-					  .new-project-checkbox{
-						  margin-left:2em;
-						  margin-right:0.5em;
-					  }
-					  .new-project-name{
-				  	
-					  }
-					  
-					  input{
-					  	  &.vat{
-					  	  	  width:3em;
-							  text-align:center;
-					  	  }
-						  &.discount{
-						  	  width:3em;
-							  text-align:center;
-						  }
-					  }
+				  	&.active{
+					  	height:auto;
+					  	opacity:1;
+					  	z-index:0;
+				  	}
+	              	tr{
+	                  	td{
+	                      	line-height:1.6em;
+	                      	font-size:0.8em;
+	                      	font-family:proxima;
+	                      	letter-spacing:0.08em;
+	                      	//States
+	                      	&:first-child{
+	                          	color:#6B6B6B;   
+	                      	}
+	                      	&:last-child{
+	                          	color:#828282;
+	                          	padding-left:20px;   
+	                      	}
+	                  }
 	              }
 	          }
-		  }
-      }  
-      .order-details{
-		  .supplier;
-		  margin-bottom:2em;
-		  
-		  .item-menu{
-			  margin-top:2em;
-			  height:2.2em;
-			  button{
-			  	  opacity:1;
+	      }
+	      .order{
+	          .supplier;
+	          .details{
+				  margin-top:1.5em;
+				  opacity:1;
 				  z-index:0;
-				  float:left;
-				  position:relative;
-				  top:0;
-				  float:left;
-				  margin-right:0.5em;
+			  
+			  
+			  
+		          tr{
+				  
+					  &.currency{
+						  opacity:0;
+						  .transition(all, 250ms, linear);
+					  
+						  &.active{
+							  opacity:1;
+						  }
+					  }
+				  
+		              td{
+		                  padding:0.25em 0;
+				  
+						  .new-project-checkbox{
+							  margin-left:2em;
+							  margin-right:0.5em;
+						  }
+						  .new-project-name{
+				  	
+						  }
+					  
+						  input{
+						  	  &.vat{
+						  	  	  width:3em;
+								  text-align:center;
+						  	  }
+							  &.discount{
+							  	  width:3em;
+								  text-align:center;
+							  }
+						  }
+		              }
+		          }
 			  }
-		  }
+	      }  
+	      .order-details{
+			  .supplier;
+			  margin-bottom:2em;
 		  
-	      	table{
-				margin-top:2em;
-				width:90%;
+			  .item-menu{
+				  margin-top:2em;
+				  height:2.2em;
+				  button{
+				  	  opacity:1;
+					  z-index:0;
+					  float:left;
+					  position:relative;
+					  top:0;
+					  float:left;
+					  margin-right:0.5em;
+				  }
+			  }
+		  
+		      	table{
+					margin-top:2em;
+					width:90%;
 			
-				tr{
-					td{
-						padding:0.25em 0.5em;
-					}
-				}
-				thead{
 					tr{
 						td{
+							padding:0.25em 0.5em;
+						}
+					}
+					thead{
+						tr{
+							td{
+								color:#FFF;
+								text-align:center;
+								border:1px solid #272727;
+							}
+						}
+					}
+					tbody{
+						font-family:proxima;
+						letter-spacing:0.08em;
+		        		.items{
+				
+				
+							//border:1px solid #282828;
+		        			td{
+		        				color:#CCC;
+								text-align:right;
+				
+								&.description{
+									text-align:left;
+								}
+				
+								&.discount{
+									text-align:center;
+									input{
+										text-align:center;
+										width:2em;
+									}
+								}
+				
+								&.quantity{
+									width:3em;
+									text-align:center;
+									input{
+										text-align:center;
+										width:5em;
+									}
+								}
+				
+								&.unit-cost{
+									text-align:center;
+									input{
+										text-align:center;
+										width:5em;
+									}
+								}
+				
+								&.total{
+									padding-right:3em;
+									width:20%;
+								}
+							
+								textarea{
+									width:100%;
+								
+									&:focus{
+										//width:10em;
+									}
+								}
+							
+								.remove-btn{
+									position:relative;
+									top:0;
+									opacity:1;
+									z-index:0;
+								
+									.transition(background-color, 100ms, linear);
+								
+									&:hover{
+										background-color:#2D2D2D;
+									}
+									&:active{
+										background-color:#282828;
+									}
+								}
+		        			}
+		        		}
+			
+						.summary{
 							color:#FFF;
-							text-align:center;
-							border:1px solid #272727;
-						}
-					}
-				}
-				tbody{
-					font-family:proxima;
-					letter-spacing:0.08em;
-	        		.items{
-				
-				
-						//border:1px solid #282828;
-	        			td{
-	        				color:#CCC;
-							text-align:right;
-				
-							&.description{
-								text-align:left;
-							}
-				
-							&.discount{
-								text-align:center;
-								input{
-									text-align:center;
-									width:2em;
+							td{
+								&.title{
+									text-align:right;
+									padding-right:3em;
 								}
-							}
-				
-							&.quantity{
-								width:3em;
-								text-align:center;
-								input{
-									text-align:center;
-									width:5em;
-								}
-							}
-				
-							&.unit-cost{
-								text-align:center;
-								input{
-									text-align:center;
-									width:5em;
-								}
-							}
-				
-							&.total{
-								padding-right:3em;
-								width:20%;
-							}
-							
-							textarea{
-								width:100%;
-								
-								&:focus{
-									//width:10em;
-								}
-							}
-							
-							.remove-btn{
-								position:relative;
-								top:0;
-								opacity:1;
-								z-index:0;
-								
-								.transition(background-color, 100ms, linear);
-								
-								&:hover{
-									background-color:#2D2D2D;
-								}
-								&:active{
-									background-color:#282828;
-								}
-							}
-	        			}
-	        		}
-			
-					.summary{
-						color:#FFF;
-						td{
-							&.title{
-								text-align:right;
-								padding-right:3em;
-							}
 					
-							&.value{
-								text-align:right;
-								padding-right:3em;
+								&.value{
+									text-align:right;
+									padding-right:3em;
+								}
 							}
 						}
-					}
-					.subtotal{
-						color:#FFF;
-					}
+						.subtotal{
+							color:#FFF;
+						}
 			
-					.discount{
-						color:#FFF;
+						.discount{
+							color:#FFF;
+						}
 					}
-				}
-				.totals{
+					.totals{
 			
-				}
+					}
+		      	}
 	      	}
-      	}
-    }
-    
-  }
-  
-  //Page States
-  &.fadeIn{
-      opacity:1;
-	  left:0;
-  }
+	    }
+	}
 }
