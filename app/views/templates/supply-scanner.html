@@ -1,6 +1,6 @@
 <md-dialog class="supply-scanner" aria-label="Supply Checkout">
-	<md-subheader class="supply" ui-if="!po.id">Supply Checkout</md-subheader>
-	<md-subheader class="po ng-hide" ui-if="po.id">Check in Purchase Order {{po.id}}</md-subheader>
+	<md-subheader class="supply" ng-show="!po.id">Supply Checkout</md-subheader>
+	<md-subheader class="po ng-hide" ng-show="po.id">Check in Purchase Order {{po.id}}</md-subheader>
 	<div class="container">
 		<div ng-hide="employee" class="employee-placeholder">
 			<h2>Employee</h2>
@@ -32,7 +32,7 @@
 						    </md-radio-group>
 								-->
 							Quantity: {{item.quantity}}
-							<md-button class="md-warn" ng-click="removeItem($index)">Remove<md-button>
+							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove<md-button>
 						</div>
 					</md-item-content>
 					<md-divider></md-divider>
@@ -79,9 +79,9 @@
 	</md-divider>
 	<md-action>
 		<select ng-options="po.id for po in poList" ng-model="po"></select>
-	 	<md-button class="md-accent" ng-show="po" ng-click="checkout()">Check In</md-button>
+	 	<md-button class="md-primary md-raised" ng-show="po" ng-click="checkout()">Check In</md-button>
 	
-		<md-button class="md-accent" ng-hide="po"  ng-click="checkout()">Checkout</md-button>
+		<md-button class="md-primary md-raised" ng-hide="po"  ng-click="checkout()">Checkout</md-button>
 
 	</md-action>
 </md-dialog>

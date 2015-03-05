@@ -54,20 +54,22 @@
 			
         <div class="workspace">
 				<div class="submenu">
-                	<button class="create" ng-click="save()">Create</button>
-                	<button class="reset" ng-click="reset()">Reset</button>
+                	<md-button class="create md-primary md-raised" ng-click="save()">Create</md-button>
+                	<md-button class="reset md-warn md-raised" href="#/order/purchase_order">CANCEL</md-button>
 				</div>
                 <div class="supplier">
                     <h2 class="title">Supplier</h2>
-					<md-button class="add md-accent" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
-						Select Supplier
-					</md-button>
-					<md-button class="change md-accent" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
-						Change Supplier
-					</md-button>
-					<md-button class="create-supplier md-accent" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
-						Create New Supplier
-					</md-button>
+					<div class="supplier-menu">
+						<md-button class="add md-accent md-raised" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
+							Select Supplier
+						</md-button>
+						<md-button class="change md-accent md-raised" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
+							Change Supplier
+						</md-button>
+						<md-button class="create-supplier md-accent md-raised" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
+							Create New Supplier
+						</md-button>
+					</div>
                     <table class="details" ng-class="{'active':po.supplier}">
                         <tr>
                             <td>Name:</td>
@@ -93,7 +95,7 @@
                     </table>
                 </div>
                 
-                <div class="order">
+                <div class="order" ng-show="po.supplier">
 					<h2 class="title">Order Particulars</h2>
                     <table class="details">
                         
@@ -147,7 +149,7 @@
                 </div>
                 
             
-			<div class="order-details">
+			<div class="order-details" ng-show="po.supplier">
                 <h2 class="title">Items</h2>
 				<div class="item-menu">
 					<button class="add" ng-click="showSupplies=true"> + Add Supply</button>

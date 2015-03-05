@@ -30,8 +30,12 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider) {
 	/*
 	 * Configure the theme for this application
 	 */
-	$mdThemingProvider.setDefaultTheme('blue-grey');
-		
+	
+	$mdThemingProvider.theme('default')
+		.primaryPalette('blue-grey')
+		.accentPalette('blue')
+		.backgroundPalette('grey');
+	
 	
 	
 }]);

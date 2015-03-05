@@ -6,6 +6,9 @@
     /*
     *For Panels containing the suppliers and the supplies
     */
+	position:fixed;
+	top:0;
+	z-index:100;
 	
     .suppliers  {
         background-color:#313131;
@@ -62,9 +65,8 @@
 				margin-left:1em;
 			
 				button{
-					font-size:1.25em;
-					margin-right:0.5em;
-					background-color:#607d8b;
+					//font-size:1.25em;
+					//margin-right:0.5em;
 				}
 			}
       	
@@ -76,35 +78,34 @@
 	          	.title{
 	           		font-family:proxima;
 	          	}
-		  
-			  	button{
-				  	position:absolute;
-				  	top:4.5em;
-				  	opacity:0;
-				  	z-index:-1;
-				  	background-color:#607d8b;
-			  	  	color: rgba(255, 255, 255, 1);
-					
-				  	&.add{
-					  	&.active{
-						  	opacity:1;
-						  	z-index:0;
-					  	}
-				  	}
-			  
-				  	&.change{
-					  	&.active{
-						  	opacity:1;
-						  	z-index:0;
-					  	}
-				  	}
+		  	  
+				.supplier-menu{
+					display:flex;
+					justify-content:space-between;
+					width:25em;
+					align-items:center;
 				
-					&.create-supplier{
-						left:9em;
-						opacity:1;
-						z-index:0;
-					}
-			  	}
+				  	button{
+					  	display:none;
+					
+					  	&.add{
+						  	&.active{
+							  	display:block;
+						  	}
+					  	}
+			  
+					  	&.change{
+						  	&.active{
+							  	display:block;
+						  	}
+					  	}
+				
+						&.create-supplier{
+							display:block;
+						}
+				  	}
+				}
+				
 	          	.details{
 				  	opacity:0;
 				  	z-index:-1;
