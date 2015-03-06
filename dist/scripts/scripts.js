@@ -269,7 +269,7 @@ angular.module('employeeApp').config([
     /*
 	 * Configure the theme for this application
 	 */
-    $mdThemingProvider.setDefaultTheme('blue-grey');
+    $mdThemingProvider.theme('default').primaryPalette('blue-grey').accentPalette('blue').backgroundPalette('grey');
   }
 ]);
 /*
@@ -7718,7 +7718,13 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$location',
   '$window',
   function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
-    $scope.po = PurchaseOrder.get({ id: $routeParams.id });
+    $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
+      for (var i = 0; i < $scope.po.items.length; i++) {
+        var item = $scope.po.items[i];
+        item.unit_cost = Number(item.unit_cost);
+        item.quantity = Number(item.quantity);
+      }
+    });
     $scope.save = function () {
       $mdToast.show($mdToast.simple().position('top right').content('Saving changes to purchase order ' + $scope.po.id).hideDelay(0));
       $scope.po.$update(function () {

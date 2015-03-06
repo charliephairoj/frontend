@@ -1,4 +1,4 @@
-<div class="create-po-page add-page" fade-in>
+<div class="create-po-page">
 	<!--
         Forms
     -->
@@ -39,20 +39,22 @@
         -->
 		<div class="workspace">
 			<div class="submenu">
-				<button class="create" ng-click="save()">Create</button>
-				<button class="reset" ng-click="reset()">Reset</button>
+				<md-button class="create md-primary md-raised" ng-click="save()">Create</md-button>
+				<md-button class="reset md-warn md-raised" href="#/order/purchase_order">CANCEL</md-button>
 			</div>
 			<div class="supplier">
 				<h2 class="title">Supplier</h2>
-				<button class="add" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
-					Select Supplier
-				</button>
-				<button class="change" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
-					Change Supplier
-				</button>
-				<button class="create-supplier" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
-					Create New Supplier
-				</button>
+				<div class="supplier-menu">
+					<md-button class="add md-accent md-raised" ng-click="showSuppliers=true" ng-class="{'active':!po.supplier}">
+						Select Supplier
+					</md-button>
+					<md-button class="change md-accent md-raised" ng-click="showSuppliers=true" ng-class="{'active':po.supplier}">
+						Change Supplier
+					</md-button>
+					<md-button class="create-supplier md-accent md-raised" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
+						Create New Supplier
+					</md-button>
+				</div>
 				<table class="details" ng-class="{'active':po.supplier}">
 					<tr>
 						<td>Name:</td>
@@ -75,7 +77,7 @@
 						</tr>
 				</table>
 			</div>
-			<div class="order">
+			<div class="order" ng-show="po.supplier">
 				<h2 class="title">Order Particulars</h2>
 				<table class="details">
 					<tr>
@@ -127,11 +129,11 @@
 						</tr>
 				</table>
 			</div>
-			<div class="order-details">
+			<div class="order-details" ng-show="po.supplier">
 				<h2 class="title">Items</h2>
 				<div class="item-menu">
-					<button class="add" ng-click="showSupplies=true">+ Add Supply</button>
-					<button class="create" ng-click="showAddSupply=true">Create New Supply</button>
+					<md-button class="add md-accent md-raised" ng-click="showSupplies=true">+ Add Supply</md-button>
+					<md-button class="create md-accent md-raised" ng-click="showAddSupply=true">Create New Supply</md-button>
 				</div>
 				<table ng-show="po.items">
 					<thead>
@@ -151,17 +153,18 @@
 								<textarea ng-model=item.comments row="4"></textarea>
 							</td>
 							<td class='discount'>
-								<input required type="number" ng-model="item.discount" />
+								<input required type="number" min="0" ng-model="item.discount" />
 							</td>
 							<td class='unit-cost'>
-								<input required type="number" ng-model="item.cost" />
+								<input required min="0" type="number" ng-model="item.cost" />
 							</td>
 							<td class='quantity'>
-								<input required type="number" ng-model="item.quantity" />
+								<input required type="number" min="0" ng-model="item.quantity" />
 							</td>
 							<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
 							<td>
-								<button class="remove-btn" ng-click="removeItem($index)">Remove</td>
+								<md-button class="remove-btn md-warn md-raised" ng-click="removeItem($index)">Remove</md-button>
+							</td>
 						</tr>
 						<tr class="summary subtotal">
 							<td></td>
