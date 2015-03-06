@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout',
-function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout) {
+.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog',
+function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog) {
     
 	var updateLoopActive = false,
 		timeoutPromise;
@@ -9,11 +9,21 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 	//Retreive the supplier from the server
     $scope.supplier =  Supplier.get({'id': $routeParams.id});
     
+	$scope.showAddContact = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-supplier-contact.html',
+	        controller: 'AddSupplierContactCtrl',
+	        onComplete: $scope.addContact,
+	        scope: {contact: "="}
+	    });
+		
+	}
     //addS  contact to the supplier
     $scope.addContact = function (contact) {
         
         $scope.supplier.contacts = $scope.supplier.contacts || [];
         contact = contact || $scope.contact;
+		contact.name = contact.firstName + ' ' + contact.lastName;
         $scope.supplier.contacts.push(contact);
         
         $scope.contact = {};

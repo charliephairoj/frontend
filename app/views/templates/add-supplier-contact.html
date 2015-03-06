@@ -1,0 +1,18 @@
+<md-dialog class="add-supplier-contact">
+	<md-subheader>Add Contact</md-subheader>
+	<md-content>
+		<table>
+			<tr>
+				<td>
+					<md-input-container flex>
+			          	<label>First Name</label>
+			          	<input ng-model="user.firstName" placeholder="Placeholder text">
+			        </md-input-container>
+				</td>
+			</tr>
+		</table>
+	</md-content>
+	<md-action>
+		<md-button class="md-primary" ng-click="complete()">ADD</md-button>
+	</md-action>
+</md-dialog>

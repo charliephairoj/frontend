@@ -15,7 +15,7 @@
                     </div>
                 </li>
                 <li ui-if="currentUser.hasPermission('add_suppliercontact')">
-                    <div ng-click="showAddContact=true">
+                    <div ng-click="showAddContact()">
                         Add Contact
                     </div>
                 </li>
@@ -36,7 +36,7 @@
     </div>
     <!--Supplier Contact Section -->
     
-    <form name="contactForm" novalidate class="addContactModal" ng-show="showAddContact">
+    <form name="contactForm" novalidate class="addContactModal">
         <div class="title" ng-click="showAddContact=false">Add Supplier Contact</div>
         <table class="supplier_contact_table">
             <tr>
