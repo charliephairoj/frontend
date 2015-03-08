@@ -1,24 +1,5 @@
 <div class="viewSuppliersPage">
-    
-    <!-- 
-        Sidebar
-    -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Suppliers</span></h1>
-        </header>
-        <nav>
-            <ul>
-                
-                <li ui-if="currentUser.hasPermission('add_supplier')">
-                    <a href="#/contact/supplier/add">
-                        Add Supplier
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    
+   
     <!--
         Search Bar
     -->
@@ -29,6 +10,11 @@
     -->
     
     <div class="workspace">
+		
+		<nav>
+			<h2>Suppliers</h2>
+			<md-button class="add-btn md-primary md-raised" ng-href="#/contact/supplier/add">New Supplier</md-button>
+		</nav>
 		
 		<div class="title-bar">
 			<div class="id">ID</div>

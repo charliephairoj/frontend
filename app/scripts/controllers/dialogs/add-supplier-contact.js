@@ -5,6 +5,6 @@ function ($scope, $mdDialog) {
     
 	$scope.complete = function () {
 		$mdDialog.hide();
-	}
+	};
     
 }]);

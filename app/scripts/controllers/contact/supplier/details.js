@@ -1,35 +1,49 @@
 
 angular.module('employeeApp')
-.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog',
-function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog) {
+.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast',
+function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast) {
     
 	var updateLoopActive = false,
 		timeoutPromise;
 	
 	//Retreive the supplier from the server
     $scope.supplier =  Supplier.get({'id': $routeParams.id});
-    
+    $scope.contact = {};
+	
 	$scope.showAddContact = function () {
 		$mdDialog.show({
 			templateUrl: 'views/templates/add-supplier-contact.html',
-	        controller: 'AddSupplierContactCtrl',
-	        onComplete: $scope.addContact,
-	        scope: {contact: "="}
+	        controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
 	    });
-		
-	}
+	};
+	
+	$scope.complete = function () {
+		if ($scope.form.$valid) {
+			$mdToast.hide();
+			$mdDialog.hide();
+			$scope.addContact();
+		} else {
+			$mdToast.show($mdToast.simple()
+				.position('top right')
+				.hideDelay(0)
+			.content('Please complete all fields.'));
+		}
+	};
+	
+	$scope.cancel = function () {
+		$mdDialog.hide();
+		$sccope.contact = {};
+	};
+	
     //addS  contact to the supplier
     $scope.addContact = function (contact) {
-        
         $scope.supplier.contacts = $scope.supplier.contacts || [];
         contact = contact || $scope.contact;
-		contact.name = contact.firstName + ' ' + contact.lastName;
         $scope.supplier.contacts.push(contact);
         
         $scope.contact = {};
-        
-        $scope.showAddContact = false;
-        
+                
         //Save changes
         $scope.supplier.$update();
         
@@ -37,19 +51,11 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
     
     //Remove a supplier contact
     $scope.deleteContact = function ($index) {
-        
-        var contact = SupplierContact.get({'id': $scope.supplier.contacts[$index].id}, function () {
-           
             $scope.supplier.contacts.splice($index, 1);
-            contact.$delete();
-            
-            $scope.supplier.$save();
-            $scope.$apply();
-        });
-        
+            $scope.supplier.$update();
+	};
     
-    };
-    
+	/*
 	$scope.$watch(function () {
 		var supplier = angular.copy($scope.supplier);
 		delete supplier.last_modified;
@@ -71,7 +77,8 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 			}, 5000);
 		}
 	}, true);
-    
+    */
+	
     $scope.update = function () {
 		/*
         //Notify

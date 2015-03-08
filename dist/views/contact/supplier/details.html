@@ -7,21 +7,25 @@
 		</header>
 		<nav>
 			<ul>
-				<li ui-if="currentUser.hasPermission('change_supplier')">
-					<div ng-click="edit=!edit">
-						Edit
-					</div>
-				</li>
+				<!--
+                <li ui-if="currentUser.hasPermission('change_supplier')">
+                    <div ng-click="edit=!edit">
+                        Edit
+                    </div>
+                </li>
+					-->
 				<li ui-if="currentUser.hasPermission('add_suppliercontact')">
-					<div ng-click="showAddContact=true">
+					<div ng-click="showAddContact()">
 						Add Contact
 					</div>
 				</li>
-				<li>
-					<div ng-click="viewMap=true">
-						View Map
-					</div>
-				</li>
+				<!--
+                <li>
+                    <div ng-click="viewMap=true">
+                        View Map
+                    </div>
+                </li>
+					-->
 				<li ui-if="currentUser.hasPermission('delete_supplier')">
 					<div ng-click="remove()">Delete</div>
 				</li>
@@ -34,177 +38,173 @@
 		</div>
 	</div>
 
-	<!--Supplier Contact Section -->
-	<form name="contactForm" novalidate class="addContactModal" ng-show="showAddContact">
-		<div class="title" ng-click="showAddContact=false">Add Supplier Contact</div>
-		<table class="supplier_contact_table">
-			<tr>
-				<td>First Name</td>
-				<td>
-					<input beautify type="text" required ng-model="contact.firstName" />
-				</td>
-			</tr>
-			<tr>
-				<td>Last Name</td>
-				<td>
-					<input beautify type="text" required ng-model="contact.lastName" />
-				</td>
-			</tr>
-			<tr>
-				<td>Email</td>
-				<td>
-					<input beautify type="email" required ng-model="contact.email" />
-				</td>
-			</tr>
-			<tr>
-				<td>Telephone</td>
-				<td>
-					<input beautify type="text" required ng-model="contact.telephone" />
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<button type="button" ng-disabled="contactForm.$invalid" ng-click="addContact()">Add Contact</button>
-				</td>
-			</tr>
-		</table>
-	</form>
-
 	<!--Supplier Information Section -->
 	<div class="workspace">
-		<table class="details">
-			<tr>
-				<td>
+		<div class="supplier-details">
+			<div class="input-containers">
+				<md-input-container class='name'>
 					<label>Company Name</label>
-				</td>
-				<td>
 					<input type="text" size="60" ng-model="supplier.name" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Email</label>
-				</td>
-				<td>
-					<input type="text" size="30" ng-model="supplier.email" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+				</md-input-container>
+			</div>
+			<!--
+		   <div class="input-containers">
+			   <md-input-container class='name'>
+					<label>Company Name (Thai)</label>
+					<input type="text" size="60" ng-model="supplier.name_th" ec-blur="update()" />
+		   	   </md-input-container>
+		   </div>
+			   -->
+			<div class="input-containers">
+				<md-input-container class="telephone">
 					<label>Telephone</label>
-				</td>
-				<td>
-					<input type="text" ng-model="supplier.telephone" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" size="60" ng-model="supplier.telephone" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class="fax">
 					<label>Fax</label>
-				</td>
-				<td>
-					<input type="text" ng-model="supplier.fax" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Address 1</label>
-				</td>
-				<td>
-					<input type="text" size="60" ng-model="supplier.address.address1" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Address 2</label>
-				</td>
-				<td>
-					<input type="text" size="60" ng-model="supplier.address.address2" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" size="60" ng-model="supplier.fax" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class="email">
+					<label>email</label>
+					<input type="text" size="60" ng-model="supplier.email" ec-blur="update()" />
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="address">
+					<label>Address</label>
+					<input type="text" size="60" ng-model="supplier.addresses[0].address1" ec-blur="update()" />
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="address">
+					<label>Address</label>
+					<input type="text" size="60" ng-model="supplier.addresses[0].address2" ec-blur="update()" />
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="city">
 					<label>City</label>
-				</td>
-				<td>
-					<input type="text" size="40" ng-model="supplier.address.city" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Territory</label>
-				</td>
-				<td>
-					<input type="text" ng-model="supplier.address.territory" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" size="60" ng-model="supplier.addresses[0].city" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class='territory'>
+					<label>Territory/Chaeng Wat</label>
+					<input type="text" size="60" ng-model="supplier.addresses[0].territory" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class="country">
 					<label>Country</label>
-				</td>
-				<td>
-					<input type="text" ng-model="supplier.address.country" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" size="60" ng-model="supplier.addresses[0].country" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class="zipcode">
 					<label>Zipcode</label>
-				</td>
-				<td>
-					<input type="text" size="12" ng-model="supplier.address.zipcode" ec-blur="update()" />
-				</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" size="60" ng-model="supplier.addresses[0].zipcode" ec-blur="update()" />
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="terms">
 					<label>Terms</label>
-				</td>
-				<td>
-					<input type="text" size="3" maxlength="3" ng-model="supplier.terms" ec-blur="update()" />Days</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="number" min="0" ng-model="supplier.terms" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class='discount'>
 					<label>Discount</label>
-				</td>
-				<td>
-					<input type="text" size="2" maxlength="2" ng-model="supplier.discount" ec-blur="update()" />%</td>
-			</tr>
-			<tr>
-				<td>
+					<input type="text" min="0" ng-model="supplier.discount" ec-blur="update()" />
+				</md-input-container>
+				<md-input-container class="currency">
 					<label>Currency</label>
-				</td>
-				<td>
 					<select ng-model="supplier.currency" ng-change="update()">
 						<option value="THB">Thai Baht</option>
 						<option value="USD">US Dollar</option>
 						<option value="EUR">Euro</option>
 					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Notes</label>
-				</td>
-				<td>
-					<textarea ng-model="supplier.notes" ec-blur="update()">
-					</textarea>
-				</td>
-			</tr>
-		</table>
+				</md-input-container>
+			</div>
+		</div>
+		<!--
+        <table class="details">
+            <tr>
+                <td><label>Company Name</label></td>
+                <td><input type="text" size="60" ng-model="supplier.name" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Email</label></td>
+                <td><input type="text" size="30" ng-model="supplier.email" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Telephone</label></td>
+                <td><input type="text" ng-model="supplier.telephone" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Fax</label></td>
+                <td><input type="text" ng-model="supplier.fax" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Address 1</label></td>
+                <td><input type="text" size="60" ng-model="supplier.address.address1" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Address 2</label></td>
+                <td><input type="text" size="60"  ng-model="supplier.address.address2" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>City</label></td>
+                <td><input type="text" size="40" ng-model="supplier.address.city" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Territory</label></td>
+                <td><input type="text" ng-model="supplier.address.territory" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Country</label></td>
+                <td><input type="text" ng-model="supplier.address.country" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Zipcode</label></td>
+                <td><input type="text" size="12" ng-model="supplier.address.zipcode" ec-blur="update()" /></td>
+            </tr>
+            <tr>
+                <td><label>Terms</label></td>
+                <td><input type="text" size="3" maxlength="3" ng-model="supplier.terms" ec-blur="update()" /> Days</td>
+            </tr>
+            <tr>
+                <td><label>Discount</label></td>
+                <td><input type="text" size="2" maxlength="2" ng-model="supplier.discount" ec-blur="update()" /> %</td>
+            </tr>
+            <tr>
+                <td><label>Currency</label></td>
+                <td>
+                    <select ng-model="supplier.currency" ng-change="update()">
+                        <option value="THB">Thai Baht</option>
+                        <option value="USD">US Dollar</option>
+                        <option value="EUR">Euro</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Notes</label></td>
+                <td>
+                    <textarea ng-model="supplier.notes" ec-blur="update()">
+                    	
+                    </textarea>
+                </td>
+            </tr>
+        </table> 
+       
+	   -->
 		<table class="supplierContacts">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Email</th>
 					<th>Telephone</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody ng-repeat="contact in supplier.contacts">
 				<tr>
-					<td>{{contact.firstName + " " + contact.lastName}}</td>
+					<td>{{contact.name}}</td>
 					<td>{{contact.email}}</td>
 					<td>{{contact.telephone}}</td>
 					<td>
-						<button ng-click="deleteContact($index)">Delete</button>
+						<md-button class="md-warn md-raised" ng-click="deleteContact($index)">Delete</md-button>
 					</td>
 				</tr>
 			</tbody>
