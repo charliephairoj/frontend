@@ -25,30 +25,12 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 	
 	<link rel="stylesheet" 		href="//ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.css">
-	 <link rel="stylesheet" 		href="//ajax.googleapis.com/ajax/libs/angular_material/0.8.2/themes/blue-grey-theme.css">
     <link rel="stylesheet" media="(min-width:481px)" href="styles/main.css">
 
    <link rel="stylesheet" media="(min-device-width:320px) and (max-device-width:480px)" href="iphone4_style/main.css">
-	<!--
-	<link rel="stylesheet" media="print" href="print_styles/main.css"> 
-	-->
-    <!--
-    <script>
-        window.current_user = {"lastName": "Phairojmahakij", "modules": ["contacts", "products", "orders", "orders", "orders", "supplies", "accounting", "projects", "administrator"], "firstName": "Charlie", "permissions": ["delete_project", "delete_item", "add_permission", "add_pillow", "change_session", "delete_staple", "view_retail_price", "add_upholstery", "delete_configuration", "change_item", "change_address", "change_logentry", "delete_suppliercontact", "delete_supplier", "change_supplier", "add_transaction", "view_manufacture_price", "delete_contenttype", "add_product", "add_supplylog", "add_configuration", "edit_export_price", "add_staple", "delete_purchaseorder", "delete_foam", "change_transaction", "add_table", "add_book", "edit_item_price", "delete_modelimage", "change_foam", "delete_upholstery", "add_shipping", "add_acknowledgementlog", "change_staple", "change_webbing", "add_user", "change_model", "add_item", "add_delivery", "change_configuration", "add_rug", "add_zipper", "add_lumber", "delete_room", "change_shipping", "delete_webbing", "change_suppliercontact", "change_log", "change_item", "add_contact", "add_item", "change_contenttype", "add_pillow", "change_pillow", "add_customer", "delete_contact", "delete_zipper", "delete_transaction", "add_webbing", "edit_wholesale_price", "change_room", "change_permission", "delete_user", "add_session", "add_contenttype", "add_supply", "add_sewingthread", "add_item", "delete_model", "change_customer", "delete_location", "change_delivery", "delete_acknowledgement", "change_screw", "add_log", "delete_wool", "change_pillow", "add_location", "view_props", "view_wholesale_price", "view_supplier", "add_purchaseorderitems", "add_acknowledgement", "change_upholstery", "change_project", "add_fabric", "delete_delivery", "change_purchaseorderitems", "delete_item", "delete_permission", "delete_sewingthread", "add_address", "change_table", "add_suppliercontact", "delete_customer", "add_foam", "delete_log", "delete_table", "change_supply", "change_acknowledgement", "change_wool", "add_purchaseorder", "add_project", "change_group", "change_zipper", "change_modelimage", "change_item", "add_modelimage", "delete_group", "delete_fabric", "change_location", "delete_item", "delete_shipping", "change_user", "add_wool", "change_product", "change_purchaseorder", "add_room", "delete_acknowledgementlog", "delete_book", "change_book", "delete_supplylog", "delete_address", "add_screw", "view_export_price", "delete_supply", "edit_manufacture_price", "delete_s3object", "delete_product", "can_view_transactions", "change_supplylog", "change_acknowledgementlog", "delete_site", "delete_glue", "change_site", "add_model", "delete_acknowledgement_item", "delete_session", "add_glue", "delete_logentry", "change_rug", "add_group", "change_s3object", "change_glue", "delete_lumber", "delete_pillow", "delete_screw", "change_fabric", "add_s3object", "add_site", "change_lumber", "edit_retail_price", "add_logentry", "add_supplier", "delete_pillow", "change_contact", "delete_rug", "delete_purchaseorderitems", "change_sewingthread"],
-        'id': 1};
-    </script>
-    -->
-		
+   
   </head>
   <body ng-app="employeeApp" ng-init="activate=true">
-    <!--[if lt IE 7]>
-      <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-    <![endif]-->
-
-    <!--[if lt IE 9]>
-      <script src="components/es5-shim/es5-shim.js"></script>
-      <script src="components/json3/lib/json3.min.js"></script>
-    <![endif]-->
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
@@ -76,9 +58,6 @@
 				 <md-button href="#/equipment" class="menu-item" ng-show="currentUser.hasModule('supplies')">Equipment</md-button>
                 <md-button href="#/order" class="menu-item" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">Orders</md-button>
                 <md-button href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</md-button>
-                <!--
-				<a href="#/project" class="menu-item" ng-show="currentUser.hasModule('projects')">Projects</a>
-					-->
                 <md-button href="#/project" class="menu-item">Projects</md-button>
 
 				<md-button href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</md-button>
