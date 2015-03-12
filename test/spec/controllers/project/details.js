@@ -28,6 +28,11 @@ xdescribe('Controller: ProjectDetailsCtrl', function () {
                                                $routeParams: {id:5}});
 			$http.flush();
         });
+		
+		afterEach(function () {
+			$http.verifyNoOutstandingExpectation();
+			$http.verifyNoOutstandingRequest();
+		});
         
         it('should set up the UI vars', function(){
             expect(scope.showAddRoom).toBeFalsy();

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder",
-function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder) {
+.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement',
+function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement) {
     
 	var timeoutPromise;
     $scope.showAddRoom = false;
@@ -9,6 +9,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
     $scope.project = Project.get({id: $routeParams.id});
     $scope.room = {};
 	$scope.purchaseOrders = PurchaseOrder.query({limit:0, project_id:$routeParams.id});
+	$scope.acknowledgements = Acknowledgement.query({limit:0, project_id:$routeParams.id});
     
 	$scope.addCustomer = function (customer) {
 		$scope.showCustomers = false;
