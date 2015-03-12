@@ -58,6 +58,12 @@
 					<td>Order Date:</td>
 					<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
 				</tr>
+				<tr class="project">
+					<td>Project:</td>
+					<td>
+						<select ng-options="project.codename for project in projects" ng-model="ack.project">
+					</td>
+				</tr>
 			</table>
 			<table>
 				<tr class="due-date">

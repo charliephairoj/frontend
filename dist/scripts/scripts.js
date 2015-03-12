@@ -4270,7 +4270,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$window',
   '$mdToast',
   'FileUploader',
-  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader) {
+  'Project',
+  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project) {
     //Show system notification
     $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgement...').hideDelay(0));
     //Set Vars
@@ -4282,6 +4283,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
     }, function () {
       $mdToast.hide();
     });
+    $scope.projects = Project.query({ limit: 0 });
     //Grid Options
     $scope.gridOptions = {
       data: 'acknowledgement.products',

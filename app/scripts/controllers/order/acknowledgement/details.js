@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader',
-function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader) { 
+.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader', 'Project',
+function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project) { 
 	
 	//Show system notification
 	$mdToast.show($mdToast
@@ -17,6 +17,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
 	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
 		$mdToast.hide();
 	});
+	$scope.projects = Project.query({limit:0});
 	
 	//Grid Options
 	$scope.gridOptions = {

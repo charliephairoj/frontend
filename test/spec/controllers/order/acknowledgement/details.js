@@ -23,15 +23,17 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   	describe('Phase: Initialization', function() {
   		it('should make a request to the server for the acknowledgement', function() {
   			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3});
+			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route
 	    	});
 	    	expect(scope.acknowledgement).toEqual(jasmine.any(Object));
-	    	
+	    	expect(scope.projects).toEqual(jasmine.any(Array));
 	    	$http.flush();
 	    	expect(scope.acknowledgement).toEqual(jasmine.any(Object));
 	    	expect(scope.acknowledgement.id).toEqual(3);
+			expect(scope.projects.length).toEqual(1);
 	    	$http.verifyNoOutstandingRequest();
 	    	$http.verifyNoOutstandingExpectation();
   		});
@@ -41,6 +43,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   		
   		beforeEach(function() {
   			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3});
+			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route
