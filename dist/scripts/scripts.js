@@ -4282,8 +4282,17 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'pdf': true
     }, function () {
       $mdToast.hide();
+      if ($scope.projects.length > 0) {
+        var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
+        $scope.acknowledgement.project = $scope.projects[index];
+      }
     });
-    $scope.projects = Project.query({ limit: 0 });
+    $scope.projects = Project.query({ limit: 0 }, function () {
+      if ($scope.acknowledgement.id) {
+        var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
+        $scope.acknowledgement.project = $scope.projects[index];
+      }
+    });
     //Grid Options
     $scope.gridOptions = {
       data: 'acknowledgement.products',
