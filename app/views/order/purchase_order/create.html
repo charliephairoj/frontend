@@ -13,6 +13,15 @@
     <div add-supply="showAddSupply" supplier='po.supplier' on-add="addItem($supply)">
     </div>
        
+    <div class="calendar_modal" data-modal  ng-model="showCalendar">
+        <div ui-date ng-model="po.receive_date">
+        </div>
+        <div class="bottom_bar">
+            <button ng-disabled="!po.receive_date" ng-click="showCalendar=!showCalendar">Select</button>
+        </div>
+        
+    </div>
+	
     <form class="po" name="form" novalidate>
         <!--
             Sidebar
@@ -98,7 +107,17 @@
                 <div class="order" ng-show="po.supplier">
 					<h2 class="title">Order Particulars</h2>
                     <table class="details">
-                        
+                        <tr>
+                            <td>Receive Date:</td>
+                            <td>
+								<md-button ng-show="po.receive_date" class="md-accent" ng-click="showCalendar=true">
+									{{po.receive_date | date:"EEEE, MMMM d, yyyy"}}
+								</md-button>
+								<md-button ng-show="!po.receive_date" class="md-accent md-raised" ng-click="showCalendar=true">
+									Set Receive Date
+								</md-button>
+							</td>
+                        <tr>
                         <tr>
                             <td>Terms:</td>
                             <td><input type="number" class="vat" ng-model="po.terms" required maxlength="3" size="3" > Days</td>
