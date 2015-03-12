@@ -4282,12 +4282,14 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'pdf': true
     }, function () {
       $mdToast.hide();
+      //Reconcile the project so that it is shown to the user
       if ($scope.projects.length > 0) {
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
         $scope.acknowledgement.project = $scope.projects[index];
       }
     });
     $scope.projects = Project.query({ limit: 0 }, function () {
+      //Reconcile the project so that it is shown to the user
       if ($scope.acknowledgement.id) {
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
         $scope.acknowledgement.project = $scope.projects[index];
@@ -4345,6 +4347,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       $mdToast.show($mdToast.simple().position('top right').content('Saving acknowledgement...').hideDelay(0));
       $scope.acknowledgement.$update(function (response) {
         $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
+        //Reconcile the projects so that the differences are shown the user
+        var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
+        $scope.acknowledgement.project = $scope.projects[index];
       }, function () {
         $mdToast.show($mdToast.simple().position('top right').content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
       });
