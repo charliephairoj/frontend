@@ -54,7 +54,7 @@
 					<td>Customer:</td>
 					<td>{{acknowledgement.customer.name}}</td>
 				</tr>
-				<tr class="due-date">
+				<tr class="order-date">
 					<td>Order Date:</td>
 					<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
 				</tr>
@@ -68,7 +68,11 @@
 			<table>
 				<tr class="due-date">
 					<td>Devlivery Date:</td>
-					<td>{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}</td>
+					<td>
+						<md-button class="md-accent" ng-click="showCal=true">
+							{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}
+						</md-button>
+					</td>
 				</tr>
 				<tr class="due-date">
 					<td>Status:</td>
@@ -80,7 +84,7 @@
 				</tr>
 			</table>
 		</div>
-		<md-tabs md-selected="selectedIndex">
+		<md-tabs class="md-primary" md-selected="selectedIndex">
 			<md-tab label="Items">
 			</md-tab>
 			<md-tab label="Attachments">
@@ -89,6 +93,35 @@
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="items-panel">
+					<table>
+						<thead>
+							<tr>
+								<td>PREVIEW</td>
+								<td>DESCRIPTION</td>
+								<td>WIDTH</td>
+								<td>DEPTH</td>
+								<td>HEIGHT</td>
+								<td>FABRIC</td>
+								<td>STATUS</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in acknowledgement.items">
+								<td class="preview">
+									<div class="img-container">
+										<img ng-src="{{item.image.url}}" />
+									</div>
+								</td>
+								<td class="description">{{item.description}}</td>
+								<td class="width">{{item.width}}</td>
+								<td class="depth">{{item.depth}}</td>
+								<td class="height">{{item.height}}</td>
+								<td class="fabric">{{item.fabric.description}}</td>
+								<td class="status" ng-class="item.status.toLowerCase()">{{item.status}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<!--
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -102,8 +135,7 @@
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="item in acknowledgement.items">
 								<a class="item">
-
-									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+ <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">--> <!--
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -119,6 +151,7 @@
 							</div>
 						</div>
 					</div>
+							-->
 				</div>
 				<div ng-switch-when="1" class="file-panel">
 					<div class="title-bar">

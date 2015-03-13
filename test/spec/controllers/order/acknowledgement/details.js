@@ -22,7 +22,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
 
   	describe('Phase: Initialization', function() {
   		it('should make a request to the server for the acknowledgement', function() {
-  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3});
+  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project: {id:4}});
 			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
@@ -42,7 +42,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function() {
   		
   		beforeEach(function() {
-  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3});
+  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project:{id: 4}});
 			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
@@ -58,7 +58,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   		
   		describe('Updating the acknowledgement', function() {
   			it('should send a PUT request to the server', function() {
-  				$http.expectPUT('/api/v1/acknowledgement/3/').respond({id:3});
+  				$http.expectPUT('/api/v1/acknowledgement/3/').respond({id:3, project: {id: 4}});
   				scope.save(); 
   				
   				$http.flush();

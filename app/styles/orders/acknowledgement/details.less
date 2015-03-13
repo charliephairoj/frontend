@@ -141,14 +141,6 @@
 					margin-left:2em;
 				}
 			}
-			
-			.due-date{
-				cursor:pointer;
-			}
-			
-			.customer{
-				cursor:pointer;
-			}
         }
 		
         md-tabs{
@@ -169,13 +161,43 @@
 				height:100%;
 				align-items:center;
 				
+				table{
+					width:90%;
+					thead{
+						background:#607d8b;
+						tr{
+							td{
+								background:#607d8b;
+								padding:1em;
+								color:rgba(255, 255, 255, 1);
+								text-align:center;
+							}
+						}
+					}
+					tbody{
+						tr{
+							td{
+								height:3em;
+								vertical-align:middle;
+								border-right:1px dotted rgba(0, 0, 0, 0.35);
+								border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+								padding-left:1em;
+								
+								&:last-child{
+									border-right:none;
+								}
+							}
+						}
+					}
+				}
 				
 				.title-bar{
 					width:90%;
 					display:flex;
 					flex-direction:row;
 					border-bottom: 1px solid #4F6874;
-			
+					background:#607d8b;
+					
 					div{
 						display:flex;
 						flex-direction:row;
@@ -292,15 +314,15 @@
 						}
 						
 						&.width{
-							width:10%;
+							width:8%;
 						}
 						
 						&.depth{
-							width:10%;
+							width:8%;
 						}
 						
 						&.height{
-							width:10%;
+							width:8%;
 						}
 						
 						&.fabric{
@@ -308,7 +330,7 @@
 						}
 				
 						&.status{
-							width:10%;
+							width:16%;
 						}
 					}
 				
@@ -346,19 +368,19 @@
 									}
 						
 									&.width{
-										width:10%;
+										width:8%;
 										justify-content:flex-end;
 										padding:0 0.75em 0 0;
 									}
 						
 									&.depth{
-										width:10%;
+										width:8%;
 										justify-content:flex-end;
 										padding:0 0.75em 0 0;
 									}
 						
 									&.height{
-										width:10%;
+										width:8%;
 										justify-content:flex-end;
 										padding:0 0.75em 0 0;
 									}
@@ -368,7 +390,7 @@
 									}
 				
 									&.status{
-										width:10%;
+										width:16%;
 										
 										&.shipped{
 											color:green;
