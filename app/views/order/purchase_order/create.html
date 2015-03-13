@@ -134,7 +134,7 @@
                         <tr>
                             <td>Project:</td>
                             <td>
-								<select ng-options="project.codename for project in projects" ng-model="po.project" ng-disabled="po.newProject">
+								<select ng-options="project.codename for project in projects | orderBy: codename" ng-model="po.project" ng-disabled="po.newProject">
 								<input class="new-project-checkbox" type="checkbox" ng-model="po.newProject" />New Project
 								<input class="new-project-name" type="text" ng-model="po.newProjectName" ng-show="po.newProject">
                             </td>
