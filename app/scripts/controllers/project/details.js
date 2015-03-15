@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement',
-function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement) {
+.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement', '$mdDialog', 'Room',
+function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog, Room) {
     
 	var timeoutPromise;
     $scope.showAddRoom = false;
@@ -10,12 +10,57 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
     $scope.room = {};
 	$scope.purchaseOrders = PurchaseOrder.query({limit:0, project_id:$routeParams.id});
 	$scope.acknowledgements = Acknowledgement.query({limit:0, project_id:$routeParams.id});
-    
+	$scope.room = new Room();
+    $scope.roomTypes = [
+    	'Bedroom',
+		'Dining Room',
+		'Formal Dining Room',
+		'Guest Bedroom',
+		'Guest Bathroom',
+		'Kitchen',
+		'Living Room',
+		"Maid's Quaters",
+		'Master Bathroom',
+		'Master Bedroom',
+		'Pantry'
+    ];
+	
 	$scope.addCustomer = function (customer) {
 		$scope.showCustomers = false;
 		$scope.project.customer = customer;
 	};
 	
+	/*
+	 * Create dialog to add rom
+	 */
+	$scope.showAddRoom = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-room.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding room process and close the dialog 
+	 */
+	$scope.completeAddRoom = function () {
+		$mdDialog.hide();
+		var room = angular.copy($scope.room);
+		$scope.room = new Room();
+		room.$create(function (resp) {
+			$scope.projects.room.push(resp);
+		});
+	};
+	
+	/*
+	 * Cancel adding a room 
+	 */
+	$scope.cancelAddRoom = function () {
+		$mdDialog.hide();
+		$scope.room = new Room();
+	};
+	 
 	$scope.addSupply = function ($supply) {
 		
 		$scope.showAddSupply = false;

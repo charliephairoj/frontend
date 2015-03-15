@@ -16,7 +16,7 @@
             
     </div>
 	
-    <div modal class="add-room" ng-model="showAddRoom" title="Add a New Room" >
+    <div modal class="add-room" title="Add a New Room" >
         <div class="container" ng-switch on="addSelector" ng-init="addSelector='image'">
             <table class="details">
                
@@ -81,8 +81,8 @@
         <nav>
             <ul class="list">
                 <li>
-                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom=true">Add a Room</button>
-					<button ng-click="showAddSupply=true">Add a Supply</button>
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+					<button ng-click="showAddSupply()">Add a Supply</button>
                     <button ng-click="addImage=true">Upload Image</button>
                     <button ng>View Build-Ins</button>
                     <button>View Lose Items</button>
