@@ -15,62 +15,6 @@
         </div>
             
     </div>
-	
-    <div modal class="add-room" title="Add a New Room" >
-        <div class="container" ng-switch on="addSelector" ng-init="addSelector='image'">
-            <table class="details">
-               
-                <tr>
-                    <td>Room Type</td>
-                    <td>
-                        <input type="text" list="roomType" ng-model="room.description" beautify />
-                        <datalist id="roomType">
-                            <option value="Kitchen"value>
-                            <option value="Family Room"value>
-                            <option value="Living Room"value>
-                            <option value="Pantry"value>
-                            <option value="Closet"value>
-                            <option value="Walk-in Closet"value>
-                            <option value="Bathroom"value>
-                            <option value="Hallway"value>
-                            <option value="Dining Room"value>
-                            <option value="Master Bedroom">
-                            <option value="Bedroom">
-                        </datalist>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Reference</td>
-                    <td><input type="text" ng-model="room.reference"/></td>
-                </tr>
-                 <tr>
-                    <td colspan="2" class="image"><img ng-src="{{room.image.url}}" /></td>
-                </tr>
-            </table>
-            <div class="selector">
-                <ul>
-                    <li ng-click="addSelector='image'">Add Image</li>
-                    <li ng-click="addSelector='schematic'">Add Schematic</li>
-                </ul>
-            </div>
-            <div class="media-container image" ng-switch-default>
-                <div file-cropper></div>
-                <div class="bottom-bar">
-                    <button ng-click="addImage(cropper.getImage())">Save Image</button>
-                </div>
-            </div>
-            <div class="media-container files" ng-switch-when="schematic">
-                <div file-handler="files"></div>
-                <div class="bottom-bar">
-                    <button ng-click="addSchematic(files)">Save Image</button>
-                </div>
-            </div>
-            
-        </div>
-        <div class="bottom-bar">
-            <button ng-click="addRoom()">Add Room</button>
-        </div>
-    </div> 
      
     <div class="sidebar">
         <header>
@@ -117,6 +61,9 @@
         </div>
 		
 		<md-tabs md-selected="selectedIndex">
+			<md-tab label="Rooms">
+			
+			</md-tab>
 			<md-tab label="Items">
 				
 			</md-tab>
@@ -130,6 +77,37 @@
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="items-panel">
+				
+					<div class="title-bar">
+						<div class="preview">PREVIEW</div>
+						<div class="description">DESCRIPTION</div>
+						<div class="width">WIDTH</div>
+						<div class="depth">DEPTH</div>
+						<div class="height">HEIGHT</div>
+						<div class="fabric">FABRIC</div>
+						<div class="status">STATUS</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="room in project.rooms">
+								<a class="item" ng-href="#/project/room/{{room.id}}"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+									<div class="preview">
+										<div class="img-container">
+											<img ng-src="{{item.image.url}}" />
+										</div>
+									</div>
+									<div class="description">{{room.description}}</div>
+									<div class="width">{{item.width}}</div>
+									<div class="depth">{{item.depth}}</div>
+									<div class="height">{{item.height}}</div>
+									<div class="fabric">{{item.fabric.description}}</div>
+									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="1" class="items-panel">
 					
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
@@ -160,7 +138,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="1" class="po-panel">
+				<div ng-switch-when="2" class="po-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>
@@ -187,7 +165,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="2" class="acknowledgement-panel">
+				<div ng-switch-when="3" class="acknowledgement-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>

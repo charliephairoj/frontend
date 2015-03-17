@@ -47,9 +47,10 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	$scope.completeAddRoom = function () {
 		$mdDialog.hide();
 		var room = angular.copy($scope.room);
+		room.project = $scope.project;
 		$scope.room = new Room();
 		room.$create(function (resp) {
-			$scope.projects.room.push(resp);
+			$scope.project.rooms.push(resp);
 		});
 	};
 	

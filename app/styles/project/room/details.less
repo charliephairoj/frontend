@@ -1,42 +1,215 @@
 .room-details-page{
     .details-page;
-    
+    background-color: rgba(255, 255, 255, 1);
+	
     .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+		right:0;
+		padding:15em 0 1em 0;
+		background:#FFF;
+		
         .details{
-            width:100%;
-            height:6em;
-            color:#CCC;
-            table{
-                
-            }
+			position:absolute;
+			width:100%;
+			padding:1em;
+			height:8em;
+			top:0;
+			left:0;
+            color:rgba(0, 0, 0, 1);
+			
+			
+			table{
+				float:left;
+				margin-top:0.25em;
+				&:last-child{
+					margin-left:2em;
+				}
+			}
+			
+			.due-date{
+				cursor:pointer;
+			}
+			
+			.customer{
+				cursor:pointer;
+			}
         }
+		
+        md-tabs{
+        	position:absolute;
+			top:9em;
+			left:5%;
+			width:90%;
+        }
+		
+		.panel-container{
+			//position:relative;
+			height:100%;
+			width:100%;
+			
+			.supply-panel{
+				display:flex;
+				flex-direction:column;
+				height:100%;
+				align-items:center;
+				
+				
+				.title-bar{
+					width:90%;
+					display:flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					background-color:rgb(96,125,139);
+					
+					div{
+						display:flex;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-around;
+						padding:1em;
+						background:rgb(96,125,139);
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+						&:first-child{
+							border-left:none;
+						}
+				
+						&.id{
+							width:10%;
+						}
+	
+						&.order-date{
+							width:10%;
+						}
+	
+						&.customer{
+							width:25%;
+						}
+				
+						&.project{
+							width:20%;
+						}
+	
+						&.delivery-date{
+							width:10%;
+						}
+				
+						&.total{
+							width:15%;
+						}
+				
+						&.status{
+							width:10%;
+						}
+					}
+				}
         
-        .gridStyle{
-            position:absolute;
-            top:6em;
-            bottom:0px;
-            width:100%;
-            background-color:transparent;
-            font-family:proxima;
-            color:#CCC;
-            .ngTopPanel{
-                font-size:1.2em;
-                background-color:#282828;
-            }
-            .ngRow{
-                background:transparent;
-                border-bottom:1px solid #282828;
-                .ngCell{
-                    .file-handler{
-                        .transition(height, 250ms, linear);
-                        &.drag-over{
-                            height:6em;
-                        }
-                    }
-                }
-            }
-        }
-    
+		        .outer-container{
+		            height:100%;
+		            width:90%;
+		            overflow-y:scroll;
+			
+		            .inner-container{
+		                width:100%;
+		                height:auto;
+		                .item-container{
+		                    width:100%;
+		                    //background-color:red;
+		                    position:relative;
+		                    height:3em;
+		                    &:hover{
+		                        //background-color:red;
+		                    }
+                    
+		                    .item{
+								display:flex;
+								flex-direction:row;
+		                        width:100%;
+		                        background-color:#FFF;
+		                        position:absolute;
+		                        left:0;
+								top:0;
+		                        font-size:1em;
+		                        height: 3em;
+		                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+		                        text-decoration:none;
+		                        color:#000;
+		                        cursor:pointer;
+		                        .transition(all, 150ms, linear);
+                        
+								&:hover{
+		                            background-color:#E4EEF4;
+		                        }
+                        
+		                        &.selected{
+		                            background-color:orange;
+		                        }
+						
+                        
+								div{
+									display:flex;
+									flex-direction:row;
+									align-items:center;
+									padding-left:1em;
+									justify-content:flex-start;
+									border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+									&:first-child{
+										border-left:none;
+									}
+							
+									&.id{
+										width:10%;
+									}
+	
+									&.order-date{
+										width:10%;
+									}
+	
+									&.customer{
+										width:25%;
+									}
+							
+									&.project-id{
+										width:3%;
+										padding-left:0.2em;
+									}
+							
+									&.project{
+										width:17%;
+									}
+	
+									&.delivery-date{
+										width:10%;
+									}
+				
+									&.total{
+										width:15%;
+										justify-content:flex-end;
+										padding:0 1em 0 0;
+									}
+				
+									&.status{
+										width:10%;
+								
+										&.processed{
+											color:#0098cd;
+										}
+								
+										&.received{
+											color:#54947A;
+										}
+									}
+								}
+		                    }
+		                }
+		            }
+		        }
+			}
+		}
     }
-    
 }
