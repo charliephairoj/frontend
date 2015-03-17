@@ -1,37 +1,50 @@
 
 angular.module('employeeApp')
-.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', 
-function ($scope, Room, $routeParams, Notification) {
+.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', '$mdDialog', 'RoomItem',
+function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem) {
     
     $scope.room = Room.get({id: $routeParams.id});
-    $scope.gridOptions = {
-        data: 'room.items',
-        columnDefs: [{field: 'description', displayName: 'Description'},
-                     {field: 'status', displayName: 'Status'},
-                     {field: 'delivery_date', displayName: 'Delivery Date', filter: 'date:"MMMM d, yyyy"'},
-                     {field: 'schematic',
-                      displayName: 'Schematic',
-                      cellTemplate: '<div file-handler><div>'}]
-        
-    };
-    
-    $scope.addProduct = function (product) {
-        //Notification of product add to which room
-        Notification.display('Adding ' + product.description + ' to ' + $scope.room.description, false);
-        
-        //Create item and set details
-        var item = new ProjectItem();
-        item.product = product;
-        item.type = "product";
-        item.room = {id: $scope.room.id};
-        item.reference = $scope.room.reference + ($scope.room.items.length + 1);
-        
-        //Save the Item to the server
-        item.$save(function () {
-            Notification.display(item.description + ' added to ' + $scope.room.description);
-            //Add item to current room on display
-            $scope.room.items.push(item);    
-        });
-    };
-
+	$scope.item = new RoomItem();
+ 
+	/*
+	 * Create dialog to add item
+	 */
+	$scope.showAddItem = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-room-item.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Add files to the current item
+	 */
+	$scope.addItemFiles = function ($file) {
+		$scope.item.files = $scope.item.files || [];
+		$scope.item.files.push($file);
+	}
+	
+	/*
+	 * Complete adding item process and close the dialog 
+	 */
+	$scope.completeAddItem = function () {
+		$mdDialog.hide();
+		var item = angular.copy($scope.item);
+		item.room = $scope.room;
+		$scope.item = new RoomItem();
+		item.$create(function (resp) {
+			$scope.room.items = $scope.room.items || [];
+			$scope.room.items.push(resp);
+		});
+	};
+	
+	/*
+	 * Cancel adding a item 
+	 */
+	$scope.cancelAddItem = function () {
+		$mdDialog.hide();
+		$scope.item = new RoomItem();
+	};
+	
 }]);

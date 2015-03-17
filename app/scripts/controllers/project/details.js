@@ -31,7 +31,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	};
 	
 	/*
-	 * Create dialog to add rom
+	 * Create dialog to add room
 	 */
 	$scope.showAddRoom = function () {
 		$mdDialog.show({

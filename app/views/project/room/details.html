@@ -4,9 +4,6 @@
         Modals
     -->
     
-    <div product-selector="showAddItem" product-selector-add="addProduct(product)"></div>
-    
-    
     <!--
         Sidebar
     -->
@@ -19,7 +16,7 @@
         <nav>
             <ul class="list">
                 <li>
-                    <button ng-click="showAddItem=true">Add a Item</button>
+                    <button ng-click="showAddItem()">Add a Item</button>
                 </li>
             </ul>
         </nav>
@@ -55,36 +52,63 @@
 		</md-tabs>
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
-				<div ng-switch-when="0" class="supply-panel">
-				
+				<div ng-switch-when="0" class="item-panel">
+					<table>
+						<thead>
+							<tr>
+								<th>DESCRIPTION</th>
+								<th>REFERENCE</th>
+								<th>WIDTH</th>
+								<th>DEPTH</th>
+								<th>HEIGHT</th>
+								<th>QUANTITY</th>
+								<th>STATUS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in room.items">
+								<td>{{item.description}}</td>
+								<td>{{item.reference}}</td>
+								<td>{{item.width}}</td>
+								<td>{{item.depth}}</td>
+								<td>{{item.height}}</td>
+								<td>{{item.quantity}}</td>
+								<td>{{item.status}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<!--
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
+						<div class="description">DESCRIPTION</div>
 						<div class="description">DESCRIPTION</div>
 						<div class="width">WIDTH</div>
 						<div class="depth">DEPTH</div>
 						<div class="height">HEIGHT</div>
-						<div class="fabric">FABRIC</div>
+						<div class="quantity">QUANTITY</div>
 						<div class="status">STATUS</div>
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="item in room.items">
-								<a class="item" ng-href="#/project/room/{{room.id}}"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+								<a class="item" ng-href="#/project/room/{{room.id}}"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
 										</div>
 									</div>
 									<div class="description">{{item.description}}</div>
+									<div class="reference">{{item.reference}}</div>
 									<div class="width">{{item.width}}</div>
 									<div class="depth">{{item.depth}}</div>
 									<div class="height">{{item.height}}</div>
-									<div class="fabric">{{item.fabric.description}}</div>
+									<div class="quantity">{{item.quantity}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
 								</a>
 							</div>
 						</div>
 					</div>
+						-->
 				</div>
 			</ng-switch>
 		</div>

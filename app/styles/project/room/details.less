@@ -50,13 +50,49 @@
 			height:100%;
 			width:100%;
 			
-			.supply-panel{
+			.item-panel{
 				display:flex;
 				flex-direction:column;
 				height:100%;
 				align-items:center;
 				
-				
+				table{
+					width:90%;
+					
+					thead{
+						tr{
+							background-color:rgb(96,125,139);
+							
+							th{
+								padding:1em;
+								border-left: 1px dotted rgba(0, 0, 0, 0.35);
+								font-family:proxima, Helvetica;
+								color:rgba(255, 255, 255, 1);
+								
+								&:first-child{
+									border-left:none;
+								}
+							}
+						}
+					}
+					
+					tbody{
+						tr{
+							border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+							
+							td{
+								padding:1em;
+								border-left: 1px dotted rgba(0, 0, 0, 0.35);
+								font-family:proxima, Helvetica;
+								color:rgba(0, 0, 0, 1);
+								
+								&:first-child{
+									border-left:none;
+								}
+							}
+						}
+					}
+				}
 				.title-bar{
 					width:90%;
 					display:flex;
