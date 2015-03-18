@@ -3,6 +3,7 @@
     <!--
         Modals
     -->
+	<div supply-list="showSupplyToggle" on-select="addSupply($supply)"></div>
     
     <!--
         Sidebar
@@ -53,62 +54,94 @@
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="item-panel">
+					<!--
 					<table>
 						<thead>
 							<tr>
 								<th>DESCRIPTION</th>
 								<th>REFERENCE</th>
-								<th>WIDTH</th>
+								
 								<th>DEPTH</th>
 								<th>HEIGHT</th>
 								<th>QUANTITY</th>
 								<th>STATUS</th>
+								<th>FILES</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="item in room.items">
 								<td>{{item.description}}</td>
 								<td>{{item.reference}}</td>
-								<td>{{item.width}}</td>
 								<td>{{item.depth}}</td>
 								<td>{{item.height}}</td>
 								<td>{{item.quantity}}</td>
 								<td>{{item.status}}</td>
+								<td class="files">
+									<table class="file-table">
+										<tr ng-repeat="file in item.files">
+											<div>
+												<td>
+													<a ng-href="{{file.url}}" target="_blank">{{file.filename}}</a>
+												</td>
+											</div>
+										</tr>
+									</table>
+								</td>
 							</tr>
 						</tbody>
 					</table>
-					<!--
+				-->
 					<div class="title-bar">
-						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
-						<div class="description">DESCRIPTION</div>
-						<div class="width">WIDTH</div>
-						<div class="depth">DEPTH</div>
-						<div class="height">HEIGHT</div>
+						<div class="reference">REFERENCE</div>
 						<div class="quantity">QUANTITY</div>
 						<div class="status">STATUS</div>
+						<div class="supplies">SUPPLIES</div>
+						<div class="files">FILES</div>
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
-							<div class="item-container" ng-repeat="item in room.items">
-								<a class="item" ng-href="#/project/room/{{room.id}}"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">
-									<div class="preview">
-										<div class="img-container">
-											<img ng-src="{{item.image.url}}" />
-										</div>
-									</div>
+							<div class="item-container" ng-repeat="item in room.items" file-drop="addListedItemFiles($files, $index)">
+								<div class="placeholder">
+									DROP FILES HERE
+								</div>
+								<div class="item">
+									
 									<div class="description">{{item.description}}</div>
 									<div class="reference">{{item.reference}}</div>
-									<div class="width">{{item.width}}</div>
-									<div class="depth">{{item.depth}}</div>
-									<div class="height">{{item.height}}</div>
 									<div class="quantity">{{item.quantity}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
-								</a>
+									<div class="supplies">
+										<md-button class="md-accent md-raised" ng-click="showAddSupply($index)">Add</md-button>
+										<div class="supplies-table-container">
+											<table class="supplies-table">
+												<tr ng-repeat="supply in item.supplies">
+														<td>
+															<div class="supply-container">
+																<div class="description">{{supply.description}}</div>
+																<md-input-container>
+																	<label>Quantity</label>
+																	<input type="number" min="0" required ng-model="supply.quantity" required>
+																</md-input-container>
+															</div>
+														</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+									<div class="files">
+										<table class="files-table">
+											<tr ng-repeat="file in item.files">
+													<td>
+														<a ng-href="{{file.url}}" target="_blank">{{file.filename}}</a>
+													</td>
+											</tr>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-						-->
 				</div>
 			</ng-switch>
 		</div>

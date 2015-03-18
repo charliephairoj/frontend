@@ -59,7 +59,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 				}
 			}, function () {
 				
-			})
+			});
 		}
 		/* jshint ignore:end */
 	};

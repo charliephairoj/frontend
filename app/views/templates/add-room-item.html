@@ -1,0 +1,47 @@
+<md-dialog class="add-room-item">
+	<md-subheader>Add Item</md-subheader>
+	<div class="container">
+		<md-content>
+			<form name="ctrl.parent.form">
+				<table>
+					<tr>
+						<td>
+							<md-input-container>
+								<label>item Description</label>
+								<input type="text" ng-model="ctrl.parent.item.description" required>
+							</md-input-container>
+							<md-input-container>
+								<label>Reference</label>
+								<input type="text" ng-model="ctrl.parent.item.reference" required>
+							</md-input-container>
+							<md-input-container>
+								<label>Quantity</label>
+								<input type="text" ng-model="ctrl.parent.item.quantity" required>
+							</md-input-container>
+						</td>
+					</tr>
+				</table>
+				<div class="files" file-drop="ctrl.parent.addItemFiles($files)">
+					<div class="initial" ng-if="!ctrl.parent.item.files">
+						<h2>
+							ATTACHMENTS
+						</h2>
+					</div>
+					<div class="hover">
+						<h2>
+							DROP FILES HERE
+						</h2>
+					</div>
+					<a class="file" ng-repeat="file in ctrl.parent.item.files" ng-class="{'uploading': !file.url}" checkmark="file.id" ng-href="{{file.url}}" target="_blank">
+						{{file.filename}}
+						<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+					</a>
+				</div>
+			</form>
+		</md-content>
+	</div>
+	<md-action>
+		<md-button class="md-primary md-raised" ng-click="ctrl.parent.completeAddItem()">ADD</md-button>
+		<md-button class="md-primary md-raised" ng-click="ctrl.parent.cancelAddItem()">CANCEL</md-button>
+	</md-action>
+</md-dialog>

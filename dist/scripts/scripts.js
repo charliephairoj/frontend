@@ -6013,7 +6013,8 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   '$timeout',
   'PurchaseOrder',
   'Acknowledgement',
-  function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement) {
+  '$mdDialog',
+  function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog) {
     var timeoutPromise;
     $scope.showAddRoom = false;
     $scope.flag = false;
@@ -6027,9 +6028,54 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
       limit: 0,
       project_id: $routeParams.id
     });
+    $scope.room = new Room();
+    $scope.roomTypes = [
+      'Bedroom',
+      'Dining Room',
+      'Formal Dining Room',
+      'Guest Bedroom',
+      'Guest Bathroom',
+      'Kitchen',
+      'Living Room',
+      'Maid\'s Quaters',
+      'Master Bathroom',
+      'Master Bedroom',
+      'Pantry'
+    ];
     $scope.addCustomer = function (customer) {
       $scope.showCustomers = false;
       $scope.project.customer = customer;
+    };
+    /*
+	 * Create dialog to add room
+	 */
+    $scope.showAddRoom = function () {
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-room.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    /*
+	 * Complete adding room process and close the dialog 
+	 */
+    $scope.completeAddRoom = function () {
+      $mdDialog.hide();
+      var room = angular.copy($scope.room);
+      room.project = $scope.project;
+      $scope.room = new Room();
+      room.$create(function (resp) {
+        $scope.project.rooms.push(resp);
+      });
+    };
+    /*
+	 * Cancel adding a room 
+	 */
+    $scope.cancelAddRoom = function () {
+      $mdDialog.hide();
+      $scope.room = new Room();
     };
     $scope.addSupply = function ($supply) {
       $scope.showAddSupply = false;
@@ -6097,7 +6143,10 @@ angular.module('employeeApp.services').factory('Project', [
 angular.module('employeeApp.services').factory('Room', [
   '$resource',
   function ($resource) {
-    return $resource('/api/v1/room/:id', { id: '@id' });
+    return $resource('/api/v1/room/:id/', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
   }
 ]);
 angular.module('employeeApp.directives').directive('checkmark', [function () {
@@ -6382,46 +6431,130 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   'Room',
   '$routeParams',
   'Notification',
-  function ($scope, Room, $routeParams, Notification) {
-    $scope.room = Room.get({ id: $routeParams.id });
-    $scope.gridOptions = {
-      data: 'room.items',
-      columnDefs: [
-        {
-          field: 'description',
-          displayName: 'Description'
-        },
-        {
-          field: 'status',
-          displayName: 'Status'
-        },
-        {
-          field: 'delivery_date',
-          displayName: 'Delivery Date',
-          filter: 'date:"MMMM d, yyyy"'
-        },
-        {
-          field: 'schematic',
-          displayName: 'Schematic',
-          cellTemplate: '<div file-handler><div>'
+  '$mdDialog',
+  'RoomItem',
+  'FileUploader',
+  '$timeout',
+  '$mdToast',
+  function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast) {
+    var timeoutPromise = {};
+    $scope.room = Room.get({ id: $routeParams.id }, beginWatch);
+    $scope.room.items = $scope.room.items || [];
+    $scope.item = new RoomItem();
+    function setTimeoutFactory(item, i) {
+      timeoutPromise[i] = setTimeout(function (item) {
+        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Saving ' + item.description + '...'));
+        item = new RoomItem(angular.copy(item));
+        function callback() {
+          $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(item.description + ' saved.'));
         }
-      ]
+        item.id ? item.$update(callback) : item.$create(callback);  //jshint ignore:line
+      }, 2000, item);
+    }
+    /*
+	 * Watch the items
+	 */
+    function beginWatch() {
+      $scope.$watch('room.items', function (newVal, oldVal) {
+        if (newVal.length === oldVal.length) {
+          for (var i = 0; i < newVal.length; i++) {
+            if (!angular.equals(newVal[i], oldVal[i])) {
+              clearTimeout(timeoutPromise[i]);
+              setTimeoutFactory(newVal[i], i);
+            }
+          }
+        }
+      }, true);
+    }
+    /*
+	 * Add files to the current item
+	 */
+    $scope.addListedItemFiles = function ($files, $index) {
+      $scope.room.items[$index].files = $scope.room.items[$index].files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < $files.length; i++) {
+        //$scope.room.items[$index].files.push({filename: $files[i].name});
+        var promise = FileUploader.upload($files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          $scope.room.items[$index].files.push(data);
+          for (var h = 0; h < $scope.room.items[$index].files.length; h++) {
+          }
+        }, function (e) {
+        });
+      }  /* jshint ignore:end */
     };
-    $scope.addProduct = function (product) {
-      //Notification of product add to which room
-      Notification.display('Adding ' + product.description + ' to ' + $scope.room.description, false);
-      //Create item and set details
-      var item = new ProjectItem();
-      item.product = product;
-      item.type = 'product';
-      item.room = { id: $scope.room.id };
-      item.reference = $scope.room.reference + ($scope.room.items.length + 1);
-      //Save the Item to the server
-      item.$save(function () {
-        Notification.display(item.description + ' added to ' + $scope.room.description);
-        //Add item to current room on display
-        $scope.room.items.push(item);
+    /*
+	 * Create dialog to add item
+	 */
+    $scope.showAddItem = function () {
+      $scope.item = new RoomItem();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-room-item.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
       });
+    };
+    /*
+	 * Add files to the current item
+	 */
+    $scope.addItemFiles = function ($files, $index) {
+      var item = $scope.item || $scope.room.items[$index];
+      item.files = item.files || [];
+      /* jshint ignore:start */
+      for (var i = 0; i < $files.length; i++) {
+        item.files.push({ filename: $files[i].name });
+        var promise = FileUploader.upload($files[i], '/api/v1/acknowledgement/file/');
+        promise.then(function (result) {
+          var data = result.data || result;
+          for (var h = 0; h < item.files.length; h++) {
+            if (data.filename == item.files[h].filename) {
+              angular.extend(item.files[h], data);
+            }
+          }
+        }, function (e) {
+        });
+      }  /* jshint ignore:end */
+    };
+    /*
+	 * Complete adding item process and close the dialog 
+	 */
+    $scope.completeAddItem = function () {
+      $mdDialog.hide();
+      var item = angular.copy($scope.item);
+      item.room = $scope.room;
+      $scope.item = undefined;
+      item.$create(function (resp) {
+        $scope.room.items = $scope.room.items || [];
+        $scope.room.items.push(resp);
+      });
+    };
+    /*
+	 * Cancel adding a item 
+	 */
+    $scope.cancelAddItem = function () {
+      $mdDialog.hide();
+      $scope.item = undefined;
+    };
+    /*
+	 *  Shows the supply list modal
+	 */
+    $scope.showAddSupply = function ($index) {
+      //Set the current item being worked on
+      $scope.$active = $index;
+      $scope.showSupplyToggle = true;
+    };
+    /* 
+	 * Add Supply to Item
+	 */
+    $scope.addSupply = function ($supply) {
+      $scope.room.items[$scope.$active].supplies = $scope.room.items[$scope.$active].supplies || [];
+      var supply = angular.copy($supply);
+      supply.quantity = 0;
+      $scope.room.items[$scope.$active].supplies.push(supply);
+      $scope.showSupplyToggle = false;
     };
   }
 ]);
@@ -11315,5 +11448,39 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
         });
       }
     };
+  }
+]);
+/**
+ * @ngdoc function
+ * @name frontendApp.controller:DialogsAddRoomCtrl
+ * @description
+ * # DialogsAddRoomCtrl
+ * Controller of the frontendApp
+ */
+angular.module('employeeApp').controller('DialogsAddRoomCtrl', [
+  '$scope',
+  function ($scope) {
+    $scope.awesomeThings = [
+      'HTML5 Boilerplate',
+      'AngularJS',
+      'Karma'
+    ];
+  }
+]);
+/**
+ * @ngdoc service
+ * @name frontendApp.RoomItem
+ * @description
+ * # RoomItem
+ * Factory in the frontendApp.
+ */
+angular.module('employeeApp.services').factory('RoomItem', [
+  '$resource',
+  '$http',
+  function ($resource, $http) {
+    return $resource('/api/v1/room-item/:id/', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
   }
 ]);
