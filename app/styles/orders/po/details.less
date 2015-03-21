@@ -3,6 +3,12 @@
 .po-details-page{
     .detailsPage;
     left:0;
+	background-color:rgba(255, 255, 255, 1);
+	background:rgba(255, 255, 255, 1);
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	overflow-y:scroll;
 	
     .log-modal{
         .calendar-modal;
@@ -24,8 +30,10 @@
         }
     }
     .workspace{
-		padding-left:1em;
-		overflow-y:scroll;
+		width:95%;
+		height:auto;
+		background:rgba(255, 255, 255, 1);
+		position:relative;
 		
 		.submenu{
 			margin-top:2em;
@@ -42,15 +50,17 @@
 			.title{
 				margin-top:2em;
 				font-family:proxima;
-				color:#FFF;
+				color:rgba(0, 0, 0, 1);
 			}
 			
 	        table.order-details{
 				margin-top:2em;
-				color:grey;
+				color:rgba(0, 0, 0, 1);
 	            tr{
+					
 	                td{
 	                    text-decoration:none;
+						
 	                    &.acknowledged{
 	                        color:yellow;
 	                    }
@@ -58,23 +68,54 @@
 	                        color:#00FF00;
 	                    }
                     
-	                    .discount{
+	                    &.discount{
 	                        width:2em;
 	                        text-align:right;
 	                    }
+						
+						input{
+							background-color:rgba(255, 255, 255, 1);
+							color:rgba(0, 0, 0, 1);
+							border:1px solid rgba(0, 0, 0, 1);
+							border-radius:2px;
+							width:3em;
+							&.ng-invalid{
+								background-color:#A54243;
+							}
+							
+						}
+						
+						textarea{
+							width:100%;
+							background-color:rgba(255, 255, 255, 1);
+							color:rgba(0, 0, 0, 1);
+							
+							&.ng-invalid{
+								background-color:#A54243;
+							}
+							
+							&:focus{
+								//width:10em;
+							}
+						}
 	                }
 	            }
 	        }
 		}
         .order-details{
 			.details;
-			button.add-item-btn{
-				margin-top:2em;
-			}
-        	table{
-				left:1em;
-				right:0;
+			margin-bottom:5em;
+			
+			.items-submenu{
 				margin:2em 0;
+				
+				.md-button{
+					margin-right:1em;
+				}
+			}
+			
+        	table{
+				width:100%;
 				
 				tr{
 					td{
@@ -83,22 +124,38 @@
 				}
 				thead{
 					tr{
+						background-color:rgb(96,125,139);
 						td{
-							color:#FFF;
 							text-align:center;
-							border:1px solid #272727;
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							color:rgba(255, 255, 255, 1);
+							padding:1em;
+							
+							&:last-child{
+								border:none;
+							}
 						}
 					}
 				}
 				tbody{
 					font-family:proxima;
 					letter-spacing:0.08em;
-	        		.items{
-						
+	        		tr{
+						border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+							
 	        			td{
-	        				color:#CCC;
+	        				color:rgba(0, 0, 0, 1);
 							text-align:right;
-						
+							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+							&:first-child{
+								border-left:none;
+							}
+							
+							&:last-child{
+								border-left:none;
+							}
+							
 							&.description{
 								text-align:left;
 							}
@@ -126,14 +183,41 @@
 									width:5em;
 								}
 							}
-						
+							
+							&.status{
+								text-align:center;
+							}
+							
 							&.total{
 								padding-right:3em;
 								width:20%;
 							}
 							
+							input{
+								width:100%;
+								height:100%;
+								background-color:rgba(255, 255, 255, 1);
+								color:rgba(0, 0, 0, 1);
+								border-radius:none;
+								
+								&.ng-invalid{
+									background-color:#A54243;
+								}
+							}
+							
 							textarea{
-								width:20em;
+								width:100%;
+								background-color:rgba(255, 255, 255, 1);
+								color:rgba(0, 0, 0, 1);
+								padding:0.25em;
+								
+								&.ng-invalid{
+									background-color:#A54243;
+								}
+								
+								&:focus{
+									//width:10em;
+								}
 							}
 							
 							.remove-btn{
@@ -159,8 +243,11 @@
 	        		}
 					
 					.summary{
-						color:#FFF;
+						border-bottom:none;
+						
 						td{
+							border:none;
+							
 							&.title{
 								text-align:right;
 								padding-right:3em;
@@ -172,18 +259,8 @@
 							}
 						}
 					}
-					.subtotal{
-						color:#FFF;
-					}
-					
-					.discount{
-						color:#FFF;
-					}
 				}
-				.totals{
-					
-				}
-        	}
+			}
         }
         
 		

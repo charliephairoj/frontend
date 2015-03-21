@@ -50,8 +50,8 @@
 			-->
 	<form name="form" class="workspace">
 		<div class="submenu">
-			<button ng-click="save()">Save</button>
-			<button ng-click="viewPDF()">PDF</button>
+			<md-button class="md-accent md-raised" ng-click="save()">Save</md-button>
+			<md-button class="md-accent md-raised" ng-click="viewPDF()">PDF</md-button>
 		</div>
 		<div class="details">
 			<h2 class="title">Purchase Order</h2>
@@ -72,9 +72,9 @@
 					<td class="cell">Receive Date</td>
 					<td class="cell" ng-click="showCal=true">{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}</td>
 				</tr>
-				<tr class="row">
-					<td class="cell">Status</td>
-					<td class="cell" ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">
+				<tr>
+					<td>Status</td>
+					<td ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">
 						<select ng-model="po.status">
 							<option value='Processed'>Processed</option>
 							<option value='PAID'>Paid</option>
@@ -82,30 +82,32 @@
 						</select>
 					</td>
 				</tr>
-				<tr class="row">
-					<td class="cell">Discount</td>
-					<td class="cell">
-						<input class="discount" type="text" ng-model="po.discount" />%
+				<tr>
+					<td>Discount</td>
+					<td>
+						<input class="discount" type="number" min="0" ng-model="po.discount" />%
+					</td>
+				</tr>
+				<tr>
+					<td>Vat</td>
+					<td>
+						<input class="vat" type="number" required min="0" max="50" ng-model="po.vat" />%
 					</td>
 				</tr>
 				<tr class="row">
-					<td class="cell">Vat</td>
-					<td class="cell">
-						<input class="discount" type="text" required min="0" max="50" ng-model="po.vat" />%
-					</td>
-				</tr>
-				<tr class="row">
-					<td class="cell">Deposit</td>
-					<td class="cell">
-						<input class="discount" type="text" ng-model="po.deposit" />%
+					<td>Deposit</td>
+					<td>
+						<input class="deposit" type="number" min="0" ng-model="po.deposit" />%
 					</td>
 				</tr>
 			</table>
 		</div>
-		<div class="order-details" ng-show="po.items">
+		<div class="order-details">
 			<h2 class="title">Items</h2>
-			<button class="add-item-btn" ng-click="showAddItem=true">+ Add Item</button>
-			<button class="create-item-btn" ng-click="showCreateItem=true">Create New Item</button>
+			<div class="items-submenu">
+				<md-button class="md-accent md-raised" ng-click="showAddItem=true">+ Add Item</md-button>
+				<md-button class="md-accent md-raised" ng-click="showCreateItem=true">Create New Item</md-button>
+			</div>
 			<table>
 				<thead>
 					<tr class='heading'>
@@ -114,8 +116,9 @@
 						<td>Discount</td>
 						<td>Unit Cost</td>
 						<td>Quantity</td>
-						<td>Units</td>
-						<td colspan="2">Total</td>
+						<td>Status</td>
+						<td>Total</td>
+						<td></td>
 					</tr>
 				</thead>
 				<tbody>
@@ -135,7 +138,8 @@
 						<td class='quantity'>
 							<input type="number" min="0" ng-model="item.quantity" />
 						</td>
-						<td>
+						<td class="status">
+							<!--
 							<select required ng-model="item.suppliers[0].purchasing_units">
 								<option value="pc" selected>Piece</option>
 								<option value="bag">Bag</option>
@@ -154,13 +158,16 @@
 								<option value="in^2">in&#0178;</option>
 								<option value="ft^2">ft&#0178;</option>
 								<option value="ft^3">in&#179;</option>
-							</select>
+							</select>-->
+							{{item.status}}
 						</td>
 						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity | number:2}}</td>
 						<td>
-							<button ng-click="removeItem($index)">Remove</td>
+							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove</md-button>
+						</td>
 					</tr>
 					<tr class="summary subtotal">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -174,11 +181,13 @@
 						<td></td>
 						<td></td>
 						<td></td>
+						<td></td>
 						<td class="title">Discount {{po.discount}}%</td>
 						<td class="value">-{{discount() | number:2}}</td>
 						<td></td>
 					</tr>
 					<tr class="summary total" ng-show="po.discount">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -192,11 +201,13 @@
 						<td></td>
 						<td></td>
 						<td></td>
+						<td></td>
 						<td class="title">Vat {{po.vat}}%</td>
 						<td class="value">{{total() * (po.vat / 100) | number:2}}</td>
 						<td></td>
 					</tr>
 					<tr class="summary grand-total" ng-show="po.vat">
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
