@@ -85,7 +85,6 @@
                     <td class="cell">Status</td>
                     <td class="cell" ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">			<select ng-model="po.status">
 							<option value='Processed'>Processed</option>
-							<option value='RECEIVED'>Received</option>
 							<option value='PAID'>Paid</option>
 							<option value='CANCELLED'>Cancelled</option>
 						</select>
@@ -164,7 +163,7 @@
 								<option value="ft^3">in&#179;</option>
 							</select>
 						</td>
-						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity}}</td>
+						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity | number:2}}</td>
 							<td><button ng-click="removeItem($index)">Remove</td>
 					</tr>
 					<tr class="summary subtotal">

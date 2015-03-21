@@ -49,7 +49,7 @@
 						<div class="project-id">{{po.project.id}}</div>
 						<div class="project">{{po.project.codename}}</div>
 						<div class="delivery-date">{{po.delivery_date | date: "MMM d, yyyy"}}</div>
-						<div class="total">{{po.grand_total}}</div>
+						<div class="total">{{po.grand_total | number:2}}</div>
 						<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
 						<!--
     					<span class="description">{{po.id}}</span>
