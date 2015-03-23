@@ -135,11 +135,11 @@
 						}
 				
 						&.description{
-							width:20%;
+							width:12%;
 						}
 	
 						&.reference{
-							width:15%;
+							width:8%;
 						}
 						
 						&.quantity{
@@ -147,7 +147,7 @@
 						}
 						
 						&.supplies{
-							width:30%;
+							width:45%;
 							
 						}
 						&.status{
@@ -237,11 +237,11 @@
 									}
 							
 									&.description{
-										width:20%;
+										width:12%;
 									}
 	
 									&.reference{
-										width:15%;
+										width:8%;
 									}
 									
 									&.quantity{
@@ -249,15 +249,21 @@
 									}
 									
 									&.supplies{
-										width:30%;
+										width:45%;
 										max-height:20em;
 										padding:0;
 										display:flex;
 										flex-direction:column;
 										align-items:flex-start;
 										
-										.md-button{
-											margin:1em;
+										.supplies-menu{
+											display:flex;
+											align-items:center;
+											justify-content:flex-start;
+											
+											.md-button{
+												margin-left:0.5em;
+											}
 										}
 										
 										.supplies-table-container{
@@ -300,13 +306,30 @@
 															justify-content:space-between;
 															align-items:center;
 														
-															.description{
-																width:70%;
-																padding:0.5em;
+															div{
+																padding:0.25em;
+																
+																&.description{
+																	width:60%;
+																	padding-left:0.5em;
+																}
+															
+																&.qty-container{
+																	display:flex;
+																	align-items:center;
+																	height:100%;
+																	padding:1em;
+																	
+																	input{
+																		width:5em;
+																		border:1px solid rgba(0, 0, 0, 0.35);
+																	}
+																}
 															}
-													
-															input{
-																width:5em;
+															
+															
+															.md-button{
+																margin-right:0.5em;
 															}
 														}
 													}
@@ -332,6 +355,7 @@
 										padding:0;
 										max-height:20em;
 										overflow-y:scroll;
+										z-index:3;
 										
 										.files-table{
 											width:100%;

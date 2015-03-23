@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location',
-function ($scope, Project, Notification, Customer, $location) {
+.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location', '$mdDialog', '$mdToast',
+function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast) {
     
     //Controlling attributes
     $scope.showAddProject = false;
@@ -10,17 +10,36 @@ function ($scope, Project, Notification, Customer, $location) {
     $scope.projects = Project.query();
     $scope.customers = Customer.query();
     
-    //Grid options
-    $scope.gridOptions = {
-        data: 'projectList',
-        columnDefs: [{field: 'description', displayName: 'Description'},
-                     {field: 'customer.name', displayName: 'customer'},
-                     {field: 'type', displayName: 'Type'},
-                     {field: 'status', displayName: 'Status'},
-                     {field: 'delivery_date', displayName: 'Delivery Date', filter: 'date:"MMMM d, yyyy"'}]
-        
-    };
-    
+	$scope.showAddProject = function () {
+		$scope.project = new Project();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-project.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	}
+	
+	$scope.completeAddProject = function  () {
+		$mdDialog.hide();
+		
+		$mdToast.show($mdToast
+			.simple()
+			.content("Creating project...")
+			.hideDelay(0));
+			
+		$scope.project.$create(function () {
+			$mdToast.hide();
+			$location.path('/project/'+ $scope.project.id);
+		}, function () {
+			
+		});
+	};
+	
+	$scope.cancelAddProject = function  () {
+		$mdDialog.hide();
+	};
+	
+	
 	$scope.$watch('query', function (q) {
 		if (q) {
 			Project.query({limit: q.length, q: q}, function (resources) {

@@ -25,11 +25,10 @@
         <nav>
             <ul class="list">
                 <li>
+					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
-					<button ng-click="showAddSupply()">Add a Supply</button>
-                    <button ng-click="addImage=true">Upload Image</button>
-                    <button ng>View Build-Ins</button>
-                    <button>View Lose Items</button>
+					-->
+					<button ng-click="showAddRoom()">Add a Room</button>
                 </li>
             </ul>
         </nav>
@@ -54,8 +53,8 @@
             </table>
             <table>
                 <tr>
-                    <td>Total Items: </td>
-                    <td>{{project.items.length}}</td>
+                    <td>Quantity: </td>
+                    <td>{{project.quantity}}</td>
                 </tr>
             </table>
         </div>
