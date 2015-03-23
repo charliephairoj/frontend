@@ -19,11 +19,16 @@
 		<nav>
 			<ul class="list">
 				<li>
-					<button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
-					<button ng-click="showAddSupply()">Add a Supply</button>
-					<button ng-click="addImage=true">Upload Image</button>
-					<button ng>View Build-Ins</button>
-					<button>View Lose Items</button>
+					<!--
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+					-->
+					<button ng-click="showAddRoom()">Add a Room</button>
+				</li>
+				<li>
+					<!--
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+					-->
+					<button ng-click="showAddPhase()">Add a Phase</button>
 				</li>
 			</ul>
 		</nav>
@@ -46,12 +51,14 @@
 			</table>
 			<table>
 				<tr>
-					<td>Total Items:</td>
-					<td>{{project.items.length}}</td>
+					<td>Quantity:</td>
+					<td>{{project.quantity}}</td>
 				</tr>
 			</table>
 		</div>
 		<md-tabs md-selected="selectedIndex">
+			<md-tab label="Phases">
+			</md-tab>
 			<md-tab label="Rooms">
 			</md-tab>
 			<md-tab label="Items">
@@ -63,7 +70,27 @@
 		</md-tabs>
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
-				<div ng-switch-when="0" class="items-panel">
+				<div ng-switch-when="0" class="phase-panel">
+					<div class="title-bar">
+						<div class="description">DESCRIPTION</div>
+						<div class="quantity">QTY</div>
+						<div class="due-date">SHIP DATE</div>
+						<div class="status">Status</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="phase in project.phases">
+								<div class="item">
+									<div class="description">{{phase.description}}</div>
+									<div class="quantity">{{phase.quantity}}</div>
+									<div class="due-date">{{phase.due_date}}</div>
+									<div class="status" ng-class="item.status.toLowerCase()">{{phase.status}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="1" class="items-panel">
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -95,7 +122,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="1" class="items-panel">
+				<div ng-switch-when="2" class="items-panel">
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -127,7 +154,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="2" class="po-panel">
+				<div ng-switch-when="3" class="po-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>
@@ -154,7 +181,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="3" class="acknowledgement-panel">
+				<div ng-switch-when="4" class="acknowledgement-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>

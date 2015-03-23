@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', '$mdDialog', 'RoomItem', 'FileUploader', '$timeout', '$mdToast',
-function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast) {
+.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', '$mdDialog', 'RoomItem', 'FileUploader', '$timeout', '$mdToast', 'Phase',
+function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase) {
     
 	var timeoutPromise = {};
     $scope.room = Room.get({id: $routeParams.id}, beginWatch);
@@ -53,10 +53,6 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 				
 		$scope.room.items[$index].files = $scope.room.items[$index].files || [];
 		
-		$mdToast.show($mdToast.simple()
-			.hideDelay(2000)
-			.position('top right')
-			.content("Uploading files..."));
 		/* jshint ignore:start */
 		for (var i = 0; i < $files.length; i++) {
 			//$scope.room.items[$index].files.push({filename: $files[i].name});
@@ -90,7 +86,6 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 		});
 	};
 	
-	
 	/*
 	 * Add files to the current item
 	 */
@@ -99,8 +94,6 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 		
 		
 		item.files = item.files || [];
-		
-		
 		
 		/* jshint ignore:start */
 		for (var i = 0; i < $files.length; i++) {
@@ -152,12 +145,6 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 		$scope.showSupplyToggle = true;
 	};
 	
-	$scope.showCreateSupply = function ($index) {
-		//Set the current item being worked on
-		$scope.$active = $index;
-		$scope.showSupplyCreateToggle = true;
-	};
-	
 	/* 
 	 * Add Supply to Item
 	 */
@@ -168,7 +155,6 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 		$scope.room.items[$scope.$active].supplies.push(supply);
 		
 		$scope.showSupplyToggle = false;
-		$scope.showSupplyCreateToggle = false;
 	};
 	
 }]);

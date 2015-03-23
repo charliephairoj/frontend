@@ -3,6 +3,7 @@
         Modals
     -->
 	<div supply-list="showSupplyToggle" on-select="addSupply($supply)"></div>
+	<div add-supply="showSupplyCreateToggle" on-add="addItem($supply)"></div>
 	<!--
         Sidebar
     -->
@@ -86,8 +87,8 @@
 				-->
 					<div class="title-bar">
 						<div class="description">DESCRIPTION</div>
-						<div class="reference">REFERENCE</div>
-						<div class="quantity">QUANTITY</div>
+						<div class="reference">REF</div>
+						<div class="quantity">QTY</div>
 						<div class="status">STATUS</div>
 						<div class="supplies">SUPPLIES</div>
 						<div class="files">FILES</div>
@@ -104,17 +105,24 @@
 									<div class="quantity">{{item.quantity}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
 									<div class="supplies">
-										<md-button class="md-accent md-raised" ng-click="showAddSupply($index)">Add</md-button>
+										<div class="supplies-menu">
+											<md-button class="md-accent md-raised" ng-click="showAddSupply($index)">Add</md-button>
+											<md-button class="create md-accent md-raised" ng-click="showCreateSupply($index)">Create New Supply</md-button>
+										</div>
 										<div class="supplies-table-container">
 											<table class="supplies-table">
 												<tr ng-repeat="supply in item.supplies">
 													<td>
 														<div class="supply-container">
 															<div class="description">{{supply.description}}</div>
-															<md-input-container>
-																<label>Quantity</label>
-																<input type="number" min="0" required ng-model="supply.quantity" required>
-															</md-input-container>
+															<div class='qty-container'>
+																<md-input-container>
+																	<label>Quantity</label>
+																	<input type="number" min="0" required ng-model="supply.quantity" required>
+																</md-input-container>
+																<span>{{supply.units}}</span>
+															</div>
+															<md-button class="md-warn md-raised">Remove</md-button>
 														</div>
 													</td>
 												</tr>

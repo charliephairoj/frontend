@@ -17,7 +17,7 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 			controllerAs: 'ctrl',
 			controller: function () {this.parent = $scope;}
 		});
-	}
+	};
 	
 	$scope.completeAddProject = function  () {
 		$mdDialog.hide();

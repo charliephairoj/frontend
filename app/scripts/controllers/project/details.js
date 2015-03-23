@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement', '$mdDialog',
-function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog) {
+.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement', '$mdDialog', 'Phase',
+function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog, Phase) {
     
 	var timeoutPromise;
     $scope.showAddRoom = false;
@@ -28,6 +28,39 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	$scope.addCustomer = function (customer) {
 		$scope.showCustomers = false;
 		$scope.project.customer = customer;
+	};
+	
+	/*
+	 * Create dialog to add phase
+	 */
+	$scope.showAddPhase = function () {
+		$scope.phase = new Phase();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-phase.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding item process and close the dialog 
+	 */
+	$scope.completeAddPhase = function () {
+		$mdDialog.hide();
+		var phase = angular.copy($scope.phase);
+		phase.project = $scope.project.id;
+		$scope.phase = undefined;
+		phase.$create(function (resp) {
+			$scope.project.phases.push(resp);
+		});
+	};
+	
+	/*
+	 * Cancel adding a item 
+	 */
+	$scope.cancelAddPhase = function () {
+		$mdDialog.hide();
+		$scope.phase = undefined;
 	};
 	
 	/*
@@ -111,7 +144,13 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	 * Watches the project for changes in order to autosave
 	 */
     $scope.$watch('project', function (newVal, oldVal) {
-    	console.log(newVal, oldVal);
+		
+		delete angular.copy(newVal).phases;
+		
+		return newVal;
+		
+	}, function (newVal, oldVal) {
+    	
 		
 		if (oldVal.hasOwnProperty('id')) {
 	    	$timeout.cancel(timeoutPromise);

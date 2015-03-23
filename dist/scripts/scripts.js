@@ -5940,38 +5940,35 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
   'Notification',
   'Customer',
   '$location',
-  function ($scope, Project, Notification, Customer, $location) {
+  '$mdDialog',
+  '$mdToast',
+  function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast) {
     //Controlling attributes
     $scope.showAddProject = false;
     //Query the server for projects continouosly
     $scope.projects = Project.query();
     $scope.customers = Customer.query();
-    //Grid options
-    $scope.gridOptions = {
-      data: 'projectList',
-      columnDefs: [
-        {
-          field: 'description',
-          displayName: 'Description'
-        },
-        {
-          field: 'customer.name',
-          displayName: 'customer'
-        },
-        {
-          field: 'type',
-          displayName: 'Type'
-        },
-        {
-          field: 'status',
-          displayName: 'Status'
-        },
-        {
-          field: 'delivery_date',
-          displayName: 'Delivery Date',
-          filter: 'date:"MMMM d, yyyy"'
+    $scope.showAddProject = function () {
+      $scope.project = new Project();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-project.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
         }
-      ]
+      });
+    };
+    $scope.completeAddProject = function () {
+      $mdDialog.hide();
+      $mdToast.show($mdToast.simple().content('Creating project...').hideDelay(0));
+      $scope.project.$create(function () {
+        $mdToast.hide();
+        $location.path('/project/' + $scope.project.id);
+      }, function () {
+      });
+    };
+    $scope.cancelAddProject = function () {
+      $mdDialog.hide();
     };
     $scope.$watch('query', function (q) {
       if (q) {
@@ -6014,7 +6011,8 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
   'PurchaseOrder',
   'Acknowledgement',
   '$mdDialog',
-  function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog) {
+  'Phase',
+  function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog, Phase) {
     var timeoutPromise;
     $scope.showAddRoom = false;
     $scope.flag = false;
@@ -6045,6 +6043,38 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
     $scope.addCustomer = function (customer) {
       $scope.showCustomers = false;
       $scope.project.customer = customer;
+    };
+    /*
+	 * Create dialog to add phase
+	 */
+    $scope.showAddPhase = function () {
+      $scope.phase = new Phase();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-phase.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    /*
+	 * Complete adding item process and close the dialog 
+	 */
+    $scope.completeAddPhase = function () {
+      $mdDialog.hide();
+      var phase = angular.copy($scope.phase);
+      phase.project = $scope.project.id;
+      $scope.phase = undefined;
+      phase.$create(function (resp) {
+        $scope.project.phases.push(resp);
+      });
+    };
+    /*
+	 * Cancel adding a item 
+	 */
+    $scope.cancelAddPhase = function () {
+      $mdDialog.hide();
+      $scope.phase = undefined;
     };
     /*
 	 * Create dialog to add room
@@ -6117,7 +6147,9 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
 	 * Watches the project for changes in order to autosave
 	 */
     $scope.$watch('project', function (newVal, oldVal) {
-      console.log(newVal, oldVal);
+      delete angular.copy(newVal).phases;
+      return newVal;
+    }, function (newVal, oldVal) {
       if (oldVal.hasOwnProperty('id')) {
         $timeout.cancel(timeoutPromise);
         timeoutPromise = $timeout(function () {
@@ -6436,7 +6468,8 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   'FileUploader',
   '$timeout',
   '$mdToast',
-  function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast) {
+  'Phase',
+  function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase) {
     var timeoutPromise = {};
     $scope.room = Room.get({ id: $routeParams.id }, beginWatch);
     $scope.room.items = $scope.room.items || [];
@@ -11477,6 +11510,23 @@ angular.module('employeeApp.services').factory('RoomItem', [
   '$http',
   function ($resource, $http) {
     return $resource('/api/v1/room-item/:id/', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }
+]);
+/**
+ * @ngdoc service
+ * @name frontendApp.models/phase
+ * @description
+ * # models/phase
+ * Factory in the frontendApp.
+ */
+angular.module('employeeApp').factory('Phase', [
+  '$resource',
+  '$http',
+  function ($resource, $http) {
+    return $resource('/api/v1/phase/:id/', { id: '@id' }, {
       update: { method: 'PUT' },
       create: { method: 'POST' }
     });
