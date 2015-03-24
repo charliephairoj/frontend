@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: RoomItem', function () {
+xdescribe('Service: RoomItem', function () {
 
   // load the service's module
   beforeEach(module('frontendApp'));

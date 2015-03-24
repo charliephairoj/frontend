@@ -37,7 +37,7 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	$scope.$watch('query.$.$', function (q) {
 
 		if (q) {
-			PurchaseOrder.query({limit: q ? q.length : 5, q: q}, function (resources) {
+			PurchaseOrder.query({limit: q ? 10 * q.length : 5, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.poList.indexOfById(resources[i].id) == -1) {
 						$scope.poList.push(resources[i]);
@@ -59,14 +59,32 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 				.content('Loading more purchasing orders...')
 				.hideDelay(0));
 			fetching = true;
-			PurchaseOrder.query({
-				limit: 20,
+			
+			var config = {
+				limit:20,
 				offset: $scope.poList.length
-			}, function (resources) {
+			};
+			
+			try{
+				if ($scope.query.$.$) {
+					config.q = $scope.query.$.$;
+					config.offset = $filter('filter')($scope.poList, config.q).length; 
+				
+				}
+			} catch (e) {
+				
+			}
+			
+			
+			PurchaseOrder.query(config, function (resources) {
 				$mdToast.hide();
 				fetching = false;
 				for (var i = 0; i < resources.length; i++) {
-					$scope.poList.push(resources[i]);
+					for (var i = 0; i < resources.length; i++) {
+						if ($scope.poList.indexOfById(resources[i].id) == -1) {
+							$scope.poList.push(resources[i]);
+						}
+					}
 				}
 			});
 		}

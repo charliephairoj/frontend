@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DialogsAddRoomCtrl', function () {
+xdescribe('Controller: DialogsAddRoomCtrl', function () {
 
   // load the controller's module
   beforeEach(module('frontendApp'));
