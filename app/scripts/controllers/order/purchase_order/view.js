@@ -7,7 +7,8 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	var fetching = true,
 		index = 0,
 		currentSelection;
-	
+		search = $location.search();
+		
 	//System wide message
 	$mdToast.show($mdToast
 		.simple()
@@ -35,8 +36,8 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	 * PO's so that there are no duplicates
 	 */
 	$scope.$watch('query.$.$', function (q) {
-
 		if (q) {
+			$location.search('q', q);
 			PurchaseOrder.query({limit: q ? 10 * q.length : 5, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.poList.indexOfById(resources[i].id) == -1) {
@@ -44,11 +45,19 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 					}
 				}
 				index = 0;
-				changeSelection(index);
-				
+				changeSelection(index);				
 			});
 		}
 	});
+	
+	/* 
+	 * Set default search from search url
+	 */
+	if (search.q) {
+		$scope.query = {$: {$: search.q}};
+		$scope.safeApply();
+		
+	}
 	
 	$scope.loadNext = function () {
 		if (!fetching) {
@@ -80,10 +89,8 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 				$mdToast.hide();
 				fetching = false;
 				for (var i = 0; i < resources.length; i++) {
-					for (var i = 0; i < resources.length; i++) {
-						if ($scope.poList.indexOfById(resources[i].id) == -1) {
-							$scope.poList.push(resources[i]);
-						}
+					if ($scope.poList.indexOfById(resources[i].id) == -1) {
+						$scope.poList.push(resources[i]);
 					}
 				}
 			});

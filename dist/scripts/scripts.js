@@ -177,7 +177,8 @@ angular.module('employeeApp', [
       controller: 'ProjectRoomDetailsCtrl'
     }).when('/order/purchase_order', {
       templateUrl: 'views/order/purchase_order/view.html',
-      controller: 'OrderPurchaseOrderViewCtrl'
+      controller: 'OrderPurchaseOrderViewCtrl',
+      reloadOnSearch: false
     }).when('/order/purchase_order/create', {
       templateUrl: 'views/order/purchase_order/create.html',
       controller: 'OrderPurchaseOrderCreateCtrl'
@@ -6922,6 +6923,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $location) {
     //Flags and variables
     var fetching = true, index = 0, currentSelection;
+    search = $location.search();
     //System wide message
     $mdToast.show($mdToast.simple().position('top right').content('Loading purchasing orders...').hideDelay(0));
     //Poll Server for pos
@@ -6944,8 +6946,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
 	 */
     $scope.$watch('query.$.$', function (q) {
       if (q) {
+        $location.search('q', q);
         PurchaseOrder.query({
-          limit: q ? q.length : 5,
+          limit: q ? 10 * q.length : 5,
           q: q
         }, function (resources) {
           for (var i = 0; i < resources.length; i++) {
@@ -6958,19 +6961,36 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
         });
       }
     });
+    /* 
+	 * Set default search from search url
+	 */
+    if (search.q) {
+      $scope.query = { $: { $: search.q } };
+      $scope.safeApply();
+    }
     $scope.loadNext = function () {
       if (!fetching) {
         //System wide message
         $mdToast.show($mdToast.simple().position('top right').content('Loading more purchasing orders...').hideDelay(0));
         fetching = true;
-        PurchaseOrder.query({
-          limit: 20,
-          offset: $scope.poList.length
-        }, function (resources) {
+        var config = {
+            limit: 20,
+            offset: $scope.poList.length
+          };
+        try {
+          if ($scope.query.$.$) {
+            config.q = $scope.query.$.$;
+            config.offset = $filter('filter')($scope.poList, config.q).length;
+          }
+        } catch (e) {
+        }
+        PurchaseOrder.query(config, function (resources) {
           $mdToast.hide();
           fetching = false;
           for (var i = 0; i < resources.length; i++) {
-            $scope.poList.push(resources[i]);
+            if ($scope.poList.indexOfById(resources[i].id) == -1) {
+              $scope.poList.push(resources[i]);
+            }
           }
         });
       }

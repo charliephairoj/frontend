@@ -253,7 +253,8 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'employeeAp
 	})
       .when('/order/purchase_order', {
         templateUrl: 'views/order/purchase_order/view.html',
-        controller: 'OrderPurchaseOrderViewCtrl'
+        controller: 'OrderPurchaseOrderViewCtrl',
+		  reloadOnSearch: false
 	})
       .when('/order/purchase_order/create', {
         templateUrl: 'views/order/purchase_order/create.html',
