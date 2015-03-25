@@ -25,7 +25,7 @@
 			<div class="body" on-scroll-end="loadNext()">
 				<a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
 					<div class="cell preview">
-						<img ng-src="{{model.images[0].url}}" />
+						<img ng-src="{{model.image.url}}" />
 					</div>
 					<div class="cell model">{{model.model}}</div>
 					<div class="cell name">{{model.name}}</div>
