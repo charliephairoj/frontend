@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', '$mdDialog', 'RoomItem', 'FileUploader', '$timeout', '$mdToast', 'Phase',
-function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase) {
+.controller('ProjectRoomDetailsCtrl', ['$scope', 'Room', '$routeParams', 'Notification', '$mdDialog', 'RoomItem', 'FileUploader', '$timeout', '$mdToast', 'Phase', 'ProjectItemPart',
+function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase, Part) {
     
 	var timeoutPromise = {};
     $scope.room = Room.get({id: $routeParams.id}, beginWatch);
@@ -134,6 +134,39 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 	$scope.cancelAddItem = function () {
 		$mdDialog.hide();
 		$scope.item = undefined;
+	};
+	
+	/*
+	 * Create dialog to add part
+	 */
+	$scope.showAddPart = function () {
+		$scope.part = new Part();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-part.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding part process and close the dialog 
+	 */
+	$scope.completeAddPart = function ($id) {
+		$mdDialog.hide();
+		var part = angular.copy($scope.part);
+		$scope.part = undefined;
+		part.item = $id;
+		part.$create(function (resp) {
+			$scope.room.items[$scope.room.items.indexOfById($id)].parts.push(resp);
+		});
+	};
+	
+	/*
+	 * Cancel adding a part 
+	 */
+	$scope.cancelAddPart = function () {
+		$mdDialog.hide();
+		$scope.part = undefined;
 	};
 	
 	/*

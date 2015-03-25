@@ -6470,7 +6470,8 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
   '$timeout',
   '$mdToast',
   'Phase',
-  function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase) {
+  'ProjectItemPart',
+  function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUploader, $timeout, $mdToast, Phase, Part) {
     var timeoutPromise = {};
     $scope.room = Room.get({ id: $routeParams.id }, beginWatch);
     $scope.room.items = $scope.room.items || [];
@@ -6571,6 +6572,38 @@ angular.module('employeeApp').controller('ProjectRoomDetailsCtrl', [
     $scope.cancelAddItem = function () {
       $mdDialog.hide();
       $scope.item = undefined;
+    };
+    /*
+	 * Create dialog to add part
+	 */
+    $scope.showAddPart = function () {
+      $scope.part = new Part();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-part.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    /*
+	 * Complete adding part process and close the dialog 
+	 */
+    $scope.completeAddPart = function ($id) {
+      $mdDialog.hide();
+      var part = angular.copy($scope.part);
+      $scope.part = undefined;
+      part.item = $id;
+      part.$create(function (resp) {
+        $scope.room.items[$scope.room.items.indexOfById($id)].parts.push(resp);
+      });
+    };
+    /*
+	 * Cancel adding a part 
+	 */
+    $scope.cancelAddPart = function () {
+      $mdDialog.hide();
+      $scope.part = undefined;
     };
     /*
 	 *  Shows the supply list modal
@@ -11547,6 +11580,23 @@ angular.module('employeeApp').factory('Phase', [
   '$http',
   function ($resource, $http) {
     return $resource('/api/v1/phase/:id/', { id: '@id' }, {
+      update: { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }
+]);
+/**
+ * @ngdoc service
+ * @name frontendApp.models/projectItemPart
+ * @description
+ * # models/projectItemPart
+ * Factory in the frontendApp.
+ */
+angular.module('employeeApp').factory('ProjectItemPart', [
+  '$resource',
+  '$http',
+  function ($resource, $http) {
+    return $resource('/api/v1/project-part/:id/', { id: '@id' }, {
       update: { method: 'PUT' },
       create: { method: 'POST' }
     });
