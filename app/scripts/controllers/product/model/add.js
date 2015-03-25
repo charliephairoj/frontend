@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProductModelAddCtrl', ['$scope', 'Model', 'Notification', '$location',
-function ($scope, Model, Notification, $location) {
+.controller('ProductModelAddCtrl', ['$scope', 'Model', 'Notification', '$location', 'FileUploader',
+function ($scope, Model, Notification, $location, FileUploader) {
       
     $scope.model = new Model();
   
@@ -23,26 +23,16 @@ function ($scope, Model, Notification, $location) {
     $scope.uploadImage = function () {
 		//Notify of uploading image
 		Notification.display('Uploading Image...', false);
-		var fd = new FormData();
-
-		fd.append('image', $scope.images[0]);
-
-		//clear the form
-		$scope.addLength = null;
-		$scope.addRemark = null;
-
-		jQuery.ajax("/api/v1/model/image", {
-			type: 'POST',
-			data: fd,
-			processData: false,
-			contentType: false,
-			success: function (responseData) {
+		
+        //Notify of uploading image        
+		var promise = FileUploader.upload($scope.images[0], "/api/v1/upholstery/image/");
+			promise.then(function (dataObj) {
 				Notification.display('Image Uploaded');
-				$scope.model.image = $scope.model.image || {};
-				angular.copy(responseData, $scope.model.image);
-				$scope.$update();
-				$scope.$apply();
-			}
+
+				$scope.model.image = dataObj.data;
+				
+		}, function (e) {
+			Notification.display("There was an error in uploading the file");
 		});
 	};
 }]);

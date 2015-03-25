@@ -1554,7 +1554,8 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
   'Upholstery',
   'Notification',
   '$location',
-  function ($scope, Model, Configuration, Upholstery, Notification, $location) {
+  'FileUploader',
+  function ($scope, Model, Configuration, Upholstery, Notification, $location, FileUploader) {
     $scope.modelList = Model.query({ limit: 0 });
     $scope.configurationList = Configuration.query({ limit: 0 });
     $scope.upholstery = new Upholstery();
@@ -1570,22 +1571,13 @@ angular.module('employeeApp').controller('ProductUpholsteryAddCtrl', [
     $scope.upload = function () {
       //Notify of uploading image
       Notification.display('Uploading Image...', false);
-      var fd = new FormData();
-      fd.append('image', $scope.images[0]);
-      //clear the form
-      $scope.addLength = null;
-      $scope.addRemark = null;
-      jQuery.ajax('/api/v1/upholstery/image', {
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (responseData) {
-          Notification.display('Image Uploaded');
-          $scope.upholstery.image = $scope.upholstery.image || {};
-          angular.copy(responseData, $scope.upholstery.image);
-          $scope.$apply();
-        }
+      //Notify of uploading image        
+      var promise = FileUploader.upload($scope.images[0], '/api/v1/upholstery/image/');
+      promise.then(function (dataObj) {
+        Notification.display('Image Uploaded');
+        $scope.upholstery.image = dataObj.data;
+      }, function () {
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error uploading the file'));
       });
     };
     $scope.save = function () {
@@ -1758,7 +1750,8 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
   'Model',
   'Notification',
   '$location',
-  function ($scope, Model, Notification, $location) {
+  'FileUploader',
+  function ($scope, Model, Notification, $location, FileUploader) {
     $scope.model = new Model();
     //Tooltips
     $scope.nameText = 'Enter a Name for this Model';
@@ -1775,23 +1768,13 @@ angular.module('employeeApp').controller('ProductModelAddCtrl', [
     $scope.uploadImage = function () {
       //Notify of uploading image
       Notification.display('Uploading Image...', false);
-      var fd = new FormData();
-      fd.append('image', $scope.images[0]);
-      //clear the form
-      $scope.addLength = null;
-      $scope.addRemark = null;
-      jQuery.ajax('/api/v1/model/image', {
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (responseData) {
-          Notification.display('Image Uploaded');
-          $scope.model.image = $scope.model.image || {};
-          angular.copy(responseData, $scope.model.image);
-          $scope.$update();
-          $scope.$apply();
-        }
+      //Notify of uploading image        
+      var promise = FileUploader.upload($scope.images[0], '/api/v1/upholstery/image/');
+      promise.then(function (dataObj) {
+        Notification.display('Image Uploaded');
+        $scope.model.image = dataObj.data;
+      }, function (e) {
+        Notification.display('There was an error in uploading the file');
       });
     };
   }
@@ -1840,31 +1823,21 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
   '$location',
   'Notification',
   '$http',
-  function ($scope, Model, $routeParams, $location, Notification, $http) {
+  'FileUploader',
+  function ($scope, Model, $routeParams, $location, Notification, $http, FileUploader) {
     $scope.model = Model.get({ 'id': $routeParams.id });
     //Uploads Profie Image
     $scope.upload = function () {
       //display notification
       Notification.display('Uploading Model Image...', false);
-      var fd = new FormData();
-      fd.append('image', $scope.images[0]);
-      //clear the form
-      $scope.addLength = null;
-      $scope.addRemark = null;
-      jQuery.ajax('/api/v1/model/image', {
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          Notification.display('Model Image Updated');
-          $scope.model.image = $scope.model.image || {};
-          angular.copy(response, $scope.model.image);
-          $scope.model.$save();
-          $scope.imagePreviews = null;
-          $scope.images = null;
-          $scope.$apply();
-        }
+      //Notify of uploading image        
+      var promise = FileUploader.upload($scope.images[0], '/api/v1/upholstery/image/');
+      promise.then(function (dataObj) {
+        $scope.model.image = dataObj.data;
+        $scope.model.$update();
+        $scope.images = null;
+      }, function () {
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error uploading the file'));
       });
     };
     $scope.remove = function () {
