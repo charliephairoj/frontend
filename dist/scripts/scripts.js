@@ -4289,7 +4289,10 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         $scope.acknowledgement.project = $scope.projects[index];
       }
     });
-    $scope.projects = Project.query({ limit: 0 }, function () {
+    $scope.projects = Project.query({
+      limit: 0,
+      page_size: 1000
+    }, function () {
       //Reconcile the project so that it is shown to the user
       if ($scope.acknowledgement.id && $scope.acknowledgement.project) {
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
