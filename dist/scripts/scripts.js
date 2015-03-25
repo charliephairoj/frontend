@@ -1738,7 +1738,7 @@ angular.module('employeeApp.services').factory('Upholstery', [
 angular.module('employeeApp.services').factory('Model', [
   '$resource',
   function ($resource) {
-    return $resource('/api/v1/model/:id', { id: '@id' }, {
+    return $resource('/api/v1/model/:id/', { id: '@id' }, {
       update: { method: 'PUT' },
       create: { method: 'POST' }
     });
@@ -1851,7 +1851,7 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
       //clear the form
       $scope.addLength = null;
       $scope.addRemark = null;
-      jQuery.ajax('fabric/' + $scope.model.id + '/image', {
+      jQuery.ajax('/api/v1/model/image', {
         type: 'POST',
         data: fd,
         processData: false,
@@ -9068,7 +9068,12 @@ angular.module('employeeApp.directives').directive('camera', [
           },
           audio: false
         }, onSuccess, function (e) {
-          console.log(e);
+          navigator.getUserMedia({
+            video: true,
+            audio: false
+          }, onSuccess, function (e) {
+            console.error(e);
+          });
         });
         function getImageAsBlob(url) {
           var bytes = atob(url.split(',')[1]);

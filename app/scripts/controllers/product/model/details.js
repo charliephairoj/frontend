@@ -17,7 +17,7 @@ function ($scope, Model, $routeParams, $location, Notification, $http) {
         $scope.addLength = null;
         $scope.addRemark = null;
         
-        jQuery.ajax("fabric/" + $scope.model.id + "/image", {
+        jQuery.ajax("/api/v1/model/image", {
 			type: 'POST',
 			data: fd,
 			processData: false,

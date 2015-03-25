@@ -53,7 +53,12 @@ angular.module('employeeApp.directives')
 				},
 				audio: false
 			}, onSuccess, function (e) {
-				console.log(e);
+				navigator.getUserMedia({
+					video:true,
+					audio:false
+				}, onSuccess, function (e) {
+					console.error(e);
+				});
 			});
 			
 			function getImageAsBlob(url) {
