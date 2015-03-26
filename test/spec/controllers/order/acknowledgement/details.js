@@ -23,7 +23,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   	describe('Phase: Initialization', function() {
   		it('should make a request to the server for the acknowledgement', function() {
   			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project: {id:4}});
-			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
+			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route
@@ -43,7 +43,7 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   		
   		beforeEach(function() {
   			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project:{id: 4}});
-			$http.expectGET('/api/v1/project/?limit=0').respond([{id:4}]);
+			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([{id:4}]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route
