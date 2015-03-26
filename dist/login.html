@@ -80,13 +80,32 @@
 			z-index: 1;
 			color: #FFFFFF;
 			font-family: Tahoma, Helvetica, sans-serif;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
 		}
 		form input {
-			border: 1px solid black;
-			border-radius: 3px;
-			padding: 2px;
-			padding-left: 6px;
-			font-size: 12px;
+			border: none;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+			padding: 1em;
+			font-size: 1em;
+			color: rgba(255, 255, 255, 1);
+			border-radius: 0;
+			background-color: transparent;
+			outline: none;
+			margin-bottom: 1em;
+		}
+		form input: -webkit-autofill {
+			border: none !important;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+			padding: 1em;
+			font-size: 1em;
+			color: rgba(255, 255, 255, 1) !important;
+			border-radius: 0;
+			background-color: white !important;
+			outline: none !important;
+			-webkit-text-fill-color: rgba(0, 0, 0, 1) !important;
+			-webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 1) inset;
 		}
 		form button[type=submit] {
 			padding-left: 6px;
@@ -108,11 +127,11 @@
 	</head>
 	<body style="height: 100%, width:100%">
 		<div class="logo">
-			<img src='http://dellarobbiathailand.com/resources/media/layout/DRLogo.png' />
+			<img src="img/DellaLogo.png" />
 		</div>
 
 		<!--<h2 class="title">Login to Make Your Work Easier</h2>-->
-		<form action="/login" method="post">
+		<form action="/login" method="post" autocomplete="off">
 			{{form}}
 			<button id="login-btn" type="submit">Login</button>
 		</form>

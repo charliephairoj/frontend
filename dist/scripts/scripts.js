@@ -284,12 +284,16 @@ angular.module('employeeApp').run([
   'Geocoder',
   '$q',
   '$cookies',
-  function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies) {
+  '$interval',
+  'PurchaseOrder',
+  function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
     /*
 	 * Get the current user and place it at the top scope
 	 */
-    $rootScope.currentUser = new CurrentUser();
+    $rootScope.currentUser = new CurrentUser(function () {
+      inventoryUserCheck();
+    });
     /*
      * Prototypical extension of core classes
      */
@@ -387,30 +391,43 @@ angular.module('employeeApp').run([
       console.log('Geolocation not available');
     }
     /*
-	 * Determine if it is an iOS device
+	 * Auto print new purchase orders
 	 */
-    window.iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
-    /*
-	 * Prevent rubber band effect of iOS webapp
-     */
-    var scrollY = 0;
-    angular.element(document).on('touchstart', function (e) {
-      scrollY = e.originalEvent.touches.item(0).clientY;
-    });
-    angular.element(document).on('touchmove', function (e) {
-      var container = angular.element(e.target).parents('.scroll-enabled')[0];
-      if (container) {
-        var containerHeight = $(container).height();
-        var scrollDelta = scrollY - e.originalEvent.touches.item(0).clientY;
-        if (container.scrollTop === 0 && scrollDelta < 0) {
-          e.preventDefault();
-        } else if (containerHeight + container.scrollTop == container.scrollHeight && scrollDelta > 0) {
-          e.preventDefault();
+    var storage = window.localStorage;
+    var printList = [];
+    $interval(function () {
+      if (printList.length > 0) {
+        var el;
+        if ($('#auto-print-pdf').length === 0) {
+          el = angular.element('<iframe width=\'1\' height=\'1\' id=\'auto-print-pdf\' src=\'' + printList.splice(0, 1) + '\'></iframe>');
+          angular.element('#hidden-pdf-frame').append(el);
+        } else {
+          el = $('#auto-print-pdf');
+          el.attr('src', printList.splice(0, 1));
         }
-      } else {
-        e.preventDefault();
       }
-    });
+    }, 15000);
+    var intervalSwitch = $interval(function () {
+        var user = $rootScope.currentUser;
+        //Checks that this is the inventory type account
+        if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
+          //Gets a saved or creates a new last_modified reference date
+          var date = storage.getItem('purchase-order-last-modified');
+          date = !date ? new Date() : new Date(date);
+          var newLastModifiedDate = new Date();
+          //Sets the new last_modified reference date
+          storage.setItem('purchase-order-last-modified', newLastModifiedDate.toISOString());
+          //Request update from the server
+          PurchaseOrder.query({
+            last_modified: '2015-03-26T09:17:24.117Z',
+            status: 'processed'
+          }, function (resp) {
+            for (var i = 0; i < resp.length; i++) {
+              printList.push(resp[i].auto_print_pdf.url);
+            }
+          });
+        }
+      }, 5000);
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
@@ -2874,7 +2891,10 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
     /*
      * Calls for updated verions of the resources
      */
-    $scope.permissionList = Permission.query({ limit: 0 }, function () {
+    $scope.permissionList = Permission.query({
+      limit: 0,
+      page_size: 10000
+    }, function () {
       merge($scope.permissionList, $scope.group.permissions);
     });
     $scope.group = Group.get({ 'id': $routeParams.id }, function () {
@@ -8532,7 +8552,6 @@ angular.module('employeeApp').controller('MainCtrl', [
     var user = $scope.currentUser;
     var changePage = function () {
       if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
-        $location.path('/supply');
       }
     };
     if (!$scope.currentUser.ready) {
