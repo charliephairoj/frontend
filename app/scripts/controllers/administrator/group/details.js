@@ -54,6 +54,10 @@ function ($scope, Group, Permission, $routeParams, $location) {
         merge($scope.permissionList, $scope.group.permissions);
     });
     
+	/*
+	 * Implement watch on group
+	 */
+	
     
     /*
      * Removes or adds a permission to the group
@@ -72,8 +76,9 @@ function ($scope, Group, Permission, $routeParams, $location) {
             }
         }
         
-        $scope.group.$update(function (response) {
-
+		var group = angular.copy($scope.group);
+        group.$update(function (response) {
+			angular.extend($scope.group, response);
         });
     };
     

@@ -2901,6 +2901,9 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
       merge($scope.permissionList, $scope.group.permissions);
     });
     /*
+	 * Implement watch on group
+	 */
+    /*
      * Removes or adds a permission to the group
      * permissions based on whether or not 
      */
@@ -2915,7 +2918,9 @@ angular.module('employeeApp').controller('AdministratorGroupDetailsCtrl', [
           $scope.group.permissions.splice(index, 1);
         }
       }
-      $scope.group.$update(function (response) {
+      var group = angular.copy($scope.group);
+      group.$update(function (response) {
+        angular.extend($scope.group, response);
       });
     };
     /*

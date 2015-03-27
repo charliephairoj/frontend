@@ -23,7 +23,7 @@ describe('Controller: AdministratorGroupDetailsCtrl', function () {
     
     describe('Phase: Initialization', function(){
         it('should make http calls', function(){
-            $http.expectGET('/api/v1/permission/?limit=0').respond([{id:10}, {id:8}, {id:13}, {id:14}]);
+            $http.expectGET('/api/v1/permission/?limit=0&page_size=10000').respond([{id:10}, {id:8}, {id:13}, {id:14}]);
             $http.expectGET('/api/v1/group/10/').respond({name:'test', permissions:[{id:14}]});
             ctrl = Ctrl('AdministratorGroupDetailsCtrl', {$scope: scope,
                                                          $routeParams:{id:10}});
@@ -43,7 +43,7 @@ describe('Controller: AdministratorGroupDetailsCtrl', function () {
     
     describe('Phase: Post Initialization', function(){
         beforeEach(function(){
-            $http.whenGET('/api/v1/permission/?limit=0').respond([{id:10}, {id:8}, {id:13}, {id:14}]);
+            $http.whenGET('/api/v1/permission/?limit=0&page_size=10000').respond([{id:10}, {id:8}, {id:13}, {id:14}]);
             $http.whenGET('/api/v1/group/10/').respond({id:10, name:'test', permissions:[{id:14}]});
             ctrl = Ctrl('AdministratorGroupDetailsCtrl', {$scope: scope, $routeParams:{id:10}}); 
             $http.flush();

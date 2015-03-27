@@ -55,7 +55,7 @@
 			<md-button href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</md-button>
 			<md-button href="#/project" class="menu-item">Projects</md-button>
 			<md-button href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</md-button>
-			<md-button href="#/hr" class="menu-item">HR</md-button>
+			<md-button href="#/hr" class="menu-item" ng-show="currentUser.hasModule('hr')">HR</md-button>
 		</div>
 		<md-button href="/logout" class="logout">Logout</md-button>
 	</md-toolbar>
