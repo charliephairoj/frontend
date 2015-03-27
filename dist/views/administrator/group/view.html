@@ -21,7 +21,7 @@
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
 				<li class="item-container" data-ng-repeat="group in groups | filter:query">
-					<a class="item" ng-href="#/administrator/user/{{user.id}}">
+					<a class="item" ng-href="#/administrator/group/{{group.id}}">
 						<div class="id">{{group.id}}</div>
 						<div class="name">{{group.name}}</div>
 						<div class="perm">{{group.permissions.length}}</div>

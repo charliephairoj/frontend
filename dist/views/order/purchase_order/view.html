@@ -31,11 +31,12 @@
 			<md-button class="add-btn md-primary md-raised" ng-href="#/order/purchase_order/create">New Purchase Order</md-button>
 		</nav>
 		<div class="title-bar md-primary">
-			<div class="id">ORDER ID</div>
+			<div class="id">ID</div>
 			<div class="order-date">DATE</div>
 			<div class="customer">SUPPLIER</div>
 			<div class="project">PROJECT</div>
 			<div class="delivery-date">RECEIVE DATE</div>
+			<div class="paid-date">PAID DATE</div>
 			<div class="total">TOTAL</div>
 			<div class="status">STATUS</div>
 		</div>
@@ -48,7 +49,8 @@
 						<div class="customer">{{po.supplier.name}}</div>
 						<div class="project-id">{{po.project.id}}</div>
 						<div class="project">{{po.project.codename}}</div>
-						<div class="delivery-date">{{po.delivery_date | date: "MMM d, yyyy"}}</div>
+						<div class="delivery-date">{{po.receive_date | date: "MMM d, yyyy"}}</div>
+						<div class="paid-date">{{po.paid_date | date: "MMM d, yyyy"}}</div>
 						<div class="total">{{po.grand_total | number:2}}</div>
 						<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
 						<!--
