@@ -134,9 +134,25 @@
                         <tr>
                             <td>Project:</td>
                             <td>
-								<select ng-options="project.codename for project in projects | orderBy: project.codename" ng-model="po.project" ng-disabled="po.newProject">
+								<select ng-options="project.codename for project in projects | orderBy: 'codename'" ng-model="po.project" ng-disabled="po.newProject"></select>
 								<input class="new-project-checkbox" type="checkbox" ng-model="po.newProject" />New Project
 								<input class="new-project-name" type="text" ng-model="po.newProjectName" ng-show="po.newProject">
+                            </td>
+                        </tr>
+                        <tr ng-show="po.project">
+                            <td>Room:</td>
+                            <td>
+								<select ng-options="room.description for room in po.project.rooms | orderBy: 'description'" ng-model="po.room">
+								</select>
+								<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
+                            </td>
+                        </tr>
+                        <tr ng-show="po.project">
+                            <td>Phase:</td>
+                            <td>
+								<select ng-options="phase.description for phase in po.project.phases | orderBy: 'description'" ng-model="po.phase">
+								</select>
+								<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
                             </td>
                         </tr>
                         <tr>

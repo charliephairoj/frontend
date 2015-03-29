@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project',
-function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog',
+function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog) {
 	
 	/*
 	 * Setup vars
@@ -35,6 +35,74 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		}), supplier.name);
 		
 		$scope.safeApply();
+	};
+	
+	/*
+	 * Create dialog to add room
+	 */
+	$scope.showAddRoom = function () {
+		$scope.room = new Room();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-room.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding room process and close the dialog 
+	 */
+	$scope.completeAddRoom = function () {
+		$mdDialog.hide();
+		var room = angular.copy($scope.room);
+		room.project = $scope.po.project;
+		$scope.room = new Room();
+		room.$create(function (resp) {
+			$scope.po.project.rooms.push(resp);
+			$scope.po.room = resp;
+		});
+	};
+	
+	/*
+	 * Cancel adding a room 
+	 */
+	$scope.cancelAddRoom = function () {
+		$mdDialog.hide();
+		$scope.room = new Room();
+	};
+	
+	/*
+	 * Create dialog to add phase
+	 */
+	$scope.showAddPhase = function () {
+		$scope.phase = new Phase();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-phase.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding item process and close the dialog 
+	 */
+	$scope.completeAddPhase = function () {
+		$mdDialog.hide();
+		var phase = angular.copy($scope.phase);
+		phase.project = $scope.po.project.id;
+		$scope.phase = undefined;
+		phase.$create(function (resp) {
+			$scope.po.project.phases.push(resp);
+			$scope.po.phase = resp;
+		});
+	};
+	
+	/*
+	 * Cancel adding a item 
+	 */
+	$scope.cancelAddPhase = function () {
+		$mdDialog.hide();
+		$scope.phase = undefined;
 	};
 	
     /*
