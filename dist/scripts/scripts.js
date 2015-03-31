@@ -8228,7 +8228,9 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         $scope.po.status = 'Received';
         //Receive items
         for (var i = 0; i < $scope.po.items.length; i++) {
-          $scope.po.items[i].status = 'Received';
+          if ($scope.po.items[i].status.toLowerCase() != 'paid') {
+            $scope.po.items[i].status = 'Received';
+          }
         }
         $scope.po.$update(function () {
           $mdToast.show($mdToast.simple().content('Purchase order updated.'));
@@ -8239,11 +8241,12 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     };
     $scope.pay = function () {
       $mdToast.show($mdToast.simple().content('Updating purchase order...').hideDelay(0));
+      $scope.showPaidCal = false;
       //Modify the order
-      $scope.po.status = 'Paid';
+      $scope.po.status = 'PAID';
       //Pay for the items
       for (var i = 0; i < $scope.po.items.length; i++) {
-        $scope.po.items[i].status = 'Paid';
+        $scope.po.items[i].status = 'PAID';
       }
       $scope.po.$update(function () {
         $mdToast.show($mdToast.simple().content('Purchase order updated.'));

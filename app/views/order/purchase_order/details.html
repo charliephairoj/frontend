@@ -16,6 +16,13 @@
             <button ng-click="receive()">Select</button>
         </div>
     </div>
+	
+    <div class="calendar-modal" data-modal  ng-model="showPaidCal">
+        <div ui-date ng-model="po.paid_date"></div>
+        <div class="bottom_bar">
+            <button ng-click="pay()">Select</button>
+        </div>
+    </div>
     
    
     <!--
@@ -76,11 +83,23 @@
                 </tr>
                 <tr class="row">
                     <td class="cell">Order Date</td>
-                    <td class="cell">{{po.created | date:"MMMM d, yyyy"}}</td>
+                    <td class="cell">{{po.order_date | date:"MMMM d, yyyy"}}</td>
                 </tr>
                 <tr class="row">
                     <td class="cell">Receive Date</td>
-                    <td class="cell" ng-click="showCal=true">{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}</td>
+                    <td class="cell" ng-click="showCal=true">
+						<md-button class="md-accent">
+						{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}
+						</md-button>
+					</td>
+                </tr>
+                <tr class="row" ng-show="po.status.toLowerCase() == 'paid'">
+                    <td class="cell">Paid Date</td>
+                    <td class="cell" ng-click="showPaidCal=true">
+						<md-button class="md-accent">
+						{{po.paid_date || 'Select Paid Date' | date:"MMMM d, yyyy"}}
+						</md-button>
+					</td>
                 </tr>
                 <tr>
                     <td>Status</td>
