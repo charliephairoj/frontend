@@ -36,6 +36,12 @@
 					-->
 					<button ng-click="showAddPhase()">Add a Phase</button>
                 </li>
+                <li>
+					<!--
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+					-->
+					<a ng-href="/api/v1/project/{{project.id}}/report/" target="_blank">View report</a>
+                </li>
             </ul>
         </nav>
         
@@ -100,7 +106,10 @@
 									<div class="description">{{phase.description}}</div>
 									<div class="quantity">{{phase.quantity}}</div>
 									<div class="due-date">{{phase.due_date}}</div>
-									<div class="status" ng-class="item.status.toLowerCase()">{{phase.status}}</div>
+									<div class="status" ng-class="item.status.toLowerCase()">
+										{{phase.status}}
+										<md-button class="md-accent" ng-href="/api/v1/phase/{{phase.id}}/report/" target="_blank">Report</md-button>
+									</div>
 									
 									
 								</div>
