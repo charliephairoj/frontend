@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader', 'Room', 'Phase',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -31,6 +31,75 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         $scope.showCustomers = false;
         $scope.tempSave();
     };
+	
+	/*
+	 * Create dialog to add room
+	 */
+	$scope.showAddRoom = function () {
+		$scope.room = new Room();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-room.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding room process and close the dialog 
+	 */
+	$scope.completeAddRoom = function () {
+		$mdDialog.hide();
+		var room = angular.copy($scope.room);
+		room.project = $scope.ack.project;
+		$scope.room = new Room();
+		room.$create(function (resp) {
+			$scope.ack.project.rooms.push(resp);
+			$scope.ack.room = resp;
+		});
+	};
+	
+	/*
+	 * Cancel adding a room 
+	 */
+	$scope.cancelAddRoom = function () {
+		$mdDialog.hide();
+		$scope.room = new Room();
+	};
+	
+	/*
+	 * Create dialog to add phase
+	 */
+	$scope.showAddPhase = function () {
+		$scope.phase = new Phase();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-phase.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	/*
+	 * Complete adding item process and close the dialog 
+	 */
+	$scope.completeAddPhase = function () {
+		$mdDialog.hide();
+		var phase = angular.copy($scope.phase);
+		phase.project = $scope.ack.project.id;
+		$scope.phase = undefined;
+		phase.$create(function (resp) {
+			$scope.ack.project.phases.push(resp);
+			$scope.ack.phase = resp;
+		});
+	};
+	
+	/*
+	 * Cancel adding a item 
+	 */
+	$scope.cancelAddPhase = function () {
+		$mdDialog.hide();
+		$scope.phase = undefined;
+	};
+	
     
     $scope.addItem = function (product) {
         $scope.ack.items.push(product);

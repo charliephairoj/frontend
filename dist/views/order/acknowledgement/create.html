@@ -146,9 +146,25 @@
 					<tr class="project">
 						<td>Project:</td>
 						<td>
-							<select ng-options="project.codename for project in projects" ng-model="ack.project" ng-disabled="ack.newProject">
+							<select ng-options="project.codename for project in projects | orderBy: 'codename'" ng-model="ack.project" ng-disabled="ack.newProject">
 								<input class="new-project-checkbox" type="checkbox" ng-model="ack.newProject" />New Project
 								<input class="new-project-name" type="text" ng-model="ack.newProjectName" ng-show="ack.newProject">
+						</td>
+					</tr>
+					<tr ng-show="ack.project">
+						<td>Room:</td>
+						<td>
+							<select ng-options="room.description for room in ack.project.rooms | orderBy: 'description'" ng-model="ack.room">
+							</select>
+							<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
+						</td>
+					</tr>
+					<tr ng-show="ack.project">
+						<td>Phase:</td>
+						<td>
+							<select ng-options="phase.description for phase in ack.project.phases | orderBy: 'description'" ng-model="ack.phase">
+							</select>
+							<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
 						</td>
 					</tr>
 				</table>
