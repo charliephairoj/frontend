@@ -167,6 +167,7 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 	 * Auto print new purchase orders
 	 */
 	
+	/*
 	var storage = window.localStorage;
 	var printList = [];
 	
@@ -210,4 +211,5 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 			});
 		}
 	}, 5000);	
+	*/
 });

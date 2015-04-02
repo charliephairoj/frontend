@@ -389,45 +389,54 @@ angular.module('employeeApp').run([
       });
     } else {
       console.log('Geolocation not available');
-    }
-    /*
+    }  /*
 	 * Auto print new purchase orders
 	 */
-    var storage = window.localStorage;
-    var printList = [];
-    $interval(function () {
-      if (printList.length > 0) {
-        var el;
-        if ($('#auto-print-pdf').length === 0) {
-          el = angular.element('<iframe width=\'1\' height=\'1\' id=\'auto-print-pdf\' src=\'' + printList.splice(0, 1) + '\'></iframe>');
-          angular.element('#hidden-pdf-frame').append(el);
-        } else {
-          el = $('#auto-print-pdf');
-          el.attr('src', printList.splice(0, 1));
-        }
-      }
-    }, 15000);
-    var intervalSwitch = $interval(function () {
-        var user = $rootScope.currentUser;
-        //Checks that this is the inventory type account
-        if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
-          //Gets a saved or creates a new last_modified reference date
-          var date = storage.getItem('purchase-order-last-modified');
-          date = !date ? new Date() : new Date(date);
-          var newLastModifiedDate = new Date();
-          //Sets the new last_modified reference date
-          storage.setItem('purchase-order-last-modified', newLastModifiedDate.toISOString());
-          //Request update from the server
-          PurchaseOrder.query({
-            last_modified: '2015-03-26T09:17:24.117Z',
-            status: 'processed'
-          }, function (resp) {
-            for (var i = 0; i < resp.length; i++) {
-              printList.push(resp[i].auto_print_pdf.url);
-            }
-          });
-        }
-      }, 5000);
+       /*
+	var storage = window.localStorage;
+	var printList = [];
+	
+	
+	
+	$interval(function () {
+		if (printList.length > 0) {
+			var el;
+			
+			if ($('#auto-print-pdf').length === 0) {
+				el = angular.element("<iframe width='1' height='1' id='auto-print-pdf' src='" + printList.splice(0, 1) + "'></iframe>");
+				angular.element('#hidden-pdf-frame').append(el);
+			} else{
+				el = $('#auto-print-pdf');
+				el.attr('src', printList.splice(0, 1));
+			}
+		}
+	}, 15000);
+	
+	var intervalSwitch = $interval(function () {
+		
+		var user = $rootScope.currentUser;
+
+		//Checks that this is the inventory type account
+		if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
+			
+			//Gets a saved or creates a new last_modified reference date
+			var date = storage.getItem('purchase-order-last-modified');
+			date = !date ? new Date() : new Date(date);
+			var newLastModifiedDate = new Date();
+			
+			//Sets the new last_modified reference date
+			storage.setItem('purchase-order-last-modified', newLastModifiedDate.toISOString());
+			
+			//Request update from the server
+			PurchaseOrder.query({last_modified:"2015-03-26T09:17:24.117Z", status:"processed"}, function (resp) {
+			
+				for (var i = 0; i < resp.length; i++) {
+					printList.push(resp[i].auto_print_pdf.url);
+				}
+			});
+		}
+	}, 5000);	
+	*/
   }
 ]);
 angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
