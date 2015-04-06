@@ -94,6 +94,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$mdToast.show($mdToast.simple()
 				.hideDelay(0)
 				.position('top right')
+				.action('Close')
 				.content('Unable to find supply.'));
 		});
 	});
@@ -159,6 +160,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		$mdToast.show($mdToast.simple()
 			.hideDelay(0)
 			.position('top right')
+			.action('Close')
 			.content('Looking up Equipment...'));
 		
 		Equipment.get({id: code.split('-')[1]}, function (response) {
@@ -169,6 +171,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find equipment.')
 				.position('top right')
+				.action('Close')
 				.hideDelay(0));
 		});
 	});
@@ -182,6 +185,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		$mdToast.show($mdToast.simple()
 			.content("Looking up employee...")
 			.position('top right')
+			.action('close')
 			.hideDelay(0));
 		
 		$scope.equipment = Employee.get({id: code.split('-')[1]}, function (response) {
@@ -192,6 +196,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find employee.')
 				.position('top right')
+				.action('close')
 				.hideDelay(0));
 		});
 	});
@@ -264,6 +269,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(0)
+				.action('close')
 				.content(e.message));
 		}
 		
@@ -299,6 +305,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		$mdToast.show($mdToast.simple()
 			.position('top right')
 			.hideDelay(0)
+			.action('Close')
 			.content("There was a checkout error"));
 	};
 	

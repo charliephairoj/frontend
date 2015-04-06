@@ -10943,7 +10943,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
           $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(response.description + ' already in checkout'));
         }
       }, function () {
-        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Unable to find supply.'));
+        $mdToast.show($mdToast.simple().hideDelay(0).position('top right').action('Close').content('Unable to find supply.'));
       });
     });
     /*
@@ -10988,12 +10988,12 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
 	 *  Regiester the equipment code
 	 */
     $scope.scanner.register(/^DRE-\d+$/, function (code) {
-      $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('Looking up Equipment...'));
+      $mdToast.show($mdToast.simple().hideDelay(0).position('top right').action('Close').content('Looking up Equipment...'));
       Equipment.get({ id: code.split('-')[1] }, function (response) {
         $mdToast.hide();
         $scope.equipmentList.push(response);
       }, function () {
-        $mdToast.show($mdToast.simple().content('Unable to find equipment.').position('top right').hideDelay(0));
+        $mdToast.show($mdToast.simple().content('Unable to find equipment.').position('top right').action('Close').hideDelay(0));
       });
     });
     /*
@@ -11002,12 +11002,12 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
     $scope.scanner.register(/^DREM-\d+$/, function (code) {
       $mdToast.hide();
       //Notifiy the user of action
-      $mdToast.show($mdToast.simple().content('Looking up employee...').position('top right').hideDelay(0));
+      $mdToast.show($mdToast.simple().content('Looking up employee...').position('top right').action('close').hideDelay(0));
       $scope.equipment = Employee.get({ id: code.split('-')[1] }, function (response) {
         $scope.employee = response;
         $mdToast.hide();
       }, function () {
-        $mdToast.show($mdToast.simple().content('Unable to find employee.').position('top right').hideDelay(0));
+        $mdToast.show($mdToast.simple().content('Unable to find employee.').position('top right').action('close').hideDelay(0));
       });
     });
     $scope.verify = function () {
@@ -11064,7 +11064,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         }
       } catch (e) {
         console.log(e);
-        $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content(e.message));
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('close').content(e.message));
       }
       //Perform Purchase Order PUT
       if ($scope.po) {
@@ -11088,7 +11088,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
       }
     };
     $scope.checkoutError = function (e) {
-      $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was a checkout error'));
+      $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('Close').content('There was a checkout error'));
     };
     $scope.$on('$destroy', function () {
       $scope.scanner.disable();

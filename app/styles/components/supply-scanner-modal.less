@@ -128,9 +128,61 @@
 					}
 					
 					&.equipment{
-						h3{
-							margin-left:1em;
+						md-item-content{
+							display:flex;
+							flex-direction:column;
+							justify-content:flex-start;
+							width:100%;
+							
+							div.container{
+								display:flex;
+								flex-direction:row;
+								justify-content:space-between;
+								width:100%;
+								
+								&.overview{
+									
+								
+									h3{
+										margin-left:1em;
+									}
+								}
+						
+								&.details{
+									width:auto;
+									align-self:flex-start;
+									align-items:center;
+									justify-content:flex-start;
+									
+									h4{
+										margin-left:3em;
+									}
+									
+									.employee-container{
+										display:flex;
+										flex-direction:row;
+										flex-wrap:nowrap;
+										margin-right:1em;
+										align-items:center;
+										margin-left:3em;
+										
+										.img-container{
+											margin-right:1em;
+											height:5em;
+											width:auto;
+									
+											img{
+												height:100%;
+												width:auto;
+											}
+										}
+									}
+								}
+							}
+						
+							
 						}
+						
 					}
 				}
 			}

@@ -39,19 +39,32 @@
 
 				</md-item>
 				<md-item class="equipment" ng-repeat="equipment in equipmentList">
-					<md-item-content>
-						<h3>
-							{{equipment.brand}} {{equipment.description}} 
-						</h3>
-						<div class="item-ctrl">
-							<md-radio-group ng-model="employee.status">
-						      	<md-radio-button value="Checked In" aria-label="Checked In">
-									Checked In
-								</md-radio-button>
-						      	<md-radio-button value="Checked Out" aria-label="Add">
-									Checked Out
-								</md-radio-button>
-						    </md-radio-group>
+					<md-item-content class="content-container">
+						<div class="overview container">
+							<h3>
+								{{equipment.brand}} {{equipment.description}} 
+							</h3>
+						
+							
+							<div class="item-ctrl">
+								<md-radio-group ng-model="equipment.status">
+							      	<md-radio-button value="Checked In" aria-label="Checked In">
+										Checked In
+									</md-radio-button>
+							      	<md-radio-button value="Checked Out" aria-label="Add">
+										Checked Out
+									</md-radio-button>
+							    </md-radio-group>
+							</div>
+						</div>
+						<div class="details container">
+							<h4>Status: <span>{{equipment.status}}<span></h4>
+							<div class="employee-container">
+								<div class="img-container">
+									<img ng-src="{{equipment.employee.image.url}}">
+								</div>
+								<div>{{equipment.employee.first_name}} {{equipment.employee.last_name}}</div>
+							</div>
 						</div>
 					</md-item-content>
 				</md-item>
