@@ -57,7 +57,17 @@
 			<md-button href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</md-button>
 			<md-button href="#/hr" class="menu-item" ng-show="currentUser.hasModule('hr')">HR</md-button>
 		</div>
-		<md-button href="/logout" class="logout">Logout</md-button>
+		<ul class="settings">
+			<li class="settings-img-container">
+				<img src="img/icons/ikons/cog.png">
+			</li>
+			<li>
+				<md-button class="change-password" ng-click="showChangePassword()">Change Password</md-button>
+			</li>
+			<li>
+				<md-button href="/logout" class="logout">Logout</md-button>
+			</li>
+		</ul>
 	</md-toolbar>
 	<div ng-view class="mainContainer md-background">
 	</div>

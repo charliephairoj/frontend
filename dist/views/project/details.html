@@ -22,19 +22,27 @@
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
-					<button ng-click="showAddRoom()">Add a Room</button>
+					<div ng-click="showAddRoom()">
+						<span>Add a Room</span>
+						<img src="img/icons/ikons/square_add.png" />
+					</div>
 				</li>
 				<li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
-					<button ng-click="showAddPhase()">Add a Phase</button>
+					<div ng-click="showAddPhase()">
+						<span>Add a Phase</span>
+						<img src="img/icons/ikons/slideshow.png" />
+					</div>
 				</li>
 				<li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
-					<a ng-href="/api/v1/project/{{project.id}}/report/" target="_blank">View report</a>
+					<a ng-href="/api/v1/project/{{project.id}}/report/" target="_blank">
+						View Report <img src="img/icons/ikons/bar_chart_2.png" />
+					</a>
 				</li>
 			</ul>
 		</nav>
@@ -89,10 +97,13 @@
 								<div class="item">
 									<div class="description">{{phase.description}}</div>
 									<div class="quantity">{{phase.quantity}}</div>
-									<div class="due-date">{{phase.due_date}}</div>
+									<div class="due-date">{{phase.due_date | date:"MMMM d, yyyy"}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">
 										{{phase.status}}
-										<md-button class="md-accent" ng-href="/api/v1/phase/{{phase.id}}/report/" target="_blank">Report</md-button>
+										<md-button class="md-accent md-raised phase-report" ng-href="/api/v1/phase/{{phase.id}}/report/" target="_blank">
+											Report
+											<img src="img/icons/ikons/bar_chart_2.png" />
+										</md-button>
 									</div>
 								</div>
 							</div>

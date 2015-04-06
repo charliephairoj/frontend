@@ -44,7 +44,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider) {
 /*
  * Run top level application code
  */
-angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder) {
+angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog) {
 	
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 	/*
@@ -118,6 +118,23 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
     window.globalScanner = new scanner('global');
     globalScanner.enable();
 	//hi
+	
+	/*
+	 * Changing the password
+	 *
+	 */
+	
+	/*
+	 * Create dialog to change password
+	 */
+	$rootScope.showChangePassword = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/change-password.html',
+			controller: 'DialogsChangePasswordCtrl'
+		});
+	};
+	
+	
 	/*
 	 * Geolocating the user
 	 * 
