@@ -107,6 +107,16 @@
 									</div>
 								</div>
 							</div>
+							<div class="item-container empty" ng-show="!project.phases || project.phases.length == 0">
+								<div class="item">
+									<div class="empty">
+										No phases yet
+										<md-button ng-click="showAddPhase()" class="md-accent md-raised">
+											Add a Phase
+										</md-button>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -138,6 +148,16 @@
 									<div class="fabric">{{item.fabric.description}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
 								</a>
+							</div>
+							<div class="item-container" ng-show="!project.rooms || project.rooms.length == 0">
+								<div class="item">
+									<div class="empty">
+										No rooms yet
+										<md-button ng-click="showAddRoom()" class="md-accent md-raised">
+											Add a Room
+										</md-button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
