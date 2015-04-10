@@ -7210,6 +7210,34 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       }), supplier.name);
       $scope.safeApply();
     };
+    /* 
+	 * Dialog to add a new project
+	 */
+    $scope.showAddProject = function () {
+      $scope.project = new Project();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-project.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    $scope.completeAddProject = function () {
+      $mdDialog.hide();
+      $mdToast.show($mdToast.simple().content('Creating project...').hideDelay(0));
+      $scope.project.$create(function (resp) {
+        $scope.projects.push(resp);
+        $scope.po.project = resp;
+        $mdToast.hide();
+        $scope.project = new Project();
+      }, function () {
+      });
+    };
+    $scope.cancelAddProject = function () {
+      $mdDialog.hide();
+      $scope.project = new Project();
+    };
     /*
 	 * Create dialog to add room
 	 */

@@ -117,62 +117,58 @@
 									<td>Project:</td>
 									<td>
 										<select ng-options="project.codename for project in projects | orderBy: 'codename'" ng-model="po.project" ng-disabled="po.newProject"></select>
-										<input ui-if="currentUser.hasPermission('add_project') class=" new-project-checkbox " type="checkbox " ng-model="po.newProject " />New Project
-								<input class="new-project-name " type="text " ng-model="po.newProjectName " ng-show="po.newProject ">
-                            </td>
-                        </tr>
-                        <tr ng-show="po.project ">
-                            <td>Room:</td>
-                            <td>
-								<select ng-options="room.description for room in po.project.rooms | orderBy: 'description' " ng-model="po.room ">
-								</select>
-								<md-button class="md-accent md-raised " ng-click="showAddRoom() ">Add a Room</md-button>
-                            </td>
-                        </tr>
-                        <tr ng-show="po.project ">
-                            <td>Phase:</td>
-                            <td>
-								<select ng-options="phase.description for phase in po.project.phases | orderBy: 'description' " ng-model="po.phase ">
-								</select>
-								<md-button class="md-accent md-raised " ng-click="showAddPhase() ">Add a Phase</md-button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Discount:</td>
-                            <td>
-                                <input class="discount " type="number " size="2 " maxlength="3 " ng-model="po.discount " />%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Deposit:</td>
-                            <td>
-								<select ng-model="po.deposit_type ">
-									<option value="percent ">Percent</option>
-									<option value="amount ">Amount</option>
-								</select>
-                                <input type="text " size="6 " maxlength="6 " ng-model="po.deposit " />
-								<span class="deposit-currency " ng-show="po.deposit_type=='amount' ">{{po.supplier.currency}}</span>
-								<span class="deposit-percent " ng-show="po.deposit_type=='percent' ">%</span>
-								
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Comments:</td>
-                            <td>
-                                <textarea rows="4 " cols="20 " ng-model="po.comments "></textarea>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                
-            
-			<div class="order-details " ng-show="po.supplier ">
-                <h2 class="title ">Items</h2>
-				<div class="item-menu ">
-					<md-button class="add md-accent md-raised " ng-click="showSupplies=true "> + Add Supply</md-button>
-					<md-button class="create md-accent md-raised " ng-click="showAddSupply=true ">Create New Supply</md-button>
+										<md-button class="md-accent md-raised" ng-click="showAddProject()">Add a Project</md-button>
+									</td>
+								</tr>
+								<tr ng-show="po.project">
+									<td>Room:</td>
+									<td>
+										<select ng-options="room.description for room in po.project.rooms | orderBy: 'description'" ng-model="po.room">
+										</select>
+										<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
+									</td>
+								</tr>
+								<tr ng-show="po.project">
+									<td>Phase:</td>
+									<td>
+										<select ng-options="phase.description for phase in po.project.phases | orderBy: 'description'" ng-model="po.phase">
+										</select>
+										<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
+									</td>
+								</tr>
+								<tr>
+									<td>Discount:</td>
+									<td>
+										<input class="discount" type="number" size="2" maxlength="3" ng-model="po.discount" />%
+									</td>
+								</tr>
+								<tr>
+									<td>Deposit:</td>
+									<td>
+										<select ng-model="po.deposit_type">
+											<option value="percent">Percent</option>
+											<option value="amount">Amount</option>
+										</select>
+										<input type="text" size="6" maxlength="6" ng-model="po.deposit" />
+										<span class="deposit-currency" ng-show="po.deposit_type=='amount'">{{po.supplier.currency}}</span>
+										<span class="deposit-percent" ng-show="po.deposit_type=='percent'">%</span>
+									</td>
+								</tr>
+								<tr>
+									<td>Comments:</td>
+									<td>
+										<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
+									</td>
+								</tr>
+				</table>
+			</div>
+			<div class="order-details" ng-show="po.supplier">
+				<h2 class="title">Items</h2>
+				<div class="item-menu">
+					<md-button class="add md-accent md-raised" ng-click="showSupplies=true">+ Add Supply</md-button>
+					<md-button class="create md-accent md-raised" ng-click="showAddSupply=true">Create New Supply</md-button>
 				</div>
-				<table ng-show="po.items ">
+				<table ng-show="po.items">
 					<thead>
 						<tr class='heading'>
 							<td>Description</td>
@@ -180,76 +176,78 @@
 							<td>Discount</td>
 							<td>Unit Cost</td>
 							<td>Quantity</td>
-							<td colspan="2 ">Total</td>
+							<td colspan="2">Total</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="items " ng-repeat="item in po.items ">
+						<tr class="items" ng-repeat="item in po.items">
 							<td class='description'>{{item.description}}</td>
-							<td><textarea ng-model=item.comments row="4 "></textarea></td>
-							<td class='discount'>
-								<input required type="number " min="0 " ng-model="item.discount "/> 
+							<td>
+								<textarea ng-model=item.comments row="4"></textarea>
 							</td>
-							<td class='unit-cost'><input required min="0 " type="number " ng-model="item.cost " /></td>
+							<td class='discount'>
+								<input required type="number" min="0" ng-model="item.discount" />
+							</td>
+							<td class='unit-cost'>
+								<input required min="0" type="number" ng-model="item.cost" />
+							</td>
 							<td class='quantity'>
-								<input required type="number " min="0 " ng-model="item.quantity " />
+								<input required type="number" min="0" ng-model="item.quantity" />
 							</td>
 							<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
-							<td><md-button class="remove-btn md-warn md-raised " ng-click="removeItem($index) ">Remove</md-button></td>
+							<td>
+								<md-button class="remove-btn md-warn md-raised" ng-click="removeItem($index)">Remove</md-button>
+							</td>
 						</tr>
-						<tr class="summary subtotal ">
+						<tr class="summary subtotal">
 							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
-							<td class="title ">Subtotal</td>
-							<td class="value ">{{subtotal() || 0 | number:2}}</td>
-							<td></td>
-						</tr>
-						<tr class="summary discount " ng-show="po.discount ">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td class="title ">Discount {{po.discount}}%</td>
-							<td class="value ">-{{discount() || 0 | number:2}}</td>
+							<td class="title">Subtotal</td>
+							<td class="value">{{subtotal() || 0 | number:2}}</td>
 							<td></td>
 						</tr>
-						<tr class="summary total " ng-show="po.discount ">
+						<tr class="summary discount" ng-show="po.discount">
 							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
-							<td class="title ">Total</td>
-							<td class="value "> {{total() || 0 | number:2}}</td>
-							<td></td>
-						</tr>
-						<tr class="summary vat " ng-show="po.vat ">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td class="title ">Vat {{po.vat}}%</td>
-							<td class="value ">{{total() * (po.vat / 100) || 0 | number:2}}</td>
+							<td class="title">Discount {{po.discount}}%</td>
+							<td class="value">-{{discount() || 0 | number:2}}</td>
 							<td></td>
 						</tr>
-						<tr class="summary grand-total " ng-show="po.vat ">
+						<tr class="summary total" ng-show="po.discount">
 							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
-							<td class="title ">Grand Total</td>
-							<td class="value ">{{grandTotal() || 0 | number:2}}</td>
+							<td class="title">Total</td>
+							<td class="value">{{total() || 0 | number:2}}</td>
+							<td></td>
+						</tr>
+						<tr class="summary vat" ng-show="po.vat">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="title">Vat {{po.vat}}%</td>
+							<td class="value">{{total() * (po.vat / 100) || 0 | number:2}}</td>
+							<td></td>
+						</tr>
+						<tr class="summary grand-total" ng-show="po.vat">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="title">Grand Total</td>
+							<td class="value">{{grandTotal() || 0 | number:2}}</td>
 							<td></td>
 						</tr>
 					</tbody>
 				</table>
-			
 			</div>
-                
-            </div>
-            
-        </div>
-    </form>
-    
+		</div>
+</div>
+</form>
 </div>
