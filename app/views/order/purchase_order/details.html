@@ -111,6 +111,17 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>Currency</td>
+                    <td>
+                       	<select ng-model="po.currency">
+							<option value="THB">Thai Baht</option>
+							<option value="USD">US Dollar</option>
+							<option value="EUR">Euro</option>
+							<option value="RMB">Renminbi</option>
+						</select>
+                    </td>
+                </tr>
+                <tr>
                     <td>Discount</td>
                     <td>
                     	<input class="discount" type="number" min="0" ng-model="po.discount" />%

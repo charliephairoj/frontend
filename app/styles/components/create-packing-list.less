@@ -1,0 +1,89 @@
+.create-packing-list{
+	height:60%;
+	//width:50%;
+	min-width:50em;
+	overflow:hidden;
+	
+	.md-subheader{
+		background:#607d8b;
+		color:#FFF;
+		margin:0;
+	}
+	
+	.container{
+		height:100%;
+		width:100%;
+		overflow-y:scroll;
+		
+		md-content{
+			
+			.header{
+				display:flex;
+				justify-content:space-between;
+				margin:1em 0;
+				
+			}
+			
+			.room{
+				
+				.items{
+					
+					.item{
+						margin-left:2em;
+						margin-bottom:1em;					
+						padding:0.5em;
+						background:rgba(0, 0, 0, 0.05);
+
+						.parts{
+							
+							.part{
+								display:flex;
+								justify-content:space-between;
+								text-decoration:none;
+								padding:0.25em 0;
+								
+								span{
+									text-indent:2em;
+								}
+						
+								input{
+									font-size:1em;
+									width:3em;
+									text-align:center;
+									background: transparent;
+									.transition(all, 250ms, linear);
+									
+									border:1px solid transparent;
+									
+									&.ng-invalid{
+										background-color:rgba(255, 255, 255, 1);
+									}
+									
+									&:hover{
+										border:1px solid rgba(0, 0, 0, 0.25);
+									}
+									
+									&:focus{
+										border:1px solid rgba(0, 0, 0, 0.25);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}
+	}
+	
+	md-action{
+		display:flex;
+		justify-content:flex-end;
+		padding:1em;
+		
+		.md-button{
+			padding:0.5em;
+			margin-left:1em;
+		}
+	}
+}

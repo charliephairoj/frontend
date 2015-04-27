@@ -141,6 +141,19 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
     };
 	
 	/*
+	 * Create dialog to add packing list
+	 */
+	$scope.showCreatePacking = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-packing-list.html',
+			controllerAs: 'ctrl',
+			locals: {project: $scope.project},
+			controller: 'DialogsCreatePackingListCtrl',
+			bindToController: true,
+		});
+	};
+	
+	/*
 	 * Watches the project for changes in order to autosave
 	 */
     $scope.$watch('project', function (newVal, oldVal) {

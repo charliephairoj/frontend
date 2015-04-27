@@ -29,6 +29,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		$scope.po.supplier = supplier;
 		$scope.po.discount = supplier.discount;
 		$scope.po.terms = supplier.terms;
+		$scope.po.currency = supplier.currency;
 		
 		$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
 			$scope.supplies = $filter('filter')(response, supplier.name);
