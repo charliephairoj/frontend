@@ -6230,6 +6230,18 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
       });
     };
     /*
+	 * Create dialog to add packing list
+	 */
+    $scope.showCreatePacking = function () {
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-packing-list.html',
+        controllerAs: 'ctrl',
+        locals: { project: $scope.project },
+        controller: 'DialogsCreatePackingListCtrl',
+        bindToController: true
+      });
+    };
+    /*
 	 * Watches the project for changes in order to autosave
 	 */
     $scope.$watch('project', function (newVal, oldVal) {
@@ -7205,6 +7217,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       $scope.po.supplier = supplier;
       $scope.po.discount = supplier.discount;
       $scope.po.terms = supplier.terms;
+      $scope.po.currency = supplier.currency;
       $scope.supplies = $filter('filter')(Supply.query({ supplier_id: supplier.id }, function (response) {
         $scope.supplies = $filter('filter')(response, supplier.name);
       }), supplier.name);
@@ -11831,6 +11844,60 @@ angular.module('employeeApp').controller('DialogsChangePasswordCtrl', [
     };
     $scope.cancel = function () {
       $mdDialog.hide();
+    };
+  }
+]);
+/**
+ * @ngdoc function
+ * @name frontendApp.controller:DialogsCreatePackingListCtrl
+ * @description
+ * # DialogsCreatePackingListCtrl
+ * Controller of the frontendApp
+ */
+angular.module('employeeApp').controller('DialogsCreatePackingListCtrl', [
+  '$scope',
+  '$mdDialog',
+  'Room',
+  'Shipping',
+  function ($scope, $mdDialog, Room, Shipping) {
+    function getRoomDetails() {
+      function applyRoomDetails(resp) {
+        angular.extend($scope.project.rooms[$scope.project.rooms.indexOfById(resp)], resp);
+      }
+      for (var i = 0; i < $scope.project.rooms.length; i++) {
+        var room = Room.get({ id: $scope.project.rooms[i].id }, applyRoomDetails);
+      }
+    }
+    setTimeout(function () {
+      $scope.project = this.project;
+      getRoomDetails();
+    }.bind(this));
+    /*
+	 * Complete adding packing list process and close the dialog 
+	 */
+    $scope.completeAddPacking = function () {
+      var shipping = new Shipping();
+      shipping.phase = $scope.phase;
+      shipping.project = $scope.project;
+      shipping.items = [];
+      for (var i = 0; i < $scope.project.rooms.length; i++) {
+        for (var h = 0; h < $scope.project.rooms[i].items.length; h++) {
+          for (var j = 0; j < $scope.project.rooms[i].items[h].parts.length; j++) {
+            shipping.items.push($scope.project.rooms[i].items[h].parts[j]);
+          }
+        }
+      }
+      $mdDialog.hide();
+      shipping.$create(function (resp) {
+        console.log(resp);
+      });
+    };
+    /*
+	 * Cancel create a packing list 
+	 */
+    $scope.cancelAddPacking = function () {
+      $mdDialog.hide();
+      $scope.room = new Room();
     };
   }
 ]);

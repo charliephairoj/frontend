@@ -11,10 +11,13 @@ angular.module('employeeApp')
 ['$scope', '$mdDialog', 'Room', 'Shipping', function ($scope, $mdDialog, Room, Shipping) {
 	
 	function getRoomDetails() {
+		
+		function applyRoomDetails(resp) {
+			angular.extend($scope.project.rooms[$scope.project.rooms.indexOfById(resp)], resp);
+		}
+					
 		for (var i = 0; i < $scope.project.rooms.length; i++) {
-			var room = Room.get({id: $scope.project.rooms[i].id}, function (resp) {
-				angular.extend($scope.project.rooms[$scope.project.rooms.indexOfById(resp)], resp);
-			});
+			var room = Room.get({id: $scope.project.rooms[i].id}, applyRoomDetails);
 		}
 	}
 	
@@ -23,7 +26,7 @@ angular.module('employeeApp')
 		getRoomDetails();
 		
 		
-	}.bind(this))
+	}.bind(this));
 	/*
 	 * Complete adding packing list process and close the dialog 
 	 */
