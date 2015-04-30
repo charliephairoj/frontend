@@ -11,7 +11,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	 */
 	var fetching = true,
 		index = 0,
-		currentSelection;
+		currentSelectionm,
+		search = $location.search();
 		
 	var loadingToast = $mdToast.show($mdToast
 			.simple()
@@ -33,8 +34,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	 * resources;
 	 */
 	$scope.$watch('query.$.$', function (q) {
-		
 		if (q) {
+			$location.search('q', q);
 			Acknowledgement.query({q: q, limit: q ? q.length : 5}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
@@ -47,6 +48,14 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 			});
 		}
 	});
+	
+	/* 
+	 * Set default search from search url
+	 */
+	if (search.q) {
+		$scope.query = {$: {$: search.q}};
+		$scope.safeApply();
+	}
 
 	//Loads the next set of data
 	$scope.loadNext = function () {

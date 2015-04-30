@@ -109,7 +109,7 @@
 									<div class="due-date">{{phase.due_date | date:"MMMM d, yyyy"}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">
 										{{phase.status}}
-										<md-button class="md-accent md-raised phase-report" ng-href="/api/v1/phase/{{phase.id}}/shipping/" target="_blank">
+										<md-button class="md-accent md-raised phase-report" ng-href="/api/v1/phase/{{phase.id}}/report/" target="_blank">
 											Report
 											<img src="img/icons/ikons/bar_chart_2.png" />
 										</md-button>

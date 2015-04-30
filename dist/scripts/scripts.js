@@ -57,7 +57,8 @@ angular.module('employeeApp', [
       controller: 'OrderAcknowledgementCreateCtrl'
     }).when('/order', { templateUrl: 'views/order.html' }).when('/order/acknowledgement', {
       templateUrl: 'views/order/acknowledgement/view.html',
-      controller: 'OrderAcknowledgementViewCtrl'
+      controller: 'OrderAcknowledgementViewCtrl',
+      reloadOnSearch: false
     }).when('/order/shipping/create', {
       templateUrl: 'views/order/shipping/create.html',
       controller: 'OrderShippingCreateCtrl'
@@ -2160,7 +2161,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
 	 * 
 	 * -fetching: this is a switch to see if there is currently a call being made
 	 */
-    var fetching = true, index = 0, currentSelection;
+    var fetching = true, index = 0, currentSelectionm, search = $location.search();
     var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
@@ -2176,6 +2177,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
 	 */
     $scope.$watch('query.$.$', function (q) {
       if (q) {
+        $location.search('q', q);
         Acknowledgement.query({
           q: q,
           limit: q ? q.length : 5
@@ -2190,6 +2192,13 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         });
       }
     });
+    /* 
+	 * Set default search from search url
+	 */
+    if (search.q) {
+      $scope.query = { $: { $: search.q } };
+      $scope.safeApply();
+    }
     //Loads the next set of data
     $scope.loadNext = function () {
       if (!fetching) {
@@ -7052,8 +7061,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderViewCtrl', [
   '$location',
   function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $location) {
     //Flags and variables
-    var fetching = true, index = 0, currentSelection;
-    search = $location.search();
+    var fetching = true, index = 0, currentSelection, search = $location.search();
     //System wide message
     $mdToast.show($mdToast.simple().position('top right').content('Loading purchasing orders...').hideDelay(0));
     //Poll Server for pos

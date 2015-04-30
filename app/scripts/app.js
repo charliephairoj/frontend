@@ -71,9 +71,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'employeeAp
       .when('/order', {
         templateUrl: 'views/order.html'
 	})
-      .when('/order/acknowledgement', {
+	.when('/order/acknowledgement', {
         templateUrl: 'views/order/acknowledgement/view.html',
-        controller: 'OrderAcknowledgementViewCtrl'
+        controller: 'OrderAcknowledgementViewCtrl',
+		reloadOnSearch: false
 	})
       .when('/order/shipping/create', {
         templateUrl: 'views/order/shipping/create.html',

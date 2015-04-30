@@ -6,7 +6,7 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	//Flags and variables
 	var fetching = true,
 		index = 0,
-		currentSelection;
+		currentSelection,
 		search = $location.search();
 		
 	//System wide message
@@ -56,7 +56,6 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	if (search.q) {
 		$scope.query = {$: {$: search.q}};
 		$scope.safeApply();
-		
 	}
 	
 	$scope.loadNext = function () {
