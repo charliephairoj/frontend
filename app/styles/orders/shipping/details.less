@@ -1,0 +1,369 @@
+/*
+ * LESS file for the shipping details page
+ */
+
+.shipping-details-page{
+    .details-page;
+    
+    .workspace{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+		right:0;
+		padding:15em 0 1em 0;
+		background:#FFF;
+		
+        .details{
+			position:absolute;
+			width:100%;
+			padding:1em;
+			height:9em;
+			top:0;
+			left:0;
+            color:rgba(0, 0, 0, 1);
+			
+			
+			.table{
+				float:left;
+				margin-top:0.25em;
+				&:last-child{
+					margin-left:2em;
+				}
+				
+				.row{
+					
+					.cell{
+						color: rgba(0, 0, 0, 1);
+					}
+				}
+			}
+        }
+		
+        md-tabs{
+        	position:absolute;
+			top:9em;
+			left:5%;
+			width:90%;
+        }
+		
+		.panel-container{
+			//position:relative;
+			height:100%;
+			width:100%;
+			
+			.file-panel{
+				display:flex;
+				flex-direction:column;
+				height:100%;
+				align-items:center;
+				overflow-y:scroll;
+				
+				table{
+					width:90%;
+					thead{
+						background:#607d8b;
+						tr{
+							td{
+								background:#607d8b;
+								padding:1em;
+								color:rgba(255, 255, 255, 1);
+								text-align:center;
+							}
+						}
+					}
+					tbody{
+						tr{
+							td{
+								height:3em;
+								vertical-align:middle;
+								border-right:1px dotted rgba(0, 0, 0, 0.35);
+								border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+								padding-left:1em;
+								
+								&:last-child{
+									border-right:none;
+								}
+							}
+						}
+					}
+				}
+				
+				.title-bar{
+					width:90%;
+					display:flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					background:#607d8b;
+					
+					div{
+						display:flex;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-around;
+						padding:1em;
+						background:#607d8b;
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+						&:first-child{
+							border-left:none;
+						}
+				
+						&.filename{
+							width:75%;
+						}
+	
+						&.type{
+							width:25%;
+						}
+					}
+				}
+        
+		        .outer-container{
+		            height:100%;
+		            width:90%;
+		            overflow-y:scroll;
+			
+		            .inner-container{
+		                width:100%;
+		                height:auto;
+		                .item-container{
+		                    width:100%;
+		                    //background-color:red;
+		                    position:relative;
+		                    height:3em;
+		                    &:hover{
+		                        //background-color:red;
+		                    }
+                    
+		                    .item{
+								display:flex;
+								flex-direction:row;
+		                        width:100%;
+		                        background-color:#FFF;
+		                        position:absolute;
+		                        left:0;
+								top:0;
+		                        font-size:1em;
+		                        height: 3em;
+		                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+		                        text-decoration:none;
+		                        color:#000;
+		                        cursor:pointer;
+		                        .transition(all, 150ms, linear);
+                        
+								&:hover{
+		                            background-color:#E4EEF4;
+		                        }
+                        
+		                        &.selected{
+		                            background-color:orange;
+		                        }
+						
+                        
+								div{
+									display:flex;
+									flex-direction:row;
+									align-items:center;
+									padding-left:1em;
+									justify-content:flex-start;
+									border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+									&:first-child{
+										border-left:none;
+									}
+							
+									&.filename{
+										width:75%;
+										display:flex;
+										flex-direction:row;
+										justify-content:space-between;
+										align-items:center;
+										
+										.progress{
+											width:5em;
+											margin-right:1em;
+										}
+									}
+	
+									&.type{
+										width:25%;
+									}
+									
+									input{
+										width:100%;
+										height:100%;
+										background-color:rgba(255, 255, 255, 1);
+										color:rgba(0, 0, 0, 1);
+										border-radius:none;
+								
+										&.ng-invalid{
+											background-color:#A54243;
+										}
+									}
+							
+									textarea{
+										width:100%;
+										background-color:rgba(255, 255, 255, 1);
+										color:rgba(0, 0, 0, 1);
+										padding:0.25em;
+								
+										&.ng-invalid{
+											background-color:#A54243;
+										}
+								
+										&:focus{
+											//width:10em;
+										}
+									}
+								}
+		                    }
+		                }
+		            }
+		        }
+			}
+			
+			.items-panel{
+				.file-panel;
+			
+				.title-bar{
+					
+					div{
+						&.preview{
+							width:20%;
+						}
+				
+						&.description{
+							width:25%;
+						}
+						
+						&.width{
+							width:8%;
+						}
+						
+						&.depth{
+							width:8%;
+						}
+						
+						&.height{
+							width:8%;
+						}
+						
+						&.fabric{
+							width:15%;
+						}
+				
+						&.status{
+							width:16%;
+						}
+					}
+				
+				}
+			
+				.outer-container{
+				
+					.inner-container{
+					
+						.item-container{
+							height:10em;
+							
+							.item{
+								height:10em;
+								
+								div{
+									
+									&.preview{
+										width:20%;
+										height:100%;
+										position:relative;
+										
+										.img-container{
+											height:100%;
+											width:100%;
+											
+											img{
+												height:80%;
+											}
+										}
+									}
+								
+									&.description{
+										width:25%;
+									}
+						
+									&.width{
+										width:8%;
+										justify-content:flex-end;
+										padding:0 0.75em 0 0;
+									}
+						
+									&.depth{
+										width:8%;
+										justify-content:flex-end;
+										padding:0 0.75em 0 0;
+									}
+						
+									&.height{
+										width:8%;
+										justify-content:flex-end;
+										padding:0 0.75em 0 0;
+									}
+						
+									&.fabric{
+										width:15%;
+									}
+				
+									&.status{
+										width:16%;
+										
+										&.shipped{
+											color:green;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				table{
+					
+					tr{
+						
+						td{
+							input{
+								width:85%;
+								text-align:right;
+								padding-right:1em;
+								height:100%;
+								background-color:rgba(255, 255, 255, 1);
+								color:rgba(0, 0, 0, 1);
+								border-radius:none;
+								
+								&.ng-invalid{
+									background-color:#A54243;
+								}
+							}
+							
+							textarea{
+								width:100%;
+								background-color:rgba(255, 255, 255, 1);
+								color:rgba(0, 0, 0, 1);
+								padding:0.25em;
+								
+								&.ng-invalid{
+									background-color:#A54243;
+								}
+								
+								&:focus{
+									//width:10em;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+    }
+}

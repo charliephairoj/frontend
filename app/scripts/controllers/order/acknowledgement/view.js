@@ -11,7 +11,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	 */
 	var fetching = true,
 		index = 0,
-		currentSelectionm,
+		currentSelection,
 		search = $location.search();
 		
 	var loadingToast = $mdToast.show($mdToast

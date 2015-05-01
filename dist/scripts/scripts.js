@@ -2161,7 +2161,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
 	 * 
 	 * -fetching: this is a switch to see if there is currently a call being made
 	 */
-    var fetching = true, index = 0, currentSelectionm, search = $location.search();
+    var fetching = true, index = 0, currentSelection, search = $location.search();
     var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
