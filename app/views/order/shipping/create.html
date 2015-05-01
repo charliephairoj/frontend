@@ -148,6 +148,14 @@
                             <td>Height:</td>
                             <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.height" />mm</td>
                         </tr>
+                        <tr>
+                            <td>Net Weight:</td>
+                            <td><input type="text" ng-model="product.net_weight" />kg</td>
+                        </tr>
+                        <tr>
+                            <td>Gross Weight:</td>
+                            <td><input type="text" ng-model="product.gross_weight" />kg</td>
+                        </tr>
                         <tr ui-if="product.fabric">
                             <td>Fabric: </td>
                             <td>
