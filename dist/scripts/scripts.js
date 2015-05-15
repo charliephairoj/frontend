@@ -3370,6 +3370,9 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
       promise.then(function (dataObj) {
         Notification.display('Image Uploaded');
         $scope.fabric.image = dataObj.data;
+        $scope.fabric.$update(function () {
+          Notification.display('Fabric updated');
+        });
       }, function (e) {
         Notification.display('There was an error in uploading the file');
       });
