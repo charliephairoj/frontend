@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast',
-function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast) {
+.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast', 'FileUploader',
+function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader) {
     $scope.fabric = Fabric.get({'id': $routeParams.id});
     $scope.logs = SupplyLog.query({supply_id: $routeParams.id});
     
@@ -39,6 +39,24 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
             $location.path('/fabric');
         });
         
+    };
+	
+    //Upload Image
+    $scope.upload = function () {
+        
+        //Notify of uploading image
+        Notification.display('Uploading Image...', false);
+		
+        //Notify of uploading image        
+		var promise = FileUploader.upload($scope.images[0], "/api/v1/supply/image/");
+			promise.then(function (dataObj) {
+				Notification.display('Image Uploaded');
+
+				$scope.fabric.image = dataObj.data;
+				
+		}, function (e) {
+			Notification.display("There was an error in uploading the file");
+		});
     };
     
     $scope.update = function () {
