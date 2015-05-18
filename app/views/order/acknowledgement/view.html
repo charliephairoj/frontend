@@ -41,6 +41,7 @@
 			<div class="id">ORDER ID</div>
 			<div class="order-date">DATE</div>
 			<div class="customer">CUSTOMER</div>
+			<div class="po">PO #</div>
 			<div class="project">PROJECT</div>
 			<div class="delivery-date">DELIVERY DATE</div>
 			<div class="total">TOTAL</div>
@@ -55,6 +56,7 @@
 						<div class="id">{{ack.id}}</div>
 						<div class="order-date">{{ack.time_created | date: "MMM d, yyyy"}}</div>
 						<div class="customer">{{ack.customer.name}}</div>
+						<div class="po">{{ack.po_id}}</div>
 						<div class="project-id">{{ack.project.id}}</div>
 						<div class="project">{{ack.project.codename}}</div>
 						<div class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
