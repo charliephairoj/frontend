@@ -83,7 +83,15 @@
                 </tr>
                 <tr class="due-date">
                     <td>Status: </td>
-                    <td>{{acknowledgement.status}}</td>
+                    <td>
+						<select ng-model="acknowledgement.status">
+							<option value="acknowledged">Acknowledged</optioon>
+							<option value="in production">In Production</option>
+							<option value="shipped">Shipped</option>
+							<option value="invoiced">Invoiced</option>
+							<option value="paid">Paid</option>
+						</select>
+					</td>
                 </tr>
                 <tr>
                     <td>Total Items: </td>
