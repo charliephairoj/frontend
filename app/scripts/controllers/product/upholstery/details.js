@@ -4,6 +4,7 @@ angular.module('employeeApp')
 function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader) {
 	
 	$scope.updateLoopActive = true;
+	var timeoutPromise;
 	
     $scope.uphol = Upholstery.get({'id': $routeParams.id}, function () {
 		$scope.safeApply(function () {
@@ -62,30 +63,45 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 		}
 		return uphol;
 	}, function (newVal, oldVal) {
-		if (!$scope.updateLoopActive && oldVal.hasOwnProperty('id')) {
-			$scope.updateLoopActive = true;
+		if (oldVal.hasOwnProperty('id')) {
+			
+			$timeout.cancel(timeoutPromise);
 			
 			timeoutPromise = $timeout(function () {
-				Notification.display('Updating ' + $scope.uphol.description + '...', false);
+				
+				$mdToast.show($mdToast.simple()
+					.position('top right')
+					.hideDelay(3000)
+					.content('Updating ' + $scope.uphol.description + '...'));
+				
 				$scope.uphol.$update(function () {
 					$scope.updateLoopActive = false;
-					Notification.display($scope.uphol.description + ' updated.');
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(3000)
+						.content($scope.uphol.description + ' updated.'));
+
 				}, function () {
-					Notification.display("Unable to update");
-					$scope.updateLoopActive = false;
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(3000)
+						.content("Unable to update"));
+
 				});
-			}, 5000);
+			}, 700);
 		}
     }, true);
     
     $scope.update = function () {
         //Notification.display('Saving Upholsterty...', false);
+		/*
         $scope.uphol.$update(function () {
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(3000)
 				.content('Upholstery saved.'));
         });
+		*/
     };
     
     $scope.remove = function () {

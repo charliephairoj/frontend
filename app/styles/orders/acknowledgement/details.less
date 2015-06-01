@@ -342,10 +342,23 @@
 					.inner-container{
 					
 						.item-container{
-							height:10em;
+							height:8em;
+							position:relative;
+							overflow:hidden;
 							
+							/*
+							 * States
+							 */
+							
+							//Active State
+							&.active{
+								height:12em;
+							}
+					
 							.item{
-								height:10em;
+								height:8em;
+								
+								
 								
 								div{
 									
@@ -396,8 +409,27 @@
 										&.shipped{
 											color:green;
 										}
+										
+										.item-menu{
+											width:2em;
+											height:2em;
+											background:red;
+											
+											&.active{
+												height:5em;
+											}
+										}
 									}
 								}
+							}
+							
+							.item-menu{
+								height:4em;
+								width:100%;
+								background:blue;
+								position:absolute;
+								top:8em;
+								left:0;
 							}
 						}
 					}
