@@ -26,7 +26,6 @@ function ($scope, Employee, Notification, $mdDialog) {
 	 * Show add Employee
 	 */
 	$scope.showAddEmployee = function () {
-		console.log('ok');
 		$mdDialog.show({
 			templateUrl: 'views/templates/add-employee.html',
 			controller: 'DialogsAddEmployeeCtrl'
