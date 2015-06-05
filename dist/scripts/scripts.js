@@ -4232,8 +4232,9 @@ angular.module('employeeApp.services').factory('eaResource', [
 angular.module('employeeApp.services').factory('scanner', [
   '$location',
   '$rootScope',
-  function ($location, $rootScope) {
-    var code = '', codes = '', standardCodes = [
+  '$timeout',
+  function ($location, $rootScope, $timeout) {
+    var code = '', codes = '', unparsedStr = '', standardCodes = [
         [
           /^PO-\d+$/,
           '/order/purchase_order/'
@@ -4250,7 +4251,7 @@ angular.module('employeeApp.services').factory('scanner', [
           /^S-\d+$/,
           '/order/shipping/'
         ]
-      ], customCodes = [], parseStandardCodes = true;
+      ], customCodes = [], parseStandardCodes = true, timeoutVar = 0, re = /^METROLOGICK07[A-Z]\-\d+$/, codeRe = /[A-Z]\-\d+$/;
     var check = function (evt) {
       this._check(evt);
     };
@@ -4268,7 +4269,39 @@ angular.module('employeeApp.services').factory('scanner', [
         }
       });
     }
+    Scanner.prototype.stringCheck = function (evt) {
+      //Cancel previously set timeout
+      $timeout.cancel(timeoutVar);
+      //Get the letter
+      var key = evt.keyCode;
+      var letter;
+      if (96 <= key && key <= 105 || 48 <= key && key <= 90) {
+        letter = String.fromCharCode(96 <= key && key <= 105 ? key - 48 : key);
+      } else if (key === 189) {
+        letter = '-';
+      }
+      //Add to unparsed string
+      unparsedStr += letter;
+      //Restart the time to check the string
+      timeoutVar = $timeout(function () {
+        console.log('surprise');
+        console.log(unparsedStr);
+        if (re.test(unparsedStr)) {
+          codes = codeRe.exec(unparsedStr);
+          if (codes) {
+            code = codes[0];
+            this._dispatch(code);
+          }
+          unparsedStr = '';
+        }
+      }.bind(this), 500, false);
+    };
     Scanner.prototype._check = function (evt, customFn) {
+      /*
+		 * Checks if the string matches the preset prefix and suffix 
+		 * of the scanner
+		 */
+      this.stringCheck(evt);
       /*
 		 * Checks if the character is the start code for the 
 		 * scanner. If it is the start code, then turn on the parse
