@@ -1682,6 +1682,7 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
   'FileUploader',
   function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader) {
     $scope.updateLoopActive = true;
+    var timeoutPromise;
     $scope.uphol = Upholstery.get({ 'id': $routeParams.id }, function () {
       $scope.safeApply(function () {
         $scope.updateLoopActive = false;
@@ -1727,25 +1728,20 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
       }
       return uphol;
     }, function (newVal, oldVal) {
-      if (!$scope.updateLoopActive && oldVal.hasOwnProperty('id')) {
-        $scope.updateLoopActive = true;
+      if (oldVal.hasOwnProperty('id')) {
+        $timeout.cancel(timeoutPromise);
         timeoutPromise = $timeout(function () {
-          Notification.display('Updating ' + $scope.uphol.description + '...', false);
+          $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('Updating ' + $scope.uphol.description + '...'));
           $scope.uphol.$update(function () {
             $scope.updateLoopActive = false;
-            Notification.display($scope.uphol.description + ' updated.');
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content($scope.uphol.description + ' updated.'));
           }, function () {
-            Notification.display('Unable to update');
-            $scope.updateLoopActive = false;
+            $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('Unable to update'));
           });
-        }, 5000);
+        }, 700);
       }
     }, true);
     $scope.update = function () {
-      //Notification.display('Saving Upholsterty...', false);
-      $scope.uphol.$update(function () {
-        $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('Upholstery saved.'));
-      });
     };
     $scope.remove = function () {
       //Notification.display('Deleteing Upholstery Product');
@@ -2324,7 +2320,7 @@ angular.module('employeeApp').directive('dragOn', [function () {
       }
     };
   }]);
-angular.module('employeeApp').directive('dropOn', [function () {
+angular.module('employeeApp.directives').directive('dropOn', [function () {
     function emptyStrFilter(element, index, array) {
       return element !== '';
     }
@@ -2366,6 +2362,10 @@ angular.module('employeeApp').directive('dropOn', [function () {
     return {
       restrict: 'A',
       replace: false,
+      scope: {
+        'dropOn': '=',
+        'onDropAction': '&'
+      },
       link: function (scope, element, attrs) {
         element.bind('drop', function (event) {
           preventPropagation(event);
@@ -2376,8 +2376,16 @@ angular.module('employeeApp').directive('dropOn', [function () {
                  * object to it
                  */
           scope.$apply(function () {
-            var target = getTarget(scope, attrs.dropOn);
-            angular.copy(getData(event), target);
+            /*
+                    var target = getTarget(scope, attrs.dropOn);
+					console.log(target);
+                    angular.copy(getData(event), target);
+					console.log(target);
+					*/
+            scope.dropOn = getData(event);
+            if (attrs.onDropAction) {
+              scope.onDropAction({ $data: getData(event) });
+            }
           });
         }).bind('dragover', function (event) {
           preventPropagation(event);
@@ -4380,7 +4388,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$mdToast',
   'FileUploader',
   'Project',
-  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project) {
+  '$mdDialog',
+  'Fabric',
+  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project, $mdDialog, Fabric) {
     //Show system notification
     $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgement...').hideDelay(0));
     //Set Vars
@@ -4407,14 +4417,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         $scope.acknowledgement.project = $scope.projects[index];
       }
     });
-    //Grid Options
-    $scope.gridOptions = {
-      data: 'acknowledgement.products',
-      columnDefs: [{
-          field: 'image',
-          displayName: 'Image'
-        }]
-    };
+    //get all fabrics
+    $scope.fabrics = Fabric.query({
+      limit: 0,
+      page_size: 1000
+    });
     //Request pdf for acknowledgements from server
     $scope.getPDF = function (type) {
       try {
@@ -4453,6 +4460,19 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         }, function () {
         });
       }  /* jshint ignore:end */
+    };
+    // Change Fabric
+    $scope.changeFabric = function ($index) {
+      $mdDialog.show({
+        templateUrl: 'views/templates/change-fabric.html',
+        controllerAs: 'ctrl',
+        locals: {
+          item: $scope.acknowledgement.items[$index],
+          fabrics: $scope.fabrics
+        },
+        controller: 'DialogsChangeFabricCtrl',
+        bindToController: true
+      });
     };
     //Save updates to the server
     $scope.save = function () {
@@ -6366,7 +6386,6 @@ angular.module('employeeApp').controller('HrEmployeeViewCtrl', [
 	 * Show add Employee
 	 */
     $scope.showAddEmployee = function () {
-      console.log('ok');
       $mdDialog.show({
         templateUrl: 'views/templates/add-employee.html',
         controller: 'DialogsAddEmployeeCtrl'
@@ -11923,6 +11942,22 @@ angular.module('employeeApp').controller('DialogsCreatePackingListCtrl', [
     $scope.cancelAddPacking = function () {
       $mdDialog.hide();
       $scope.room = new Room();
+    };
+  }
+]);
+/**
+ * @ngdoc function
+ * @name frontendApp.controller:DialogsChangeFabricCtrl
+ * @description
+ * # DialogsChangeFabricCtrl
+ * Controller of the frontendApp
+ */
+angular.module('employeeApp').controller('DialogsChangeFabricCtrl', [
+  '$scope',
+  '$mdDialog',
+  function ($scope, $mdDialog) {
+    $scope.close = function () {
+      $mdDialog.hide();
     };
   }
 ]);

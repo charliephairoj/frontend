@@ -5,6 +5,44 @@
 			<button ng-click="showCal=false">Select</button>
 		</div>
 	</div>
+	<div data-modal ng-model="showFabric" class="fabric_modal">
+		<div class="title">
+			Fabric
+		</div>
+		<div class="container">
+			<div class="product_container">
+				<div class="product" data-drop-on="item.fabric">
+					<div>{{item.description}}</div>
+					<div class="fabric" ui-if="item.fabric">
+						Fabric: {{item.fabric.description}}
+						<img ng-src="{{item.fabric.image_url}}" />
+					</div>
+				</div>
+				<div class="pillow" ng-repeat="pillow in item.pillows" data-drop-on="pillow.fabric">
+					<div>{{pillow.type | beautify}} Pillow</div>
+					<div class="fabric">
+						Fabric: {{pillow.fabric.description}}
+						<img ng-src="{{pillow.fabric.image_url}}" />
+					</div>
+				</div>
+			</div>
+			<div class="fabric_container">
+				<div data-search-bar></div>
+				<ul class="list">
+					<li class="item" ng-repeat="fabric in fabricList | filter:query " data-drag-on="fabric">
+						<img ng-src="{{fabric.image_url}}" />
+						<div class="details">
+							Pattern: {{fabric.pattern}}
+							<br />Color: {{fabric.color}}
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="bottom_bar">
+			<button ng-click="showFabric = false">Submit</button>
+		</div>
+	</div>
 	<!--
         Sidebar
     -->
@@ -58,10 +96,16 @@
 					<td>Order Date:</td>
 					<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
 				</tr>
-				<tr class="project">
-					<td>Project:</td>
+				<tr class="due-date">
+					<td>Status:</td>
 					<td>
-						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project">
+						<select ng-model="acknowledgement.status">
+							<option value="acknowledged">Acknowledged</optioon>
+								<option value="in production">In Production</option>
+								<option value="shipped">Shipped</option>
+								<option value="invoiced">Invoiced</option>
+								<option value="paid">Paid</option>
+						</select>
 					</td>
 				</tr>
 			</table>
@@ -74,16 +118,10 @@
 						</md-button>
 					</td>
 				</tr>
-				<tr class="due-date">
-					<td>Status:</td>
+				<tr class="project">
+					<td>Project:</td>
 					<td>
-						<select ng-model="acknowledgement.status">
-							<option value="acknowledged">Acknowledged</optioon>
-								<option value="in production">In Production</option>
-								<option value="shipped">Shipped</option>
-								<option value="invoiced">Invoiced</option>
-								<option value="paid">Paid</option>
-						</select>
+						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project">
 					</td>
 				</tr>
 				<tr>
@@ -101,6 +139,7 @@
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="items-panel">
+					<!--
 					<table>
 						<thead>
 							<tr>
@@ -129,7 +168,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<!--
+					-->
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -141,9 +180,8 @@
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
-							<div class="item-container" ng-repeat="item in acknowledgement.items">
-								<a class="item">
- <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">--> <!--
+							<div class="item-container" ng-repeat="item in acknowledgement.items" ng-class="{'active': active}" ng-click="active=true">
+								<div class="item">
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -154,12 +192,16 @@
 									<div class="depth">{{item.depth}}</div>
 									<div class="height">{{item.height}}</div>
 									<div class="fabric">{{item.fabric.description}}</div>
-									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
-								</a>
+									<div class="status" ng-class="item.status.toLowerCase()">
+										{{item.status}}
+									</div>
+									<div class="item-menu">
+										<md-button ng-click="changeFabric($index)" class="md-accent md-raised">Change Fabric</md-button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-							-->
 				</div>
 				<div ng-switch-when="1" class="file-panel">
 					<div class="title-bar">

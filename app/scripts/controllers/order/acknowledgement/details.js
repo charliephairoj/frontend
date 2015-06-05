@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader', 'Project',
-function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project) { 
+.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader', 'Project', '$mdDialog', 'Fabric',
+function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project, $mdDialog, Fabric) { 
 	
 	//Show system notification
 	$mdToast.show($mdToast
@@ -32,13 +32,10 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
 			$scope.acknowledgement.project = $scope.projects[index];
 		}
 	});
-	
-	//Grid Options
-	$scope.gridOptions = {
-		data: 'acknowledgement.products',
-		columnDefs: [{field: 'image', displayName: 'Image'}]
-	};
 
+	//get all fabrics
+	$scope.fabrics = Fabric.query({limit:0, page_size:1000});
+	
 	//Request pdf for acknowledgements from server
     $scope.getPDF = function (type) {
 		try {
@@ -89,6 +86,20 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
 		}
 		/* jshint ignore:end */
 		
+	};
+	
+	// Change Fabric
+	$scope.changeFabric = function ($index) {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/change-fabric.html',
+			controllerAs: 'ctrl',
+			locals: {item: $scope.acknowledgement.items[$index],
+					 fabrics: $scope.fabrics},
+			controller: 'DialogsChangeFabricCtrl',
+			bindToController: true,
+		});
+	
 	};
 	
     //Save updates to the server

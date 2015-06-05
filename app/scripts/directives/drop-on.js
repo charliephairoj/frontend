@@ -1,5 +1,5 @@
 
-angular.module('employeeApp')
+angular.module('employeeApp.directives')
 .directive('dropOn', [function () {
     function emptyStrFilter(element, index, array) {
         return (element !== "");
@@ -46,6 +46,10 @@ angular.module('employeeApp')
     return {
         restrict: 'A',
         replace: false,
+		scope: {
+			'dropOn': '=',
+			'onDropAction': '&'
+		},
         link: function (scope, element, attrs) {
             element.bind('drop', function (event) {
                 preventPropagation(event);
@@ -56,8 +60,17 @@ angular.module('employeeApp')
                  * object to it
                  */
                 scope.$apply(function () {
+					/*
                     var target = getTarget(scope, attrs.dropOn);
+					console.log(target);
                     angular.copy(getData(event), target);
+					console.log(target);
+					*/
+					scope.dropOn = getData(event);
+					
+					if (attrs.onDropAction) {
+						scope.onDropAction({$data:getData(event)});
+					}
                 });
                 
                 
