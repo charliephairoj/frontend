@@ -45,14 +45,18 @@ angular.module('employeeApp.services')
 		//Get the letter
 		var key = evt.keyCode;
 		var letter;
+		
 		if ((96 <= key && key <= 105) || (48 <= key && key <= 90)) {
 			letter = String.fromCharCode((96 <= key && key <= 105) ? key - 48 : key);
+			//Add to unparsed string
+			unparsedStr += letter;
 		} else if (key === 189) {
 			letter = '-';
+			//Add to unparsed string
+			unparsedStr += letter;
 		}
 		
-		//Add to unparsed string
-		unparsedStr += letter;
+		
 		
 		//Restart the time to check the string
 		timeoutVar = $timeout(function () {
