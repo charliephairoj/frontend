@@ -136,6 +136,8 @@
 			</md-tab>
 			<md-tab label="Attachments">
 			</md-tab>
+			<md-tab label="Logs">
+			</md-tab>
 		</md-tabs>
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
@@ -221,6 +223,30 @@
 									</div>
 									<div class="type">{{file.type}}</div>
 								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="2" class="log-panel">
+					<div class="title-bar">
+						<div class="message">
+							MESSAGE
+						</div>
+						<div class="employee">EMPLOYEE</div>
+						<div class="timestamp">TIMESTAMP</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="log in acknowledgement.logs">
+								<div class="item" target="_blank">
+									<div class="message">
+										{{log.message}}
+									</div>
+									<div class="message">
+										{{log.employee}}
+									</div>
+									<div class="timestamp">{{log.timestamp | date:"MMMM d, yyyy"}}</div>
+								</div>
 							</div>
 						</div>
 					</div>
