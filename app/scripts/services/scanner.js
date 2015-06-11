@@ -60,8 +60,6 @@ angular.module('employeeApp.services')
 		
 		//Restart the time to check the string
 		timeoutVar = $timeout(function () {
-			console.log('surprise');
-			console.log(unparsedStr);
 			if (re.test(unparsedStr)) {
 				codes = codeRe.exec(unparsedStr);
 				if (codes) {

@@ -2212,6 +2212,35 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         });
       }
     };
+    /*
+	 * Navigate to the details page for an acknowledgement
+	 */
+    $scope.navigate = function (id) {
+      $location.path('/order/acknowledgement/' + id);
+    };
+    /*
+	 * Watch for changes in the status of the acknowledgement
+	 */
+    $scope.$watch('acknowledgements', function (newVal, oldVal) {
+      // Callback to run when the acknowledgement is finished updating
+      function postUpdate(resp) {
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Acknowledgement #' + resp.id + ' status updated to \'' + resp.status.toLowerCase() + '\''));
+      }
+      if (newVal && oldVal) {
+        try {
+          for (var i = 0; i < newVal.length; i++) {
+            if (newVal[i].id === oldVal[i].id) {
+              if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Updating Acknowledgement #' + newVal[i].id + ' status...'));
+                newVal[i].$update(postUpdate);
+              }
+            }
+          }
+        } catch (e) {
+          console.debug(e);
+        }
+      }
+    }, true);
     function filter(array) {
       return $filter('filter')(array, $scope.query);
     }
@@ -4286,8 +4315,6 @@ angular.module('employeeApp.services').factory('scanner', [
       }
       //Restart the time to check the string
       timeoutVar = $timeout(function () {
-        console.log('surprise');
-        console.log(unparsedStr);
         if (re.test(unparsedStr)) {
           codes = codeRe.exec(unparsedStr);
           if (codes) {
