@@ -6303,9 +6303,14 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
     };
     $scope.addSupply = function ($supply) {
       $scope.showAddSupply = false;
-      $scope.project.supplies.push($supply);
-      //Notify the user
-      Notification.display('Adding ' + $supply.description + ' to ' + $scope.project.codename);
+      var supply = angular.copy($supply);
+      supply.quantity = 0;
+      $scope.project.supplies = $scope.project.supplies || [];
+      $scope.project.supplies.push(supply);  //Notify the user
+                                             //Notification.display("Adding "+$supply.description+" to "+$scope.project.codename);
+                                             //$scope.project.$update(function () {
+                                             //	Notification.display($supply.description+" added to "+$scope.project.codename + ".");
+                                             //});
     };
     $scope.removeSupply = function ($index) {
       $scope.project.supplies.splice($index, 1);
@@ -6352,11 +6357,8 @@ angular.module('employeeApp').controller('ProjectDetailsCtrl', [
     /*
 	 * Watches the project for changes in order to autosave
 	 */
-    $scope.$watch('project', function (newVal, oldVal) {
-      delete angular.copy(newVal).phases;
-      return newVal;
-    }, function (newVal, oldVal) {
-      if (oldVal.hasOwnProperty('id')) {
+    $scope.$watch('project.supplies', function (newVal, oldVal) {
+      if (oldVal) {
         $timeout.cancel(timeoutPromise);
         timeoutPromise = $timeout(function () {
           Notification.display('Saving...', false);

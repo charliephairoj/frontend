@@ -28,6 +28,14 @@
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
+					<div ng-click="showAddSupply=true">
+						<span>Add a Supply</span>
+					</div>
+                </li>
+				<li>
+					<!--
+                    <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+					-->
 					<div ng-click="showAddRoom()">
 						<span>Add a Room</span>
 						<img src="img/icons/ikons/square_add.png" />
@@ -101,6 +109,9 @@
 				
 			</md-tab>
 			<md-tab label="Acknowledgements">
+				
+			</md-tab>
+			<md-tab label="Supplies">
 				
 			</md-tab>
 		</md-tabs>
@@ -275,6 +286,33 @@
 									<div class="status" ng-class="po.status.toLowerCase()">{{ack.status}}</div>
 								</a>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="5" class="supplies-panel">
+				
+					<div class="title-bar">
+						<div class="preview">PREVIEW</div>
+						<div class="description">DESCRIPTION</div>
+						<div class="qty">QTY</div>
+					</div>
+					<div class="outer-container">
+						<div class="inner-container">
+							<div class="item-container" ng-repeat="supply in project.supplies">
+								<div class="item"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+									<div class="preview">
+										<div class="img-container">
+											<img ng-src="{{supply.image.url}}" />
+										</div>
+									</div>
+									<div class="description">{{supply.description}}</div>
+									<div class="qty">
+										<input type="number" min="0" ng-model="supply.quantity">
+										<md-button class="md-warn md-raised" ng-click="removeSupply($index)">Remove</md-button>
+									</div>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>

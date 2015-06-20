@@ -9,6 +9,8 @@
 						<div class="fabric" ui-if="ctrl.item.fabric">
 							Fabric: {{ctrl.item.fabric.description}}
 							<img ng-src="{{ctrl.item.fabric.image_url}}" />
+							<br />Fabric Quantity:
+							<input type="number" min="0" ng-model="item.fabric_quantity">
 						</div>
 					</div>
 					<div class="pillow" ng-repeat="pillow in ctrl.item.pillows" data-drop-on="pillow.fabric">

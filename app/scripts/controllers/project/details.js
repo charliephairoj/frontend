@@ -98,11 +98,17 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	$scope.addSupply = function ($supply) {
 		
 		$scope.showAddSupply = false;
-		
-		$scope.project.supplies.push($supply);
+		var supply = angular.copy($supply);
+		supply.quantity = 0;
+		$scope.project.supplies = $scope.project.supplies || [];
+		$scope.project.supplies.push(supply);
 		
 		//Notify the user
-		Notification.display("Adding "+$supply.description+" to "+$scope.project.codename);
+		//Notification.display("Adding "+$supply.description+" to "+$scope.project.codename);
+		
+		//$scope.project.$update(function () {
+		//	Notification.display($supply.description+" added to "+$scope.project.codename + ".");
+		//});
 		
 	};
 	
@@ -156,18 +162,11 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	/*
 	 * Watches the project for changes in order to autosave
 	 */
-    $scope.$watch('project', function (newVal, oldVal) {
-		
-		delete angular.copy(newVal).phases;
-		
-		return newVal;
-		
-	}, function (newVal, oldVal) {
+    $scope.$watch('project.supplies', function (newVal, oldVal) {
     	
-		
-		if (oldVal.hasOwnProperty('id')) {
+		if (oldVal) {
 	    	$timeout.cancel(timeoutPromise);
-		
+	
 			timeoutPromise = $timeout(function () {
 				Notification.display('Saving...', false);
 				var project = angular.copy($scope.project);
@@ -176,6 +175,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 				});
 			}, 750);
 		}
+		
     }, true);
 	
 }]);
