@@ -178,6 +178,14 @@
                 <td><label>Current Length</label></td>
                 <td><input type="number" ng-model="fabric.quantity"></td>
             </tr> 
+            <tr>
+                <td><label>Reserved</label></td>
+                <td>{{fabric.reserved}}</td>
+            </tr>
+            <tr>
+                <td><label>Quantity Need</label></td>
+                <td>{{quantityNeeded()}}</td>
+            </tr>
             
             
 		</table>

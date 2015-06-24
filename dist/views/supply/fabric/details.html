@@ -211,6 +211,18 @@
 					<input type="number" ng-model="fabric.quantity">
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<label>Reserved</label>
+				</td>
+				<td>{{fabric.reserved}}</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Quantity Need</label>
+				</td>
+				<td>{{quantityNeeded()}}</td>
+			</tr>
 		</table>
 		<div class="title-bar">
 			<div class="message">MESSAGE</div>

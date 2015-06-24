@@ -288,13 +288,18 @@ angular.module('employeeApp').run([
   '$interval',
   'PurchaseOrder',
   '$mdDialog',
-  function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog) {
+  '$location',
+  function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
     /*
 	 * Get the current user and place it at the top scope
 	 */
     $rootScope.currentUser = new CurrentUser(function () {
       inventoryUserCheck();
+      for (var z = 0; z < $rootScope.groups.length; z++) {
+        if ($rootScope.groups[z].toLowerCase() == 'decoroom') {
+        }
+      }
     });
     /*
      * Prototypical extension of core classes
@@ -3375,6 +3380,12 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
     function capitalizeFirstLetter(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
+    $scope.quantityNeeded = function () {
+      var qty = Number($scope.fabric.quantity) - Number($scope.fabric.reserved);
+      var value = qty < 0 ? Math.abs(qty) : 'Sufficient fabric in stock.';
+      console.log(value);
+      return value;
+    };
     $scope.add = function () {
       $scope.fabric.$add({ quantity: $scope.quantity }, function () {
       });
@@ -3431,6 +3442,9 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
         }, function (e) {
           $mdToast.hide();
           $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
+        });
+        Fabric.get({ 'id': $routeParams.id }, function (resp) {
+          $scope.fabric.reserved = resp.reserved;
         });
       }
     };
@@ -4463,6 +4477,16 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'pdf': true
     }, function () {
       $mdToast.hide();
+      //Convert string into numbers for quantity and unit_price and fabric quantity
+      for (var i = 0; i < $scope.acknowledgement.items.length; i++) {
+        $scope.acknowledgement.items[i].quantity = Number($scope.acknowledgement.items[i].quantity);
+        $scope.acknowledgement.items[i].unit_price = Number($scope.acknowledgement.items[i].unit_price);
+        $scope.acknowledgement.items[i].fabric_quantity = Number($scope.acknowledgement.items[i].fabric_quantity);
+        //Convert string into numbers for pillow fabric quantity
+        for (var h = 0; h < $scope.acknowledgement.items[i].pillows.length; h++) {
+          $scope.acknowledgement.items[i].pillows[h].fabric_quantity = Number($scope.acknowledgement.items[i].pillows[h].fabric_quantity);
+        }
+      }
       //Reconcile the project so that it is shown to the user
       if ($scope.projects.length > 0 && $scope.acknowledgement.project) {
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);

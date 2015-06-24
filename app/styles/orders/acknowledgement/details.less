@@ -311,19 +311,7 @@
 						}
 				
 						&.description{
-							width:25%;
-						}
-						
-						&.width{
-							width:8%;
-						}
-						
-						&.depth{
-							width:8%;
-						}
-						
-						&.height{
-							width:8%;
+							width:20%;
 						}
 						
 						&.fabric{
@@ -331,7 +319,19 @@
 						}
 				
 						&.status{
-							width:16%;
+							width:14%;
+						}
+						
+						&.unit-price{
+							width:10%;
+						}
+						
+						&.qty{
+							width:6%;
+						}
+						
+						&.total{
+							width:15%;
 						}
 					}
 				
@@ -378,37 +378,63 @@
 									}
 								
 									&.description{
-										width:25%;
+										width:20%;
 									}
 						
-									&.width{
-										width:8%;
-										justify-content:flex-end;
-										padding:0 0.75em 0 0;
-									}
-						
-									&.depth{
-										width:8%;
-										justify-content:flex-end;
-										padding:0 0.75em 0 0;
-									}
-						
-									&.height{
-										width:8%;
-										justify-content:flex-end;
-										padding:0 0.75em 0 0;
-									}
+									
 						
 									&.fabric{
 										width:15%;
 									}
 				
 									&.status{
-										width:16%;
+										width:14%;
 										
 										&.shipped{
 											color:green;
 										}
+									}
+									
+									&.unit-price{
+										width:10%;
+										justify-content:flex-end;
+										height:8em;
+										position:relative;
+										padding:0;
+										
+										input{
+											height:98%;
+											width:100%;
+											background:rgba(255, 255, 255, 1);
+											border-radius:0;
+											padding:0;
+											text-align:center;
+											color:rgba(0,0,0, 1);
+										}
+									}
+						
+									&.qty{
+										width:6%;
+										justify-content:flex-end;
+										height:8em;
+										position:relative;
+										padding:0;
+										
+										input{
+											height:98%;
+											width:100%;
+											background:rgba(255, 255, 255, 1);
+											border-radius:0;
+											padding:0;
+											text-align:center;
+											color:rgba(0,0,0, 1);
+										}
+									}
+						
+									&.total{
+										width:15%;
+										justify-content:flex-end;
+										padding:0 2em 0 0;
 									}
 								}
 							}

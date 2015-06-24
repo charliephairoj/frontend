@@ -9,7 +9,7 @@ function ($scope, $location) {
 		!user.hasModule('shipping')) {
 			//$location.path('/supply');
 		}
-		
+			
 	};
 	
 	if (!$scope.currentUser.ready) {

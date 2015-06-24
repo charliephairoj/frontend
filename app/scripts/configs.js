@@ -44,7 +44,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider) {
 /*
  * Run top level application code
  */
-angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog) {
+angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
 	
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 	/*
@@ -52,6 +52,12 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 	 */
 	$rootScope.currentUser = new CurrentUser(function () {
 		inventoryUserCheck();
+		
+		for (var z = 0; z < $rootScope.groups.length; z++) {
+			if ($rootScope.groups[z].toLowerCase() == 'decoroom') {
+				//$location.path
+			}
+		}
 	});
     
     /*

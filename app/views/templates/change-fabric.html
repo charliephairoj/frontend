@@ -11,7 +11,7 @@
 	                        Fabric:  {{ctrl.item.fabric.description}}
 	                        <img ng-src="{{ctrl.item.fabric.image_url}}" />
 							<br />
-							Fabric Quantity: <input type="number" min="0" ng-model="item.fabric_quantity">
+							Fabric Quantity: <input type="number" min="0" ng-model="ctrl.item.fabric_quantity">
 	                    </div>
 						
                     
@@ -21,6 +21,8 @@
 	                    <div class="fabric">
 	                        Fabric: {{pillow.fabric.description}}
 	                        <img ng-src="{{pillow.fabric.image_url}}" />
+							<br />
+							Fabric Quantity: <input type="number" min="0" ng-model="pillow.fabric_quantity">
 	                    </div>
 	                </div>
 	            </div>

@@ -199,11 +199,11 @@
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
-						<div class="width">WIDTH</div>
-						<div class="depth">DEPTH</div>
-						<div class="height">HEIGHT</div>
 						<div class="fabric">FABRIC</div>
 						<div class="status">STATUS</div>
+						<div class="unit-price">UNIT PRICE</div>
+						<div class="qty">QTY</div>
+						<div class="total">TOTAL</div>
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
@@ -216,13 +216,20 @@
 										</div>
 									</div>
 									<div class="description">{{item.description}}</div>
-									<div class="width">{{item.width}}</div>
-									<div class="depth">{{item.depth}}</div>
-									<div class="height">{{item.height}}</div>
+									
 									<div class="fabric">{{item.fabric.description}}</div>
 									<div class="status" ng-class="item.status.toLowerCase()">
 										{{item.status}}
 										
+									</div>
+									<div class="unit-price">
+										<input type="number" min="0" ng-model="item.unit_price">
+									</div>
+									<div class="qty">
+										<input type="number" min="0" ng-model="item.quantity">
+									</div>
+									<div class="total">
+										{{item.unit_price * item.quantity}}
 									</div>
 									<div class="item-menu">
 										<md-button ng-click="changeFabric($index)" class="md-accent md-raised">Change Fabric</md-button>

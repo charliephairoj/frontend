@@ -10,6 +10,13 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
     function capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
+	
+	$scope.quantityNeeded = function () {
+		var qty = Number($scope.fabric.quantity) - Number($scope.fabric.reserved);
+		var value = qty < 0 ? Math.abs(qty) : "Sufficient fabric in stock."; 
+		console.log(value);
+		return value;
+	};
     
     $scope.add = function () {
 		$scope.fabric.$add({quantity: $scope.quantity}, function () {
@@ -98,6 +105,10 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 					.position('top right')
 					.content(e)
 					.hideDelay(0));
+			});
+			
+			Fabric.get({'id': $routeParams.id}, function (resp) {
+				$scope.fabric.reserved = resp.reserved;
 			});
 		}
 		
