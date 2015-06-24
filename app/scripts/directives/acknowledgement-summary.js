@@ -12,7 +12,7 @@ angular.module('employeeApp')
 		//Create box charts for summary
 		var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div')
 		.attr('class', function (d) {
-			return d.category.toLowerCase() == 'partially shipped' ? 'partially-shipped' : d.category.toLowerCase();
+			return d.category.toLowerCase().replace(/ /gi, '-');
 		});
 		
 		//Attach amount
@@ -54,8 +54,12 @@ angular.module('employeeApp')
 				var total = e.total.count;
 				var data = [
 					{count:e.acknowledged.count, amount: e.acknowledged.amount, category:'Acknowledged', total:total},
-					{count:e.partially_shipped.count, amount: e.partially_shipped.amount, category:'Partially Shipped', total:total},
+					{count:e.deposit_received.count, amount: e.deposit_received.amount, category:'Deposit Received', total:total},
+					{count:e.in_production.count, amount: e.in_production.amount, category:'In Production', total:total},
+					{count:e.ready_to_ship.count, amount: e.ready_to_ship.amount, category:'Ready to Ship', total:total},
 					{count:e.shipped.count, amount: e.shipped.amount, category:'Shipped', total:total},
+					{count:e.invoiced.count, amount: e.invoiced.amount, category:'Invoiced', total:total},
+					{count:e.paid.count, amount: e.paid.amount, category:'Paid', total:total},
 				];
 				
 				//Call fn to create chart
