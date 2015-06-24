@@ -296,11 +296,20 @@ angular.module('employeeApp').run([
 	 */
     $rootScope.currentUser = new CurrentUser(function () {
       inventoryUserCheck();
+      console.log('ok');
       for (var z = 0; z < $rootScope.groups.length; z++) {
         if ($rootScope.groups[z].toLowerCase() == 'decoroom') {
+          $location.path('/order/acknowledgement');
         }
       }
     });
+    $rootScope.currentUser.onready = function () {
+      for (var z = 0; z < $rootScope.currentUser.groups.length; z++) {
+        if ($rootScope.currentUser.groups[z].toLowerCase() == 'decoroom') {
+          $location.path('/order/acknowledgement');
+        }
+      }
+    };
     /*
      * Prototypical extension of core classes
      */

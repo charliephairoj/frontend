@@ -34,7 +34,7 @@
 		
 		<nav>
 			<h2>Acknowledgements</h2>
-			<md-button class="add-btn md-primary md-raised" ui-if="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">New Order</md-button>
+			<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">New Order</md-button>
 		</nav>
 		
 		<div class="title-bar">
@@ -62,7 +62,7 @@
 						<div class="delivery-date" ng-click="navigate(ack.id)">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
 						<div class="total" ng-click="navigate(ack.id)">{{ack.total}}</div>
 						<div class="status" ng-class="ack.status.toLowerCase()">
-							<select ng-model="ack.status">
+							<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 								<option value="deposit received">Deposit Received</option>
 								<option value="acknowledged">Acknowledged</optioon>
 								<option value="in production">In Production</option>

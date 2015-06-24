@@ -70,16 +70,16 @@
                 <li ng-show="currentUser.hasPermission('change_acknowledgement')">
                     <div ng-click="showCal=true">Change Delivery Date</div>
                 </li>
-                <li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
                     <a ng-href="{{acknowledgement.pdf.acknowledgement}}"target="_blank">View Acknowledgement</a>
                 </li>
-                <li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
                     <a ng-href="{{acknowledgement.pdf.confirmation}}"target="_blank">View Confirmation</a>
                 </li>
-                <li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
                     <a ng-href="{{acknowledgement.pdf.production}}"target="_blank">View Production</a>
                 </li>
-                <li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
                     <a ng-href="{{acknowledgement.pdf.label}}"target="_blank">View Shipping Labels</a>
                 </li>
 				<!--
@@ -87,7 +87,7 @@
                     <div ng-click="viewLog()">View Log</div>
                 </li>
 					-->
-                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+                <li ng-show="currentUser.hasPermission('delete_acknowledgement')">
                     <div ng-click="remove()">Delete</div>
                 </li>
             </ul>
@@ -113,7 +113,7 @@
 					
                     <td>Status: </td>
                     <td>
-						<select ng-model="acknowledgement.status">
+						<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 							<option value="deposit received">Deposit Received</option>
 							<option value="acknowledged">Acknowledged</optioon>
 							<option value="in production">In Production</option>
@@ -130,7 +130,7 @@
                 <tr class="due-date">
                     <td>Devlivery Date: </td>
                     <td>
-						<md-button class="md-accent" ng-click="showCal=true">
+						<md-button class="md-accent" ng-click="showCal=true" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 							{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}
 						</md-button>
 					</td>
@@ -138,7 +138,7 @@
                 <tr class="project">
                     <td>Project:</td>
                     <td>
-						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project">
+						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
                     </td>
                 </tr>
                 
@@ -223,16 +223,16 @@
 										
 									</div>
 									<div class="unit-price">
-										<input type="number" min="0" ng-model="item.unit_price">
+										<input type="number" min="0" ng-model="item.unit_price" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 									</div>
 									<div class="qty">
-										<input type="number" min="0" ng-model="item.quantity">
+										<input type="number" min="0" ng-model="item.quantity" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 									</div>
 									<div class="total">
 										{{item.unit_price * item.quantity}}
 									</div>
 									<div class="item-menu">
-										<md-button ng-click="changeFabric($index)" class="md-accent md-raised">Change Fabric</md-button>
+										<md-button ng-click="changeFabric($index)" class="md-accent md-raised" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">Change Fabric</md-button>
 									</div>
 								</div>
 							</div>
