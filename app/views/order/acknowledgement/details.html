@@ -2,6 +2,11 @@
 
 <div class="acknowledgement-details-page" file-drop="addFiles($files)">
     
+	<div class="file-drag-drop-modal">
+		<div class="container">
+			<h2>Drop Files for Order #{{acknowledgement.id}} Here</h2>
+		</div>
+	</div>
     
     <div class="calendar-modal" data-modal  ng-model="showCal">
         <div ui-date ng-model="acknowledgement.delivery_date"></div>

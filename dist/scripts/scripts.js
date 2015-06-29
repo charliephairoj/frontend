@@ -2179,6 +2179,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
       fetching = false;
       changeSelection(index);
     });
+    $scope.setCategory = function ($category) {
+      $scope.safeApply(function () {
+        $scope.query.status = $category;
+      });
+    };
     /*
 	 * Take the query in the searchbar and then sends 
 	 * the query to the server to get more results. The
@@ -11814,7 +11819,7 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
   '$http',
   '$filter',
   function (D3, $http, $filter) {
-    function createChart(element, data) {
+    function createChart(element, data, callback) {
       //Create box charts for summary
       var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div').attr('class', function (d) {
           return d.category.toLowerCase().replace(/ /gi, '-');
@@ -11827,6 +11832,10 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
       //Attach count
       box.append('h2').text(function (d) {
         return d.category + ' ' + d.count;
+      });
+      box.on('click', function (d) {
+        console.log(d);
+        (callback || angular.noop)({ '$category': d.category });
       });
       box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
         //Calculate bar width
@@ -11842,6 +11851,7 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
     }
     return {
       restrict: 'EA',
+      scope: { 'onClick': '&' },
       link: function postLink(scope, element, attrs) {
         //Set class for this element
         element.addClass('acknowledgement-summary');
@@ -11895,7 +11905,7 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
               }
             ];
           //Call fn to create chart
-          createChart(element, data);
+          createChart(element, data, scope.onClick);
         });
       }
     };

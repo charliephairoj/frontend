@@ -27,6 +27,12 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		changeSelection(index);
 	});
 
+	$scope.setCategory = function ($category) {
+		$scope.safeApply(function () {
+			
+			$scope.query.status = $category;
+		});
+	};
 	/*
 	 * Take the query in the searchbar and then sends 
 	 * the query to the server to get more results. The

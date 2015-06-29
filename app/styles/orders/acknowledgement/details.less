@@ -4,7 +4,39 @@
 
 .acknowledgement-details-page{
     .details-page;
-    
+    left:0;
+	
+	.file-drag-drop-modal{
+		display:none;
+		height:100%;
+		width:100%;
+		z-index:1000;
+		position:absolute;
+		background:rgba(255, 255, 255, 0.75);
+		padding: 0.5em;
+		color:rgba(0, 0, 0, 0.30);
+		pointer-events:none;
+		
+		.container{
+			border: 0.35em dashed rgba(0, 0, 0, 0.30);
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			height:100%;
+			width:100%;
+			
+			h2{
+				font-size:2.5em;
+				color:rgba(0, 0, 0, 0.25);
+			}
+		}
+	}
+	&.active{
+		.file-drag-drop-modal{
+			display:block;
+		}
+	}
+	
     /*
      * Modal Section
      */
@@ -119,7 +151,7 @@
         position:absolute;
         top:0;
         bottom:0;
-        left:0;
+        left:200px;
 		right:0;
 		padding:15em 0 1em 0;
 		background:#FFF;

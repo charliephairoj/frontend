@@ -8,7 +8,7 @@
 angular.module('employeeApp')
 .directive('acknowledgementSummary', ['D3', '$http', '$filter', function (D3, $http, $filter) {
 	
-	function createChart(element, data) {
+	function createChart(element, data, callback) {
 		//Create box charts for summary
 		var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div')
 		.attr('class', function (d) {
@@ -25,6 +25,11 @@ angular.module('employeeApp')
 			return d.category + " " + d.count;
 		});
 		
+		box.on('click', function (d) {
+			console.log(d);
+			(callback || angular.noop)({'$category': d.category});
+		});
+		
 		box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
 			//Calculate bar width
 			var value =  ((d.count / d.total) * 100);
@@ -38,10 +43,14 @@ angular.module('employeeApp')
 			
 			return value + '%';
 		});
+		
 	}
 	
     return {
       	restrict: 'EA',
+		scope: {
+			'onClick': '&'
+		},
       	link: function postLink(scope, element, attrs) {
         	
 			//Set class for this element
@@ -63,7 +72,7 @@ angular.module('employeeApp')
 				];
 				
 				//Call fn to create chart
-				createChart(element, data);
+				createChart(element, data, scope.onClick);
 			});
       	}
     };
