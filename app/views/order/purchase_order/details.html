@@ -201,10 +201,10 @@
 							<input type="text" ng-model="item.discount"/> 
 						</td>
 						<td class='unit-cost'>
-							<input type="number" min="0" ng-model="item.unit_cost"/>
+							<input type="number" min="0" step="0.001" ng-model="item.unit_cost"/>
 						</td>
 						<td class='quantity'>
-							<input type="number" min="0" ng-model="item.quantity" />
+							<input type="number" min="0" step="0.01" ng-model="item.quantity" />
 						</td>
 						<td class="status">
 							<!--
