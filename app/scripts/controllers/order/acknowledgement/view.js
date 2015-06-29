@@ -20,6 +20,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 			.content('Loading acknowledgements...')
 			.hideDelay(0));
 
+	$scope.query = {};
+	
 	//Poll the server for acknowledgements
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function (e) {
 		$mdToast.hide();

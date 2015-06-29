@@ -2173,6 +2173,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
 	 */
     var fetching = true, index = 0, currentSelection, search = $location.search();
     var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
+    $scope.query = {};
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
       $mdToast.hide();
