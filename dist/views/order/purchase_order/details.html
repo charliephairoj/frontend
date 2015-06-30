@@ -132,25 +132,19 @@
 				<tr class="row">
 					<td>Project</td>
 					<td>
-						<md-button class="md-accent" ng-href="#/project/{{po.project.id}}">
-							{{po.project.codename}}
-						</md-button>
+						<select ng-options="project.codename for project in projects" ng-model="po.project">
 					</td>
 				</tr>
 				<tr class="row">
 					<td>Room</td>
 					<td>
-						<md-button class="md-accent" ng-href="#/project/room/{{po.room.id}}">
-							{{po.room.description}}
-						</md-button>
+						<select ng-options="room.description for room in po.project.rooms" ng-model="po.room">
 					</td>
 				</tr>
 				<tr class="row">
 					<td>Project Phase</td>
 					<td>
-						<md-button class="md-accent" ng-href="#/project/{{po.project.id}}">
-							{{po.phase.description}}
-						</md-button>
+						<select ng-options="phase.description for phase in po.project.phases" ng-model="po.phase">
 					</td>
 				</tr>
 				<tr class="row">

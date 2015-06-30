@@ -1,8 +1,8 @@
 
 angular.module('employeeApp')
 
-.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window',
-function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
+.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window', 'Project',
+function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project) {
 		
 	$scope.po = PurchaseOrder.get({id: $routeParams.id}, function () {
 		for (var i = 0; i < $scope.po.items.length; i++) {
@@ -10,8 +10,44 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 			item.unit_cost = Number(item.unit_cost);
 			item.quantity = Number(item.quantity);
 		}
+		
+		//Reconcile the project so that it is shown to the user
+		if ($scope.po.id && $scope.po.project && $scope.projects.length) {
+			var index = $scope.projects.indexOfById($scope.po.project.id);
+			
+			$scope.po.project = $scope.projects[index] || $scope.po.project;
+			
+			if ($scope.po.room) {
+				index = $scope.po.project.rooms.indexOfById($scope.po.room.id);
+				$scope.po.room = $scope.po.project.rooms[index] || $scope.po.room;
+			}
+			
+			if ($scope.po.phase) {
+				index = $scope.po.project.phases.indexOfById($scope.po.phase.id);
+				$scope.po.phase = $scope.po.project.phases[index];
+			}
+		}
 	});
 
+	//Get a list of projects
+	$scope.projects = Project.query({limit:0, page_size:1000}, function () {
+		
+		//Reconcile the project so that it is shown to the user
+		if ($scope.po.id && $scope.po.project) {
+			var index = $scope.projects.indexOfById($scope.po.project.id);
+			$scope.po.project = $scope.projects[index];
+			
+			if ($scope.po.room) {
+				index = $scope.po.project.rooms.indexOfById($scope.po.room.id);
+				$scope.po.room = $scope.po.project.rooms[index] || $scope.po.room;
+			}
+			
+			if ($scope.po.phase) {
+				index = $scope.po.project.phases.indexOfById($scope.po.phase.id);
+				$scope.po.phase = $scope.po.project.phases[index];
+			}
+		}
+	});
 	
 	$scope.save = function () {
 		$mdToast.show($mdToast
@@ -26,6 +62,23 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window) {
 				.content('Changes to purchase order ' + $scope.po.id + ' saved.')
 				.hideDelay(2000));
 			$window.open($scope.po.pdf.url);
+			
+			//Reconcile the project so that it is shown to the user
+			if ($scope.po.id && $scope.po.project) {
+				var index = $scope.projects.indexOfById($scope.po.project.id);
+				$scope.po.project = $scope.projects[index];
+			
+				if ($scope.po.room) {
+					index = $scope.po.project.rooms.indexOfById($scope.po.room.id);
+					$scope.po.room = $scope.po.project.rooms[index] || $scope.po.room;
+				}
+			
+				if ($scope.po.phase) {
+					index = $scope.po.project.phases.indexOfById($scope.po.phase.id);
+					$scope.po.phase = $scope.po.project.phases[index];
+				}
+			}
+			
 		}, function (e) {
 			console.error(e);
 		});
