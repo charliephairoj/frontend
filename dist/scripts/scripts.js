@@ -2184,6 +2184,25 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
       $scope.safeApply(function () {
         $scope.query.status = $category;
       });
+      //Determines the paramters for the GET request
+      var params = {
+          limit: 20,
+          status: $category
+        };
+      try {
+        if ($scope.query.$.$) {
+          params.q = $scope.query.$.$;
+        }
+      } catch (e) {
+      }
+      //Make a GET request to the acknowledgement server
+      Acknowledgement.query(params, function (resources) {
+        for (var i = 0; i < resources.length; i++) {
+          if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
+            $scope.acknowledgements.push(resources[i]);
+          }
+        }
+      });
     };
     /*
 	 * Take the query in the searchbar and then sends 
@@ -2220,10 +2239,16 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
       if (!fetching) {
         fetching = true;
         var moreAckToast = $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more acknowledgements...'));
-        Acknowledgement.query({
-          limit: 50,
-          offset: $scope.acknowledgements.length
-        }, function (resources) {
+        //Determine parameters for the GET call	
+        var params = {
+            limit: 50,
+            offset: $scope.acknowledgements.length
+          };
+        if ($scope.query.status) {
+          params.status = $scope.query.status;
+        }
+        //Make a GET request to the server
+        Acknowledgement.query(params, function (resources) {
           fetching = false;
           $mdToast.hide();
           for (var i = 0; i < resources.length; i++) {
@@ -11978,7 +12003,8 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
         return d.category + ' ' + d.count;
       });
       box.on('click', function (d) {
-        console.log(d);
+        angular.element('.acknowledgement-summary div.active').removeClass('active');
+        d3.select(this).attr('class', 'active ' + d.category.toLowerCase().replace(/ /gi, '-'));
         (callback || angular.noop)({ '$category': d.category });
       });
       box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {

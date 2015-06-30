@@ -34,6 +34,26 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 			
 			$scope.query.status = $category;
 		});
+		
+		//Determines the paramters for the GET request
+		var params = {limit:20, status: $category};
+		try {
+			if ($scope.query.$.$ ) {
+				params.q = $scope.query.$.$;
+			}
+		} catch (e) {
+			
+		}
+		
+		
+		//Make a GET request to the acknowledgement server
+		Acknowledgement.query(params, function (resources) {
+			for (var i = 0; i < resources.length; i++) {
+				if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
+					$scope.acknowledgements.push(resources[i]);
+				}
+			}
+		});
 	};
 	/*
 	 * Take the query in the searchbar and then sends 
@@ -74,10 +94,18 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 					.position('top right')
 					.hideDelay(0)
 					.content('Loading more acknowledgements...'));
-			Acknowledgement.query({
+				
+			//Determine parameters for the GET call	
+			var params = {
 				limit: 50, 
 				offset: $scope.acknowledgements.length
-			}, function (resources) {
+			};
+			if ($scope.query.status) {
+				params.status = $scope.query.status;
+			}
+			
+			//Make a GET request to the server
+			Acknowledgement.query(params, function (resources) {
 				fetching = false;
 				$mdToast.hide();
 				for (var i = 0; i < resources.length; i++) {

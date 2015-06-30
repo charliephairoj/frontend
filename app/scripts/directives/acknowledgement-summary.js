@@ -26,7 +26,8 @@ angular.module('employeeApp')
 		});
 		
 		box.on('click', function (d) {
-			console.log(d);
+			angular.element('.acknowledgement-summary div.active').removeClass('active');
+			d3.select(this).attr('class', 'active ' + d.category.toLowerCase().replace(/ /gi, '-'));
 			(callback || angular.noop)({'$category': d.category});
 		});
 		
