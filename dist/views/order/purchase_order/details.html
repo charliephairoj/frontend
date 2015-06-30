@@ -133,18 +133,22 @@
 					<td>Project</td>
 					<td>
 						<select ng-options="project.codename for project in projects" ng-model="po.project">
+						</select>
+						<md-button class="md-accent md-raised" ng-click="showAddProject()">Add a Project</md-button>
 					</td>
 				</tr>
 				<tr class="row">
 					<td>Room</td>
 					<td>
-						<select ng-options="room.description for room in po.project.rooms" ng-model="po.room">
+						<select ng-options="room.description for room in po.project.rooms" ng-model="po.room"></select>
+						<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
 					</td>
 				</tr>
 				<tr class="row">
 					<td>Project Phase</td>
 					<td>
-						<select ng-options="phase.description for phase in po.project.phases" ng-model="po.phase">
+						<select ng-options="phase.description for phase in po.project.phases" ng-model="po.phase"></select>
+						<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
 					</td>
 				</tr>
 				<tr class="row">

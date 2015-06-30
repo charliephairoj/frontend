@@ -8324,7 +8324,10 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$location',
   '$window',
   'Project',
-  function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project) {
+  '$mdDialog',
+  'Room',
+  'Phase',
+  function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase) {
     $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
       for (var i = 0; i < $scope.po.items.length; i++) {
         var item = $scope.po.items[i];
@@ -8364,6 +8367,100 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
         }
       }
     });
+    /* 
+	 * Dialog to add a new project
+	 */
+    $scope.showAddProject = function () {
+      $scope.project = new Project();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-project.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    $scope.completeAddProject = function () {
+      $mdDialog.hide();
+      $mdToast.show($mdToast.simple().content('Creating project...').hideDelay(0));
+      $scope.project.$create(function (resp) {
+        $scope.projects.push(resp);
+        $scope.po.project = resp;
+        $mdToast.hide();
+        $scope.project = new Project();
+      }, function () {
+      });
+    };
+    $scope.cancelAddProject = function () {
+      $mdDialog.hide();
+      $scope.project = new Project();
+    };
+    /*
+	 * Create dialog to add room
+	 */
+    $scope.showAddRoom = function () {
+      $scope.room = new Room();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-room.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    /*
+	 * Complete adding room process and close the dialog 
+	 */
+    $scope.completeAddRoom = function () {
+      $mdDialog.hide();
+      var room = angular.copy($scope.room);
+      room.project = $scope.po.project;
+      $scope.room = new Room();
+      room.$create(function (resp) {
+        $scope.po.project.rooms.push(resp);
+        $scope.po.room = resp;
+      });
+    };
+    /*
+	 * Cancel adding a room 
+	 */
+    $scope.cancelAddRoom = function () {
+      $mdDialog.hide();
+      $scope.room = new Room();
+    };
+    /*
+	 * Create dialog to add phase
+	 */
+    $scope.showAddPhase = function () {
+      $scope.phase = new Phase();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-phase.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    /*
+	 * Complete adding item process and close the dialog 
+	 */
+    $scope.completeAddPhase = function () {
+      $mdDialog.hide();
+      var phase = angular.copy($scope.phase);
+      phase.project = $scope.po.project.id;
+      $scope.phase = undefined;
+      phase.$create(function (resp) {
+        $scope.po.project.phases.push(resp);
+        $scope.po.phase = resp;
+      });
+    };
+    /*
+	 * Cancel adding a item 
+	 */
+    $scope.cancelAddPhase = function () {
+      $mdDialog.hide();
+      $scope.phase = undefined;
+    };
     $scope.save = function () {
       $mdToast.show($mdToast.simple().position('top right').content('Saving changes to purchase order ' + $scope.po.id).hideDelay(0));
       $scope.po.$update(function () {
