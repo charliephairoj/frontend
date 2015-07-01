@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader', 'Room', 'Phase',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader', 'Room', 'Phase', '$mdDialog',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase, $mdDialog) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -31,6 +31,41 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         $scope.showCustomers = false;
         $scope.tempSave();
     };
+	
+	/* 
+	 * Dialog to add a new project
+	 */
+	$scope.showAddProject = function () {
+		$scope.project = new Project();
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-project.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	$scope.completeAddProject = function  () {
+		$mdDialog.hide();
+		
+		$mdToast.show($mdToast
+			.simple()
+			.content("Creating project...")
+			.hideDelay(0));
+			
+		$scope.project.$create(function (resp) {
+			$scope.projects.push(resp);
+			$scope.ack.project = resp;
+			$mdToast.hide();
+			$scope.project = new Project();
+		}, function () {
+			
+		});
+	};
+	
+	$scope.cancelAddProject = function  () {
+		$mdDialog.hide();
+		$scope.project = new Project();
+	};
 	
 	/*
 	 * Create dialog to add room
@@ -190,7 +225,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 			$mdToast.show($mdToast
 				.simple()
 				.position('top right')
-				.content(e)
+				.content(e.message)
 				.hideDelay(0));
         }
     };

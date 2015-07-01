@@ -22,6 +22,21 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 
 	$scope.query = {};
 	
+	/* 
+	 * Set default search from search url
+	 */
+	if (search.q) {
+		$scope.safeApply(function () {
+			$scope.query = {$: {$: search.q}};
+		});
+	}
+	if (search.status) {
+		$scope.safeApply(function () {
+			$scope.query.status = search.status;
+		});
+	}
+	
+	
 	//Poll the server for acknowledgements
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function (e) {
 		$mdToast.hide();
@@ -31,9 +46,11 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 
 	$scope.setCategory = function ($category) {
 		$scope.safeApply(function () {
-			
 			$scope.query.status = $category;
 		});
+		
+		//Set search paramters in url
+		$location.search('status', $category);
 		
 		//Determines the paramters for the GET request
 		var params = {limit:20, status: $category};
@@ -77,14 +94,6 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		}
 	});
 	
-	/* 
-	 * Set default search from search url
-	 */
-	if (search.q) {
-		$scope.query = {$: {$: search.q}};
-		$scope.safeApply();
-	}
-
 	//Loads the next set of data
 	$scope.loadNext = function () {
 		if (!fetching) {

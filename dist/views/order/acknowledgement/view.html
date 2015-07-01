@@ -38,6 +38,7 @@
 			<div class="delivery-date">DELIVERY DATE</div>
 			<div class="total">TOTAL</div>
 			<div class="status">STATUS</div>
+			<div class="remarks">REMARKS</div>
 		</div>
 		<div class="outer-container" on-scroll-end="loadNext()">
 			<ul class="inner-container">
@@ -62,6 +63,9 @@
 									<option value="paid">Paid</option>
 									<option value="cancelled">Cancelled</option>
 							</select>
+						</div>
+						<div class="remarks">
+							{{ack.remarks}}
 						</div>
 						<!--
 	    				<span class="description">{{ack.id}}</span>

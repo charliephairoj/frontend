@@ -33,41 +33,29 @@
 		<!--
             Sidebar
         -->
-		<div class="sidebar">
-			<header>
-				<h1>
+		<!--
+        <div class="sidebar">
+            <header>
+                <h1>
                     <span>Create Ack</span>
                 </h1>
-			</header>
-			<nav>
-				<ul class="list">
-					<li>
-						<div ng-click="create()">Create</div>
-					</li>
-					<li>
-						<div class="customer" checkmark="ack.customer" x="!ack.customer" ng-click="showCustomers=!showCustomers">Add Customer</div>
-					</li>
-					<li>
-						<div class="upholstery" checkmark="ack.items.length>0" x="ack.items.length==0" ng-click="showProducts=true">Add Product</div>
-					</li>
-					<li>
-						<div class="delivery_date" checkmark="ack.delivery_date" x="!ack.delivery_date" ng-click="show_calendar=true">Delivery Date</div>
-					</li>
-					<li>
-						<div class="vat" checkmark="ack.vat" x="!ack.vat" ng-click="showVat=true">Set Vat</div>
-					</li>
-					<li>
-						<div class="po" checkmark="ack.po_id" x="!ack.po_id" ng-click="showPO=true">Purchase Order</div>
-					</li>
-					<li>
-						<div ng-click="showRemarks=true">Add Remarks</div>
-					</li>
-					<li>
-						<div ng-click="reset()">Reset</div>
-					</li>
-				</ul>
-			</nav>
-		</div>
+            </header>
+            <nav>
+                <ul class="list">
+                    <li><div ng-click="create()" >Create</div></li>
+                    <li><div class="customer" checkmark="ack.customer" x="!ack.customer" ng-click="showCustomers=!showCustomers">Add Customer</div></li>
+                    <li><div class="upholstery" checkmark="ack.items.length>0" x="ack.items.length==0" ng-click="showProducts=true">Add Product</div></li>
+                   
+                    <li><div class="delivery_date" checkmark="ack.delivery_date" x="!ack.delivery_date" ng-click="show_calendar=true">Delivery Date</div></li>
+                    <li><div class="vat" checkmark="ack.vat" x="!ack.vat" ng-click="showVat=true">Set Vat</div></li>
+                    <li><div class="po" checkmark="ack.po_id" x="!ack.po_id" ng-click="showPO=true">Purchase Order</div></li>
+                    <li><div ng-click="showRemarks=true">Add Remarks</div></li>
+                    <li><div ng-click="reset()" >Reset</div></li>
+                </ul>
+            </nav>
+            
+        </div>
+        -->
 		<!--
             Panels
         -->
@@ -83,21 +71,25 @@
             Workspace
         -->
 		<div class="workspace">
-			<div class="files">
-				<span class="title">Attachments</span>
+			<div class="submenu">
+				<md-button class="create md-primary md-raised" ng-click="create()">CREATE</md-button>
+				<md-button class="reset md-warn md-raised" href="#/order/acknowledgement">CANCEL</md-button>
+			</div>
+			<div class="files" ng-show="ack.files">
+				<h2 class="title">Attachments</h2>
 				<a class="file" ng-repeat="file in ack.files" ng-class="{'uploading': !file.url}" checkmark="file.id" ng-href="{{file.url}}" target="_blank">
-						{{file.filename}}
-						<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
-					</a>
+					{{file.filename}}
+					<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+				</a>
 			</div>
 			<div class="company">
-				<span class="title">Company</span>
+				<h2 class="title">Company</h2>
 				<table class="details">
 					<tr>
 						<td>Company:</td>
 						<td>
-							<select ng-model="ack.company" required>
-								<option value="Dellarobbia Thailand" default>Dellarobbia Thailand</option>
+							<select ng-model="ack.company" required selectedIndex="0">
+								<option value="Dellarobbia Thailand">Dellarobbia Thailand</option>
 								<option value="Pacific Carpet">Pacific Carpet</option>
 							</select>
 						</td>
@@ -105,8 +97,21 @@
 				</table>
 			</div>
 			<div class="customer">
-				<span class="title">Customer</span>
-				<table class="details">
+				<h2 class="title">Customer</h2>
+				<div class="customer-menu">
+					<md-button class="add md-accent md-raised" ng-click="showCustomers=!showCustomers" ng-class="{'active':!ack.customer}">
+						Select Customer
+					</md-button>
+					<md-button class="change md-accent md-raised" ng-click="showCustomers=!showCustomers" ng-class="{'active':ack.customer}">
+						Change Customer
+					</md-button>
+					<!--
+					<md-button class="create-supplier md-accent md-raised" ng-click="showAddSupplier=true" ng-class="{'active':!po.supplier}">
+						Create New Supplier
+					</md-button>
+						-->
+				</div>
+				<table class="details" ng-class="{'active': ack.customer}">
 					<tr>
 						<td>Name:</td>
 						<td>{{ack.customer.name}}</td>
@@ -128,19 +133,29 @@
 						</tr>
 				</table>
 			</div>
-			<div class="order">
+			<div class="order" ng-show="ack.customer">
 				<table class="details">
 					<tr>
 						<td>Delivery Date:</td>
-						<td>{{ack.delivery_date | date:"EEEE, MMMM d, yyyy"}}</td>
+						<td>
+							<md-button ng-show="ack.delivery_date" class="md-accent" ng-click="show_calendar=true">
+								{{ack.delivery_date | date:"EEEE, MMMM d, yyyy"}}
+							</md-button>
+							<md-button ng-show="!ack.delivery_date" class="md-accent md-raised" ng-click="show_calendar=true">
+								Set Delivery Date
+							</md-button>
+						</td>
 					</tr>
 					<tr ui-if="ack.po_id">
 						<td>PO#:</td>
-						<td>{{ack.po_id}}</td>
+						<td>
+							<input type="text" ng-model="ack.po_id" required size="20" />
+						</td>
 					</tr>
 					<tr>
 						<td>Vat:</td>
-						<td>{{ack.vat}}%</td>
+						<td>
+							<input type="number" class="vat" ng-model="ack.vat" required maxlength="3" size="3">%</td>
 					</tr>
 					<tr>
 						<td>Currency:</td>
@@ -148,12 +163,11 @@
 							{{ack.customer.currency}}
 						</td>
 					</tr>
-					<tr class="project">
+					<tr>
 						<td>Project:</td>
 						<td>
-							<select ng-options="project.codename for project in projects | orderBy: 'codename'" ng-model="ack.project" ng-disabled="ack.newProject">
-								<input class="new-project-checkbox" type="checkbox" ng-model="ack.newProject" />New Project
-								<input class="new-project-name" type="text" ng-model="ack.newProjectName" ng-show="ack.newProject">
+							<select ng-options="project.codename for project in projects | orderBy: 'codename'" ng-model="ack.project"></select>
+							<md-button class="md-accent md-raised" ng-click="showAddProject()">Add a Project</md-button>
 						</td>
 					</tr>
 					<tr ng-show="ack.project">
@@ -172,11 +186,20 @@
 							<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
 						</td>
 					</tr>
+					<tr>
+						<td>Remarks:</td>
+						<td>
+							<textarea ng-model="ack.remarks"></textarea>
+						</td>
+					</tr>
 				</table>
 			</div>
-			<div class="products" ng-show="ack.items.length>0">
-				<div class="title">Products</div>
-				<div class="product" ng-repeat="product in ack.items track by $index">
+			<div class="products">
+				<h2 class="title">Products</h2>
+				<div class="item-menu">
+					<md-button class="add md-accent md-raised" ng-click="showProducts=true">+ Add Product</md-button>
+				</div>
+				<div class="product" ng-repeat="product in ack.items track by $index" ng-show="ack.items">
 					{{product.description}}
 					<table class="details">
 						<tr>

@@ -1935,7 +1935,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   'FileUploader',
   'Room',
   'Phase',
-  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase) {
+  '$mdDialog',
+  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase, $mdDialog) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -1958,6 +1959,34 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       //Hide Customer Panel
       $scope.showCustomers = false;
       $scope.tempSave();
+    };
+    /* 
+	 * Dialog to add a new project
+	 */
+    $scope.showAddProject = function () {
+      $scope.project = new Project();
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-project.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    $scope.completeAddProject = function () {
+      $mdDialog.hide();
+      $mdToast.show($mdToast.simple().content('Creating project...').hideDelay(0));
+      $scope.project.$create(function (resp) {
+        $scope.projects.push(resp);
+        $scope.ack.project = resp;
+        $mdToast.hide();
+        $scope.project = new Project();
+      }, function () {
+      });
+    };
+    $scope.cancelAddProject = function () {
+      $mdDialog.hide();
+      $scope.project = new Project();
     };
     /*
 	 * Create dialog to add room
@@ -2084,7 +2113,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           });
         }
       } catch (e) {
-        $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
+        $mdToast.show($mdToast.simple().position('top right').content(e.message).hideDelay(0));
       }
     };
     $scope.reset = function () {
@@ -2174,6 +2203,19 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     var fetching = true, index = 0, currentSelection, search = $location.search();
     var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
     $scope.query = {};
+    /* 
+	 * Set default search from search url
+	 */
+    if (search.q) {
+      $scope.safeApply(function () {
+        $scope.query = { $: { $: search.q } };
+      });
+    }
+    if (search.status) {
+      $scope.safeApply(function () {
+        $scope.query.status = search.status;
+      });
+    }
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
       $mdToast.hide();
@@ -2184,6 +2226,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
       $scope.safeApply(function () {
         $scope.query.status = $category;
       });
+      //Set search paramters in url
+      $location.search('status', $category);
       //Determines the paramters for the GET request
       var params = {
           limit: 20,
@@ -2227,13 +2271,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         });
       }
     });
-    /* 
-	 * Set default search from search url
-	 */
-    if (search.q) {
-      $scope.query = { $: { $: search.q } };
-      $scope.safeApply();
-    }
     //Loads the next set of data
     $scope.loadNext = function () {
       if (!fetching) {

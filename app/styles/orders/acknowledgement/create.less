@@ -3,8 +3,7 @@
 .createAcknowledgementPage{
     opacity:0;
     .transition(opacity, 1s, linear);
-    
-    
+
     .addPage;
     left:0;
     
@@ -66,79 +65,43 @@
             padding:0px;
             text-align:center;
         }
-    }
-    
-    .vat_modal{
-        .quantity_modal;
-        .title{
-
-            padding:0.2em 0em;
-        }
-        input{
-            width:50px;
-            left:75px;
-        }
-        span{
-            top:50px;
-            position:absolute;
-            right:55px;
-            color:#FFFFFF;
-        }
-    }
-    
-    .po_modal{
-        .vat_modal;
-        .title{
-            font-size:0.8em;
-            padding:0.6em 0em;
-        }
-        input{
-            width:150px;
-            left:25px;
-        }
-        
-    }
-    
-    
-    
-    .remarks_modal{
-        .vat_modal;
-        height:350px;
-        width:500px;
-        top:50%;
-        left:50%;
-        margin-left:-250px;
-        margin-top:-175px;
-        background-color:#313131;
-        textarea{
-            font-size:1em;
-            position:absolute;
-            top:50px;
-            bottom:50px;
-            right:10px;
-            left:10px
-        }
-    }
-  
-  
-  
-
+    } 
+	
     .ack{
-        overflow-y:scroll;
-        overflow-x:hidden;
-        position:absolute;
-        top:0px;
-        bottom:0px;
-        left:200px;
-        right:0px;
-        background:#313131;
+		overflow-y:scroll;
+	    overflow-x:hidden;
+	    position:absolute;
+	    top:0px;
+	    bottom:0px;
+	    left:0px;
+	    right:0px;
+	    background:rgba(255, 255, 255, 1);
+		display:flex;
+		flex-direction:row;
+		justify-content:space-around;
+		
         .workspace{
-            position:absolute;
-            height:auto;
-            width:100%;
-            padding-bottom:50px;
-            z-index:1;
-            bottom:auto;
+	        height:auto;
+	        width:95%;
+	        z-index:1;
+	        padding-bottom:50px;
+			position:relative;
+			top:inherit;
+			bottom:inherit;
+			
+			.submenu{
+				margin-top:2em;
+				width:95%;
+				display:flex;
+				align-items:flex-start;
+				
+				.md-button{
+					font-size:1.25em;
+					margin-right:0.5em;
+					padding:0.5em;
+					font-family:proxima;
+				}
+			}
 			
 			.files{
 				position:absolute;
@@ -146,13 +109,13 @@
 				height:auto;
 				right:1em;
 				top:40px;
-				color:#FFF;
 				padding:1em;
 				z-index:2;
 				
                 .title{
-                    font-size:18px; 
 					margin-bottom:1em;  
+					color:rgb(0, 0, 0);
+	           		font-family:proxima;
                 }
 				
 				.file{
@@ -161,7 +124,7 @@
 					background:#575757;
 					height:2em;
 					display:flex;
-					color:#FFF;
+					color:rgb(255, 255, 255);
 					font-family:proxima;
 					flex-direction:row;
 					align-items:center;
@@ -170,10 +133,14 @@
 					
 					.progress{
 						display:none;
+						color:rgb(255, 255, 255);
+						
 					}
 					
 					.checkmark{
 						margin-right:0.75em;
+						color:rgb(255, 255, 255);
+						
 					}
 					&.uploading{
 						
@@ -186,64 +153,173 @@
 			
             .customer{
                 position:relative;
-                margin-left:20px;
-                margin-top:40px;
-                color:#FFF;
-                .title{
-                    font-size:18px;   
-                }
+				width:100%;
+                margin-top:2em;
+                color:rgba(0, 0, 0, 1);
+                
+	          	h2{
+	           		font-family:proxima;
+	          	}
+		  	  
+				.customer-menu{
+					display:flex;
+					justify-content:space-between;
+					width:22em;
+					align-items:center;
+				
+				  	.md-button{
+					  	display:none;
+						padding:0.5em;
+						font-family:proxima;
+					
+					  	&.add{
+						  	&.active{
+							  	display:block;
+						  	}
+					  	}
+			  
+					  	&.change{
+						  	&.active{
+							  	display:block;
+						  	}
+					  	}
+				
+						&.create-supplier{
+							display:block;
+						}
+				  	}
+				}
+				
                 .details{
-                    margin-top:20px;
-                    tr{
-                        td{
-                            font-size:12px;
-                            line-height:18px;
-                            //States
-                            &:first-child{
-                                color:#6B6B6B;   
-                            }
-                            &:last-child{
-                                color:#828282;
-                                padding-left:20px;   
-                            }
-							
-							.new-project-checkbox{
-								margin-left:1em;
-							}
-							.new-project-name{
-								margin-left:0.5em;
-							}
-                        }
-                    }
+				  	opacity:0;
+					margin-top:1em;
+				  	.transition(all, 250ms, linear);
+			  
+				  	&.active{
+					  	height:auto;
+					  	opacity:1;
+					  	z-index:0;
+				  	}
+	              	tr{
+	                  	td{
+	                      	line-height:1.6em;
+	                      	font-size:1em;
+	                      	font-family:proxima;
+	                      	letter-spacing:0.08em;
+	                      	//States
+	                      	&:first-child{
+	                          	color:rgba(0, 0, 0, 1);   
+	                      	}
+	                      	&:last-child{
+	                          	color:rgba(0, 0, 0, 1);
+	                          	padding-left:20px;   
+	                      	}
+	                  	}
+	              	}
                 }
             }
 			.company{
 				.customer;
+				
+				.details{
+				  	opacity:1;
+				}
 			}
             .order{
                 .customer;
                 position:relative;
-                margin-top:40px;
-                margin-left:20px;
-                color:#FFFFFF;
+                margin-top:2em;
+                color:rgba(0, 0, 0, 1);
+				
+				.details{
+  				  	margin-top:0em;
+  				  	opacity:1;
+  				  	z-index:0;
+			  
+			  
+			  
+  		          	tr{
+				  
+  						&.currency{
+  						  	opacity:0;
+  						  	.transition(all, 250ms, linear);
+					  
+  						  	&.active{
+  							  	opacity:1;
+  						  	}
+  					  	}
+				  
+  		              	td{
+  		                  	padding:0.25em 0;
+				  		
+  						  	.new-project-checkbox{
+  							  	margin-left:2em;
+  							  	margin-right:0.5em;
+  						  	}
+  						  	.new-project-name{
+				  	
+  						  	}
+					  
+  						  	input{
+  							  	background-color:rgba(255, 255, 255, 1);
+  							  	color:rgba(0, 0, 0, 1);
+  							  	border:1px solid rgba(0, 0, 0, 0.35);
+							  
+  						  	  	&.vat{
+  						  	  	  	width:3em;
+  								  	text-align:center;
+  						  	  	}
+  							  	&.discount{
+  							  	  	width:3em;
+  								  	text-align:center;
+  							  	}
+							  
+  							  	&.ng-invalid{
+  								  	background-color:#A54243;
+  							  	}
+  						  	}
+						  
+  						  	textarea{
+  							  	background-color:rgba(255, 255, 255, 1);
+  							  	color:rgba(0, 0, 0, 1);
+  							  	border:1px solid rgba(0, 0, 0, 0.35);
+  						  	}
+  		              	}
+  		          	}
+				}
             }
        
             .products{
-                position:relative;
-                height:auto;
-                margin-left:20px;
-                margin-right:0px;
-                margin-top:40px;
-                margin-bottom:50px;
-                color:#FFFFFF;
+				.customer;
+	  			margin-top:2em;
+	  			margin-bottom:2em;
+	  			display:flex;
+	  			flex-direction:column;
+	  			align-items:center;
+				
                 .title{
-                    font-size:24px;   
+  					align-self:flex-start;
                 }
+				
+  				.item-menu{
+  				  	margin-top:2em;
+  				  	height:2.2em;
+  				  	width:100%;
+  				  	display:flex;
+  				  	align-items:flex-start;
+				  
+  				  	.md-button{
+  					  	padding:0.5em;
+  					  	font-family:proxima;
+  					  	margin-right:1.25em;
+  				  	}
+  			  	}
+				
                 .product{
-                    color:#828282;
-                    font-size:14px;
+	                color:rgba(0, 0, 0, 1);
+                    font-size:1em;
                     position:relative;
-                    width:80%;
+                    width:100%;
                     margin-right:20px;
                     margin-top:30px;
                     border:1px solid #282828;
@@ -256,32 +332,46 @@
                     
                     .details{
                         margin-top:5px;
+						opacity:1;
+						
                         tr{
                             td{
                                 padding:2px 0px 2px;
                                 vertical-align:middle;
-                                color:#828282;
-                                font-size:12px;
-                                line-height:18px;
+                                color:rgb(0, 0, 0);
+                                font-size:1em;
                                 input{
-                                    
+                                    background: rgba(255, 255, 255, 1);
+									border: 1px solid rgba(0, 0, 0, 0.35);
                                     width:60px;
                                     //padding:0px;
                                     margin-right:5px;
                                     .transition(all, 250ms, ease);
-                                    //State
                                     
-                                    
+									//State
+                                    &[disabled]{
+                                    	background:rgba(0, 0, 0, 0.35);
+                                    }
                                 }
+								
+								textarea{
+                                    background: rgba(255, 255, 255, 1);
+									border: 1px solid rgba(0, 0, 0, 0.35);
+                                    margin-right:5px;
+                                    .transition(all, 250ms, ease);
+                                    
+									//State
+                                    &[disabled]{
+                                    	background:rgba(0, 0, 0, 0.35);
+                                    }
+								}
+								
                                 img{
                                     margin-left:5px;
                                     height:30px;
                                     width:auto;
                                 }
                                 //States
-                                &:first-child{
-                                    color:#6B6B6B;   
-                                }
                                 &:last-child{
                                     
                                     padding-left:20px;   
