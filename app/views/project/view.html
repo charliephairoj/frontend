@@ -36,17 +36,23 @@
 			<div class="id">PROJECT ID</div>
 			<div class="codename">NAME</div>
 			<div class="customer">CUSTOMER</div>
-			
+			<div class="status">STATUS</div>
 		</div>
     	<div class="outer-container" on-scroll-end="loadNext()"> 
 	    	<ul class="inner-container" >
 	    		<li class="item-container" data-ng-repeat="project in projects | filter:query">
-	    			<a class="item" ng-class="{'selected':project.$selected}" ng-href="#/project/{{project.id}}">
-						<div class="id">{{project.id}}</div>
-						<div class="codename">{{project.codename}}</div>
-						<div class="customer">{{project.customer.name}}</div>
-						
-	    			</a>
+	    			<div class="item" ng-class="{'selected':project.$selected}">
+						<div class="id" ng-click="navigate(project.id)">{{project.id}}</div>
+						<div class="codename" ng-click="navigate(project.id)">{{project.codename}}</div>
+						<div class="customer" ng-click="navigate(project.id)">{{project.customer.name}}</div>
+						<div class="status">
+							<select ng-model="project.status">
+								<option value="lapnning">Planning</option>
+								<option value="in production">In Production</option>
+								<option value="completed">Completed</option>
+							</select>
+						</div>
+					</div>
 	    				
 	    		</li>
 	    	</ul>

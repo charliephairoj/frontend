@@ -7,7 +7,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
     $scope.uploading = false;
     $scope.customImageScale = 100;
 	
-	$scope.projects = Project.query({page_size:99999});
+	$scope.projects = Project.query({page_size:99999, limit:0, status__exclude:"completed"});
     $scope.ack = new Acknowledgement();
     
     var uploadTargets = [];
@@ -305,6 +305,25 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         if (!$scope.ack.po_id) {
             throw new TypeError("PO# is not defined");
         }
+		
+		//Test if the project was declared in the remarks section
+		testWords = [
+			{
+				re: /ห้อง/ig,
+				type: 'room',
+			 	message: "Please specify the room in room selection"
+			},
+			{
+				re: /โครงการ/ig,
+				type: 'project',
+			 	message: "Please specify the project in the project selection"
+			}
+		];
+		for (var j = 0; j < testWords.length; j++) {
+			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type]) {
+				throw new TypeError(testWords[j].message);
+			}
+		}
         //Return true for form validated
 		return true;
 	};

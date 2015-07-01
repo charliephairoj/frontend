@@ -1941,7 +1941,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     $scope.showFabric = false;
     $scope.uploading = false;
     $scope.customImageScale = 100;
-    $scope.projects = Project.query({ page_size: 99999 });
+    $scope.projects = Project.query({
+      page_size: 99999,
+      limit: 0,
+      status__exclude: 'completed'
+    });
     $scope.ack = new Acknowledgement();
     var uploadTargets = [];
     var storage = window.localStorage;
@@ -2181,6 +2185,24 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       //Validate purchase order number
       if (!$scope.ack.po_id) {
         throw new TypeError('PO# is not defined');
+      }
+      //Test if the project was declared in the remarks section
+      testWords = [
+        {
+          re: /ห้อง/gi,
+          type: 'room',
+          message: 'Please specify the room in room selection'
+        },
+        {
+          re: /โครงการ/gi,
+          type: 'project',
+          message: 'Please specify the project in the project selection'
+        }
+      ];
+      for (var j = 0; j < testWords.length; j++) {
+        if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type]) {
+          throw new TypeError(testWords[j].message);
+        }
       }
       //Return true for form validated
       return true;
@@ -6280,6 +6302,35 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
         });
       }
     });
+    /*
+	 * Navigate to the details page for an acknowledgement
+	 */
+    $scope.navigate = function (id) {
+      $location.path('/project/' + id);
+    };
+    /*
+	 * Watch for changes in the status of the project
+	 */
+    $scope.$watch('projects', function (newVal, oldVal) {
+      // Callback to when the acknowledgement is finished updating
+      function postUpdate(resp) {
+        $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Project: ' + resp.codename + ' status updated to \'' + resp.status.toLowerCase() + '\''));
+      }
+      if (newVal && oldVal) {
+        try {
+          for (var i = 0; i < newVal.length; i++) {
+            if (newVal[i].id === oldVal[i].id) {
+              if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
+                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Updating Project: ' + newVal[i].codename + ' status...'));
+                newVal[i].$update(postUpdate);
+              }
+            }
+          }
+        } catch (e) {
+          console.debug(e);
+        }
+      }
+    }, true);
     //Create new project
     $scope.create = function () {
       Notification.display('Creating new project...', false);

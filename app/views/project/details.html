@@ -92,6 +92,16 @@
                     <td>Quantity: </td>
                     <td>{{project.quantity}}</td>
                 </tr>
+                <tr>
+                    <td>Status: </td>
+                    <td>
+						<select ng-model="project.status">
+							<option value="planning">Planning</option>
+							<option value="in production">In Production</option>
+							<option value="completed">Completed</option>
+						</select>
+					</td>
+                </tr>
             </table>
         </div>
 		

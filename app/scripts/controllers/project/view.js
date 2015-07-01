@@ -54,6 +54,48 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 		}
 	});
 	
+	/*
+	 * Navigate to the details page for an acknowledgement
+	 */
+	$scope.navigate = function (id) {
+		$location.path('/project/' + id);
+	};
+	
+	/*
+	 * Watch for changes in the status of the project
+	 */
+	$scope.$watch('projects', function (newVal, oldVal) {
+		
+		// Callback to when the acknowledgement is finished updating
+		function postUpdate (resp) {
+			$mdToast.show($mdToast
+						.simple()
+						.position('top right')
+						.hideDelay(2000)
+						.content('Project: ' + resp.codename + " status updated to '" + resp.status.toLowerCase() + "'"));
+		}
+		
+		if (newVal && oldVal) {
+			try{
+				for (var i = 0; i < newVal.length; i++) {
+					if (newVal[i].id === oldVal[i].id) {
+						if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
+							$mdToast.show($mdToast
+											.simple()
+											.position('top right')
+											.hideDelay(0)
+											.content('Updating Project: ' + newVal[i].codename + ' status...'));
+							newVal[i].$update(postUpdate);
+						}
+					}
+				}
+			} catch (e) {
+				console.debug(e);
+			}
+		}
+		
+	}, true);
+	
     //Create new project
     $scope.create = function () {
         Notification.display('Creating new project...', false);
