@@ -314,6 +314,21 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 			 	message: "Please specify the room in room selection"
 			},
 			{
+				re: /บ้าน/ig,
+				type: 'project',
+			 	message: "Please specify the project in the project selection"
+			},
+			{
+				re: /บ้านตัวอย่าง/ig,
+				type: 'project',
+			 	message: "Please specify the project in the project selection"
+			},
+			{
+				re: /ลดาวัลย์/ig,
+				type: 'project',
+			 	message: "Please specify the project in the project selection"
+			},
+			{
 				re: /โครงการ/ig,
 				type: 'project',
 			 	message: "Please specify the project in the project selection"

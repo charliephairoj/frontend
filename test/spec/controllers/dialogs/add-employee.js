@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DialogsAddEmployeeCtrl', function () {
+xdescribe('Controller: DialogsAddEmployeeCtrl', function () {
 
   	// load the controller's module
   	beforeEach(module('employeeApp'));

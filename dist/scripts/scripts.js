@@ -2194,6 +2194,21 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           message: 'Please specify the room in room selection'
         },
         {
+          re: /บ้าน/gi,
+          type: 'project',
+          message: 'Please specify the project in the project selection'
+        },
+        {
+          re: /บ้านตัวอย่าง/gi,
+          type: 'project',
+          message: 'Please specify the project in the project selection'
+        },
+        {
+          re: /ลดาวัลย์/gi,
+          type: 'project',
+          message: 'Please specify the project in the project selection'
+        },
+        {
           re: /โครงการ/gi,
           type: 'project',
           message: 'Please specify the project in the project selection'
@@ -11466,6 +11481,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
       return true;
     };
     $scope.checkout = function () {
+      $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Processing checkout...'));
       try {
         $scope.verify();
         /*
@@ -11488,7 +11504,7 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         }
         //Do supply PUT
         if ($scope.supplies.length > 0) {
-          var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
+          var supplyPromise = $http.put('/api/v1/supply/', angular.copy($scope.supplies));
           supplyPromise.success(function () {
             $scope.supplies = [];
             $scope.postCheckout();
@@ -11507,7 +11523,6 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
           });
         }
       } catch (e) {
-        console.log(e);
         $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('close').content(e.message));
       }
       //Perform Purchase Order PUT

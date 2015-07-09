@@ -22,8 +22,9 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
 
   	describe('Phase: Initialization', function() {
   		it('should make a request to the server for the acknowledgement', function() {
-  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project: {id:4}});
+  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project: {id:4}, items:[]});
 			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([{id:4}]);
+  			$http.expectGET('/api/v1/fabric/?limit=0&page_size=1000').respond([]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route
@@ -42,8 +43,9 @@ describe('Controller: OrderAcknowledgementDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function() {
   		
   		beforeEach(function() {
-  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project:{id: 4}});
-			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([{id:4}]);
+  			$http.expectGET('/api/v1/acknowledgement/3/?pdf=true').respond({id:3, project:{id: 4}, items:[]});
+			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([]);
+  			$http.expectGET('/api/v1/fabric/?limit=0&page_size=1000').respond([]);
   			ctrl = Ctrl('OrderAcknowledgementDetailsCtrl', {
 	      		$scope: scope,
 	      		$routeParams: route

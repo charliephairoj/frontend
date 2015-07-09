@@ -408,5 +408,56 @@ describe('Controller: DialogsSupplyScannerCtrl', function () {
 			expect(scope.supplies.length).toEqual(0);
 		});
 	});
+	
+	describe('Testing making repeated deductions from the inventory', function () {
+		
+		it('should correctly deduct the quantity from the inventory and correctly display it', function () {
+			
+			var supply = {
+				id: 187,
+				quantity: 120, 
+				description: 'Screw'
+			},
+			deduction = 1,
+			oldQuantity = 0;
+			
+			for (var i = 0; i < 20; i++) {
+				
+				//Get initial supply
+				expect(supply.quantity).toEqual(jasmine.any(Number));
+				$http.expectGET('/api/v1/supply/187/?country=TH').respond(supply);
+				
+				//Simulate barcode scanning
+				keypress(76, true);
+				keypress(68);
+				keypress(82);
+				keypress(83);
+				keypress(189);
+				keypress(49);
+				keypress(56);
+				keypress(55);
+				keypress(71, true);
+				
+				$http.flush();
+				
+				//Test the supply is correctly displayed
+				if (i > 0) {
+					expect(scope.supplies[0].quantity).toEqual(oldQuantity - deduction);
+				}
+				
+				oldQuantity = supply.quantity;
+				supply.quantity -= deduction;
+				
+				scope.supplies[0].$$action = 'subtract';
+				scope.supplies[0].$$quantity = deduction;
+				
+				$http.expectPUT('/api/v1/supply/').respond([supply]);
+				scope.checkout();
+				
+				$http.flush();
+				expect(scope.supplies).toEqual([]);							
+			}
+		});
+	});
 });
    

@@ -28,6 +28,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   		
   		it('should make a call to the server for the item', function () {
   			$http.expectGET('/api/v1/purchase-order/1234/').respond({id:1234, items: []});
+			$http.expectGET('/api/v1/project/?limit=0&page_size=1000').respond([]);
   			ctrl = Ctrl('OrderPurchaseOrderDetailsCtrl', {$scope:scope, $routeParams:{id:1234}});
   			$http.flush();
   			
@@ -38,6 +39,7 @@ describe('Controller: OrderPurchaseOrderDetailsCtrl', function () {
   	describe('Phase: Post-Initialization', function () {
   		
   		beforeEach(function () {
+			$http.whenGET('/api/v1/project/?limit=0&page_size=1000').respond([]);
   			$http.whenGET('/api/v1/purchase-order/2345/').respond({
   				id: 2345,
   				supplier: {

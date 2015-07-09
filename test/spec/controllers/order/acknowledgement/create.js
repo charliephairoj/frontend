@@ -33,7 +33,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
         describe('No stored acknowledgement', function() {
         	
         	it('should create predefined variables', function() {
-				$http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+				$http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
         		ctrl = Ctrl('OrderAcknowledgementCreateCtrl', {
         			$scope:scope
         		});
@@ -51,7 +51,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	        	var obj = {id: 4, items: [{id:5}]}
 	        	window.localStorage.setItem('acknowledgement-create', JSON.stringify(obj));
 	        	$http.whenGET('/api/v1/customer_user/').respond({});
-				$http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+				$http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
 	        	ctrl = Ctrl('OrderAcknowledgementCreateCtrl', {
 	        		$scope:scope
 	        	});
@@ -73,7 +73,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
     	
     	beforeEach(function() {
     		window.localStorage.clear();
-			$http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+			$http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
     		ctrl = Ctrl('OrderAcknowledgementCreateCtrl', {$scope:scope});
     	});
     	
@@ -170,7 +170,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	        beforeEach(function(){
 	            window.localStorage.clear(); 
 				
-				$http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+				$http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
 	            ctrl = Ctrl("OrderAcknowledgementCreateCtrl", {$scope: scope});
 	            scope.reset();
 	            
@@ -240,7 +240,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	    describe("Temporary save", function(){
 	        var date = new Date();
 	        beforeEach(function(){
-	            $http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+	            $http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
 	            ctrl = Ctrl("OrderAcknowledgementCreateCtrl", {$scope: scope});
 	            scope.ack.customer = {id:100, name:'Charlie'};
 	            scope.ack.items.push({id:12, description:'AC-1100', wholesale_price:100});
@@ -274,7 +274,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	            
 	            expect(scope.ack).not.toBeDefined();
 				
-	            $http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+	            $http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
 	            ctrl = Ctrl("OrderAcknowledgementCreateCtrl", {$scope:scope});
 	
 	            expect(scope.ack).toBeDefined();
@@ -291,7 +291,7 @@ describe('Controller: OrderAcknowledgementCreateCtrl', function () {
 	        beforeEach(function(){
 	            var date = new Date();
 				
-	            $http.expectGET('/api/v1/project/?page_size=99999').respond([]);
+	            $http.expectGET('/api/v1/project/?limit=0&page_size=99999&status__exclude=completed').respond([]);
 	            ctrl = Ctrl("OrderAcknowledgementCreateCtrl", {$scope: scope});
 	            var customer = {id:100, name:'Charlie'}
 	            scope.addCustomer(customer);

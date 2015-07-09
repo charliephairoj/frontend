@@ -216,6 +216,11 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	
 	$scope.checkout = function () {
 		
+		$mdToast.show($mdToast.simple()
+			.position('top right')
+			.hideDelay(0)
+			.content('Processing checkout...'));
+		
 		try {
 			
 			$scope.verify();
@@ -243,7 +248,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		
 			//Do supply PUT
 			if ($scope.supplies.length > 0) {
-				var supplyPromise = $http.put('/api/v1/supply/', $scope.supplies);
+				var supplyPromise = $http.put('/api/v1/supply/', angular.copy($scope.supplies));
 				
 				supplyPromise.success(function () {
 					$scope.supplies = [];
@@ -265,7 +270,6 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				});
 			}
 		} catch (e) {
-			console.log(e);
 			$mdToast.show($mdToast.simple()
 				.position('top right')
 				.hideDelay(0)

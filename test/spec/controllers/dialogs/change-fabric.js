@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DialogsChangeFabricCtrl', function () {
+xdescribe('Controller: DialogsChangeFabricCtrl', function () {
 
   // load the controller's module
   beforeEach(module('frontendApp'));

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DialogsCreatePackingListCtrl', function () {
+xdescribe('Controller: DialogsCreatePackingListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('frontendApp'));

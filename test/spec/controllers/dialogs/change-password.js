@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: DialogsChangePasswordCtrl', function () {
+xdescribe('Controller: DialogsChangePasswordCtrl', function () {
 
   // load the controller's module
   beforeEach(module('frontendApp'));
