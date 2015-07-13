@@ -6,7 +6,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	/*
 	 * Vars
 	 */
-	var keyboardNav = new KeyboardNavigation();
+	var keyboardNav = new KeyboardNavigation(),
+		checkoutActive = false;
 	$scope.scanner = new scanner('supply-scanner-modal');
 	$scope.interfaceType = 'equipment';
 	$scope.supplies = [];
@@ -216,86 +217,107 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	
 	$scope.checkout = function () {
 		
+		
 		$mdToast.show($mdToast.simple()
 			.position('top right')
 			.hideDelay(0)
 			.content('Processing checkout...'));
 		
-		try {
+		if (!checkoutActive) {
+			//Turn the switch on to prevent duplicate checkouts
+			checkoutActive = true;
 			
-			$scope.verify();
+			try {
 			
-			/*
-			 * Assign the employee to each supply and calculate the 
-			 * new quantity based on the supply action
-			 */
-			for (var i = 0; i < $scope.supplies.length; i++) {
-				$scope.supplies[i].employee = angular.copy($scope.employee);
-
-				if ($scope.supplies[i].$$action == 'subtract') {
-					$scope.supplies[i].quantity -= $scope.supplies[i].$$quantity;
-				} else if ($scope.supplies[i].$$action == 'add') {
-					$scope.supplies[i].quantity += $scope.supplies[i].$$quantity;
-				}
-			}
-		
-			/* 
-			 * Assign the employee to each equipment
-			 */
-			for (var h = 0; h < $scope.equipmentList.length; h++) {
-				$scope.equipmentList[h].employee = angular.copy($scope.employee);
-			}
-		
-			//Do supply PUT
-			if ($scope.supplies.length > 0) {
-				var supplyPromise = $http.put('/api/v1/supply/', angular.copy($scope.supplies));
+				$scope.verify();
 				
-				supplyPromise.success(function () {
-					$scope.supplies = [];
-					$scope.postCheckout();
-				}).error(function (e) {
-					$scope.checkoutError(e);
-				});
-			}
-		
-			//Do equipment PUT
-			if ($scope.equipmentList.length > 0) {
-				var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
-		
-				equipPromise.success(function () {
-					$scope.equipmentList = [];
-					$scope.postCheckout();
-				}).error(function (e) {
-					$scope.checkoutError(e);
-				});
-			}
-		} catch (e) {
-			$mdToast.show($mdToast.simple()
-				.position('top right')
-				.hideDelay(0)
-				.action('close')
-				.content(e.message));
-		}
-		
-		//Perform Purchase Order PUT
-		if ($scope.po) {
-			for (var g = 0; g < $scope.po.items.length; g++) {
-				if ($scope.po.items[g].$$action) {
-					$scope.po.items[g].status = 'Received';
+				/*
+				 *  Create new supply var to work on and attach to the request. This prevents the changes
+				 *  from being immediately viewed on the screen and reflected before the request is complete
+				 */
+				var supplies = angular.copy($scope.supplies);
+				
+				/*
+				 * Assign the employee to each supply and calculate the 
+				 * new quantity based on the supply action
+				 */				
+				for (var i = 0; i < supplies.length; i++) {
+					supplies[i].employee = angular.copy($scope.employee);
+					
+					//Add or subtract quantity based on user selected action
+					if (supplies[i].$$action == 'subtract') {
+						supplies[i].quantity -= supplies[i].$$quantity;
+					} else if (supplies[i].$$action == 'add') {
+						supplies[i].quantity += supplies[i].$$quantity;
+					}
 				}
+		
+				//Do supply PUT
+				if (supplies.length > 0) {
+					
+					//Make the PUT request
+					var supplyPromise = $http.put('/api/v1/supply/', supplies);
+				
+					//Define callbacks for the request
+					supplyPromise.success(function () {
+						$scope.supplies = [];
+						$scope.postCheckout();
+					}).error(function (e) {
+						$scope.checkoutError(e);
+					});
+				}
+				
+				/* 
+				 * Assign the employee to each equipment
+				 */
+				for (var h = 0; h < $scope.equipmentList.length; h++) {
+					$scope.equipmentList[h].employee = angular.copy($scope.employee);
+				}
+		
+				//Do equipment PUT
+				if ($scope.equipmentList.length > 0) {
+					var equipPromise = $http.put('/api/v1/equipment/', $scope.equipmentList);
+		
+					equipPromise.success(function () {
+						$scope.equipmentList = [];
+						$scope.postCheckout();
+					}).error(function (e) {
+						$scope.checkoutError(e);
+					});
+				}
+			} catch (e) {
+				checkoutActive = false;
+				$mdToast.show($mdToast.simple()
+					.position('top right')
+					.hideDelay(0)
+					.action('close')
+					.content(e.message));
 			}
+		
+			//Perform Purchase Order PUT
+			if ($scope.po) {
+				for (var g = 0; g < $scope.po.items.length; g++) {
+					if ($scope.po.items[g].$$action) {
+						$scope.po.items[g].status = 'Received';
+					}
+				}
 			
-			$scope.po.status = "Received";
+				$scope.po.status = "Received";
 			
-			$scope.po.$update(function () {
-				delete $scope.po;
-				$scope.postCheckout();
-			});
+				$scope.po.$update(function () {
+					delete $scope.po;
+					$scope.postCheckout();
+				});
+			}
 		}
 	};
 	
 	$scope.postCheckout = function () {
 		if ($scope.supplies.length === 0 && $scope.equipmentList.length === 0 && !$scope.po) {
+			
+			//Turn checkout switch off to allow new checkout
+			checkoutActive = false;
+			
 			//Reset employee
 			$scope.employee = undefined;
 			$mdToast.show($mdToast.simple()

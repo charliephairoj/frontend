@@ -1,22 +1,22 @@
 'use strict';
 
-xdescribe('Controller: DialogsChangeFabricCtrl', function () {
+describe('Controller: DialogsChangeFabricCtrl', function () {
 
-  // load the controller's module
-  beforeEach(module('frontendApp'));
+  	// load the controller's module
+  	beforeEach(module('employeeApp'));
 
-  var DialogsChangeFabricCtrl,
-    scope;
+  	var DialogsChangeFabricCtrl,
+    	scope;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    DialogsChangeFabricCtrl = $controller('DialogsChangeFabricCtrl', {
-      $scope: scope
-    });
-  }));
+  	// Initialize the controller and a mock scope
+  	beforeEach(inject(function ($controller, $rootScope) {
+    	scope = $rootScope.$new();
+    	DialogsChangeFabricCtrl = $controller('DialogsChangeFabricCtrl', {
+      	  $scope: scope
+    	});
+  	}));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
-  });
+  	it('should attach a list of awesomeThings to the scope', function () {
+    	expect(scope.awesomeThings.length).toBe(3);
+  	});
 });
