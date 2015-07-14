@@ -14,25 +14,6 @@
 		</div>
 	</form>
 
-	<!--SideBar Section-->
-	<div class="sidebar">
-		<header>
-			<h1><span>{{customer.name}}</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li>
-					<div ng-click="viewMap()">
-						View Map
-					</div>
-				</li>
-				<li ui-if="currentUser.hasPermission('delete_customer')">
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-
 	<!--Supplier Information Section -->
 	<div class="workspace">
 		<div class="customer">
@@ -44,19 +25,19 @@
 				<tr>
 					<td>Telephone</td>
 					<td>
-						<input ec-blur="update()" ng-model="customer.telephone" />
+						<input ng-model="customer.telephone" />
 					</td>
 				</tr>
 				<tr>
 					<td>Email</td>
 					<td>
-						<input ec-blur="update()" ng-model="customer.email" />
+						<input ng-model="customer.email" />
 					</td>
 				</tr>
 				<tr>
 					<td>Customer Type</td>
 					<td>
-						<select required ng-change="update()" ng-model="customer.type">
+						<select required ng-model="customer.type">
 							<option value="Dealer">Dealer</option>
 							<option value="Retail">Retail</option>
 						</select>
@@ -65,40 +46,55 @@
 				<tr>
 					<td>Currency</td>
 					<td>
-						<select required ng-change="update()" ng-model="customer.currency">
+						<select required ng-model="customer.currency">
 							<option value="USD">US Dollar</option>
 							<option value="EUR">Euro</option>
 							<option value="THB">Thai Baht</option>
 						</select>
 					</td>
 				</tr>
+				<tr>
+					<td>Discount</td>
+					<td>
+						<input type="number" step="1.00" min="0" max="60" ng-model="customer.discount">%
+					</td>
+				</tr>
 			</table>
 		</div>
-		<div class="address">
-			<div ng-repeat="address in customer.addresses">
+		<div class="addresses">
+			<h2>Addresses</h2>
+			<md-button class="md-raised md-accent add" ng-click="customer.addresses.push({contact: {id: customer.id}})">Add Address</md-button>
+			<div class="address" ng-class="{'hover': address.hover}" ng-repeat="address in customer.addresses">
 				<table>
 					<tr>
 						<td>
-							<input type="text" class="address" data-ng-model="address.address1" />
+							<input type="text" class="address1" data-ng-model="address.address1" placeholder="Address 1" />
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<input type="text" data-ng-model="address.city" />
-							<input type="text" data-ng-model="address.territory" />
+							<input type="text" class="address2" data-ng-model="address.address2" placeholder="Address 2" />
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<input type="text" data-ng-model="address.country" />
-							<input type="text" data-ng-model="address.zipcode" />
+							<input type="text" class="city" data-ng-model="address.city" placeholder="City/Mueng" />
+							<input type="text" class="territory" data-ng-model="address.territory" placeholder="Territory/Chaengwat" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" class="country" data-ng-model="address.country" placeholder="country" />
+							<input type="text" class="zipcode" data-ng-model="address.zipcode" placeholder="zipcode" />
 						</td>
 					</tr>
 				</table>
+				<md-button class="md-accent md-raised" ng-hide="address.marker" ng-click="createMarker(address, $index)">Add Marker</md-button>
+				<md-button class="md-warn md-raised" ng-click="customer.addresses.splice($index, 1)">Delete</md-button>
 			</div>
 		</div>
 		<div class="map-container">
-			<div map id="map_canvas"></div>
+			<div id="customer-map" style="height:100%; width:100%"></div>
 		</div>
 	</div>
 </div>

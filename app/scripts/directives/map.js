@@ -9,12 +9,41 @@ angular.module('employeeApp.directives')
 	try {
 		var mapOptions = {
 			center: new google.maps.LatLng(13.776239, 100.527884),
-			zoom: 10,
-			mapTypeId: google.maps.MapTypeId.HYBRID
+			zoom: 4,
+			mapTypeId: google.maps.MapTypeId.ROAD
 		};
 	} catch (e) {
 
 	}
+    var styles = [
+    	{
+    		featureType: "road",
+			stylers: [
+				{visibility: "off"}
+			]
+    	},
+		{
+			featureType: "water",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#DDDDDD"}
+			]
+		},
+		{
+			featureType: "landscape",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#FFFFFF"}
+			]
+		},
+		{
+		    "featureType": "administrative.province",
+		    "elementType": "geometry.stroke",
+		    "stylers": [
+		      { "visibility": "off" }
+		    ]
+		  }
+    ];
     
     return {
         restrict: 'A',
@@ -27,6 +56,7 @@ angular.module('employeeApp.directives')
 					LatLng: google.maps.LatLng
 				};
 				scope.map.map = new google.maps.Map(element.get(0), mapOptions);
+				scope.map.map.setOptions({styles:styles});
 				
 				//Refresh the map if a shown event is broadcast
 				scope.$on('shown', function () {
@@ -65,7 +95,7 @@ angular.module('employeeApp.directives')
 				};
 
 			} catch (e) {
-
+				console.error(e);
 			}
           
         }

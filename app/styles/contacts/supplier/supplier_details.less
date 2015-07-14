@@ -3,6 +3,7 @@
   
   .detailsPage;
   background:rgba(255, 255, 255, 1);
+  left:0;
   
   	.workspace{
       	overflow-y:scroll;
@@ -14,56 +15,57 @@
 	  	.supplier-details{
 			display:flex;
 			flex-direction:column;
+			width:40em;
 			
 			.input-containers{
 				display:flex;
 				flex-direction:row;
-				justify-content:flext-start;
+				justify-content:space-between;
 				align-items:center;
 				
 				md-input-container{
 					margin-right:1.25em;
 					
 					&.name{
-						width:48em;
+						width:40em;
 					}
 					
 					&.telephone{
-						width:15em;
+						width:12em;
 					}
 					
 					&.fax{
-						width:15em;
+						width:12em;
 					}
 					
 					&.email{
-						width:15em;
+						width:12em;
 					}
 					
 					&.address{
-						width:48em;
+						width:40em;
 					}
 					
 					&.city{
-						width:14em;
+						width:12em;
 					}
 					
 					
 					&.territory{
-						width:14em;
+						width:12em;
 					}
 					
 					&.country{
-						width:10em;
+						width:8em;
 					}
 				
 					&.zipcode{
-						width:6em;
+						width:4em;
 					}
 					
 					input{
-						border:1px solid;
-						background:#CCC;
+						//border:1px solid;
+						//background:#CCC;
 					}
 				}
 				
@@ -103,30 +105,20 @@
               }
           }
       }
-  }
-  .mapContainer{
-    position:absolute;
-    top:10px;
-    right:10px;
-    left:325px;
-    bottom:10px;
-    min-width:210px;
-    min-height:210px;
-    overflow:hidden;
-    background:#A0A0A0;
-    border-radius:5px;
-  }
-  #map_canvas{
-    
-    top:5px;
-    bottom:5px;
-    left:5px;
-    right:5px;
-    min-width:200px;
-    min-height:200px;
-    position:absolute;
-    
-  }
+		
+    	.map-container{
+        	position:absolute;
+        	top:1em;
+        	right:1em;
+        	bottom:1em;
+        	left:50em;
+          
+        	#supplier-map{
+            	height:100%;
+            	width:100%
+        	}
+    	}
+  	}
   
   	//View Supplier Contacts
   	.supplierContacts{

@@ -4,10 +4,122 @@ angular.module('employeeApp')
 function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast) {
     
 	var updateLoopActive = false,
-		timeoutPromise;
+		timeoutPromise,
+	map,
+	geocoder = new google.maps.Geocoder(),
+	markers = [],
+	mapOptions = {
+			center: new google.maps.LatLng(13.776239, 100.527884),
+			zoom: 4,
+			mapTypeId: google.maps.MapTypeId.ROAD
+	},
+	styles = [
+		{
+			featureType: "road",
+			stylers: [
+				{visibility: "on"}
+			]
+		},
+		{
+			featureType: "water",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#DDDDDD"}
+			]
+		},
+		{
+			featureType: "landscape",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#FFFFFF"}
+			]
+		},
+		{
+		    "featureType": "administrative.province",
+		    "elementType": "geometry.stroke",
+		    "stylers": [
+		      { "visibility": "off" }
+		    ]
+		  }
+	];
+
+	//Create new map and set the map style
+	map = new google.maps.Map($('#supplier-map')[0], mapOptions);
+	map.setOptions({styles:styles});
+
+	//General purpose create marker function
+	function createMarker(configs) {
+		var lat = configs.address.latitude || configs.latitude,
+			lng = configs.address.longitude || configs.longitude;
+		
+	
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lng),
+			map: map,
+			title: configs.title,
+			draggable: true
+		});
+	
+		//Add marker to configs for later bindings
+		configs.marker = marker;
+	
+		//Swtich to let it be known a marker has been made for this address
+		configs.address.marker = true;
+	
+		//Add a listener to mark when the user stops dragging the marker
+		google.maps.event.addListener(marker, 'dragend', function () {
+			var latLng = this.marker.getPosition();
+			var index = Number(this.marker.getTitle()) - 1;
+			this.address.latitude = latLng.lat();
+			this.address.longitude = latLng.lng();
+			$scope.update();
+		}.bind(configs));
+		
+		return configs.marker;
+	}
+	
+  	$scope.createMarker = function (address, $index) {
+		var latlng = map.getPosition();
+    	createMarker({address: address, index:$index, latitude:latlng.lat(), longitude:latlng.lng()});
+  	};
 	
 	//Retreive the supplier from the server
-    $scope.supplier =  Supplier.get({'id': $routeParams.id});
+    $scope.supplier =  Supplier.get({'id': $routeParams.id}, function () {
+    	var address = $scope.supplier.addresses[0];
+		
+		if (address.latitude && address.longitude) {
+			var latLng = map.getCenter();
+		
+			marker = createMarker({address:address, title:$scope.supplier.name, latitude:latLng.lat(), longitude: latLng.lng()});
+			map.panTo(marker.getPosition());
+			map.setZoom(14);
+		} else {
+			//Create address string for geocoding
+			var addressStr = address.address1 || "";
+			addressStr += (address.address2 || "") + ", ";
+			addressStr += (address.city || "") + ", ";
+			addressStr += (address.territory || "") + ", ";
+			addressStr += (address.country || "") + " ";
+			addressStr += (address.zipcode || "");
+			
+			//Perform geocoding request
+			geocoder.geocode({address: addressStr}, function (results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					var local = results[0].geometry.location;
+					marker = createMarker({address:address, title:$scope.supplier.name, latitude:local.lat(), longitude: local.lng()});
+					map.panTo(marker.getPosition());
+					map.setZoom(14);
+				} else {
+					console.error(status);
+				}
+			});
+		}
+		
+		
+		
+    });
+	
+	
     $scope.contact = {};
 	
 	$scope.showAddContact = function () {
@@ -80,16 +192,15 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
     */
 	
     $scope.update = function () {
-		/*
+		
         //Notify
         Notification.display('Updating Supplier...', false); 
-        //if
-        //angular.extend($scope.supplier.address, position);
+
         $scope.supplier.$update(function (data) {
             Notification.display('Supplier Updated');
         });
        
-        */
+        
     };
     
     $scope.remove = function () {

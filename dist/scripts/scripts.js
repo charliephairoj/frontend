@@ -524,34 +524,94 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
   'Notification',
   '$timeout',
   function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
-    var updateLoopActive = false, timeoutPromise;
-    $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
-    });
-    /*
-    function updatePosition(results){
-        if ($scope.marker) {
-            $scope.marker.setPosition(results[0].geometry.location);
-        } else {
-            $scope.marker = $scope.map.createMarker(results[0].geometry.location);
-            $scope.marker.onchange = function (latLng) {
-                //Set address lat and lng
-                $scope.customer.address.lat = $scope.marker.lat;
-                $scope.customer.address.lng = $scope.marker.lng;
-                $scope.customer.address.user_defined_latlng = true;
-                $scope.customer.$update();
-            };
+    var updateLoopActive = false, timeoutPromise, map, markers = [], mapOptions = {
+        center: new google.maps.LatLng(13.776239, 100.527884),
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROAD
+      }, styles = [
+        {
+          featureType: 'road',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#DDDDDD' }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#FFFFFF' }]
+        },
+        {
+          'featureType': 'administrative.province',
+          'elementType': 'geometry.stroke',
+          'stylers': [{ 'visibility': 'off' }]
         }
-      
-        //Reposition the map to the marker
-        $scope.map.setPosition(results[0].geometry.location);
-      
-        //Set the Address lat and lng
-        $scope.customer.address[0].lat = $scope.marker.lat;
-        $scope.customer.address[0].lng = $scope.marker.lng;
+      ];
+    //Create new map and set the map style
+    map = new google.maps.Map($('#customer-map')[0], mapOptions);
+    map.setOptions({ styles: styles });
+    //General purpose create marker function
+    function createMarker(configs) {
+      var lat = configs.address.latitude || configs.latitude, lng = configs.address.longitude || configs.longitude;
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: map,
+          title: String(configs.index + 1),
+          draggable: true
+        });
+      //Add marker to configs for later bindings
+      configs.marker = marker;
+      //Swtich to let it be known a marker has been made for this address
+      configs.address.marker = true;
+      //Add a listener to mark when the user stops dragging the marker
+      google.maps.event.addListener(marker, 'dragend', function () {
+        var latLng = this.marker.getPosition();
+        var index = Number(this.marker.getTitle()) - 1;
+        this.address.latitude = latLng.lat();
+        this.address.longitude = latLng.lng();
+      }.bind(configs));
+      //Add Hover listener to the marker
+      google.maps.event.addListener(marker, 'mouseover', function () {
+        $scope.safeApply(function () {
+          this.address.hover = true;
+        }.bind(this));
+      }.bind(configs));
+      //Add mouseleave listener to the marker
+      google.maps.event.addListener(marker, 'mouseout', function () {
+        $scope.safeApply(function () {
+          this.address.hover = false;
+        }.bind(this));
+      }.bind(configs));
+      return configs.marker;
     }
-    */
-    //Mehtods
+    //Request the customer resource from server
+    $scope.customer = Customer.get({ 'id': $routeParams.id }, function () {
+      //Loop through the addresses to create markers for them
+      for (var i = 0; i < $scope.customer.addresses.length; i++) {
+        var address = $scope.customer.addresses[i];
+        //Create a marker for previously marked addresses
+        if (address.latitude && address.longitude) {
+          marker = createMarker({
+            address: address,
+            index: i
+          });
+        }
+      }
+      //Focus map on single location
+      if ($scope.customer.addresses.length === 1) {
+        map.panTo(marker.getPosition());
+        map.setZoom(14);
+      }
+    });
     $scope.update = function () {
+      Notification.display('Updating...', false);
+      var customer = $scope.customer.$update(function () {
+          Notification.display('Customer Save');
+        }, function () {
+          Notification.display('Unable to Update Customer');
+        });
     };
     $scope.$watch(function () {
       var customer = angular.copy($scope.customer);
@@ -563,22 +623,28 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
         timeoutPromise = $timeout(function () {
           Notification.display('Updating customer...', false);
           var customer = angular.copy($scope.customer);
+          for (var i = 0; i < customer.addresses.length; i++) {
+            delete customer.addresses[i].marker;
+          }
           customer.$update(function () {
             updateLoopActive = false;
             Notification.display('Customer updated');
           }, function () {
+            updateLoopActive = false;
             Notification.display('There was an error updating the customer');
           });
         }, 5000);
       }
     }, true);
-    /*
-    $scope.updatePosition = function () {
-        var promise = Geocoder.geocode($scope.customer.address);
-        promise.then(function (results) {
-            updatePosition(results);
-        });
-    };*/
+    $scope.createMarker = function (address, $index) {
+      var latlng = map.getCenter();
+      createMarker({
+        address: address,
+        index: $index,
+        latitude: latlng.lat(),
+        longitude: latlng.lng()
+      });
+    };
     $scope.remove = function () {
       $scope.customer.$delete(function () {
         $location.path('/contact/customer');
@@ -738,9 +804,105 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
   '$mdDialog',
   '$mdToast',
   function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast) {
-    var updateLoopActive = false, timeoutPromise;
+    var updateLoopActive = false, timeoutPromise, map, geocoder = new google.maps.Geocoder(), markers = [], mapOptions = {
+        center: new google.maps.LatLng(13.776239, 100.527884),
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROAD
+      }, styles = [
+        {
+          featureType: 'road',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#DDDDDD' }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#FFFFFF' }]
+        },
+        {
+          'featureType': 'administrative.province',
+          'elementType': 'geometry.stroke',
+          'stylers': [{ 'visibility': 'off' }]
+        }
+      ];
+    //Create new map and set the map style
+    map = new google.maps.Map($('#supplier-map')[0], mapOptions);
+    map.setOptions({ styles: styles });
+    //General purpose create marker function
+    function createMarker(configs) {
+      var lat = configs.address.latitude || configs.latitude, lng = configs.address.longitude || configs.longitude;
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: map,
+          title: configs.title,
+          draggable: true
+        });
+      //Add marker to configs for later bindings
+      configs.marker = marker;
+      //Swtich to let it be known a marker has been made for this address
+      configs.address.marker = true;
+      //Add a listener to mark when the user stops dragging the marker
+      google.maps.event.addListener(marker, 'dragend', function () {
+        var latLng = this.marker.getPosition();
+        var index = Number(this.marker.getTitle()) - 1;
+        this.address.latitude = latLng.lat();
+        this.address.longitude = latLng.lng();
+        $scope.update();
+      }.bind(configs));
+      return configs.marker;
+    }
+    $scope.createMarker = function (address, $index) {
+      var latlng = map.getPosition();
+      createMarker({
+        address: address,
+        index: $index,
+        latitude: latlng.lat(),
+        longitude: latlng.lng()
+      });
+    };
     //Retreive the supplier from the server
-    $scope.supplier = Supplier.get({ 'id': $routeParams.id });
+    $scope.supplier = Supplier.get({ 'id': $routeParams.id }, function () {
+      var address = $scope.supplier.addresses[0];
+      if (address.latitude && address.longitude) {
+        var latLng = map.getCenter();
+        marker = createMarker({
+          address: address,
+          title: $scope.supplier.name,
+          latitude: latLng.lat(),
+          longitude: latLng.lng()
+        });
+        map.panTo(marker.getPosition());
+        map.setZoom(14);
+      } else {
+        //Create address string for geocoding
+        var addressStr = address.address1 || '';
+        addressStr += (address.address2 || '') + ', ';
+        addressStr += (address.city || '') + ', ';
+        addressStr += (address.territory || '') + ', ';
+        addressStr += (address.country || '') + ' ';
+        addressStr += address.zipcode || '';
+        //Perform geocoding request
+        geocoder.geocode({ address: addressStr }, function (results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            var local = results[0].geometry.location;
+            marker = createMarker({
+              address: address,
+              title: $scope.supplier.name,
+              latitude: local.lat(),
+              longitude: local.lng()
+            });
+            map.panTo(marker.getPosition());
+            map.setZoom(14);
+          } else {
+            console.error(status);
+          }
+        });
+      }
+    });
     $scope.contact = {};
     $scope.showAddContact = function () {
       $mdDialog.show({
@@ -802,6 +964,11 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
 	}, true);
     */
     $scope.update = function () {
+      //Notify
+      Notification.display('Updating Supplier...', false);
+      $scope.supplier.$update(function (data) {
+        Notification.display('Supplier Updated');
+      });
     };
     $scope.remove = function () {
       $scope.supplier.$remove(function () {
@@ -2677,11 +2844,32 @@ angular.module('employeeApp.directives').directive('map', [
     try {
       var mapOptions = {
           center: new google.maps.LatLng(13.776239, 100.527884),
-          zoom: 10,
-          mapTypeId: google.maps.MapTypeId.HYBRID
+          zoom: 4,
+          mapTypeId: google.maps.MapTypeId.ROAD
         };
     } catch (e) {
     }
+    var styles = [
+        {
+          featureType: 'road',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#DDDDDD' }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#FFFFFF' }]
+        },
+        {
+          'featureType': 'administrative.province',
+          'elementType': 'geometry.stroke',
+          'stylers': [{ 'visibility': 'off' }]
+        }
+      ];
     return {
       restrict: 'A',
       replace: false,
@@ -2692,6 +2880,7 @@ angular.module('employeeApp.directives').directive('map', [
             LatLng: google.maps.LatLng
           };
           scope.map.map = new google.maps.Map(element.get(0), mapOptions);
+          scope.map.map.setOptions({ styles: styles });
           //Refresh the map if a shown event is broadcast
           scope.$on('shown', function () {
             google.maps.event.trigger(scope.map.map, 'resize');
@@ -2724,6 +2913,7 @@ angular.module('employeeApp.directives').directive('map', [
             this.map.setZoom(14);
           };
         } catch (e) {
+          console.error(e);
         }
       }
     };
@@ -9177,7 +9367,9 @@ angular.module('employeeApp.directives').directive('addCustomer', [
 angular.module('employeeApp').controller('MainCtrl', [
   '$scope',
   '$location',
-  function ($scope, $location) {
+  'Acknowledgement',
+  'mapMarker',
+  function ($scope, $location, Acknowledgement, mapMarker) {
     var user = $scope.currentUser;
     var changePage = function () {
       if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
@@ -9188,6 +9380,86 @@ angular.module('employeeApp').controller('MainCtrl', [
     } else {
       changePage();
     }
+    var acknowledgements = Acknowledgement.query(function (resp) {
+        for (var i = 0; i < 20; i++) {
+          new google.maps.Marker({
+            position: new google.maps.LatLng(13.736565, 100.641658),
+            map: $scope.map.map,
+            title: 'Order #' + resp[i].id,
+            draggable: true
+          });
+        }
+      });
+    /*
+	 * Map 
+	 *
+	 */
+    var latLng = {}, map, marker,
+      //Options for the map 
+      mapOptions = {
+        center: new google.maps.LatLng(13.776239, 100.527884),
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROAD
+      };
+    var styles = [
+        {
+          featureType: 'road',
+          stylers: [{ visibility: 'off' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#DDDDDD' }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#FFFFFF' }]
+        },
+        {
+          'featureType': 'administrative.province',
+          'elementType': 'geometry.stroke',
+          'stylers': [{ 'visibility': 'off' }]
+        }
+      ];
+    $scope.map = {
+      Marker: mapMarker,
+      LatLng: google.maps.LatLng
+    };
+    $scope.map.map = new google.maps.Map($('#main-map')[0], mapOptions);
+    //$scope.map.map.setOptions({styles:styles});
+    //Refresh the map if a shown event is broadcast
+    $scope.$on('shown', function () {
+      google.maps.event.trigger($scope.map.map, 'resize');
+    });
+    $scope.map.refresh = function () {
+      google.maps.event.triggger(this.map);
+    };
+    //Create a marker and adds to $scope.map.markers
+    $scope.map.createMarker = function (obj) {
+      if (obj instanceof google.maps.LatLng) {
+        latLng = obj;
+      } else if (obj.hasOwnProperty('lat') && obj.hasOwnProperty('lng')) {
+        latLng = new google.maps.LatLng(obj.lat, obj.lng);
+      } else {
+        console.log('oops');
+        latLng = null;
+      }
+      return new $scope.map.Marker({
+        map: this.map,
+        position: latLng
+      });
+    };
+    //Set map position
+    $scope.map.setPosition = function (obj) {
+      if (obj instanceof google.maps.LatLng) {
+        latLng = obj;
+      } else {
+        latLng = new google.maps.LatLng(obj.lat, obj.lng);
+      }
+      this.map.panTo(latLng);
+      this.map.setZoom(14);
+    };
   }
 ]);
 angular.module('employeeApp').directive('img', [function () {

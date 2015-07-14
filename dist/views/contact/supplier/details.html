@@ -1,43 +1,5 @@
 <div class="supplier-details-page">
 
-	<!--SideBar Section-->
-	<div class="sidebar">
-		<header>
-			<h1><span>New Supplier</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<!--
-                <li ui-if="currentUser.hasPermission('change_supplier')">
-                    <div ng-click="edit=!edit">
-                        Edit
-                    </div>
-                </li>
-					-->
-				<li ui-if="currentUser.hasPermission('add_suppliercontact')">
-					<div ng-click="showAddContact()">
-						Add Contact
-					</div>
-				</li>
-				<!--
-                <li>
-                    <div ng-click="viewMap=true">
-                        View Map
-                    </div>
-                </li>
-					-->
-				<li ui-if="currentUser.hasPermission('delete_supplier')">
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div data-modal ng-model="viewMap">
-		<div map>
-			<div id="map_canvas"></div>
-		</div>
-	</div>
-
 	<!--Supplier Information Section -->
 	<div class="workspace">
 		<div class="supplier-details">
@@ -189,6 +151,7 @@
         </table> 
        
 	   -->
+		<md-button class="md-accent md-raised" ng-click="showAddContact()">Add Contact</md-button>
 		<table class="supplierContacts">
 			<thead>
 				<tr>
@@ -209,5 +172,8 @@
 				</tr>
 			</tbody>
 		</table>
+		<div class="map-container">
+			<div id="supplier-map" style="height:100%; width:100%"></div>
+		</div>
 	</div>
 </div>
