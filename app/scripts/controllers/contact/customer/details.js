@@ -116,7 +116,6 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
     
     $scope.update = function () {
         Notification.display('Updating...', false);
-		var customer = 
         $scope.customer.$update(function () {
             Notification.display('Customer Save'); 
         }, function () {

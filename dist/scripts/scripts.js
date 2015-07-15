@@ -607,11 +607,11 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
     });
     $scope.update = function () {
       Notification.display('Updating...', false);
-      var customer = $scope.customer.$update(function () {
-          Notification.display('Customer Save');
-        }, function () {
-          Notification.display('Unable to Update Customer');
-        });
+      $scope.customer.$update(function () {
+        Notification.display('Customer Save');
+      }, function () {
+        Notification.display('Unable to Update Customer');
+      });
     };
     $scope.$watch(function () {
       var customer = angular.copy($scope.customer);
@@ -851,6 +851,11 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
         var index = Number(this.marker.getTitle()) - 1;
         this.address.latitude = latLng.lat();
         this.address.longitude = latLng.lng();
+        //Ensure that the data in the supplier resource is consistent with the user's data
+        if (this.address.latitude != $scope.supplier.addresses[0].latitude || this.address.longitude != $scope.supplier.addresses[0].longitude) {
+          $scope.supplier.addresses[0].latitude = latLng.lat();
+          $scope.supplier.addresses[0].longitude = latLng.lng();
+        }
         $scope.update();
       }.bind(configs));
       return configs.marker;
@@ -966,6 +971,8 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     $scope.update = function () {
       //Notify
       Notification.display('Updating Supplier...', false);
+      console.log($scope.supplier);
+      console.log($scope.supplier.addresses[0].latitude, $scope.supplier.addresses[0].longitude);
       $scope.supplier.$update(function (data) {
         Notification.display('Supplier Updated');
       });
