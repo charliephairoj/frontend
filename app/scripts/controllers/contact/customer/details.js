@@ -106,7 +106,7 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
 		//Focus map on single location
 		if ($scope.customer.addresses.length === 1) {
 			map.panTo(marker.getPosition());
-			map.setZoom(14);
+			map.setZoom(17);
 		}
     
         

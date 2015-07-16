@@ -319,8 +319,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 						.simple()
 						.position('top right')
 						.content('Purchase order created.'));
-						
-					$scope.reset();
+											
+					//Change page to newly saved purchase order page
+					$location.path("/order/purchase_order/" + response.id);
+					
 				}, function (e) {
 					$mdToast.show($mdToast
 						.simple()

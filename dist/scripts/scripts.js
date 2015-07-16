@@ -602,7 +602,7 @@ angular.module('employeeApp').controller('ContactCustomerDetailsCtrl', [
       //Focus map on single location
       if ($scope.customer.addresses.length === 1) {
         map.panTo(marker.getPosition());
-        map.setZoom(14);
+        map.setZoom(17);
       }
     });
     $scope.update = function () {
@@ -841,6 +841,9 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
           title: configs.title,
           draggable: true
         });
+      if (configs.icon) {
+        marker.setIcon(configs.icon);
+      }
       //Add marker to configs for later bindings
       configs.marker = marker;
       //Swtich to let it be known a marker has been made for this address
@@ -856,6 +859,8 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
           $scope.supplier.addresses[0].latitude = latLng.lat();
           $scope.supplier.addresses[0].longitude = latLng.lng();
         }
+        //Change icon color
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
         $scope.update();
       }.bind(configs));
       return configs.marker;
@@ -878,10 +883,11 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
           address: address,
           title: $scope.supplier.name,
           latitude: latLng.lat(),
-          longitude: latLng.lng()
+          longitude: latLng.lng(),
+          icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
         });
         map.panTo(marker.getPosition());
-        map.setZoom(14);
+        map.setZoom(17);
       } else {
         //Create address string for geocoding
         var addressStr = address.address1 || '';
@@ -7946,7 +7952,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
               console.warn(e);
             }
             $mdToast.show($mdToast.simple().position('top right').content('Purchase order created.'));
-            $scope.reset();
+            //Change page to newly saved purchase order page
+            $location.path('/order/purchase_order/' + response.id);
           }, function (e) {
             $mdToast.show($mdToast.simple().content(e));
           });
@@ -8663,6 +8670,67 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   'Room',
   'Phase',
   function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase) {
+    var updateLoopActive = false, timeoutPromise, map, geocoder = new google.maps.Geocoder(), markers = [], mapOptions = {
+        center: new google.maps.LatLng(13.776239, 100.527884),
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROAD
+      }, styles = [
+        {
+          featureType: 'road',
+          stylers: [{ visibility: 'on' }]
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#DDDDDD' }]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry.fill',
+          stylers: [{ color: '#FFFFFF' }]
+        },
+        {
+          'featureType': 'administrative.province',
+          'elementType': 'geometry.stroke',
+          'stylers': [{ 'visibility': 'off' }]
+        }
+      ];
+    //Create new map and set the map style
+    map = new google.maps.Map($('#po-map')[0], mapOptions);
+    map.setOptions({ styles: styles });
+    //General purpose create marker function
+    function createMarker(configs) {
+      var lat = configs.address.latitude || configs.latitude, lng = configs.address.longitude || configs.longitude;
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: map,
+          title: configs.title,
+          draggable: true
+        });
+      if (configs.icon) {
+        marker.setIcon(configs.icon);
+      }
+      //Add marker to configs for later bindings
+      configs.marker = marker;
+      //Swtich to let it be known a marker has been made for this address
+      configs.address.marker = true;
+      //Add a listener to mark when the user stops dragging the marker
+      google.maps.event.addListener(marker, 'dragend', function () {
+        var latLng = this.marker.getPosition();
+        var index = Number(this.marker.getTitle()) - 1;
+        this.address.latitude = latLng.lat();
+        this.address.longitude = latLng.lng();
+        //Ensure that the data in the supplier resource is consistent with the user's data
+        if (this.address.latitude != $scope.supplier.addresses[0].latitude || this.address.longitude != $scope.supplier.addresses[0].longitude) {
+          $scope.po.supplier.addresses[0].latitude = latLng.lat();
+          $scope.po.supplier.addresses[0].longitude = latLng.lng();
+        }
+        //Change icon color
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+      }.bind(configs));
+      return configs.marker;
+    }
+    //Retrieve the purchase order from the server
     $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
       for (var i = 0; i < $scope.po.items.length; i++) {
         var item = $scope.po.items[i];
@@ -8681,6 +8749,20 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
           index = $scope.po.project.phases.indexOfById($scope.po.phase.id);
           $scope.po.phase = $scope.po.project.phases[index];
         }
+      }
+      var address = $scope.po.supplier.addresses[0] || {};
+      if (address.latitude && address.longitude) {
+        var latLng = map.getCenter();
+        marker = createMarker({
+          address: address,
+          title: $scope.po.supplier.name,
+          latitude: latLng.lat(),
+          longitude: latLng.lng(),
+          icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        });
+        map.panTo(marker.getPosition());
+        map.setZoom(17);
+      } else {
       }
     });
     //Get a list of projects

@@ -55,6 +55,9 @@
     </div>
 			-->
 	<form name="form" class="workspace">
+		<div class="map-container">
+			<div id="po-map"></div>
+		</div>
 		<div class="submenu">
 			<md-button class="md-accent md-raised" ng-click="save()">Save</md-button>
 			<md-button class="md-accent md-raised" ng-click="viewPDF()">PDF</md-button>
@@ -67,8 +70,12 @@
 					<td class="cell">{{po.id}}</td>
 				</tr>
 				<tr class="row">
-					<td class="cell">Customer</td>
-					<td class="cell">{{po.supplier.name}}</td>
+					<td class="cell">Supplier</td>
+					<td class="cell">
+						<md-button class="md-accent" ng-href="#/contact/supplier/{{po.supplier.id}}">
+							{{po.supplier.name}}
+						</md-button>
+					</td>
 				</tr>
 				<tr class="row">
 					<td class="cell">Order Date</td>

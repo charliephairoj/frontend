@@ -59,6 +59,10 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 			title: configs.title,
 			draggable: true
 		});
+		
+		if (configs.icon) {
+			marker.setIcon(configs.icon);
+		}
 	
 		//Add marker to configs for later bindings
 		configs.marker = marker;
@@ -80,6 +84,9 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 					$scope.supplier.addresses[0].longitude = latLng.lng();
 			}
 				
+			//Change icon color
+			marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+			
 			$scope.update();
 			
 		}.bind(configs));
@@ -99,9 +106,11 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 		if (address.latitude && address.longitude) {
 			var latLng = map.getCenter();
 		
-			marker = createMarker({address:address, title:$scope.supplier.name, latitude:latLng.lat(), longitude: latLng.lng()});
+			marker = createMarker({address:address, title:$scope.supplier.name, latitude:latLng.lat(), longitude: latLng.lng(),
+				icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+			});
 			map.panTo(marker.getPosition());
-			map.setZoom(14);
+			map.setZoom(17);
 		} else {
 			//Create address string for geocoding
 			var addressStr = address.address1 || "";
