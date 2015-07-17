@@ -58,6 +58,10 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
 			draggable: true
     	});
 		
+		if (configs.icon) {
+			marker.setIcon(configs.icon);
+		}
+		
 		//Add marker to configs for later bindings
 		configs.marker = marker;
 		
@@ -71,6 +75,8 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
 			this.address.latitude = latLng.lat();
 			this.address.longitude = latLng.lng();
 			
+			//Change icon color
+			marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
 		}.bind(configs));
 		
 		//Add Hover listener to the marker
@@ -99,7 +105,7 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
 			
 			//Create a marker for previously marked addresses
 			if (address.latitude && address.longitude) {
-	        	marker = createMarker({address: address, index:i});
+	        	marker = createMarker({address: address, index:i, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
 			}
         }
 		

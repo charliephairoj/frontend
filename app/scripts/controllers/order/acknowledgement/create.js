@@ -11,25 +11,148 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
     $scope.ack = new Acknowledgement();
     
     var uploadTargets = [];
-    var storage = window.localStorage;
+    var storage = window.localStorage,
+		
+		/*
+	 	 * Map variables and settings
+	 	 */ 
+		map,
+		geocoder = new google.maps.Geocoder(),
+		markers = [],
+		mapOptions = {
+				center: new google.maps.LatLng(13.776239, 100.527884),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROAD
+		},
+		//Style for the map
+		styles = [
+			{
+				featureType: "road",
+				stylers: [
+					{visibility: "on"}
+				]
+			},
+			{
+				featureType: "water",
+				elementType: "geometry.fill",
+				stylers: [
+					{color:"#DDDDDD"}
+				]
+			},
+			{
+				featureType: "landscape",
+				elementType: "geometry.fill",
+				stylers: [
+					{color:"#FFFFFF"}
+				]
+			},
+			{
+			    "featureType": "administrative.province",
+			    "elementType": "geometry.stroke",
+			    "stylers": [
+			      { "visibility": "off" }
+			    ]
+			  }
+		];
     
+	//Create new map and set the map style
+	map = new google.maps.Map($('#create-ack-map')[0], mapOptions);
+	map.setOptions({styles:styles});
+
+	//General purpose create marker function
+	function createMarker(configs) {
+		var lat = configs.address.latitude || configs.latitude,
+			lng = configs.address.longitude || configs.longitude;
+		
+	
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lng),
+			map: map,
+			title: configs.title,
+			draggable: true
+		});
+		
+		if (configs.icon) {
+			marker.setIcon(configs.icon);
+		}
+	
+		//Add marker to configs for later bindings
+		configs.marker = marker;
+	
+		//Swtich to let it be known a marker has been made for this address
+		configs.address.marker = true;
+	
+		//Add a listener to mark when the user stops dragging the marker
+		google.maps.event.addListener(marker, 'dragend', function () {
+			var latLng = this.marker.getPosition();
+			var index = Number(this.marker.getTitle()) - 1;
+			this.address.latitude = latLng.lat();
+			this.address.longitude = latLng.lng();
+			
+			//Ensure that the data in the supplier resource is consistent with the user's data
+			if (this.address.latitude != $scope.supplier.addresses[0].latitude || 
+				this.address.longitude != $scope.supplier.addresses[0].longitude) {
+					$scope.po.supplier.addresses[0].latitude = latLng.lat();
+					$scope.po.supplier.addresses[0].longitude = latLng.lng();
+			}
+				
+			//Change icon color
+			marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+					
+		}.bind(configs));
+		
+		return configs.marker;
+	}
+	
+	//Restore saved acknowledgement from localStorage
     if (storage.getItem('acknowledgement-create')) {
         angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
+		
+		//Set marker for customer
+		try {
+			var address = $scope.ack.customer.addresses[0];
+			if (address.latitude && address.longitude) {
+				 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+				 map.panTo(marker.getPosition());
+				 map.setZoom(17);
+			} 
+		} catch (e) {
+			console.error(e);
+		}
+		
     }
-    
+	
+	//Set items and employee
     $scope.ack.items = $scope.ack.items || [];
     $scope.employee = {id: $scope.currentUser.id};
     
-    $scope.tempSave = function () {
+    //Save a copy of acknowledgement to localStorage 
+	$scope.tempSave = function () {
         storage.setItem('acknowledgement-create', JSON.stringify($scope.ack));
     };
     
+	//Add customer and hide modal
     $scope.addCustomer = function (customer) {
         //Set Customer
         $scope.ack.customer = customer;
         //Hide Customer Panel
         $scope.showCustomers = false;
         $scope.tempSave();
+		
+		if (marker) {
+			marker.setMap(null);
+		}
+		//Set marker for customer
+		try {
+			var address = customer.addresses[0];
+			if (address.latitude && address.longitude) {
+				 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+				 map.panTo(marker.getPosition());
+				 map.setZoom(17);
+			}
+		} catch (e) {
+			
+		}
     };
 	
 	/* 
