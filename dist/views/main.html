@@ -1,4 +1,26 @@
-<div style="height:100%; width:100%;">
-	<div id="main-map" style="height:100%; width:100%;">
+<div class="main-page" style="height:100%; width:100%;">
+	<div class="orders">
+		<div class="selectors">
+			<md-button class="md-accent" ng-class="{'md-raised': active != 'acknowledgements'}" ng-click="view('acknowledgements')">Acknowledgements</md-button>
+			<md-button class="md-accent" ng-class="{'md-raised': active != 'purchaseOrders'}" ng-click="view('purchaseOrders')">Purchase Orders</md-button>
+		</div>
+		<div class="list" ng-show="active=='purchaseOrders'">
+			<div class="item-container" ng-repeat="po in pos">
+				<a class="item" ng-href="#/order/purchase_order/{{po.id}}">
+					<span class="id">{{po.id}}</span>
+					<span class="name">{{po.supplier.name}}</span>
+				</a>
+			</div>
+		</div>
+		<div class="list" ng-show="active=='acknowledgements'">
+			<div class="item-container" ng-repeat="ack in acknowledgements">
+				<a class="item" ng-href="#/order/acknowledgement/{{ack.id}}">
+					<span class="id">{{ack.id}}</span>
+					<span class="name">{{ack.customer.name}}</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div id="main-map">
 	</div>
 </div>

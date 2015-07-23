@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker',
-function ($scope, $location, Acknowledgement, mapMarker) {
+.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder',
+function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
 	
 	var user = $scope.currentUser;
 	var changePage = function () {
@@ -18,19 +18,6 @@ function ($scope, $location, Acknowledgement, mapMarker) {
 		changePage();
 	}
 	
-	var acknowledgements = Acknowledgement.query(function (resp) {
-		for (var i = 0; i < 20; i++) {
-			new google.maps.Marker({
-				position: new google.maps.LatLng(13.736565,100.641658),
-				map: $scope.map.map,
-				title: "Order #" + resp[i].id,
-				draggable: true
-			});
-		}
-		
-		
-	});
-	
 	/*
 	 * Map 
 	 *
@@ -38,13 +25,15 @@ function ($scope, $location, Acknowledgement, mapMarker) {
 	var latLng = {},
 	    map,
 	    marker,
+		markers = {'acknowledgements': [],
+				   'purchaseOrders': []},
 	    //Options for the map 
 		mapOptions = {
 			center: new google.maps.LatLng(13.776239, 100.527884),
 			zoom: 4,
 			mapTypeId: google.maps.MapTypeId.ROAD
 		};
-	
+
 	var styles = [
 		{
 			featureType: "road",
@@ -72,53 +61,110 @@ function ($scope, $location, Acknowledgement, mapMarker) {
 		    "stylers": [
 		      { "visibility": "off" }
 		    ]
-		  }
+		}
 	];
 	
-	$scope.map = {
-		Marker: mapMarker,
-		LatLng: google.maps.LatLng
-	};
-	$scope.map.map = new google.maps.Map($('#main-map')[0], mapOptions);
-	//$scope.map.map.setOptions({styles:styles});
+	//Function to get zoom and position
+	function setMapFocus(latArray, lngArray){
+		var ne = new google.maps.LatLng(Math.max.apply(null, latArray), Math.max.apply(null, lngArray)),
+			sw = new google.maps.LatLng(Math.min.apply(null, latArray), Math.min.apply(null, lngArray));
+		
+		var bounds = new google.maps.LatLngBounds(sw, ne);
+		map.fitBounds(bounds);	
+	}
 	
-	//Refresh the map if a shown event is broadcast
-	$scope.$on('shown', function () {
-		google.maps.event.trigger($scope.map.map, 'resize');
-	});
-
-	$scope.map.refresh = function () {
-		google.maps.event.triggger(this.map);    
-	};
-
-	//Create a marker and adds to $scope.map.markers
-	$scope.map.createMarker = function (obj) {
-		if (obj instanceof google.maps.LatLng) {
-			latLng = obj;
-		} else if (obj.hasOwnProperty('lat') && obj.hasOwnProperty('lng')) {
-			latLng = new google.maps.LatLng(obj.lat, obj.lng);
-		} else {
-			console.log('oops');
-			latLng = null;
-		}
-
-		return new $scope.map.Marker({
-			map: this.map,
-			position: latLng
+	//Initialize map
+	map = new google.maps.Map($('#main-map')[0], mapOptions);
+	map.setOptions({styles:styles});
+	
+	//Get purchase orders
+	$scope.pos = PurchaseOrder.query(function () {}, function () {});
+	//Get acknowledgements and create markers on map for each order
+	$scope.acknowledgements = Acknowledgement.query(function (resp) {
+			
+			$scope.active = 'acknowledgements';
+			
+			for (var i = 0; i < 20; i++) {
+				try {
+					var address = resp[i].customer;
+					if (address.latitude && address.longitude) {
+				
+						marker = new google.maps.Marker({
+							position: new google.maps.LatLng(address.latitude, address.longitude),
+							map: map,
+							title: "Order #" + resp[i].id,
+							draggable: false
+						});
+						
+						markers[$scope.active].push(marker);
+					}
+				} catch (e) {
+					console.log(resp[i]);
+					console.error(e);
+				}
+			}
+			map.setZoom(6);
 		});
-	};
-	//Set map position
-	$scope.map.setPosition = function (obj) {
-		if (obj instanceof google.maps.LatLng) {
-			latLng = obj;
-		} else {
-			latLng = new google.maps.LatLng(obj.lat, obj.lng);
+	
+	
+	/* 
+ 	 * Show markers for pending orders or pending purchase orders
+	 */
+	$scope.view = function (target) {
+		
+		var arrayHolder,
+			getAddress, 
+			markerArray,
+			lats = [],
+			lngs = [];
+		
+		for (var i in markers[$scope.active]) {
+			try {
+				markers[$scope.active][i].setMap(null);
+			} catch (e) {
+				console.log(markers[$scope.active][i]);
+			}
 		}
-
-		this.map.panTo(latLng);
-		this.map.setZoom(14);
+		
+		$scope.active = target;
+		markers[$scope.active] = [];
+			
+		if (target === 'acknowledgements') {
+			arrayHolder = $scope.acknowledgements;
+			getAddress = function (dataObj) {
+				return dataObj.customer;
+			};
+		} else if (target === 'purchaseOrders') {
+			arrayHolder = $scope.pos;
+			getAddress = function (dataObj) {
+				return dataObj.supplier.addresses[0] || {};
+			};
+		}
+		
+		for (i = 0; i < arrayHolder.length; i++) {
+			try {
+				var address = getAddress(arrayHolder[i]);
+				if (address.latitude && address.longitude) {
+					
+					//Add to lats and lngs for later calculations 
+					lats.push(address.latitude);
+					lngs.push(address.longitude);
+					
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(address.latitude, address.longitude),
+						map: map,
+						title: (arrayHolder[i].customer || arrayHolder[i].supplier).name,
+						draggable: false
+					});
+					
+					markers[$scope.active].push(marker);
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		
+		setMapFocus(lats, lngs);
 	};
-	
-	
 	
 }]);
