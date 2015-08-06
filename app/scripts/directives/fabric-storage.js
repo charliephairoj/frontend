@@ -1,4 +1,3 @@
-'use strict';
 
 
 angular.module('employeeApp')
@@ -12,16 +11,16 @@ angular.module('employeeApp')
 		ctx.beginPath();
 		ctx.fillStyle = "#CCCCCC";
 		ctx.fillRect(10 + this.hMargin, 10 + 10, 200 - (this.hMargin * 2), 100 - (this.hMargin * 2));
-	}
+	};
 	
 	Shelf.prototype.isPointInElement = function (x, y) {
 		return ((x >= this.x && x <= (this.x + this.w)) && (y >= this.y && y <= (this.y + this.h))) ? true : false;
-	}
+	};
 	
 	function Tower () {
-		this.x = 10,
-		this.y = 10,
-		this.h = 50,
+		this.x = 10;
+		this.y = 10;
+		this.h = 50;
 		this.w = 50;
 		this.color = "#AAAAAA";
 		this.textColor = "#000000";
@@ -47,11 +46,11 @@ angular.module('employeeApp')
 				this.shelves[i].draw(ctx, this);
 			}
 		}
-	}
+	};
 	
 	Tower.prototype.isPointInElement = function (x, y) {
 		return ((x >= this.x && x <= (this.x + this.w)) && (y >= this.y && y <= (this.y + this.h))) ? true : false;
-	}
+	};
 	
 	function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
@@ -75,7 +74,8 @@ angular.module('employeeApp')
 				{id: 16, x: 465, y: 140},
 				{id: 17, x: 410, y: 215},
 				{id: 18, x: 465, y: 215}
-			]
+			],
+			towers = [];
 				
 			
 			//Add towers on the left of the room
@@ -88,7 +88,7 @@ angular.module('employeeApp')
 			context.canvas.height = 400;
 			context.canvas.width =  800;
 			
-			for (var i = 0; i < positions.length; i++) {
+			for (i = 0; i < positions.length; i++) {
 				var tower = new Tower();
 				towers.push(tower);
 				tower.id = positions[i].id;
