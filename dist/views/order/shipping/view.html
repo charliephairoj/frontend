@@ -1,0 +1,61 @@
+<div class="shipping-view-page">
+	<!--
+        Sidebar
+    -->
+	<!--
+    <div class="sidebar">
+        <header>
+            <h1>
+                <span>Shipping</span>
+            </h1>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_shipping')"><a ng-href="#/order/shipping/create">Create</a></li>
+                <li><a ng-href="#/order/shipping/delivery">View Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/week">View Weekly Deliveries</a></li>
+                <li><a ng-href="#/order/shipping/deliveries/today">View Today's Deliveries</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+    -->
+	<!--
+        Search Bar
+    -->
+	<div data-search-bar ng-model="query"></div>
+	<!--
+        Workspace
+    -->
+	<div class="workspace">
+		<nav>
+			<h2>Shipping</h2>
+			<md-button class="add-btn md-primary md-raised" ui-if="currentUser.hasPermission('add_shipping')" ng-href="#/order/shipping/create">New Shipping</md-button>
+		</nav>
+		<div class="title-bar">
+			<div class="id">SHIPPING ID</div>
+			<div class="ack-id">ACK ID</div>
+			<div class="order-date">DATE</div>
+			<div class="customer">CUSTOMER</div>
+			<div class="project">PROJECT</div>
+			<div class="delivery-date">SHIP DATE</div>
+			<div class="status">STATUS</div>
+		</div>
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="shipping in shippingList | filter:query">
+					<a class="item" ng-href="#/order/shipping/{{shipping.id}}">
+						<div class="id">{{shipping.id}}</div>
+						<div class="ack-id">{{shipping.acknowledgement.id}}</div>
+						<div class="order-date">{{shipping.time_created | date: "MMM d, yyyy"}}</div>
+						<div class="customer">{{shipping.customer.name}}</div>
+						<div class="project-id">{{shipping.acknowledgement.project.id}}</div>
+						<div class="project">{{shipping.acknowledgement.project.codename}}</div>
+						<div class="delivery-date">{{shipping.delivery_date | date: "MMM d, yyyy"}}</div>
+						<div class="status" ng-class="po.status.toLowerCase()">{{shipping.acknowledgement.status}}</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

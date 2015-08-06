@@ -1,0 +1,40 @@
+<div class="user-view-page">
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<h1><span>Users</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ui-if="currentUser.hasPermission('add_user')">
+					<a href="#/administrator/user/add">
+                        Create User
+                    </a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div data-search-bar ng-model="query"></div>
+	<div class="workspace">
+		<div class="title-bar">
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<div class="email">EMAIL</div>
+			<div class="email">LAST LOGIN</div>
+		</div>
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" data-ng-repeat="user in users | filter:query">
+					<a class="item" ng-href="#/administrator/user/{{user.id}}">
+						<div class="id">{{user.id}}</div>
+						<div class="name">{{user.first_name+' '+user.last_name}}</div>
+						<div class="email">{{user.email}}</div>
+						<div class="last-login">{{user.last_login | date:"MMM d, y h:mm:ss a"}}</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

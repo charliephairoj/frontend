@@ -1,0 +1,47 @@
+<div class="employee-view-page">
+	<!--
+        Sidebar
+    -->
+	<!--
+    <div class="sidebar">
+        <header>
+            <h1><span>Employees</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ng-show="currentUser.hasPermission('add_user')">
+                    <div data-ng-click="showAddEmployee()">
+                        Add Employee
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>  
+    -->
+	<!--
+        Search Bar
+    -->
+	<div data-search-bar data-ng-model="query">
+	</div>
+	<div class="workspace">
+		<nav>
+			<h2>Employees</h2>
+			<md-button class="add-btn md-accent" ng-show="currentUser.hasPermission('add_user')" ng-click="showAddEmployee()">New Employee</md-button>
+		</nav>
+		<div class="title-bar">
+			<div class="preview">PROFILE</div>
+			<div class="id">ID</div>
+			<div class="name">NAME</div>
+			<div class="first-name">FIRST NAME</div>
+			<div class="last-name">LAST NAME</div>
+			<div class="nickname">NICKNAME</div>
+		</div>
+		<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
+					<div employee="employee" on-select="focus($element)"></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

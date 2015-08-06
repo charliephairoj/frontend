@@ -1,0 +1,99 @@
+<form name="form" class="addUserPage" novalidate>
+	<!--
+		Modals
+	-->
+	<div modal="showAddImage" class="add-profile-picture">
+		<div class="container" image-uploader url="api/v1/user/image" on-upload="addImage(data)">
+		</div>
+	</div>
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="user.image" ng-click="showAddImage=true">
+				<img ng-src="{{user.image.url}}" />
+			</div>
+			<h1><span>Add User</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<div ng-class="{dirty:form.$invalid}" ng-click="save()">
+						Save
+					</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<table class="new-user-table">
+			<tr>
+				<td>
+					<label>First Name</label>
+				</td>
+				<td>
+					<input required autofocus type="text" ng-model="user.first_name" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Last Name</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.last_name" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Telephone</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.telephone" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Email</label>
+				</td>
+				<td>
+					<input required type="email" ng-model="user.email" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Company</label>
+				</td>
+				<td>
+					<select required ng-model="user.company">
+						<option value="dellarobbia thailand">Dellarobbia Thailand</option>
+						<option value="decoroom">Decoroom</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Username</label>
+				</td>
+				<td>
+					<input required type="text" ng-model="user.username" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Password</label>
+				</td>
+				<td>
+					<input required type="password" ng-model="user.password" />
+				</td>
+			</tr>
+		</table>
+		<table>
+			<tr ng-repeat="group in groups">
+				<td>
+					<input type="checkbox" ng-model="group.$$checked" value="group.name" name="group.name">{{group.name}}
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>

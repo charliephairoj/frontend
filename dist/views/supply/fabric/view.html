@@ -1,0 +1,61 @@
+<div class="viewFabricPage">
+	<!--
+        Sidebar
+    -->
+	<div class="sidebar">
+		<header>
+			<h1><span>Fabric</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a ng-href="#/supply/fabric/add">Add Fabric</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
+        Search Bar
+    -->
+	<div data-search-bar ng-model='query'></div>
+	<!--
+        Workspace
+    -->
+	<div class="workspace">
+		<div class="title-bar">
+			<div class="preview">PREVIEW</div>
+			<div class="id">ID</div>
+			<div class="pattern">PATTERN</div>
+			<div class="color">COLOR</div>
+			<div class="quantity">QUANTITY</div>
+		</div>
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name'">
+					<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/supply/fabric/{{fabric.id}}">
+						<div class="preview">
+							<img ng-src="{{fabric.image.url}}" />
+						</div>
+						<div class="id">{{fabric.id}}</div>
+						<div class="pattern">{{fabric.pattern}}</div>
+						<div class="color">{{fabric.color}}</div>
+						<div class="quantity">{{fabric.quantity}}</div>
+						<!--
+    					<span class="description">{{po.id}}</span>
+	    				<span class="customer">{{po.supplier.name}}</span>
+	    				<span class="status" 
+	    					ng-class="{ordered:po.status == 'Ordered',
+	    							   paid:po.status == 'Paid',
+	    							   received:po.status == 'Received'}">
+	    					{{po.status}}
+	    				</span>
+	    				<span class="items">{{po.items.length}} Items</span>
+	    				<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
+	    				<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
+							-->
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="supply-directive">
+	<div class="short-details details" ng-click="activate()">
+		<div class="preview">
+			<div class="img-container" ng-click="activate()">
+				<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
+				<img ng-src="{{supply.image.url}}" />
+			</div>
+		</div>
+		<div class="id">{{supply.id}}</div>
+		<div class="description">{{supply.description}}</div>
+		<div class="quantity">{{supply.quantity}}</div>
+		<div class="units">{{supply.units}}</div>
+		<div class="nickname">{{employee.nickname}}</div>
+	</div>
+	<div class='loading-notification' ng-class="{'active': !fetched}">
+		<span>Loading</span>
+	</div>
+	<div class="supply-details">
+	</div>
+</div>
