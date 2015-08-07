@@ -82,30 +82,56 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
 	//Get acknowledgements and create markers on map for each order
 	$scope.acknowledgements = Acknowledgement.query(function (resp) {
 			
-			$scope.active = 'acknowledgements';
-			
-			for (var i = 0; i < 20; i++) {
-				try {
-					var address = resp[i].customer;
-					if (address.latitude && address.longitude) {
+		$scope.active = 'acknowledgements';
+		
+		for (var i = 0; i < 20; i++) {
+			try {
+				var address = resp[i].customer;
+				if (address.latitude && address.longitude) {
+		
+					marker = new google.maps.Marker({
+						position: new google.maps.LatLng(address.latitude, address.longitude),
+						map: map,
+						title: "Order #" + resp[i].id,
+						draggable: false
+					});
 				
-						marker = new google.maps.Marker({
-							position: new google.maps.LatLng(address.latitude, address.longitude),
-							map: map,
-							title: "Order #" + resp[i].id,
-							draggable: false
-						});
-						
-						markers[$scope.active].push(marker);
-					}
-				} catch (e) {
-					console.log(resp[i]);
-					console.error(e);
+					markers[$scope.active].push(marker);
 				}
+			} catch (e) {
+				console.log(resp[i]);
+				console.error(e);
 			}
-			map.setZoom(6);
-		});
+			
+		}
+		map.setZoom(6);
+	});
 	
+	
+	/*
+	 * Extract relevant orders
+	 */
+	function extractOrders(dataArray, dataType) {
+		var statuses,
+			validData = [];
+		
+		if (dataType == 'acknowledgement') {
+			statuses = ['acknowledged', 'in production', 'deposit received'];
+		} else if (dataType == 'purchase order') {
+			statuses = ['processed', 'ordered'];
+		} else {
+			throw Error("Invalid data type.");
+		}
+		
+		for (var i = 0; i < dataArray.length; i++) {
+			console.log(dataType, dataArray[i].status.toLowerCase(), statuses.indexOf(dataArray[i].status.toLowerCase()));
+			if (statuses.indexOf(dataArray[i].status.toLowerCase()) > -1) {
+				validData.push(dataArray[i]);
+			}
+		}
+		console.log(dataType, validData.length);
+		return validData;
+	}
 	
 	/* 
  	 * Show markers for pending orders or pending purchase orders
@@ -130,12 +156,12 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
 		markers[$scope.active] = [];
 			
 		if (target === 'acknowledgements') {
-			arrayHolder = $scope.acknowledgements;
+			arrayHolder = extractOrders($scope.acknowledgements, 'acknowledgement');
 			getAddress = function (dataObj) {
 				return dataObj.customer;
 			};
 		} else if (target === 'purchaseOrders') {
-			arrayHolder = $scope.pos;
+			arrayHolder = extractOrders($scope.pos, 'purchase order');
 			getAddress = function (dataObj) {
 				return dataObj.supplier.addresses[0] || {};
 			};
