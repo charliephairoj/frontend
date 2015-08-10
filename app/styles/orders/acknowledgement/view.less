@@ -118,183 +118,298 @@
 			.title{
 				
 			}
-			.add-btn{
-				align-self:flex-end;
-				text-decoration:none;
-				font-family:proxima;
-				background:#607d8b;
-				color:#FFF;
-				padding:1em;
-				width:10em;
-			}
-		}
-		
-		.title-bar{
-			display:flex;
-			flex-direction:row;
-			border-bottom: 1px solid #4F6874;
-			background-color:rgb(96,125,139);
 			
-			div{
+			.right-menu{
 				display:flex;
-				flex-direction:row;
+				justify-content:space-between;
 				align-items:center;
-				justify-content:space-around;
-				padding:1em;
-				background:rgb(96,125,139);
-				color:rgba(255, 255, 255, 1);
-				border-left:1px dotted rgba(0, 0, 0, 0.35);
 				
-				&:first-child{
-					border-left:none;
+				.map-btn{
+					margin-right:1em;
 				}
 				
-				&.id{
-					width:5%;
-				}
-	
-				&.order-date{
-					width:9%;
-				}
-	
-				&.customer{
-					width:15%;
-				}
-				
-				&.po{
-					width:8%
-				}
-				
-				&.project{
-					width:15%;
-				}
-	
-				&.delivery-date{
-					width:10%;
-				}
-				
-				&.total{
-					width:8%;
-				}
-				
-				&.status{
-					width:15%;
-				}
-				
-				&.remarks{
-					width:15%;
+				.add-btn{
+					align-self:flex-end;
+					text-decoration:none;
+					font-family:proxima;
+					background:#607d8b;
+					color:#FFF;
+					padding:1em;
+					width:10em;
 				}
 			}
+			
 		}
 		
-        .outer-container{
-            height:100%;
-            overflow-y:scroll;
+		.acknowledgements-container{
+			display:flex;
+			flex-wrap:nowrap;
+			width:95%;
+			position:relative;
+			height:100%;
 			
-			
-            .inner-container{
-                width:100%;
-                height:auto;
-                .item-container{
-                    width:100%;
-                    background-color:red;
-                    position:relative;
-                    height:3em;
-                    &:hover{
-                        background-color:red;
-                    }
-                    
-                    .item{
+			.acknowledgements{
+				width:100%;
+				height:100%;
+				position:absolute;
+				top:0;
+				left:0;
+				z-index:1;
+				
+				.title-bar{
+					display:flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					background-color:rgb(96,125,139);
+					width:100%;
+				
+					div{
 						display:flex;
 						flex-direction:row;
-                        width:100%;
-                        background-color:#FFF;
-                        position:absolute;
-                        left:0;
-						top:0;
-                        font-size:1em;
-                        height: 3em;
-                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
-                        text-decoration:none;
-                        color:#000;
-                        cursor:pointer;
-                        .transition(all, 150ms, linear);
+						align-items:center;
+						justify-content:space-around;
+						padding:1em;
+						background:rgb(96,125,139);
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+				
+						&:first-child{
+							border-left:none;
+						}
+				
+						&.id{
+							width:5%;
+						}
+	
+						&.order-date{
+							width:9%;
+						}
+	
+						&.customer{
+							width:15%;
+						}
+				
+						&.po{
+							width:8%
+						}
+				
+						&.project{
+							width:15%;
+						}
+	
+						&.delivery-date{
+							width:10%;
+						}
+				
+						&.total{
+							width:8%;
+						}
+				
+						&.status{
+							width:15%;
+						}
+				
+						&.remarks{
+							width:15%;
+						}
+					}
+				}
+		
+		        .outer-container{
+		            height:100%;
+		            overflow-y:scroll;
+					width:100%;
+			
+		            .inner-container{
+		                width:100%;
+		                height:auto;
+		                .item-container{
+		                    width:100%;
+		                    background-color:red;
+		                    position:relative;
+		                    height:3em;
+		                    &:hover{
+		                        background-color:red;
+		                    }
+                    
+		                    .item{
+								display:flex;
+								flex-direction:row;
+		                        width:100%;
+		                        background-color:#FFF;
+		                        position:absolute;
+		                        left:0;
+								top:0;
+		                        font-size:1em;
+		                        height: 3em;
+		                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+		                        text-decoration:none;
+		                        color:#000;
+		                        cursor:pointer;
+		                        .transition(all, 150ms, linear);
                         
-						&:hover{
-                            background-color:#E4EEF4;
-                        }
+								&:hover{
+		                            background-color:#E4EEF4;
+		                        }
                         
-                        &.selected{
-                            background-color:orange;
-                        }
+		                        &.selected{
+		                            background-color:orange;
+		                        }
 						
                         
+								div{
+									display:flex;
+									flex-direction:row;
+									align-items:center;
+									padding-left:1em;
+									justify-content:flex-start;
+									border-left:1px dotted rgba(0, 0, 0, 0.35);
+							
+									&:first-child{
+										border-left:none;
+									}
+							
+									&.id{
+										width:5%;
+									}
+	
+									&.order-date{
+										width:9%;
+									}
+	
+									&.customer{
+										width:15%;
+									}
+							
+									&.po{
+										width:8%;
+									}
+				
+									&.project-id{
+										width:3%;
+										padding-left:0.2em;
+									}
+							
+									&.project{
+										width:12%;
+									}
+	
+									&.delivery-date{
+										width:10%;
+									}
+				
+									&.total{
+										width:8%;
+										justify-content:flex-end;
+										padding:0 1em 0 0;
+									}
+				
+									&.status{
+										width:15%;
+								
+										&.acknowledged{
+											color:#0098cd;
+										}
+								
+										&.shipped{
+											color:#54947A;
+										}
+									}
+							
+									&.remarks{
+										width:15%;
+									}
+								}
+		                    }
+		                }
+		            }
+		        }
+			}
+		
+			.map-container{
+				width:48%;
+				position:absolute;
+				height:100%;
+				right:0;
+				top:0;
+				z-index: 0;
+				
+				#acknowledgement-map{
+					height:100%;
+					width:100%;
+				}
+			}
+		}
+		
+		
+		&.map{
+						
+			.acknowledgements-container{
+	
+				.acknowledgements{
+					width:50%;
+					
+					.title-bar{
 						div{
-							display:flex;
-							flex-direction:row;
-							align-items:center;
-							padding-left:1em;
-							justify-content:flex-start;
-							border-left:1px dotted rgba(0, 0, 0, 0.35);
-							
-							&:first-child{
-								border-left:none;
-							}
-							
 							&.id{
-								width:5%;
-							}
-	
-							&.order-date{
-								width:9%;
-							}
-	
-							&.customer{
 								width:15%;
+							}
+							
+							&.delivery-date{
+								width:18%;
+							}
+							
+							&.order-date{
+								display:none;
+							}
+							
+							&.customer{
+								width:30%;
 							}
 							
 							&.po{
-								width:8%;
+								width:15%;
 							}
-				
+							
+							&.status{
+								display:none;
+							}
+							
+							&.date{
+								display:none;
+							}
+							
 							&.project-id{
-								width:3%;
-								padding-left:0.2em;
+								display:none;
 							}
 							
 							&.project{
-								width:12%;
+								display:none;
 							}
-	
-							&.delivery-date{
-								width:10%;
-							}
-				
+
 							&.total{
-								width:8%;
-								justify-content:flex-end;
-								padding:0 1em 0 0;
+								display:none;
 							}
-				
-							&.status{
-								width:15%;
-								
-								&.acknowledged{
-									color:#0098cd;
-								}
-								
-								&.shipped{
-									color:#54947A;
-								}
-							}
-							
+
 							&.remarks{
-								width:15%;
+								width:22%;
 							}
 						}
-                    }
-                }
-            }
-        }
+					}
+			
+					.outer-container{
+						.inner-container{
+							.item{
+								
+								.title-bar;
+							}
+						}
+					}
+				}
+			
+				.map-container{
+				}
+			}
+		}
     }
 }

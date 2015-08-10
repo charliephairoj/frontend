@@ -70,6 +70,9 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 					$scope.acknowledgements.push(resources[i]);
 				}
 			}
+			
+			//createAcknowledgementMarkers()
+			
 		});
 	};
 	/*
@@ -120,6 +123,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 				for (var i = 0; i < resources.length; i++) {
 					$scope.acknowledgements.push(resources[i]);
 				}
+				
+				createAcknowledgementMarkers();
 			});
 		}
 	};
@@ -161,7 +166,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 					}
 				}
 			} catch (e) {
-				console.debug(e);
+				console.log(e);
 			}
 			
 		}
@@ -227,5 +232,126 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	$scope.$on('$destroy', function () {
 		keyboardNav.disable();
 	});
+	
+	
+	/*
+	 * Map Section
+	 */
+	var latLng = {},
+	    map,
+	    marker,
+		markers = [];
+	    //Options for the map 
+		mapOptions = {
+			center: new google.maps.LatLng(13.776239, 100.527884),
+			zoom: 4,
+			mapTypeId: google.maps.MapTypeId.ROAD
+		};
+
+
+	var styles = [
+		{
+			featureType: "road",
+			stylers: [
+				{visibility: "on"}
+			]
+		},
+		{
+			featureType: "water",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#DDDDDD"}
+			]
+		},
+		{
+			featureType: "landscape",
+			elementType: "geometry.fill",
+			stylers: [
+				{color:"#FFFFFF"}
+			]
+		},
+		{
+		    "featureType": "administrative.province",
+		    "elementType": "geometry.stroke",
+		    "stylers": [
+		      { "visibility": "off" }
+		    ]
+		}
+	];
+
+	//Function to get zoom and position
+	function setMapFocus(latArray, lngArray){
+		var ne = new google.maps.LatLng(Math.max.apply(null, latArray), Math.max.apply(null, lngArray)),
+			sw = new google.maps.LatLng(Math.min.apply(null, latArray), Math.min.apply(null, lngArray));
+	
+		var bounds = new google.maps.LatLngBounds(sw, ne);
+		map.fitBounds(bounds);	
+	}
+
+	//Function to create markers for acknowledgements
+	function createAcknowledgementMarkers (acknowledgements) {
+		
+		acknowledgements = acknowledgements || $scope.acknowledgements;
+		
+		var lats = [],
+			lngs = [];
+		
+		for (var h = 0; h < markers.length; h++) {
+			markers[h].setMap(null);
+		}
+		
+		markers = [];
+		
+		for (var i = 0; i < acknowledgements.length; i++) {
+			try {
+				var address = acknowledgements[i].customer;
+				if (address.latitude && address.longitude) {
+					
+					//Add to lats and lngs for later calculations 
+					lats.push(address.latitude);
+					lngs.push(address.longitude);
+					
+					marker = new google.maps.Marker({
+						position: new google.maps.LatLng(address.latitude, address.longitude),
+						map: map,
+						title: "Order #" + acknowledgements.id,
+						draggable: false
+					});
+				
+					//Zoom to marker
+					google.maps.event.addListener(marker, 'click', function () {
+						map.panTo(this.getPosition());
+						map.setZoom(17);
+					}.bind(marker));
+					
+					markers.push(marker);
+				}
+			} catch (e) {
+				console.log(acknowledgements[i]);
+				console.error(e);
+			}
+		}
+	
+		setMapFocus(lats, lngs);
+	}
+	
+	
+	//Initialize map
+	map = new google.maps.Map($('#acknowledgement-map')[0], mapOptions);
+	map.setOptions({styles:styles});
+	
+	
+	//Open map, resize and create markers
+	$scope.viewMap = function () {
+		
+		$scope.map = true;
+		
+		//setTimeout(function () {
+		//	google.maps.event.trigger(map, 'resize');
+		//}, 1000);
+		
+		createAcknowledgementMarkers();
+	};
+	
 	
 }]);
