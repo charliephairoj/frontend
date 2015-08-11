@@ -302,6 +302,11 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		
 		markers = [];
 		
+		function focusOnMarker() {
+			map.panTo(this.getPosition());
+			map.setZoom(17);
+		}
+		
 		for (var i = 0; i < acknowledgements.length; i++) {
 			try {
 				var address = acknowledgements[i].customer;
@@ -319,10 +324,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 					});
 				
 					//Zoom to marker
-					google.maps.event.addListener(marker, 'click', function () {
-						map.panTo(this.getPosition());
-						map.setZoom(17);
-					}.bind(marker));
+					google.maps.event.addListener(marker, 'click', focusOnMarker.bind(marker));
 					
 					markers.push(marker);
 				}

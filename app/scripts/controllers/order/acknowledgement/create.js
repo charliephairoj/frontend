@@ -17,6 +17,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 	 	 * Map variables and settings
 	 	 */ 
 		map,
+		marker,
 		geocoder = new google.maps.Geocoder(),
 		markers = [],
 		mapOptions = {
