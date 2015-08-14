@@ -275,6 +275,37 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 					});
 				}
 			});
+			
+			function setPrint () {				
+			    var afterPrint = function() {
+					console.log('ok');
+			        $(".print").empty();
+			    };
+
+			    if (window.matchMedia) {
+			        var mediaQueryList = window.matchMedia('print');
+			        mediaQueryList.addListener(function(mql) {
+			            if (mql.matches) {
+			               	angular.noop();
+			            } else {
+			                afterPrint();
+			            }
+			        });
+			    }
+
+				window.onafterprint = afterPrint;
+					
+				this.contentWindow.focus();
+				this.contentWindow.print();
+			}
+			
+			scope.printSticker = function () {
+				var container = $(".print").empty();
+				var iframe = document.createElement('iframe');
+				iframe.onload = setPrint;
+				iframe.src = "api/v1/supply/" + scope.supply.id + "/sticker/";
+				container.append(iframe);
+			};
   	  	}
 	};
 }]);

@@ -356,3 +356,33 @@ and (orientation : portrait) {
 		
 	}
 }
+
+.print {
+	position:absolute;
+	left:100%;
+	
+}
+
+@media print{
+	html, body{
+		width: 210mm;
+		height: 297mm;
+		margin: 0;
+		
+		.mainMenu{
+			display:none;
+		}
+	
+		.mainContainer{
+			display:none;
+		}
+	
+		.print{
+			left:0;
+			height:100%;
+			width:100%;
+			background:red;
+		}
+	}
+}
+
