@@ -301,6 +301,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'employeeAp
         templateUrl: 'views/order/estimate/details.html',
         controller: 'OrderEstimateDetailsCtrl'
       })
+      .when('/scanner', {
+        templateUrl: 'views/scanner.html',
+        controller: 'ScannerCtrl'
+      })
       .otherwise({
         redirectTo: '/'
 	});

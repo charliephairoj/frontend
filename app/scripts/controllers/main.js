@@ -7,7 +7,7 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
 	var changePage = function () {
 		if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && 
 		!user.hasModule('shipping')) {
-			//$location.path('/supply');
+			$location.path('/scanner');
 		}
 			
 	};
