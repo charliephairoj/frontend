@@ -1,0 +1,133 @@
+<div class="scanner-page">
+	<md-action>
+		<select ng-options="po.id for po in poList" ng-model="po"></select>
+		<div class="btn-container">
+			<md-button class="md-primary md-raised" ng-click="addNewEquipment()">Add Equipment</md-button>
+			<md-button class="md-primary md-raised" ng-show="po" ng-click="checkout()">Check In</md-button>
+			<md-button class="md-primary md-raised" ng-hide="po" ng-click="checkout()">Checkout</md-button>
+		</div>
+	</md-action>
+	<div class="container">
+		<div ng-hide="employee" class="employee-placeholder">
+			<h2>Employee</h2>
+		</div>
+		<div ng-show="employee" class="employee">
+			<div class="img-container">
+				<img ng-src="{{employee.image.url}}" />
+			</div>
+			<h3>{{employee.name}}</h3>
+			<h2>{{employee.department}}</h2>
+		</div>
+		<div ng-hide="supplies.length > 0 || equipmentList.length > 0 || po" class="supplies-placeholder">
+			<h2>Supplies</h2>
+		</div>
+		<md-content ng-show="supplies.length > 0 || equipmentList.length > 0 || po">
+			<md-list>
+				<!--
+					List of items in the Purchase Order
+				-->
+				<md-item ng-repeat="item in po.items">
+					<md-item-content>
+						<div class="img-container">
+							<img ng-src="{{item.image.url}}" />
+						</div>
+						<h3>{{item.description}}</h3>
+						<div class="item-ctrl">
+							<!--
+							<md-radio-group ng-model="item.$$action">
+						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+						      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+						    </md-radio-group>
+								-->
+							Quantity: {{item.quantity | number:2}}{{item.units}}
+							<md-button class="md-accent md-raised" ng-click="printSupplySticker(item)">Print Sticker</md-button>
+							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove
+								<md-button>
+						</div>
+					</md-item-content>
+					<md-divider></md-divider>
+				</md-item>
+				<!--
+					List of Equipments
+				-->
+				<md-item class="equipment" ng-repeat="equipment in equipmentList">
+					<md-item-content class="content-container">
+						<div class="img-container">
+							<div ng-hide="equipment.image" camera on-snapshot="addEquipmentImage($image, equipment)">
+							</div>
+							<img ng-src="{{equipment.image.url}}" ng-show="equipment.image" />
+						</div>
+						<div class="equipment-info-container">
+							<div class="new-equipment container" ng-show="equipment.$new">
+								<md-input-container>
+									<label>Equipment ID</label>
+									<input type="text" ng-model="equipment.id">
+								</md-input-container>
+								<md-input-container>
+									<label>Description</label>
+									<input type="text" ng-model="equipment.description">
+								</md-input-container>
+								<md-input-container>
+									<label>Brand</label>
+									<input type="text" ng-model="equipment.brand">
+								</md-input-container>
+								<md-button class="md-primary md-raised" ng-click="createEquipment(equipment)">Save</md-button>
+							</div>
+							<div class="overview container" ng-hide="equipment.$new">
+								<h3>
+									{{equipment.brand}} {{equipment.description}} 
+								</h3>
+								<div class="item-ctrl">
+									<md-radio-group ng-model="equipment.status">
+										<md-radio-button value="Checked In" aria-label="Checked In">
+											Checked In
+										</md-radio-button>
+										<md-radio-button value="Checked Out" aria-label="Add">
+											Checked Out
+										</md-radio-button>
+									</md-radio-group>
+								</div>
+							</div>
+							<div class="details container" ng-hide="equipment.$new">
+								<h4>Status: <span>{{equipment.status}}<span></h4>
+								<div class="employee-container">
+									<div class="img-container">
+										<img ng-src="{{equipment.employee.image.url}}">
+									</div>
+									<div>{{equipment.employee.first_name}} {{equipment.employee.last_name}}</div>
+								</div>
+								<md-button class="md-accent md-raised" ng-click="printEquipmentSticker(equipment)">Print Sticker</md-button>
+							</div>
+						</div>
+					</md-item-content>
+				</md-item>
+				<!--
+					List of supplies to either checkin or checkout
+				-->
+				<md-item class="supply">
+					<md-item-content ng-class="{'warn': supply.$$quantity > supply.quantity && supply.$$action == 'subtract'}" ng-repeat="supply in supplies">
+						<div class="img-container">
+							<img ng-src="{{supply.image.url}}" />
+						</div>
+						<h3>{{supply.description}} <br/>  Qty:{{supply.quantity | number:2}}</h3>
+						<div class="item-ctrl">
+							<md-radio-group ng-model="supply.$$action">
+								<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+								<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+							</md-radio-group>
+							<md-input-container>
+								<label>Quantity</label>
+								<input type="number" ng-model="supply.$$quantity" />
+							</md-input-container>
+							<div class="btn-panel">
+								<md-button class="md-accent md-raised" ng-click="printSupplySticker(supply)">Print Sticker</md-button>
+								<md-button class="md-warn md-raised" ng-click="remove($index, supply)">Remove
+									<md-button>
+							</div>
+						</div>
+					</md-item-content>
+				</md-item>
+			</md-list>
+		</md-content>
+	</div>
+</div>

@@ -1,13 +1,15 @@
 
 angular.module('employeeApp')
-.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder',
-function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
+.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope',
+function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope) {
 	
 	var user = $scope.currentUser;
 	var changePage = function () {
 		if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && 
 		!user.hasModule('shipping')) {
+			$rootScope.inventory = true;
 			$location.path('/scanner');
+			console.log($rootScope);
 		}
 			
 	};

@@ -299,20 +299,27 @@ angular.module('employeeApp').run([
 	 */
     $rootScope.currentUser = new CurrentUser(function () {
       inventoryUserCheck();
-      console.log('ok');
       for (var z = 0; z < $rootScope.groups.length; z++) {
         if ($rootScope.groups[z].toLowerCase() == 'decoroom') {
           $location.path('/order/acknowledgement');
         }
       }
     });
+    //Check if user is from decoroom
     $rootScope.currentUser.onready = function () {
-      for (var z = 0; z < $rootScope.currentUser.groups.length; z++) {
-        if ($rootScope.currentUser.groups[z].toLowerCase() == 'decoroom') {
+      for (var z = 0; z < this.groups.length; z++) {
+        if (this.groups[z].toLowerCase() == 'decoroom') {
           $location.path('/order/acknowledgement');
         }
       }
-    };
+    }.bind($rootScope.currentUser);
+    //Check if user is inventory
+    $rootScope.currentUser.onready = function () {
+      if (this.hasModule('supplies') && !this.hasModule('acknowledgements') && !this.hasModule('shipping')) {
+        $rootScope.inventory = true;
+        $location.path('/scanner');
+      }
+    }.bind($rootScope.currentUser);
     /*
      * Prototypical extension of core classes
      */
@@ -9737,11 +9744,14 @@ angular.module('employeeApp').controller('MainCtrl', [
   'Acknowledgement',
   'mapMarker',
   'PurchaseOrder',
-  function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder) {
+  '$rootScope',
+  function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope) {
     var user = $scope.currentUser;
     var changePage = function () {
       if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
+        $rootScope.inventory = true;
         $location.path('/scanner');
+        console.log($rootScope);
       }
     };
     if (!$scope.currentUser.ready) {
@@ -13270,7 +13280,6 @@ angular.module('employeeApp').directive('fabricStorage', [
     };
   }
 ]);
-'use strict';
 /**
  * @ngdoc function
  * @name frontendApp.controller:ScannerCtrl
@@ -13298,6 +13307,7 @@ angular.module('employeeApp').controller('ScannerCtrl', [
 	 */
     var keyboardNav = new KeyboardNavigation(), checkoutActive = false;
     $scope.scanner = new scanner('supply-scanner-modal');
+    //jshint ignore: line
     $scope.interfaceType = 'equipment';
     $scope.supplies = [];
     $scope.equipmentList = [];
@@ -13364,12 +13374,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
 	 * Updates the image of the currently selected supply
 	 */
     $scope.addImage = function (data) {
-      console.log(data);
-      Notification.display('Updating the supply\'s image', false);
       var image = data.hasOwnProperty('data') ? data.data : data;
       $scope.supply.image = image;
       $scope.supply.$update(function () {
-        Notification.display('Supply\'s image updated.');
       });
     };
     /*
@@ -13554,6 +13561,42 @@ angular.module('employeeApp').controller('ScannerCtrl', [
     };
     $scope.checkoutError = function (e) {
       $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('Close').content('There was a checkout error'));
+    };
+    /*
+	* Functions to print stickers
+	*/
+    function setPrint() {
+      var afterPrint = function () {
+        console.log('ok');
+        $('.print').empty();
+      };
+      if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function (mql) {
+          if (mql.matches) {
+            angular.noop();
+          } else {
+            afterPrint();
+          }
+        });
+      }
+      window.onafterprint = afterPrint;
+      this.contentWindow.focus();
+      this.contentWindow.print();
+    }
+    $scope.printEquipmentSticker = function (equipment) {
+      var container = $('.print').empty();
+      var iframe = document.createElement('iframe');
+      iframe.onload = setPrint;
+      iframe.src = 'api/v1/equipment/' + equipment.id + '/sticker/';
+      container.append(iframe);
+    };
+    $scope.printSupplySticker = function (supply) {
+      var container = $('.print').empty();
+      var iframe = document.createElement('iframe');
+      iframe.onload = setPrint;
+      iframe.src = 'api/v1/supply/' + supply.id + '/sticker/';
+      container.append(iframe);
     };
     $scope.$on('$destroy', function () {
       $scope.scanner.disable();
