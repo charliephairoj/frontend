@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader', 'Room', 'Phase', '$mdDialog',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase, $mdDialog) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -171,15 +171,12 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 	$scope.completeAddProject = function  () {
 		$mdDialog.hide();
 		
-		$mdToast.show($mdToast
-			.simple()
-			.content("Creating project...")
-			.hideDelay(0));
+		Notification.display("Creating project...", false);
 			
 		$scope.project.$create(function (resp) {
 			$scope.projects.push(resp);
 			$scope.ack.project = resp;
-			$mdToast.hide();
+			Notification.hide();
 			$scope.project = new Project();
 		}, function () {
 			
@@ -298,11 +295,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
         try {
             if ($scope.isValidated()) {
 				
-				$mdToast.show($mdToast
-					.simple()
-					.position('top right')
-					.content("Creating new acknowledgement...")
-					.hideDelay(0));
+				Notification.display("Creating new acknowledgment", false);
 				
 				/*
 				 * Preps for creation of a new project
@@ -317,11 +310,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 				
                 $scope.ack.$create(function (response) {
 					
-                   	$mdToast.show($mdToast
-						.simple()
-						.position('top right')
-						.content("Acknowledgement created with ID: " + $scope.ack.id)
-						.hideDelay(2000));
+					Notification.display("Acknowledgement created with ID: " + $scope.ack.id, 2000);
 						
                     if (response.pdf.acknowledgement) {
 						$window.open(response.pdf.acknowledgement);
@@ -339,18 +328,11 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast
 					
                 }, function (e) {
                     console.error(e);
-					$mdToast.show($mdToast
-						.simple()
-						.content(e)
-						.hideDelay(0));
+					Notification.display(e, false);
                 });
             }
         } catch (e) {
-			$mdToast.show($mdToast
-				.simple()
-				.position('top right')
-				.content(e.message)
-				.hideDelay(0));
+			Notification.display(e, false);
         }
     };
     

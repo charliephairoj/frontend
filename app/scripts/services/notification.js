@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('Notification', ['$timeout', '$rootScope', function($timeout, $rootScope) {
+.factory('Notification', ['$timeout', '$rootScope', '$mdToast', function($timeout, $rootScope, $mdToast) {
     function center(target){
         var width = angular.element(window).width();
         var tWidth = angular.element(target).width();
@@ -26,15 +26,17 @@ angular.module('employeeApp.services')
     Notifier.prototype.display = function (message, autoHide) {
         
         //Change message and 
+		/*
         $rootScope.safeApply(function () {
             this.notification.html(message);
             center(this.notification);
             this.notification.addClass('active');
         }.bind(this));
-        
+        */
         
         //Cancels the fadingout and 
         //removal of message
+		/*
         if(this.promise){
             $timeout.cancel(this.promise);
         }
@@ -46,11 +48,20 @@ angular.module('employeeApp.services')
                 
             }.bind(this), 1000);
         }
+		*/
+		autoHide = autoHide ? autoHide : 0;
+		$mdToast.show($mdToast
+			.simple()
+			.position('top right')
+			.content(message)
+			.hideDelay(autoHide));
     };
     
     Notifier.prototype.hide = function () {
         //Remove Message and 
-        this.notification.removeClass('active');
+        //this.notification.removeClass('active');
+		
+		$mdToast.hide();
     };
     
     return new Notifier();
