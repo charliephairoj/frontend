@@ -21,7 +21,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	$scope.supplies = [];
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
-
+	$scope.employees = Employee.query({limit:0, page_size:99999});
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
 

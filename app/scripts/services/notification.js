@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('Notification', ['$timeout', '$rootScope', '$mdToast', function($timeout, $rootScope, $mdToast) {
+.factory('Notification', ['$timeout', '$rootScope', function($timeout, $rootScope) {
     function center(target){
         var width = angular.element(window).width();
         var tWidth = angular.element(target).width();
@@ -11,32 +11,48 @@ angular.module('employeeApp.services')
         }
     }
     
-    function Notifier() {
-        this.notification = angular.element(document.getElementById('notification'));
-        this.promise = null;
-    }
-    
-    
-    /*
-     * The display function will display a new messge
-     * And call a timeout after a certain amount of time
-     * to fade out the message. If the message is already displayed,
-     * it will just change the message and cancel the old timeout.
-     */
-    Notifier.prototype.display = function (message, autoHide) {
-        
-        //Change message and 
+	function spawnNotification(message, autoHide) {
+		
+		var notification = new Notification(message);
+		
+		if (autoHide) {
+			setTimeout(function () {
+				this.close()
+			}.bind(notification), autoHide)
+		}
+		
+		function close() {
+			notification.close();
+		}
+		
+		return {
+			hide: close,
+			close: close
+		}
+	}
+	
+	function spawnToast() {
 		/*
+		$mdToast.show($mdToast
+					.simple()
+					.position('top right')
+					.content(message)
+					.hideDelay(0));
+		*/
+	}
+	
+	function spawnSimpleNotification(message, autoHide) {
+        //Change message and 
+		
         $rootScope.safeApply(function () {
             this.notification.html(message);
             center(this.notification);
             this.notification.addClass('active');
         }.bind(this));
-        */
+        
         
         //Cancels the fadingout and 
         //removal of message
-		/*
         if(this.promise){
             $timeout.cancel(this.promise);
         }
@@ -48,20 +64,61 @@ angular.module('employeeApp.services')
                 
             }.bind(this), 1000);
         }
-		*/
-		autoHide = autoHide ? autoHide : 0;
-		$mdToast.show($mdToast
-			.simple()
-			.position('top right')
-			.content(message)
-			.hideDelay(autoHide));
+		
+		
+		var close = function () {
+			this.notification.removeClass('active');
+		}.bind(this);
+		
+		return {
+			hide: close,
+			close: close
+		}
+	}
+	
+    function Notifier() {
+		
+        this.notification = angular.element(document.getElementById('notification'));
+        this.promise = null;
+		this._display = spawnSimpleNotification;
+		
+		//Determine which notification system to use
+		if (!"Notification" in window) {
+			this._display = spawnSimpleNotification;
+		} else if (Notification.permission === 'granted') {
+				this._display = spawnNotification;
+		} else {
+			Notification.requestPermission(function (permission) {
+			
+				if (permission === 'granted') {
+					this._display = spawnNotification;
+				} else {
+					this._display = spawnSimpleNotification;
+				}
+			});
+		}
+    }
+    
+    
+    /*
+     * The display function will display a new messge
+     * And call a timeout after a certain amount of time
+     * to fade out the message. If the message is already displayed,
+     * it will just change the message and cancel the old timeout.
+     */
+    Notifier.prototype.display = function (message, autoHide) {
+        
+		var notification = this._display(message, autoHide);
+		
+		return notification;
+		
     };
     
     Notifier.prototype.hide = function () {
         //Remove Message and 
-        //this.notification.removeClass('active');
+        this.notification.removeClass('active');
 		
-		$mdToast.hide();
+		//$mdToast.hide();
     };
     
     return new Notifier();

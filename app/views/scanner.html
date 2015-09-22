@@ -9,6 +9,11 @@
 		</div>
 	</md-action>
 	<div class="container">
+		
+		<div class="employee-drop-down-selector">
+			<select ng-options="employee.name for employee in employees" ng-model="employee">
+		</div>
+			
 		<div ng-hide="employee" class="employee-placeholder">
 			<h2>Employee</h2>
 		</div>

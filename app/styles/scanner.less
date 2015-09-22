@@ -31,12 +31,34 @@
 	}
 	
 	.container{
-		height:100%;
+		position:absolute;
+		top:3.9em;
+		bottom:0;
 		width:100%;
 		display:flex;
 		flex-direction:row;
 		
+		.employee-drop-down-selector{
+			position:absolute;
+			top:0;
+			width:20%;
+			left:0;
+			height:auto;
+			//height:2em;
+			//overflow-y:scroll;
+			//width:20%;
+			display:flex;
+			justify-content:space-around;
+			
+			.employee{
+				height:2em;
+				width:100%;
+			}
+		}
 		.employee-placeholder{
+			position:absolute;
+			top:0;
+			left:0;
 			bottom:0;
 			width:20%;
 			border-right:1px solid rgba(0, 0, 0, .50);
@@ -51,6 +73,9 @@
 		}
 		
 		.employee{
+			position:absolute;
+			top:0;
+			left:0;
 			bottom:0;
 			width:20%;
 			border-right:1px solid rgba(0, 0, 0, .50);
@@ -78,6 +103,9 @@
 		}
 		
 		.supplies-placeholder{
+			position:absolute;
+			top:0;
+			right:0;
 			width:80%;
 			bottom:0;
 			display:flex;

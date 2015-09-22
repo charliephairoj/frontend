@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', '$mdToast',
-function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdToast) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification) {
 	
 	
 	/*
@@ -13,12 +13,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		index = 0,
 		currentSelection,
 		search = $location.search();
-		
-	var loadingToast = $mdToast.show($mdToast
-			.simple()
-			.position('top right')
-			.content('Loading acknowledgements...')
-			.hideDelay(0));
+	
+	var notification = Notification.display('Retrieving acknowledgements...', false);
 
 	$scope.query = {};
 	
@@ -39,7 +35,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	
 	//Poll the server for acknowledgements
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function (e) {
-		$mdToast.hide();
+		notification.hide();
 		fetching = false;
 		changeSelection(index);
 	});
@@ -101,12 +97,9 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 	$scope.loadNext = function () {
 		if (!fetching) {
 			fetching = true;
-			var moreAckToast = $mdToast.show($mdToast
-					.simple()
-					.position('top right')
-					.hideDelay(0)
-					.content('Loading more acknowledgements...'));
-				
+			
+			var notification = Notification.display('Retrieving more acknowledgements...', false);
+	
 			//Determine parameters for the GET call	
 			var params = {
 				limit: 50, 
@@ -119,7 +112,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 			//Make a GET request to the server
 			Acknowledgement.query(params, function (resources) {
 				fetching = false;
-				$mdToast.hide();
+				notification.hide();
 				for (var i = 0; i < resources.length; i++) {
 					$scope.acknowledgements.push(resources[i]);
 				}
@@ -143,11 +136,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 		
 		// Callback to run when the acknowledgement is finished updating
 		function postUpdate (resp) {
-			$mdToast.show($mdToast
-						.simple()
-						.position('top right')
-						.hideDelay(2000)
-						.content('Acknowledgement #' + resp.id + " status updated to '" + resp.status.toLowerCase() + "'"));
+			var notification = Notification.display('Acknowledgement #' + resp.id + " status updated to '" + resp.status.toLowerCase() + "'", 2000);
 		}
 		
 		if (newVal && oldVal) {
@@ -156,11 +145,9 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdTo
 				for (var i = 0; i < newVal.length; i++) {
 					if (newVal[i].id === oldVal[i].id) {
 						if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
-							$mdToast.show($mdToast
-											.simple()
-											.position('top right')
-											.hideDelay(0)
-											.content('Updating Acknowledgement #' + newVal[i].id + ' status...'));
+							
+							var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
+							
 							newVal[i].$update(postUpdate);
 						}
 					}

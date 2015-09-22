@@ -16,7 +16,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 	
 
 	//system message
-	Notification.display('Loading supplies...', false);
+	var notification = Notification.display('Loading supplies...', false);
 
 	$http.get('/api/v1/supply/type/').success(function (response) {
 		$scope.types = response;
@@ -26,7 +26,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 	$scope.scannerMode = false;
 	$scope.supplies = Supply.query({'country': $scope.country}, function (resources) {
 		fetching = false;
-		Notification.hide();
+		notification.hide();
 		changeSelection(index);
 	});
 	
@@ -143,13 +143,13 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 	*/
 	$scope.loadNext = function () {
 		if (!fetching) {
-			Notification.display('Loading more supplies...', false);
+			var notification = Notification.display('Loading more supplies...', false);
 			Supply.query({
 				offset: $scope.supplies.length,
 				limit: 50,
 				country: $scope.country
 			}, function (resources) {
-				Notification.hide();
+				notification.hide();
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.supplies.indexOfById(resources[i].id) == -1) {
 						$scope.supplies.push(resources[i]);

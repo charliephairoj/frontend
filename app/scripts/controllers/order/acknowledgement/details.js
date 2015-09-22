@@ -1,21 +1,17 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', '$mdToast', 'FileUploader', 'Project', '$mdDialog', 'Fabric',
-function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project, $mdDialog, Fabric) { 
+.controller('OrderAcknowledgementDetailsCtrl', ['$scope', 'Acknowledgement', '$routeParams', '$http', '$window', 'Notification', 'FileUploader', 'Project', '$mdDialog', 'Fabric',
+function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, FileUploader, Project, $mdDialog, Fabric) { 
 	
 	//Show system notification
-	$mdToast.show($mdToast
-		.simple()
-		.position('top right')
-		.content('Loading acknowledgement...')
-		.hideDelay(0));
+	var notification = Notification.display('Retrieving acknowledgement...', false);
 		
 	//Set Vars
 	$scope.showCal = false;
 	
 	//GET request server for Acknowledgements
 	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
-		$mdToast.hide();
+		notification.hide();
 		
 		//Convert string into numbers for quantity and unit_price and fabric quantity
 		for (var i = 0; i < $scope.acknowledgement.items.length; i++) {
@@ -58,10 +54,8 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
 		} catch (e) {
 			var message = "Missing " + type + " pdf for Acknowledgement #" + $scope.acknowledgement.id;
 			
-			$mdToast.show($mdToast
-				.simple()
-				.content(message)
-				.hideDelay(0));
+			Notification.display(message, false);
+	
 			throw new Error(message);
 		}
 	};
@@ -119,18 +113,12 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
     //Save updates to the server
     $scope.save = function () { 
 		
-		$mdToast.show($mdToast
-			.simple()
-			.position('top right')
-			.content('Saving acknowledgement...')
-			.hideDelay(0));
+		var notification = Notification.display('Saving acknowledgement...', false);
 
         $scope.acknowledgement.$update(function (response) {
-            
-			$mdToast.show($mdToast
-				.simple()
-				.position('top right')
-				.content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
+            notification.hide();
+			Notification.display('Acknowledgement ' + $scope.acknowledgement.id + ' saved.', 2000);
+			
 				
 			//Reconcile the projects so that the differences are shown the user
 			var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
@@ -149,10 +137,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileU
 			}
         }, 
         function () {
-			$mdToast.show($mdToast
-				.simple()
-				.position('top right')
-				.content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
+			Notification.display('Failed to save acknowledgement ' + $scope.acknowledgement.id, false);
         });
     };
 }]);
