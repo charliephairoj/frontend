@@ -1622,17 +1622,24 @@ angular.module('employeeApp.services').factory('Notification', [
         angular.element(target).css('margin-left', -(tWidth / 2));
       }
     }
-    function Notifier() {
-      this.notification = angular.element(document.getElementById('notification'));
-      this.promise = null;
+    function spawnNotification(message, autoHide) {
+      var notification = new Notification(message);
+      if (autoHide) {
+        setTimeout(function () {
+          this.close();
+        }.bind(notification), autoHide);
+      }
+      function close() {
+        notification.close();
+      }
+      return {
+        hide: close,
+        close: close
+      };
     }
-    /*
-     * The display function will display a new messge
-     * And call a timeout after a certain amount of time
-     * to fade out the message. If the message is already displayed,
-     * it will just change the message and cancel the old timeout.
-     */
-    Notifier.prototype.display = function (message, autoHide) {
+    function spawnToast() {
+    }
+    function spawnSimpleNotification(message, autoHide) {
       //Change message and 
       $rootScope.safeApply(function () {
         this.notification.html(message);
@@ -1649,10 +1656,46 @@ angular.module('employeeApp.services').factory('Notification', [
           this.hide();
         }.bind(this), 1000);
       }
+      var close = function () {
+          this.notification.removeClass('active');
+        }.bind(this);
+      return {
+        hide: close,
+        close: close
+      };
+    }
+    function Notifier() {
+      this.notification = angular.element(document.getElementById('notification'));
+      this.promise = null;
+      this._display = spawnSimpleNotification;
+      //Determine which notification system to use
+      if (!('Notification' in window)) {
+        this._display = spawnSimpleNotification;
+      } else if (Notification.permission === 'granted') {
+        this._display = spawnNotification;
+      } else {
+        Notification.requestPermission(function (permission) {
+          if (permission === 'granted') {
+            this._display = spawnNotification;
+          } else {
+            this._display = spawnSimpleNotification;
+          }
+        });
+      }
+    }
+    /*
+     * The display function will display a new messge
+     * And call a timeout after a certain amount of time
+     * to fade out the message. If the message is already displayed,
+     * it will just change the message and cancel the old timeout.
+     */
+    Notifier.prototype.display = function (message, autoHide) {
+      var notification = this._display(message, autoHide);
+      return notification;
     };
     Notifier.prototype.hide = function () {
       //Remove Message and 
-      this.notification.removeClass('active');
+      this.notification.removeClass('active');  //$mdToast.hide();
     };
     return new Notifier();
   }
@@ -2127,12 +2170,12 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   '$filter',
   '$window',
   'Project',
-  '$mdToast',
+  'Notification',
   'FileUploader',
   'Room',
   'Phase',
   '$mdDialog',
-  function ($scope, Acknowledgement, Customer, $filter, $window, Project, $mdToast, FileUploader, Room, Phase, $mdDialog) {
+  function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -2276,11 +2319,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
     };
     $scope.completeAddProject = function () {
       $mdDialog.hide();
-      $mdToast.show($mdToast.simple().content('Creating project...').hideDelay(0));
+      Notification.display('Creating project...', false);
       $scope.project.$create(function (resp) {
         $scope.projects.push(resp);
         $scope.ack.project = resp;
-        $mdToast.hide();
+        Notification.hide();
         $scope.project = new Project();
       }, function () {
       });
@@ -2385,7 +2428,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       $scope.tempSave();
       try {
         if ($scope.isValidated()) {
-          $mdToast.show($mdToast.simple().position('top right').content('Creating new acknowledgement...').hideDelay(0));
+          Notification.display('Creating new acknowledgment', false);
           /*
 				 * Preps for creation of a new project
 				 */
@@ -2395,7 +2438,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             delete $scope.ack.newProjectName;
           }
           $scope.ack.$create(function (response) {
-            $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement created with ID: ' + $scope.ack.id).hideDelay(2000));
+            Notification.display('Acknowledgement created with ID: ' + $scope.ack.id, 2000);
             if (response.pdf.acknowledgement) {
               $window.open(response.pdf.acknowledgement);
             }
@@ -2410,11 +2453,11 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             delete $scope.ack.newProjectName;
           }, function (e) {
             console.error(e);
-            $mdToast.show($mdToast.simple().content(e).hideDelay(0));
+            Notification.display(e, false);
           });
         }
       } catch (e) {
-        $mdToast.show($mdToast.simple().position('top right').content(e.message).hideDelay(0));
+        Notification.display(e, false);
       }
     };
     $scope.reset = function () {
@@ -2527,15 +2570,15 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   '$location',
   '$filter',
   'KeyboardNavigation',
-  '$mdToast',
-  function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, $mdToast) {
+  'Notification',
+  function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification) {
     /*
 	 * Vars
 	 * 
 	 * -fetching: this is a switch to see if there is currently a call being made
 	 */
     var fetching = true, index = 0, currentSelection, search = $location.search();
-    var loadingToast = $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgements...').hideDelay(0));
+    var notification = Notification.display('Retrieving acknowledgements...', false);
     $scope.query = {};
     /* 
 	 * Set default search from search url
@@ -2552,7 +2595,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     }
     //Poll the server for acknowledgements
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function (e) {
-      $mdToast.hide();
+      notification.hide();
       fetching = false;
       changeSelection(index);
     });
@@ -2609,7 +2652,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     $scope.loadNext = function () {
       if (!fetching) {
         fetching = true;
-        var moreAckToast = $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Loading more acknowledgements...'));
+        var notification = Notification.display('Retrieving more acknowledgements...', false);
         //Determine parameters for the GET call	
         var params = {
             limit: 50,
@@ -2621,7 +2664,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
         //Make a GET request to the server
         Acknowledgement.query(params, function (resources) {
           fetching = false;
-          $mdToast.hide();
+          notification.hide();
           for (var i = 0; i < resources.length; i++) {
             $scope.acknowledgements.push(resources[i]);
           }
@@ -2641,14 +2684,14 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
     $scope.$watch('acknowledgements', function (newVal, oldVal) {
       // Callback to run when the acknowledgement is finished updating
       function postUpdate(resp) {
-        $mdToast.show($mdToast.simple().position('top right').hideDelay(2000).content('Acknowledgement #' + resp.id + ' status updated to \'' + resp.status.toLowerCase() + '\''));
+        var notification = Notification.display('Acknowledgement #' + resp.id + ' status updated to \'' + resp.status.toLowerCase() + '\'', 2000);
       }
       if (newVal && oldVal) {
         try {
           for (var i = 0; i < newVal.length; i++) {
             if (newVal[i].id === oldVal[i].id) {
               if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
-                $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('Updating Acknowledgement #' + newVal[i].id + ' status...'));
+                var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
                 newVal[i].$update(postUpdate);
               }
             }
@@ -4980,14 +5023,14 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
   '$routeParams',
   '$http',
   '$window',
-  '$mdToast',
+  'Notification',
   'FileUploader',
   'Project',
   '$mdDialog',
   'Fabric',
-  function ($scope, Acknowledgement, $routeParams, $http, $window, $mdToast, FileUploader, Project, $mdDialog, Fabric) {
+  function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, FileUploader, Project, $mdDialog, Fabric) {
     //Show system notification
-    $mdToast.show($mdToast.simple().position('top right').content('Loading acknowledgement...').hideDelay(0));
+    var notification = Notification.display('Retrieving acknowledgement...', false);
     //Set Vars
     $scope.showCal = false;
     //GET request server for Acknowledgements
@@ -4995,7 +5038,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'id': $routeParams.id,
       'pdf': true
     }, function () {
-      $mdToast.hide();
+      notification.hide();
       //Convert string into numbers for quantity and unit_price and fabric quantity
       for (var i = 0; i < $scope.acknowledgement.items.length; i++) {
         $scope.acknowledgement.items[i].quantity = Number($scope.acknowledgement.items[i].quantity);
@@ -5034,7 +5077,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
         $window.open(address);
       } catch (e) {
         var message = 'Missing ' + type + ' pdf for Acknowledgement #' + $scope.acknowledgement.id;
-        $mdToast.show($mdToast.simple().content(message).hideDelay(0));
+        Notification.display(message, false);
         throw new Error(message);
       }
     };
@@ -5081,9 +5124,10 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
     };
     //Save updates to the server
     $scope.save = function () {
-      $mdToast.show($mdToast.simple().position('top right').content('Saving acknowledgement...').hideDelay(0));
+      var notification = Notification.display('Saving acknowledgement...', false);
       $scope.acknowledgement.$update(function (response) {
-        $mdToast.show($mdToast.simple().position('top right').content('Acknowledgement ' + $scope.acknowledgement.id + ' saved.'));
+        notification.hide();
+        Notification.display('Acknowledgement ' + $scope.acknowledgement.id + ' saved.', 2000);
         //Reconcile the projects so that the differences are shown the user
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
         $scope.acknowledgement.project = $scope.projects[index];
@@ -5098,7 +5142,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
           }
         }
       }, function () {
-        $mdToast.show($mdToast.simple().position('top right').content('Failed to save acknowledgement ' + $scope.acknowledgement.id));
+        Notification.display('Failed to save acknowledgement ' + $scope.acknowledgement.id, false);
       });
     };
   }
@@ -7504,7 +7548,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
 	*/
     var fetching = true, index = 0, currentSelection, activeQueryLoop = false, masterList = [], q, keyboardNav = new KeyboardNavigation();
     //system message
-    Notification.display('Loading supplies...', false);
+    var notification = Notification.display('Loading supplies...', false);
     $http.get('/api/v1/supply/type/').success(function (response) {
       $scope.types = response;
       $scope.types.splice($scope.types.indexOf(null), 1);
@@ -7512,7 +7556,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
     $scope.scannerMode = false;
     $scope.supplies = Supply.query({ 'country': $scope.country }, function (resources) {
       fetching = false;
-      Notification.hide();
+      notification.hide();
       changeSelection(index);
     });
     /*
@@ -7618,13 +7662,13 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
 	*/
     $scope.loadNext = function () {
       if (!fetching) {
-        Notification.display('Loading more supplies...', false);
+        var notification = Notification.display('Loading more supplies...', false);
         Supply.query({
           offset: $scope.supplies.length,
           limit: 50,
           country: $scope.country
         }, function (resources) {
-          Notification.hide();
+          notification.hide();
           for (var i = 0; i < resources.length; i++) {
             if ($scope.supplies.indexOfById(resources[i].id) == -1) {
               $scope.supplies.push(resources[i]);
@@ -13312,8 +13356,13 @@ angular.module('employeeApp').controller('ScannerCtrl', [
     $scope.supplies = [];
     $scope.equipmentList = [];
     $scope.poList = PurchaseOrder.query();
+    $scope.employees = Employee.query({
+      limit: 0,
+      page_size: 99999
+    });
     $scope.scanner.enable();
     $scope.scanner.disableStandard();
+    $scope.tempUrl = 'http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png';
     keyboardNav.onenter = function (e) {
       e.preventDefault();
     };
@@ -13356,8 +13405,7 @@ angular.module('employeeApp').controller('ScannerCtrl', [
         }.bind(equipment));
       }
     };
-    /* Add Image
-	 * 
+    /* 
 	 * Updates the image of the currently selected supply
 	 */
     $scope.addEquipmentImage = function ($image, equipment) {
@@ -13369,7 +13417,13 @@ angular.module('employeeApp').controller('ScannerCtrl', [
       }, function () {
       });
     };
-    /* Add Image
+    /*
+	 * Remove equipment
+	*/
+    $scope.removeEquipment = function (equipment, $index) {
+      $scope.equipmentList.splice($index, 1);
+    };
+    /* 
 	 * 
 	 * Updates the image of the currently selected supply
 	 */

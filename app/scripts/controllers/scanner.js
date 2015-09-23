@@ -24,7 +24,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	$scope.employees = Employee.query({limit:0, page_size:99999});
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
-	$scope.tempUrl = "http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png"
+	$scope.tempUrl = "http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png";
 	
 	keyboardNav.onenter = function (e) {
 		e.preventDefault();

@@ -17,8 +17,8 @@ angular.module('employeeApp.services')
 		
 		if (autoHide) {
 			setTimeout(function () {
-				this.close()
-			}.bind(notification), autoHide)
+				this.close();
+			}.bind(notification), autoHide);
 		}
 		
 		function close() {
@@ -28,7 +28,7 @@ angular.module('employeeApp.services')
 		return {
 			hide: close,
 			close: close
-		}
+		};
 	}
 	
 	function spawnToast() {
@@ -73,7 +73,7 @@ angular.module('employeeApp.services')
 		return {
 			hide: close,
 			close: close
-		}
+		};
 	}
 	
     function Notifier() {
@@ -83,7 +83,7 @@ angular.module('employeeApp.services')
 		this._display = spawnSimpleNotification;
 		
 		//Determine which notification system to use
-		if (!"Notification" in window) {
+		if (!("Notification" in window)) {
 			this._display = spawnSimpleNotification;
 		} else if (Notification.permission === 'granted') {
 				this._display = spawnNotification;
