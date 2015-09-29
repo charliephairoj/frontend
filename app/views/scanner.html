@@ -97,7 +97,7 @@
 						
 						<div class="overview container" ng-hide="equipment.$new">
 							<h3>
-								{{equipment.brand}} {{equipment.description}} 
+								{{equipment.brand | uppercase}} {{equipment.description | uppercase}}              <span style="margin-left:2em;">ID:{{equipment.id}}<span>
 							</h3>
 					
 							<div class="item-ctrl">
