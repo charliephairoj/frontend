@@ -1,6 +1,6 @@
 
 angular.module('employeeApp')
-.directive('onScrollEnd', [function () {
+.directive('onScrollEnd', ['$log', function ($log) {
     return {
 		restrict: 'A',
 		link: function postLink(scope, element, attrs) {

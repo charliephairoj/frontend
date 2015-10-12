@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyDetailsCtrl', ['$scope', '$routeParams', 'Notification', 'Supply', '$timeout', '$location', 'scanner', '$window', '$http',
-function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window, $http) {
+.controller('SupplyDetailsCtrl', ['$scope', '$routeParams', 'Notification', 'Supply', '$timeout', '$location', 'scanner', '$window', '$http', '$log',
+function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window, $http, $log) {
 	
 	Notification.display('Retrieving supply...', false);
 	
@@ -32,7 +32,6 @@ function ($scope, $routeParams, Notification, Supply, $timeout, $location, scann
 						.attr('class', 'price-box').style('left', function (d, i) {return ((i * 6) + i) + 'em';})
 						.attr('class', function (d, i) {
 							try {
-							console.log(data[i-1].cost + ':' + d.cost);
 								if (Number(data[i-1].cost) > Number(d.cost)) {
 									return 'green';
 								} else if (Number(data[i-1].cost) < Number(d.cost)) {
@@ -77,7 +76,6 @@ function ($scope, $routeParams, Notification, Supply, $timeout, $location, scann
 				.attr('class', 'price-box').style('left', function (d, i) {return ((i * 6) + i) + 'em';})
 				.style('background-color', function (d, i) {
 					try {
-					console.log(data[i-1].quantity + ':' + d.quantity);
 						if (Number(data[i-1].quantity) > Number(d.quantity)) {
 							return 'green';
 						} else if (Number(data[i-1].quantity) < Number(d.quantity)) {

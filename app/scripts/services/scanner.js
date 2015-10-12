@@ -123,7 +123,6 @@ angular.module('employeeApp.services')
 	};
 
 	Scanner.prototype._dispatch = function (code) {
-		//console.debug(this._identity+' status: '+this.enabled+' / code: '+this._code);
 		codes = code.split('-');
 		if (parseStandardCodes) {
 			for (var i=0; i<standardCodes.length; i++) {

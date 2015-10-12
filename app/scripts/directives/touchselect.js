@@ -18,18 +18,15 @@ angular.module('employeeApp')
 			}
 
 			function touchStart() {
-				console.log('touched');
 				started = true;
 			}
 		
 			function touchMove() {
-				console.log('moved');
 				moved = true;
 			}
 		 
 			function touchEnd() {
 				if (started && !moved) {
-					console.log('time to click');
 					var url = attrs.ngHref || attrs.href;
 					
 					scope.safeApply(function () {

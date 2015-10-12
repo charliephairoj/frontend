@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.directives')
-.directive('modal', [function () {
+.directive('modal', ['$log', function ($log) {
     var backdrop;
     var closeButton;
     
@@ -59,7 +59,7 @@ angular.module('employeeApp.directives')
 								try {
 									(scope.modal._onhide && scope.modal || angular.noop)();
 								} catch (e) {
-									console.warn(e);
+									$log.warn(e);
 								}
 
 								if (attrs.ngModel || attrs.modal) {

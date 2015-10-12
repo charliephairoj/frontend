@@ -112,7 +112,6 @@ function (Supply, $filter, KeyboardNavigation, $mdToast, $rootScope, $http, $com
 							}
 
 							Supply.query(options, function (resources) {
-								console.log(resources);
 								fetching = false;
 								$mdToast.hide();
 								for (var i = 0; i < resources.length; i++) {

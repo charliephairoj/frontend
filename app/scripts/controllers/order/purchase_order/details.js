@@ -1,8 +1,8 @@
 
 angular.module('employeeApp')
 
-.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window', 'Project', '$mdDialog', 'Room', 'Phase',
-function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase) {
+.controller('OrderPurchaseOrderDetailsCtrl', ['$scope', '$routeParams', 'PurchaseOrder', '$mdToast', '$location', '$window', 'Project', '$mdDialog', 'Room', 'Phase', '$log',
+function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase, $log) {
 	
 	var updateLoopActive = false,
 		timeoutPromise,
@@ -147,7 +147,7 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Pro
 					map.panTo(marker.getPosition());
 					map.setZoom(14);
 				} else {
-					console.error(status);
+					$log.error(status);
 				}
 			});
 			*/
@@ -308,7 +308,7 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Pro
 			}
 			
 		}, function (e) {
-			console.error(e);
+			$log.error(e);
 		});
 	};
 	

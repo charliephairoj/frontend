@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addSupplier', ['$rootScope', 'Supplier', '$mdToast', 
-function ($rootScope, Supplier, $mdToast) {
+.directive('addSupplier', ['$rootScope', 'Supplier', '$mdToast', '$log',
+function ($rootScope, Supplier, $mdToast, $log) {
 	return {
 		templateUrl: 'views/templates/add-supplier.html',
 		replace: true,
@@ -75,7 +75,7 @@ function ($rootScope, Supplier, $mdToast) {
 							scope.visible = false;
 							scope.supplier = new Supplier();
 						}, function (reason) {
-							console.error(reason);
+							$log.error(reason);
 							$mdToast.show($mdToast.simple()
 								.position('top right')
 								.hideDelay(0)

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification',
-function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log) {
 	
 	
 	/*
@@ -153,7 +153,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 					}
 				}
 			} catch (e) {
-				console.log(e);
+				$log.error(e);
 			}
 			
 		}
@@ -316,8 +316,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 					markers.push(marker);
 				}
 			} catch (e) {
-				console.log(acknowledgements[i]);
-				console.error(e);
+				$log.error(e);
 			}
 		}
 	

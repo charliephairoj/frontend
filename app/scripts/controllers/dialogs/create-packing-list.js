@@ -8,7 +8,7 @@
  */
 angular.module('employeeApp')
 .controller('DialogsCreatePackingListCtrl', 
-['$scope', '$mdDialog', 'Room', 'Shipping', function ($scope, $mdDialog, Room, Shipping) {
+['$scope', '$mdDialog', 'Room', 'Shipping', '$log', function ($scope, $mdDialog, Room, Shipping, $log) {
 	
 	function getRoomDetails() {
 		
@@ -49,7 +49,7 @@ angular.module('employeeApp')
 		$mdDialog.hide();
 		
 		shipping.$create(function (resp) {
-			console.log(resp);
+			$log.log(resp);
 		});
 	};
 	

@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.directives')
-.directive('imageCropper', ['Notification', '$compile', function (Notification, $compile) {
+.directive('imageCropper', ['Notification', '$compile', '$log', function (Notification, $compile, $log) {
     function Scene(canvas, ctx, image) {
         this.ctx = ctx;
         this.canvas = canvas;
@@ -249,7 +249,7 @@ angular.module('employeeApp.directives')
                     try {
 						scope.onLoad();
                     } catch (evt) {
-						console.warn(evt);
+						$log.warn(evt);
                     }
                     
                     scope.$apply();

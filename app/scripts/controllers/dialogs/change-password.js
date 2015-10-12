@@ -7,8 +7,8 @@
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('DialogsChangePasswordCtrl', ['$scope', '$mdDialog', '$http', '$mdToast',
-function ($scope, $mdDialog, $http, $mdToast) {
+.controller('DialogsChangePasswordCtrl', ['$scope', '$mdDialog', '$http', '$mdToast', '$log',
+function ($scope, $mdDialog, $http, $mdToast, $log) {
 	
 	$scope.changePassword = function () {
 		if ($scope.old_password && ($scope.new_password === $scope.repeat_password)) {
@@ -26,7 +26,7 @@ function ($scope, $mdDialog, $http, $mdToast) {
 							  .content('Password Changed.')
 				.hideDelay(2000));
 			}, function (e) {
-				console.log(e);
+				$log.log(e);
 				$mdToast.show($mdToast
 							  .simple()
 							  .position('top right')

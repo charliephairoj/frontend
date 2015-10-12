@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast', 'FileUploader',
-function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader) {
+.controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast', 'FileUploader', '$log',
+function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader, $log) {
     $scope.fabric = Fabric.get({'id': $routeParams.id});
     $scope.logs = SupplyLog.query({supply_id: $routeParams.id});
     
@@ -14,7 +14,6 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 	$scope.quantityNeeded = function () {
 		var qty = Number($scope.fabric.quantity) - Number($scope.fabric.reserved);
 		var value = qty < 0 ? Math.abs(qty) : "Sufficient fabric in stock."; 
-		console.log(value);
 		return value;
 	};
     

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location', '$mdDialog', '$mdToast',
-function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast) {
+.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location', '$mdDialog', '$mdToast', '$log',
+function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast, $log) {
     
     //Controlling attributes
     $scope.showAddProject = false;
@@ -90,7 +90,7 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 					}
 				}
 			} catch (e) {
-				console.debug(e);
+				$log.error(e);
 			}
 		}
 		

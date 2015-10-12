@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addCustomer', ['Customer', '$mdToast', 'Geocoder', 
-function (Customer, $mdToast, Geocoder) {
+.directive('addCustomer', ['Customer', '$mdToast', 'Geocoder', '$log',
+function (Customer, $mdToast, Geocoder, $log) {
 	return {
 		templateUrl: 'views/templates/add-customer.html',
 		replace: true,
@@ -51,7 +51,7 @@ function (Customer, $mdToast, Geocoder) {
 						scope.customer.address.lng = scope.marker.lng;
 
 					}, function (status) {
-						console.error(status);
+						$log.error(status);
 					});
 				}
 			};
@@ -72,7 +72,7 @@ function (Customer, $mdToast, Geocoder) {
 						scope.visible = false;
 						scope.customer = new Customer();
 					}, function (reason) {
-						console.error(reason);
+						$log.error(reason);
 						$mdToast.show($mdToast.simple()
 							.position('top right')
 							.hideDelay(0)

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('addSupply', ['$rootScope', 'Supplier', 'Supply', '$mdToast', '$http',
-function ($rootScope, Supplier, Supply, $mdToast, $http) {
+.directive('addSupply', ['$rootScope', 'Supplier', 'Supply', '$mdToast', '$http', '$log',
+function ($rootScope, Supplier, Supply, $mdToast, $http, $log) {
 	return {
 		templateUrl: 'views/templates/add-supply.html',
 		replace: true,
@@ -109,7 +109,7 @@ function ($rootScope, Supplier, Supply, $mdToast, $http) {
 							}
 							
 						}, function (reason) {
-							console.error(reason);
+							$log.error(reason);
 						});
 					} else {
 						scope.supply.$create(function (response) {
@@ -128,7 +128,7 @@ function ($rootScope, Supplier, Supply, $mdToast, $http) {
 							}
 							
 						}, function (reason) {
-							console.error(reason);
+							$log.error(reason);
 							$mdToast.show($mdToast.simple()
 								.hideDelay(0)
 								.position('top right')

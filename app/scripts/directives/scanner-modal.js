@@ -142,10 +142,9 @@ function (scanner, Supply, $mdToast, KeyboardNavigation, $timeout, $rootScope, E
 					try {
 						scope.supply = response[0];
 					} catch (e) {
-						console.log(e);
 					}
 				}, function (reason) {
-					console.log(reason);
+
 				});
 			});
 			

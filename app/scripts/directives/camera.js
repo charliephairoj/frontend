@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.directives')
-.directive('camera', ['CameraService', function (CameraService) {
+.directive('camera', ['CameraService', '$log', function (CameraService, $log) {
 	return {
 		template: '<div class="camera">' +
 					'<div class="guide"></div>' +
@@ -23,8 +23,8 @@ angular.module('employeeApp.directives')
 			depth: '='
 		},
 		link: function postLink(scope, element, attrs) {
-			//console.log('test');
-			//console.log(CameraService.hasUserMedia());
+			//$log.log('test');
+			//$log.log(CameraService.hasUserMedia());
 			if (!CameraService.hasUserMedia()) {return; }
 			
 			var userMedia = CameraService.getUserMedia,
@@ -57,7 +57,7 @@ angular.module('employeeApp.directives')
 					video:true,
 					audio:false
 				}, onSuccess, function (e) {
-					console.error(e);
+					$log.error(e);
 				});
 			});
 			

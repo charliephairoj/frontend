@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.directives')
-.directive('map', ['mapMarker', function (mapMarker) {
+.directive('map', ['mapMarker', '$log', function (mapMarker, $log) {
     //Create the variables to be used
     var latLng = {},
         map,
@@ -95,7 +95,7 @@ angular.module('employeeApp.directives')
 				};
 
 			} catch (e) {
-				console.error(e);
+				$log.error(e);
 			}
           
         }

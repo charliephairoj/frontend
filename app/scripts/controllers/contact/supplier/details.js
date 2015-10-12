@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast',
-function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast) {
+.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast', '$log',
+function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log) {
     
 	var updateLoopActive = false,
 		timeoutPromise,
@@ -128,7 +128,7 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 					map.panTo(marker.getPosition());
 					map.setZoom(14);
 				} else {
-					console.error(status);
+					$log.error(status);
 				}
 			});
 		}
@@ -213,8 +213,8 @@ function ($scope, Supplier, $routeParams, $location, SupplierContact, Notificati
 		
         //Notify
         Notification.display('Updating Supplier...', false); 
-		console.log($scope.supplier);
-		console.log($scope.supplier.addresses[0].latitude, $scope.supplier.addresses[0].longitude);
+		$log.debug($scope.supplier);
+		$log.debug($scope.supplier.addresses[0].latitude, $scope.supplier.addresses[0].longitude);
         $scope.supplier.$update(function (data) {
             Notification.display('Supplier Updated');
         });

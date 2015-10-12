@@ -127,7 +127,6 @@ function (Table, Notification, KeyboardNavigation, $rootScope, $filter) {
 			keyboardNav.enable();
 			
 			scope.$watch('visible', function (val) {
-				console.log(val);
 				if (val) {
 					keyboardNav.enable();
 				} else {

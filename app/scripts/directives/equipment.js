@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('equipment', ['$http', 'Equipment', '$rootScope', 'Notification', '$timeout', '$window', 'scanner', 'D3', '$compile',
-function ($http, Equipment, $rootScope, Notification, $timeout, $window, scanner, D3, $compile) {
+.directive('equipment', ['$http', 'Equipment', '$rootScope', 'Notification', '$timeout', '$window', 'scanner', 'D3', '$compile', '$log',
+function ($http, Equipment, $rootScope, Notification, $timeout, $window, scanner, D3, $compile, $log) {
 	
 	var subHTML;
 	var brands = [
@@ -141,7 +141,7 @@ function ($http, Equipment, $rootScope, Notification, $timeout, $window, scanner
 					try {
 						scope.onSelect({'$element': element});
 					} catch (e) {
-						console.error(e);
+						$log.error(e);
 					}
 
 					Equipment.get({id:scope.equipment.id}, function (response) {

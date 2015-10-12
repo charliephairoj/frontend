@@ -1,7 +1,7 @@
 
 
 angular.module('employeeApp')
-.directive('attendanceChart', ['D3', function (D3) {
+.directive('attendanceChart', ['D3', '$log', function (D3, $log) {
     return {
       	templateUrl: 'views/templates/attendance-chart.html',
 		replace: true,
@@ -71,7 +71,7 @@ angular.module('employeeApp')
 					var yPos = $(this).offset().top;
 					var selectedBar = D3.select(this);
 					if (mouseDown) {
-						console.log(yPos+" : "+D3.event.y);
+						$log.log(yPos+" : "+D3.event.y);
 						
 						var index = selectedAttendances.indexOfById(d);
 						if (yPos >= D3.event.y) {

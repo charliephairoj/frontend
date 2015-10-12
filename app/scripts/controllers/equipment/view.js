@@ -1,8 +1,7 @@
 
 angular.module('employeeApp')
-.controller('EquipmentViewCtrl', ['$scope', 'Equipment', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', 
-function ($scope, Equipment, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout) {
-	console.log($scope.types);
+.controller('EquipmentViewCtrl', ['$scope', 'Equipment', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', '$log',
+function ($scope, Equipment, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $log) {
 	/*
 	* Vars and flags
 	*/
@@ -63,7 +62,7 @@ function ($scope, Equipment, Notification, $filter, KeyboardNavigation, $rootSco
 	
 		//Process a failed upload
 		}, function (e) {
-			console.log(e);
+			$log.error(e);
 			Notification.display("Unable to upload image", false);
 		});
 	};

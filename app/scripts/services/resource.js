@@ -263,7 +263,7 @@ function(eaStorage, $rootScope, $http, $q, $parse, $resource, Notification) {
                                         try{
                                             value.push(new Resource(response[i])); 
                                         }catch(e){
-                                            console.warn(e.stack);
+                                            //console.warn(e.stack);
                                         }
                                     }
                                 }

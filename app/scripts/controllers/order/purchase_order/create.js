@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog',
-function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log',
+function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log) {
 	
 	/*
 	 * Setup vars
@@ -140,7 +140,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				 map.setZoom(17);
 			}
 		} catch (e) {
-			console.error(e);
+			$log.error(e);
 		}
 	};
 	
@@ -419,7 +419,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					try {
 						$window.open(response.pdf.url);
 					} catch (e) {
-						console.warn(e);
+						$log.warn(e);
 					}
 					$mdToast.show($mdToast
 						.simple()

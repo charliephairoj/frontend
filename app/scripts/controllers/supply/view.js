@@ -1,8 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyViewCtrl', ['$scope', 'Supply', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', '$mdDialog', 
-function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $mdDialog) {
-	console.log($scope.types);
+.controller('SupplyViewCtrl', ['$scope', 'Supply', 'Notification', '$filter', 'KeyboardNavigation', '$rootScope', '$location', '$http', 'FileUploader', '$timeout', '$mdDialog', '$log', 
+function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $mdDialog, $log) {
 	/*
 	* Vars and flags
 	*/
@@ -82,7 +81,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 	
 		//Process a failed upload
 		}, function (e) {
-			console.log(e);
+			$log.error(e);
 			Notification.display("Unable to upload image", false);
 		});
 	};
@@ -178,7 +177,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 					return true;
 				}
 			} catch (e) {
-				console.error(e);
+				$log.error(e);
 			}
 		
 			try {
@@ -188,7 +187,7 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 					}
 				}
 			} catch (e) {
-				console.error(e);
+				$log.error(e);
 			}
 		 
 			return false;

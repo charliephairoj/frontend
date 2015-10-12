@@ -7,8 +7,8 @@
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader',
-function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader) {
+.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
+function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
     
 
 	/*
@@ -69,12 +69,10 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		equipment.id = equipment.id || undefined;
 		
 		if (equipment.$new) {
-			console.log(equipment);
 			var savingFn = equipment.id ? '$update' : '$create';
 			
 			equipment[savingFn](function () {
 				delete this.$new;
-				console.log(this);
 			}.bind(equipment));
 			
 		}
@@ -86,9 +84,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	$scope.addEquipmentImage = function ($image, equipment) {
 		var promise = FileUploader.upload($image, '/api/v1/supply/image/');
 		promise.then(function (data) {
-			console.log(data);
 			equipment.image = data.hasOwnProperty('data') ? data.data : data;
-			console.log(equipment);
 		}, function () {
 			
 		});
@@ -145,7 +141,10 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 					.content(response.description + ' already in checkout'));
 			}
 			
-		}, function () {
+		}, function (e) {
+			var msg = "Supply code: " + code + ". " + e;
+			$log.error(msg);
+			
 			$mdToast.show($mdToast.simple()
 				.hideDelay(0)
 				.position('top right')
@@ -176,8 +175,9 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				.position('top right')
 				.content('Added ' + response.description + ' to checkout.'));
 			
-		}, function (reason) {
-			console.log(reason);
+		}, function (e) {
+			var msg = "UPC code: " + code + ". " + e;
+			$log.error(msg)
 		});
 	});
 
@@ -203,8 +203,10 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				$scope.po.items[j].$$action = true;
 			}
 			
-		}, function (reason) {
-			console.log(reason);
+		}, function (e) {
+			var msg = "PO code: " + code + ". " + e;
+			
+			$log.error(e);
 		});
 	});
 
@@ -222,7 +224,12 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$mdToast.hide();
 			$scope.equipmentList.push(response);
 		
-		}, function () {
+		}, function (e) {
+			
+			var msg = "Equipment code: " + code + ". " + e;
+			
+			$log.error(msg);
+			
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find equipment.')
 				.position('top right')
@@ -247,7 +254,12 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$scope.employee = response;
 			$mdToast.hide();
 		
-		}, function () {
+		}, function (e) {
+			
+			var msg = "Employee code: " + code + ". " + e;
+			
+			$log.error(msg);
+			
 			$mdToast.show($mdToast.simple()
 				.content('Unable to find employee.')
 				.position('top right')
@@ -394,7 +406,6 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	*/
 	function setPrint () {				
 	    var afterPrint = function() {
-			console.log('ok');
 	        $(".print").empty();
 	    };
 

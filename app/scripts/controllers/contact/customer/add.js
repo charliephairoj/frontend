@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ContactCustomerAddCtrl', ['$scope', 'Customer', '$location', 'Notification', 'Geocoder',
-function ($scope, Customer, $location, Notification, Geocoder) {
+.controller('ContactCustomerAddCtrl', ['$scope', 'Customer', '$location', 'Notification', 'Geocoder', '$log',
+function ($scope, Customer, $location, Notification, Geocoder, $log) {
       
 	$scope.customer = new Customer();
       
@@ -45,7 +45,7 @@ function ($scope, Customer, $location, Notification, Geocoder) {
 				$scope.customer.address.lng = $scope.marker.lng;
                   
 			}, function (status) {
-				console.error(status);
+				$log.error(status);
 			});
 		}
 	};

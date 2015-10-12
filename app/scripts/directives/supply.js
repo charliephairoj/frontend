@@ -1,7 +1,7 @@
 
 angular.module('employeeApp.directives')
-.directive('supply', ['$http', 'Supply', '$rootScope', '$mdToast', '$timeout', '$window', 'scanner', 'D3', '$compile', 'FileUploader',
-function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile, FileUploader) {
+.directive('supply', ['$http', 'Supply', '$rootScope', '$mdToast', '$timeout', '$window', 'scanner', 'D3', '$compile', 'FileUploader', '$log',
+function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile, FileUploader, $log) {
 	
 	var subHTML;
 	var promise = $http.get('views/templates/supply-details.html');
@@ -183,7 +183,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 					try {
 						scope.onSelect({'$element': element});
 					} catch (e) {
-						console.error(e);
+						$log.error(e);
 					}
 
 					Supply.get({id:scope.supply.id}, function (response) {
@@ -278,7 +278,6 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 			
 			function setPrint () {				
 			    var afterPrint = function() {
-					console.log('ok');
 			        $(".print").empty();
 			    };
 

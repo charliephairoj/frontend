@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog', '$log',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -118,7 +118,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				 map.setZoom(17);
 			} 
 		} catch (e) {
-			console.error(e);
+			$log.error(e);
 		}
 		
     }
@@ -327,7 +327,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 					delete $scope.ack.newProjectName;
 					
                 }, function (e) {
-                    console.error(e);
+                    $log.error(e);
 					Notification.display(e, false);
                 });
             }

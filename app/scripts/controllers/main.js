@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope',
-function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope) {
+.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope', '$log',
+function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope, $log) {
 	
 	var user = $scope.currentUser;
 	var changePage = function () {
@@ -9,7 +9,6 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 		!user.hasModule('shipping')) {
 			$rootScope.inventory = true;
 			$location.path('/scanner');
-			console.log($rootScope);
 		}
 			
 	};
@@ -101,8 +100,7 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 					markers[$scope.active].push(marker);
 				}
 			} catch (e) {
-				console.log(resp[i]);
-				console.error(e);
+				$log.error(e);
 			}
 			
 		}
@@ -126,12 +124,10 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 		}
 		
 		for (var i = 0; i < dataArray.length; i++) {
-			console.log(dataType, dataArray[i].status.toLowerCase(), statuses.indexOf(dataArray[i].status.toLowerCase()));
 			if (statuses.indexOf(dataArray[i].status.toLowerCase()) > -1) {
 				validData.push(dataArray[i]);
 			}
 		}
-		console.log(dataType, validData.length);
 		return validData;
 	}
 	
@@ -150,7 +146,7 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 			try {
 				markers[$scope.active][i].setMap(null);
 			} catch (e) {
-				console.log(markers[$scope.active][i]);
+				console.$error(e);
 			}
 		}
 		
@@ -188,7 +184,7 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 					markers[$scope.active].push(marker);
 				}
 			} catch (e) {
-				console.error(e);
+				$log.error(e);
 			}
 		}
 		

@@ -123,7 +123,6 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				.content('Added ' + response.description + ' to checkout.'));
 				
 		}, function (reason) {
-			console.log(reason);
 		});
 	});
 	
@@ -150,7 +149,6 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			}
 				
 		}, function (reason) {
-			console.log(reason);
 		});
 	});
 	

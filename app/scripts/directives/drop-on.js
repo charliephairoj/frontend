@@ -62,9 +62,7 @@ angular.module('employeeApp.directives')
                 scope.$apply(function () {
 					/*
                     var target = getTarget(scope, attrs.dropOn);
-					console.log(target);
                     angular.copy(getData(event), target);
-					console.log(target);
 					*/
 					scope.dropOn = getData(event);
 					

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('AdministratorUserDetailsCtrl', ['$scope', 'Group', 'User', '$routeParams', '$location', '$http', 'Notification',
-function ($scope, Group, User, $routeParams, $location, $http, Notification) {
+.controller('AdministratorUserDetailsCtrl', ['$scope', 'Group', 'User', '$routeParams', '$location', '$http', 'Notification', '$log', 
+function ($scope, Group, User, $routeParams, $location, $http, Notification, $log) {
     
     var destroyed = false;
     function indexById(list, item) {
@@ -62,7 +62,7 @@ function ($scope, Group, User, $routeParams, $location, $http, Notification) {
             $scope.password = {};
             $scope.showChangePassword = false;
         }).error(function (err) {
-			console.error(err);
+			$log.error(err);
 		});
     };
     

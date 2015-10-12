@@ -1,7 +1,7 @@
 
 
 angular.module('employeeApp.services')
-.factory('Geocoder', ['$q', '$rootScope', function($q, $rootScope) {
+.factory('Geocoder', ['$q', '$rootScope', '$log', function($q, $rootScope, $log) {
         
     /*Helper functions*/
     function prepareAddress(obj){
@@ -108,7 +108,7 @@ angular.module('employeeApp.services')
 			if (status == google.maps.GeocoderStatus.OK) {
 				(callback || angular.noop)(results);
 			} else {
-				console.error(status);
+				$log.error(status);
 				(errback || angular.noop)(status);
 			}
 		});

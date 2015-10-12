@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderEstimateCreateCtrl', ['$scope', 'Estimate', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader',
-function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileUploader) {
+.controller('OrderEstimateCreateCtrl', ['$scope', 'Estimate', 'Customer', '$filter', '$window', 'Project', '$mdToast', 'FileUploader', '$log',
+function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileUploader, $log) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -105,7 +105,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileU
 					delete $scope.estimate.newProjectName;
 					
                 }, function (e) {
-                    console.error(e);
+                    $log.error(e);
 					$mdToast.show($mdToast
 						.simple()
 						.content(e)

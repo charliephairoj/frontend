@@ -1,8 +1,53 @@
 /*
  * Declare the standard headers
  */
-angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', 
-function ($httpProvider, $resourceProvider, $mdThemingProvider) {
+angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', '$provide', 
+function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
+	
+	/*
+	 * Change how the $log service works 
+	 */
+	$provide.decorator('$log', ['$delegate' '$http', function ($delegate, $http) {
+		
+		var _info = $delegate.info;
+		var _warn = $delegate.warn;
+		var _error = $delegate.error;
+		
+		var record = function (lType, msg) {
+	
+			var promise = $http.post('/api/v1/log', {'type': lType, 'message': msg});
+		};
+		
+		$delegate.info = function () {
+			var args    = [].slice.call(arguments),
+                now     = DateTime.formattedNow();
+			var msg = now + '-' + args[0];
+			
+			record('info', msg);
+			_info(msg);
+		};
+		
+		$delegate.warn = function () {
+			var args    = [].slice.call(arguments),
+	            now     = DateTime.formattedNow();
+			var msg = now + '-' + args[0];
+		
+			record('warn' msg);
+			_warn(msg);
+		};
+		
+		$delegate.error = function () {
+			var args    = [].slice.call(arguments),
+	            now     = DateTime.formattedNow();
+			var msg = now + '-' + args[0];
+			
+			record('error', msg);
+			_error(msg);
+		};
+		
+		return $delegate;
+		
+	}]);
 	
     $httpProvider.defaults.headers.post  = {
 		"Cache-Control": "no-cache", 
@@ -192,17 +237,17 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 						}
 					}
 				}, function () {
-					console.error('Getting the position failed');
+					$log.error('Getting the position failed');
 				});
 			} else {
 				
 			}
 		}, function (e) {
-			console.log(e);
+			$log.log(e);
 		});
 		
 	} else {
-		console.log('Geolocation not available'); 
+		$log.log('Geolocation not available'); 
 	}
 	
 	/*

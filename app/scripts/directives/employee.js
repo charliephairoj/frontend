@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.directive('employee', ['$rootScope', '$timeout', 'Notification', 'Attendance',
-function ($rootScope, $timeout, Notification, Attendance) {
+.directive('employee', ['$rootScope', '$timeout', 'Notification', 'Attendance', '$log',
+function ($rootScope, $timeout, Notification, Attendance, $log) {
     return {
       	templateUrl: 'views/templates/employee.html',
 		replace: true,
@@ -81,7 +81,7 @@ function ($rootScope, $timeout, Notification, Attendance) {
 					try {
 						scope.onSelect({'$element': element});
 					} catch (e) {
-						console.error(e);
+						$log.error(e);
 					}
 					
 					scope.attendances = Attendance.query({
