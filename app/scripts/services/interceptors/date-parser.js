@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('dateParser', ['$q', '$log', function($q, $log) {
+.factory('dateParser', ['$q', function($q) {
 	function formatter(obj){
 		if(obj.hasOwnProperty('delivery_date')){
 			obj.delivery_date = new Date(obj.delivery_date);
@@ -29,7 +29,7 @@ angular.module('employeeApp.services')
 				}
 				response.data = data;
 			} catch(e) {
-				$log.error(e);
+				//$log.error(e);
 			}
 			return response || $q.when(response);
 		},

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricAddCtrl', ['$scope', 'Supplier', 'Fabric', '$location', 'Notification', 'FileUploader', 
-function ($scope, Supplier, Fabric, $location, Notification, FileUploader) {
+.controller('SupplyFabricAddCtrl', ['$scope', 'Supplier', 'Fabric', '$location', 'Notification', 'FileUploader', '$log',
+function ($scope, Supplier, Fabric, $location, Notification, FileUploader, $log) {
     $scope.suppliers = Supplier.query({limit:0});
     $scope.fabric = new Fabric();
     
@@ -25,6 +25,8 @@ function ($scope, Supplier, Fabric, $location, Notification, FileUploader) {
             $scope.fabric.$create(function () {
                 Notification.display('Fabric Saved');
                 $location.path('supply/fabric');
+            }, function (e) {
+            	$log.error(JSON.stringify(e));
             });
         }
        
@@ -44,6 +46,7 @@ function ($scope, Supplier, Fabric, $location, Notification, FileUploader) {
 				$scope.fabric.image = dataObj.data;
 				
 		}, function (e) {
+			$log.error(JSON.stringify(e));
 			Notification.display("There was an error in uploading the file");
 		});
     };

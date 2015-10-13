@@ -1,6 +1,6 @@
 
 angular.module('employeeApp')
-.controller('SupplyFabricViewCtrl', ['$scope', 'Fabric', 'Notification', function ($scope, Fabric, Notification) {
+.controller('SupplyFabricViewCtrl', ['$scope', 'Fabric', 'Notification', '$log', function ($scope, Fabric, Notification, $log) {
 
 	var fetching = true;
 	
@@ -54,6 +54,8 @@ angular.module('employeeApp')
 						$scope.fabrics.push(resources[i]);
 					}
 				}
+			}, function (e) {
+				$log.error(JSON.stringify(e));
 			});
 		}
 	};

@@ -246,7 +246,49 @@ angular.module('employeeApp').config([
   '$httpProvider',
   '$resourceProvider',
   '$mdThemingProvider',
-  function ($httpProvider, $resourceProvider, $mdThemingProvider) {
+  '$provide',
+  function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
+    /*
+	 * Change how the $log service works 
+	 */
+    $provide.decorator('$log', [
+      '$delegate',
+      function ($delegate) {
+        var _info = $delegate.info;
+        var _warn = $delegate.warn;
+        var _error = $delegate.error;
+        var record = function (lType, msg) {
+          var promise = $.ajax({
+              type: 'POST',
+              url: '/api/v1/client/log/',
+              data: {
+                'type': lType,
+                'message': msg
+              },
+              processData: true
+            });
+        };
+        $delegate.info = function () {
+          var args = [].slice.call(arguments), now = new Date().toUTCString();
+          var msg = now + '-' + args[0];
+          record('info', args[0]);
+          _info(msg);
+        };
+        $delegate.warn = function () {
+          var args = [].slice.call(arguments), now = new Date().toUTCString();
+          var msg = now + '-' + args[0];
+          record('warn', args[0]);
+          _warn(msg);
+        };
+        $delegate.error = function () {
+          var args = [].slice.call(arguments), now = new Date().toUTCString();
+          var msg = now + '-' + args[0];
+          record('error', args[0]);
+          _error(msg);
+        };
+        return $delegate;
+      }
+    ]);
     $httpProvider.defaults.headers.post = {
       'Cache-Control': 'no-cache',
       'expires': '-1',
@@ -293,7 +335,13 @@ angular.module('employeeApp').run([
   '$mdDialog',
   '$location',
   function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
+    /*
+	 * Set the token 
+	 */
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
+    $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+      jqXHR.setRequestHeader('X-CSRFToken', $cookies.csrftoken);
+    });
     /*
 	 * Get the current user and place it at the top scope
 	 */
@@ -419,15 +467,15 @@ angular.module('employeeApp').run([
               }
             }
           }, function () {
-            console.error('Getting the position failed');
+            $log.error('Getting the position failed');
           });
         } else {
         }
       }, function (e) {
-        console.log(e);
+        $log.log(e);
       });
     } else {
-      console.log('Geolocation not available');
+      $log.log('Geolocation not available');
     }  /*
 	 * Auto print new purchase orders
 	 */
@@ -484,7 +532,8 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
   '$location',
   'Notification',
   'Geocoder',
-  function ($scope, Customer, $location, Notification, Geocoder) {
+  '$log',
+  function ($scope, Customer, $location, Notification, Geocoder, $log) {
     $scope.customer = new Customer();
     $scope.save = function () {
       if ($scope.form.$valid) {
@@ -520,7 +569,7 @@ angular.module('employeeApp').controller('ContactCustomerAddCtrl', [
           $scope.customer.address.lat = $scope.marker.lat;
           $scope.customer.address.lng = $scope.marker.lng;
         }, function (status) {
-          console.error(status);
+          $log.error(status);
         });
       }
     };
@@ -819,7 +868,8 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
   '$timeout',
   '$mdDialog',
   '$mdToast',
-  function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast) {
+  '$log',
+  function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log) {
     var updateLoopActive = false, timeoutPromise, map, geocoder = new google.maps.Geocoder(), markers = [], mapOptions = {
         center: new google.maps.LatLng(13.776239, 100.527884),
         zoom: 4,
@@ -925,7 +975,7 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
             map.panTo(marker.getPosition());
             map.setZoom(14);
           } else {
-            console.error(status);
+            $log.error(status);
           }
         });
       }
@@ -993,8 +1043,8 @@ angular.module('employeeApp').controller('ContactSupplierDetailsCtrl', [
     $scope.update = function () {
       //Notify
       Notification.display('Updating Supplier...', false);
-      console.log($scope.supplier);
-      console.log($scope.supplier.addresses[0].latitude, $scope.supplier.addresses[0].longitude);
+      $log.debug($scope.supplier);
+      $log.debug($scope.supplier.addresses[0].latitude, $scope.supplier.addresses[0].longitude);
       $scope.supplier.$update(function (data) {
         Notification.display('Supplier Updated');
       });
@@ -1272,7 +1322,6 @@ angular.module('employeeApp.services').factory('Resource', [
                         try {
                           value.push(new Resource(response[i]));
                         } catch (e) {
-                          console.warn(e.stack);
                         }
                       }
                     }
@@ -2175,7 +2224,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
   'Room',
   'Phase',
   '$mdDialog',
-  function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog) {
+  '$log',
+  function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -2269,7 +2319,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           map.setZoom(17);
         }
       } catch (e) {
-        console.error(e);
+        $log.error(e);
       }
     }
     //Set items and employee
@@ -2302,6 +2352,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
           map.setZoom(17);
         }
       } catch (e) {
+        $log.warn(JSON.stringify(e));
       }
     };
     /* 
@@ -2325,7 +2376,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
         $scope.ack.project = resp;
         Notification.hide();
         $scope.project = new Project();
-      }, function () {
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     $scope.cancelAddProject = function () {
@@ -2356,6 +2408,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       room.$create(function (resp) {
         $scope.ack.project.rooms.push(resp);
         $scope.ack.room = resp;
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     /*
@@ -2389,6 +2443,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       phase.$create(function (resp) {
         $scope.ack.project.phases.push(resp);
         $scope.ack.phase = resp;
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     /*
@@ -2419,7 +2475,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
               angular.extend($scope.ack.files[h], data);
             }
           }
-        }, function () {
+        }, function (e) {
+          $log.error(JSON.stringify(e));
         });
       }  /* jshint ignore:end */
     };
@@ -2452,11 +2509,15 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
             delete $scope.ack.newProject;
             delete $scope.ack.newProjectName;
           }, function (e) {
-            console.error(e);
-            Notification.display(e, false);
+            $log.error(JSON.stringify(e));
+            Notification.display('There was an error in creating the acknowledgement. A report has been sent to Charlie.', false);
           });
         }
       } catch (e) {
+        $log.error(JSON.stringify({
+          message: e,
+          data: $scope.ack
+        }));
         Notification.display(e, false);
       }
     };
@@ -2571,7 +2632,8 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
   '$filter',
   'KeyboardNavigation',
   'Notification',
-  function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification) {
+  '$log',
+  function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log) {
     /*
 	 * Vars
 	 * 
@@ -2697,7 +2759,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
             }
           }
         } catch (e) {
-          console.log(e);
+          $log.error(e);
         }
       }
     }, true);
@@ -2813,8 +2875,7 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
             markers.push(marker);
           }
         } catch (e) {
-          console.log(acknowledgements[i]);
-          console.error(e);
+          $log.error(e);
         }
       }
       setMapFocus(lats, lngs);
@@ -2951,9 +3012,7 @@ angular.module('employeeApp.directives').directive('dropOn', [function () {
           scope.$apply(function () {
             /*
                     var target = getTarget(scope, attrs.dropOn);
-					console.log(target);
                     angular.copy(getData(event), target);
-					console.log(target);
 					*/
             scope.dropOn = getData(event);
             if (attrs.onDropAction) {
@@ -3095,7 +3154,8 @@ angular.module('employeeApp.directives').directive('telephone', [
 ]);
 angular.module('employeeApp.directives').directive('map', [
   'mapMarker',
-  function (mapMarker) {
+  '$log',
+  function (mapMarker, $log) {
     //Create the variables to be used
     var latLng = {}, map, marker;
     //Options for the map 
@@ -3171,7 +3231,7 @@ angular.module('employeeApp.directives').directive('map', [
             this.map.setZoom(14);
           };
         } catch (e) {
-          console.error(e);
+          $log.error(e);
         }
       }
     };
@@ -3189,7 +3249,9 @@ angular.module('employeeApp').directive('clickUrl', [function () {
       }
     };
   }]);
-angular.module('employeeApp.directives').directive('modal', [function () {
+angular.module('employeeApp.directives').directive('modal', [
+  '$log',
+  function ($log) {
     var backdrop;
     var closeButton;
     function create_backdrop() {
@@ -3237,7 +3299,7 @@ angular.module('employeeApp.directives').directive('modal', [function () {
                   try {
                     (scope.modal._onhide && scope.modal || angular.noop)();
                   } catch (e) {
-                    console.warn(e);
+                    $log.warn(e);
                   }
                   if (attrs.ngModel || attrs.modal) {
                     if (scope.$$phase == '$apply' || scope.$$phase == '$digest') {
@@ -3298,7 +3360,8 @@ angular.module('employeeApp.directives').directive('modal', [function () {
         };
       }
     };
-  }]);
+  }
+]);
 angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
   '$scope',
   'Acknowledgement',
@@ -3648,7 +3711,8 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
   '$location',
   '$http',
   'Notification',
-  function ($scope, Group, User, $routeParams, $location, $http, Notification) {
+  '$log',
+  function ($scope, Group, User, $routeParams, $location, $http, Notification, $log) {
     var destroyed = false;
     function indexById(list, item) {
       if (!list.hasOwnProperty('length')) {
@@ -3701,7 +3765,7 @@ angular.module('employeeApp').controller('AdministratorUserDetailsCtrl', [
         $scope.password = {};
         $scope.showChangePassword = false;
       }).error(function (err) {
-        console.error(err);
+        $log.error(err);
       });
     };
     $scope.updateGroup = function (group) {
@@ -3815,7 +3879,8 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
   '$scope',
   'Fabric',
   'Notification',
-  function ($scope, Fabric, Notification) {
+  '$log',
+  function ($scope, Fabric, Notification, $log) {
     var fetching = true;
     $scope.fabrics = Fabric.query(function () {
       fetching = false;
@@ -3868,6 +3933,8 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
               $scope.fabrics.push(resources[i]);
             }
           }
+        }, function (e) {
+          $log.error(JSON.stringify(e));
         });
       }
     };
@@ -3880,7 +3947,8 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
   '$location',
   'Notification',
   'FileUploader',
-  function ($scope, Supplier, Fabric, $location, Notification, FileUploader) {
+  '$log',
+  function ($scope, Supplier, Fabric, $location, Notification, FileUploader, $log) {
     $scope.suppliers = Supplier.query({ limit: 0 });
     $scope.fabric = new Fabric();
     //Tooltips
@@ -3902,6 +3970,8 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
         $scope.fabric.$create(function () {
           Notification.display('Fabric Saved');
           $location.path('supply/fabric');
+        }, function (e) {
+          $log.error(JSON.stringify(e));
         });
       }
     };
@@ -3915,6 +3985,7 @@ angular.module('employeeApp').controller('SupplyFabricAddCtrl', [
         Notification.display('Image Uploaded');
         $scope.fabric.image = dataObj.data;
       }, function (e) {
+        $log.error(JSON.stringify(e));
         Notification.display('There was an error in uploading the file');
       });
     };
@@ -3929,7 +4000,8 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
   'SupplyLog',
   '$mdToast',
   'FileUploader',
-  function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader) {
+  '$log',
+  function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader, $log) {
     $scope.fabric = Fabric.get({ 'id': $routeParams.id });
     $scope.logs = SupplyLog.query({ supply_id: $routeParams.id });
     //Create fabric actions
@@ -3945,7 +4017,6 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
     $scope.quantityNeeded = function () {
       var qty = Number($scope.fabric.quantity) - Number($scope.fabric.reserved);
       var value = qty < 0 ? Math.abs(qty) : 'Sufficient fabric in stock.';
-      console.log(value);
       return value;
     };
     $scope.add = function () {
@@ -3989,19 +4060,25 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
     };
     $scope.update = function () {
       Notification.display('Updating Fabric...', false);
-      $scope.fabric.$update(Notification.display('Fabric Updated'));
+      $scope.fabric.$update(function () {
+        Notification.display('Fabric Updated');
+      }, function (e) {
+        $log.error(JSON.stringify(e));
+      });
     };
     $scope.updateLog = function ($index) {
       var log = $scope.logs[$index];
       if (log.action == 'RESERVE' || log.action == 'CUT' || log.action == 'CANCEL') {
         $mdToast.show($mdToast.simple().position('top right').content('Updating ' + $scope.fabric.description + ' for Ack #' + log.acknowledgement_id + '.').hideDelay(0));
         $scope.logs[$index].$update(function (response) {
+          $log.debug(JSON.stringify(response));
           if (response.supply) {
             $scope.fabric.quantity = response.supply.quantity;
           }
           $mdToast.hide();
           $mdToast.show($mdToast.simple().position('top right').content('Updated.').hideDelay(2000));
         }, function (e) {
+          $log.error(JSON.stringify(e));
           $mdToast.hide();
           $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
         });
@@ -4943,7 +5020,6 @@ angular.module('employeeApp.services').factory('scanner', [
       }
     };
     Scanner.prototype._dispatch = function (code) {
-      //console.debug(this._identity+' status: '+this.enabled+' / code: '+this._code);
       codes = code.split('-');
       if (parseStandardCodes) {
         for (var i = 0; i < standardCodes.length; i++) {
@@ -5228,7 +5304,6 @@ angular.module('employeeApp.services').factory('dateParser', [
           }
           response.data = data;
         } catch (e) {
-          console.error(e);
         }
         return response || $q.when(response);
       },
@@ -5750,7 +5825,8 @@ angular.module('employeeApp').directive('eaAdd', [function () {
 angular.module('employeeApp.directives').directive('imageCropper', [
   'Notification',
   '$compile',
-  function (Notification, $compile) {
+  '$log',
+  function (Notification, $compile, $log) {
     function Scene(canvas, ctx, image) {
       this.ctx = ctx;
       this.canvas = canvas;
@@ -5962,7 +6038,7 @@ angular.module('employeeApp.directives').directive('imageCropper', [
             try {
               scope.onLoad();
             } catch (evt) {
-              console.warn(evt);
+              $log.warn(evt);
             }
             scope.$apply();
           };
@@ -6367,7 +6443,8 @@ angular.module('employeeApp').controller('ProductInventoryCtrl', [
 angular.module('employeeApp.services').factory('Geocoder', [
   '$q',
   '$rootScope',
-  function ($q, $rootScope) {
+  '$log',
+  function ($q, $rootScope, $log) {
     /*Helper functions*/
     function prepareAddress(obj) {
       var addrStr = '';
@@ -6465,7 +6542,7 @@ angular.module('employeeApp.services').factory('Geocoder', [
         if (status == google.maps.GeocoderStatus.OK) {
           (callback || angular.noop)(results);
         } else {
-          console.error(status);
+          $log.error(status);
           (errback || angular.noop)(status);
         }
       });
@@ -6733,7 +6810,8 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
   '$location',
   '$mdDialog',
   '$mdToast',
-  function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast) {
+  '$log',
+  function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast, $log) {
     //Controlling attributes
     $scope.showAddProject = false;
     //Query the server for projects continouosly
@@ -6801,7 +6879,7 @@ angular.module('employeeApp').controller('ProjectViewCtrl', [
             }
           }
         } catch (e) {
-          console.debug(e);
+          $log.error(e);
         }
       }
     }, true);
@@ -7541,8 +7619,8 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
   'FileUploader',
   '$timeout',
   '$mdDialog',
-  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $mdDialog) {
-    console.log($scope.types);
+  '$log',
+  function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $mdDialog, $log) {
     /*
 	* Vars and flags
 	*/
@@ -7602,7 +7680,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
           supply.save();
         });  //Process a failed upload
       }, function (e) {
-        console.log(e);
+        $log.error(e);
         Notification.display('Unable to upload image', false);
       });
     };
@@ -7692,7 +7770,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
             return true;
           }
         } catch (e) {
-          console.error(e);
+          $log.error(e);
         }
         try {
           for (var i = 0; i < obj.suppliers.length; i++) {
@@ -7701,7 +7779,7 @@ angular.module('employeeApp').controller('SupplyViewCtrl', [
             }
           }
         } catch (e) {
-          console.error(e);
+          $log.error(e);
         }
         return false;
       } else {
@@ -7928,7 +8006,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   'Room',
   'Phase',
   '$mdDialog',
-  function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog) {
+  '$log',
+  function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log) {
     /*
 	 * Setup vars
 	 */
@@ -8037,7 +8116,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           map.setZoom(17);
         }
       } catch (e) {
-        console.error(e);
+        $log.error(e);
       }
     };
     /* 
@@ -8061,7 +8140,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
         $scope.po.project = resp;
         $mdToast.hide();
         $scope.project = new Project();
-      }, function () {
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     $scope.cancelAddProject = function () {
@@ -8092,6 +8172,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       room.$create(function (resp) {
         $scope.po.project.rooms.push(resp);
         $scope.po.room = resp;
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     /*
@@ -8125,6 +8207,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       phase.$create(function (resp) {
         $scope.po.project.phases.push(resp);
         $scope.po.phase = resp;
+      }, function (e) {
+        $log.error(JSON.stringify(e));
       });
     };
     /*
@@ -8203,6 +8287,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           }
         }
       } catch (e) {
+        $log.warn(JSON.stringify(e));
       }
     }, true);
     /*
@@ -8278,18 +8363,20 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
             try {
               $window.open(response.pdf.url);
             } catch (e) {
-              console.warn(e);
+              $log.warn(e);
             }
             $mdToast.show($mdToast.simple().position('top right').content('Purchase order created.'));
             //Change page to newly saved purchase order page
             $location.path('/order/purchase_order/' + response.id);
           }, function (e) {
-            $mdToast.show($mdToast.simple().content(e));
+            $log.error(JSON.stringify(e));
+            $mdToast.show($mdToast.simple().content('There was an error in creeating the purchase order. A report has been sent to Charlie'));
           });
         } else {
           throw Error;
         }
       } catch (e) {
+        $log.error(JSON.stringify(e));
         $mdToast.show($mdToast.simple().position('top right').content(e).hideDelay(0));
       }
     };
@@ -8308,7 +8395,8 @@ angular.module('employeeApp.directives').directive('addSupply', [
   'Supply',
   '$mdToast',
   '$http',
-  function ($rootScope, Supplier, Supply, $mdToast, $http) {
+  '$log',
+  function ($rootScope, Supplier, Supply, $mdToast, $http, $log) {
     return {
       templateUrl: 'views/templates/add-supply.html',
       replace: true,
@@ -8389,7 +8477,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
                   scope.supply.supplier = angular.copy(scope.assignedSupplier);
                 }
               }, function (reason) {
-                console.error(reason);
+                $log.error(reason);
               });
             } else {
               scope.supply.$create(function (response) {
@@ -8401,7 +8489,7 @@ angular.module('employeeApp.directives').directive('addSupply', [
                   scope.supply.supplier = angular.copy(scope.assignedSupplier);
                 }
               }, function (reason) {
-                console.error(reason);
+                $log.error(reason);
                 $mdToast.show($mdToast.simple().hideDelay(0).position('top right').content('There was an error in creating the supply'));
               });
             }
@@ -8420,7 +8508,8 @@ angular.module('employeeApp.directives').directive('addSupplier', [
   '$rootScope',
   'Supplier',
   '$mdToast',
-  function ($rootScope, Supplier, $mdToast) {
+  '$log',
+  function ($rootScope, Supplier, $mdToast, $log) {
     return {
       templateUrl: 'views/templates/add-supplier.html',
       replace: true,
@@ -8481,7 +8570,7 @@ angular.module('employeeApp.directives').directive('addSupplier', [
                 scope.visible = false;
                 scope.supplier = new Supplier();
               }, function (reason) {
-                console.error(reason);
+                $log.error(reason);
                 $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error in creating the supplier'));
               });
             } else {
@@ -8506,7 +8595,9 @@ angular.module('employeeApp').factory('inventory', [function () {
       }
     };
   }]);
-angular.module('employeeApp').directive('onScrollEnd', [function () {
+angular.module('employeeApp').directive('onScrollEnd', [
+  '$log',
+  function ($log) {
     return {
       restrict: 'A',
       link: function postLink(scope, element, attrs) {
@@ -8525,7 +8616,8 @@ angular.module('employeeApp').directive('onScrollEnd', [function () {
         });
       }
     };
-  }]);
+  }
+]);
 angular.module('employeeApp').directive('customerList', [
   'Customer',
   '$mdToast',
@@ -8891,7 +8983,6 @@ angular.module('employeeApp').directive('tableList', [
         };
         keyboardNav.enable();
         scope.$watch('visible', function (val) {
-          console.log(val);
           if (val) {
             keyboardNav.enable();
           } else {
@@ -8998,7 +9089,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
   '$mdDialog',
   'Room',
   'Phase',
-  function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase) {
+  '$log',
+  function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Project, $mdDialog, Room, Phase, $log) {
     var updateLoopActive = false, timeoutPromise, map, geocoder = new google.maps.Geocoder(), markers = [], mapOptions = {
         center: new google.maps.LatLng(13.776239, 100.527884),
         zoom: 4,
@@ -9226,7 +9318,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
           }
         }
       }, function (e) {
-        console.error(e);
+        $log.error(e);
       });
     };
     /*
@@ -9368,7 +9460,8 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
   'scanner',
   '$window',
   '$http',
-  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window, $http) {
+  '$log',
+  function ($scope, $routeParams, Notification, Supply, $timeout, $location, scanner, $window, $http, $log) {
     Notification.display('Retrieving supply...', false);
     /*
 	 * Vars
@@ -9402,7 +9495,6 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
                   return i * 6 + i + 'em';
                 }).attr('class', function (d, i) {
                   try {
-                    console.log(data[i - 1].cost + ':' + d.cost);
                     if (Number(data[i - 1].cost) > Number(d.cost)) {
                       return 'green';
                     } else if (Number(data[i - 1].cost) < Number(d.cost)) {
@@ -9450,7 +9542,6 @@ angular.module('employeeApp').controller('SupplyDetailsCtrl', [
               return i * 6 + i + 'em';
             }).style('background-color', function (d, i) {
               try {
-                console.log(data[i - 1].quantity + ':' + d.quantity);
                 if (Number(data[i - 1].quantity) > Number(d.quantity)) {
                   return 'green';
                 } else if (Number(data[i - 1].quantity) < Number(d.quantity)) {
@@ -9717,7 +9808,8 @@ angular.module('employeeApp.directives').directive('addCustomer', [
   'Customer',
   '$mdToast',
   'Geocoder',
-  function (Customer, $mdToast, Geocoder) {
+  '$log',
+  function (Customer, $mdToast, Geocoder, $log) {
     return {
       templateUrl: 'views/templates/add-customer.html',
       replace: true,
@@ -9759,7 +9851,7 @@ angular.module('employeeApp.directives').directive('addCustomer', [
               scope.customer.address.lat = scope.marker.lat;
               scope.customer.address.lng = scope.marker.lng;
             }, function (status) {
-              console.error(status);
+              $log.error(status);
             });
           }
         };
@@ -9771,7 +9863,7 @@ angular.module('employeeApp.directives').directive('addCustomer', [
               scope.visible = false;
               scope.customer = new Customer();
             }, function (reason) {
-              console.error(reason);
+              $log.error(reason);
               $mdToast.show($mdToast.simple().position('top right').hideDelay(0).content('There was an error in creating the customer'));
             });
           } else {
@@ -9789,13 +9881,13 @@ angular.module('employeeApp').controller('MainCtrl', [
   'mapMarker',
   'PurchaseOrder',
   '$rootScope',
-  function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope) {
+  '$log',
+  function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope, $log) {
     var user = $scope.currentUser;
     var changePage = function () {
       if (user.hasModule('supplies') && !user.hasModule('acknowledgements') && !user.hasModule('shipping')) {
         $rootScope.inventory = true;
         $location.path('/scanner');
-        console.log($rootScope);
       }
     };
     if (!$scope.currentUser.ready) {
@@ -9867,8 +9959,7 @@ angular.module('employeeApp').controller('MainCtrl', [
             markers[$scope.active].push(marker);
           }
         } catch (e) {
-          console.log(resp[i]);
-          console.error(e);
+          $log.error(e);
         }
       }
       map.setZoom(6);
@@ -9893,12 +9984,10 @@ angular.module('employeeApp').controller('MainCtrl', [
         throw Error('Invalid data type.');
       }
       for (var i = 0; i < dataArray.length; i++) {
-        console.log(dataType, dataArray[i].status.toLowerCase(), statuses.indexOf(dataArray[i].status.toLowerCase()));
         if (statuses.indexOf(dataArray[i].status.toLowerCase()) > -1) {
           validData.push(dataArray[i]);
         }
       }
-      console.log(dataType, validData.length);
       return validData;
     }
     /* 
@@ -9910,7 +9999,7 @@ angular.module('employeeApp').controller('MainCtrl', [
         try {
           markers[$scope.active][i].setMap(null);
         } catch (e) {
-          console.log(markers[$scope.active][i]);
+          console.$error(e);
         }
       }
       $scope.active = target;
@@ -9942,7 +10031,7 @@ angular.module('employeeApp').controller('MainCtrl', [
             markers[$scope.active].push(marker);
           }
         } catch (e) {
-          console.error(e);
+          $log.error(e);
         }
       }
       setMapFocus(lats, lngs);
@@ -10327,7 +10416,6 @@ angular.module('employeeApp').directive('supplyList', [
                   options.supplier_id = supplierId;
                 }
                 Supply.query(options, function (resources) {
-                  console.log(resources);
                   fetching = false;
                   $mdToast.hide();
                   for (var i = 0; i < resources.length; i++) {
@@ -10415,7 +10503,8 @@ angular.module('employeeApp.services').service('CameraService', function CameraS
 });
 angular.module('employeeApp.directives').directive('camera', [
   'CameraService',
-  function (CameraService) {
+  '$log',
+  function (CameraService, $log) {
     return {
       template: '<div class="camera">' + '<div class="guide"></div>' + '<div class="active-media-area">' + '<canvas></canvas>' + '<video class="camera-video"></video>' + '</div>' + '<div class="snapshot-btn" ng-click="takeSnapshot()"></div>' + '<div class="btn-menu">' + '<div  class="save-btn" ng-click="save()">Save</div>' + '<div class="retake-btn" ng-click="retake()">Retake</div>' + '</div>' + '</div>',
       restrict: 'EA',
@@ -10427,8 +10516,8 @@ angular.module('employeeApp.directives').directive('camera', [
         depth: '='
       },
       link: function postLink(scope, element, attrs) {
-        //console.log('test');
-        //console.log(CameraService.hasUserMedia());
+        //$log.log('test');
+        //$log.log(CameraService.hasUserMedia());
         if (!CameraService.hasUserMedia()) {
           return;
         }
@@ -10453,7 +10542,7 @@ angular.module('employeeApp.directives').directive('camera', [
             video: true,
             audio: false
           }, onSuccess, function (e) {
-            console.error(e);
+            $log.error(e);
           });
         });
         function getImageAsBlob(url) {
@@ -10498,8 +10587,18 @@ angular.module('employeeApp.services').factory('requestError', [
         return response || $q.when(response);
       },
       'responseError': function (rejection) {
-        Notification.display(rejection.data || 'An Error Occurred.');
-        console.error(rejection);
+        if (rejection.status > 400) {
+          var msg = 'AJAX failed. status: ' + rejection.status + '. response: ' + rejection.statusText;
+          var promise = $.ajax({
+              type: 'POST',
+              url: '/api/v1/client/log/',
+              data: {
+                'type': 'error',
+                'message': msg
+              },
+              processData: true
+            });
+        }
         return $q.reject(rejection);
       }
     };
@@ -10631,10 +10730,8 @@ angular.module('employeeApp.directives').directive('supplyScannerModal', [
             try {
               scope.supply = response[0];
             } catch (e) {
-              console.log(e);
             }
           }, function (reason) {
-            console.log(reason);
           });
         });
         /*
@@ -10769,16 +10866,13 @@ angular.module('employeeApp').directive('touchselect', [
           e.stopPropagation();
         }
         function touchStart() {
-          console.log('touched');
           started = true;
         }
         function touchMove() {
-          console.log('moved');
           moved = true;
         }
         function touchEnd() {
           if (started && !moved) {
-            console.log('time to click');
             var url = attrs.ngHref || attrs.href;
             scope.safeApply(function () {
               $location.path(url);
@@ -10857,7 +10951,8 @@ angular.module('employeeApp.directives').directive('supply', [
   'D3',
   '$compile',
   'FileUploader',
-  function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile, FileUploader) {
+  '$log',
+  function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $compile, FileUploader, $log) {
     var subHTML;
     var promise = $http.get('views/templates/supply-details.html');
     promise.then(function (response) {
@@ -11012,7 +11107,7 @@ angular.module('employeeApp.directives').directive('supply', [
             try {
               scope.onSelect({ '$element': element });
             } catch (e) {
-              console.error(e);
+              $log.error(e);
             }
             Supply.get({ id: scope.supply.id }, function (response) {
               angular.extend(scope.supply, response);
@@ -11079,7 +11174,6 @@ angular.module('employeeApp.directives').directive('supply', [
         });
         function setPrint() {
           var afterPrint = function () {
-            console.log('ok');
             $('.print').empty();
           };
           if (window.matchMedia) {
@@ -11122,7 +11216,8 @@ angular.module('employeeApp').directive('employee', [
   '$timeout',
   'Notification',
   'Attendance',
-  function ($rootScope, $timeout, Notification, Attendance) {
+  '$log',
+  function ($rootScope, $timeout, Notification, Attendance, $log) {
     return {
       templateUrl: 'views/templates/employee.html',
       replace: true,
@@ -11193,7 +11288,7 @@ angular.module('employeeApp').directive('employee', [
             try {
               scope.onSelect({ '$element': element });
             } catch (e) {
-              console.error(e);
+              $log.error(e);
             }
             scope.attendances = Attendance.query({ employee__id: scope.employee.id }, function (response) {
               scope.attendances = [];
@@ -11217,7 +11312,8 @@ angular.module('employeeApp').factory('Attendance', [
 ]);
 angular.module('employeeApp').directive('attendanceChart', [
   'D3',
-  function (D3) {
+  '$log',
+  function (D3, $log) {
     return {
       templateUrl: 'views/templates/attendance-chart.html',
       replace: true,
@@ -11265,7 +11361,7 @@ angular.module('employeeApp').directive('attendanceChart', [
               var yPos = $(this).offset().top;
               var selectedBar = D3.select(this);
               if (mouseDown) {
-                console.log(yPos + ' : ' + D3.event.y);
+                $log.log(yPos + ' : ' + D3.event.y);
                 var index = selectedAttendances.indexOfById(d);
                 if (yPos >= D3.event.y) {
                   selectedBar.classed('selected', false);
@@ -11632,8 +11728,8 @@ angular.module('employeeApp').controller('EquipmentViewCtrl', [
   '$http',
   'FileUploader',
   '$timeout',
-  function ($scope, Equipment, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout) {
-    console.log($scope.types);
+  '$log',
+  function ($scope, Equipment, Notification, $filter, KeyboardNavigation, $rootScope, $location, $http, FileUploader, $timeout, $log) {
     /*
 	* Vars and flags
 	*/
@@ -11679,7 +11775,7 @@ angular.module('employeeApp').controller('EquipmentViewCtrl', [
           supply.save();
         });  //Process a failed upload
       }, function (e) {
-        console.log(e);
+        $log.error(e);
         Notification.display('Unable to upload image', false);
       });
     };
@@ -11834,7 +11930,8 @@ angular.module('employeeApp.directives').directive('equipment', [
   'scanner',
   'D3',
   '$compile',
-  function ($http, Equipment, $rootScope, Notification, $timeout, $window, scanner, D3, $compile) {
+  '$log',
+  function ($http, Equipment, $rootScope, Notification, $timeout, $window, scanner, D3, $compile, $log) {
     var subHTML;
     var brands = [
         'Maktec',
@@ -11969,7 +12066,7 @@ angular.module('employeeApp.directives').directive('equipment', [
             try {
               scope.onSelect({ '$element': element });
             } catch (e) {
-              console.error(e);
+              $log.error(e);
             }
             Equipment.get({ id: scope.equipment.id }, function (response) {
               angular.extend(scope.equipment, response);
@@ -12217,7 +12314,6 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
         $mdToast.hide();
         $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
       }, function (reason) {
-        console.log(reason);
       });
     });
     /*
@@ -12235,7 +12331,6 @@ angular.module('employeeApp').controller('DialogsSupplyScannerCtrl', [
           $scope.po.items[j].$$action = true;
         }
       }, function (reason) {
-        console.log(reason);
       });
     });
     /*
@@ -12601,7 +12696,8 @@ angular.module('employeeApp').controller('OrderEstimateCreateCtrl', [
   'Project',
   '$mdToast',
   'FileUploader',
-  function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileUploader) {
+  '$log',
+  function ($scope, Estimate, Customer, $filter, $window, Project, $mdToast, FileUploader, $log) {
     //Vars
     $scope.showFabric = false;
     $scope.uploading = false;
@@ -12673,7 +12769,7 @@ angular.module('employeeApp').controller('OrderEstimateCreateCtrl', [
             delete $scope.estimate.newProject;
             delete $scope.estimate.newProjectName;
           }, function (e) {
-            console.error(e);
+            $log.error(e);
             $mdToast.show($mdToast.simple().content(e).hideDelay(0));
           });
         }
@@ -13074,7 +13170,8 @@ angular.module('employeeApp').controller('DialogsChangePasswordCtrl', [
   '$mdDialog',
   '$http',
   '$mdToast',
-  function ($scope, $mdDialog, $http, $mdToast) {
+  '$log',
+  function ($scope, $mdDialog, $http, $mdToast, $log) {
     $scope.changePassword = function () {
       if ($scope.old_password && $scope.new_password === $scope.repeat_password) {
         var data = {
@@ -13087,7 +13184,7 @@ angular.module('employeeApp').controller('DialogsChangePasswordCtrl', [
           $mdDialog.hide();
           $mdToast.show($mdToast.simple().position('top right').content('Password Changed.').hideDelay(2000));
         }, function (e) {
-          console.log(e);
+          $log.log(e);
           $mdToast.show($mdToast.simple().position('top right').action('Close').content(e.data.status).hideDelay(0));
         });
       } else {
@@ -13117,7 +13214,8 @@ angular.module('employeeApp').controller('DialogsCreatePackingListCtrl', [
   '$mdDialog',
   'Room',
   'Shipping',
-  function ($scope, $mdDialog, Room, Shipping) {
+  '$log',
+  function ($scope, $mdDialog, Room, Shipping, $log) {
     function getRoomDetails() {
       function applyRoomDetails(resp) {
         angular.extend($scope.project.rooms[$scope.project.rooms.indexOfById(resp)], resp);
@@ -13147,7 +13245,7 @@ angular.module('employeeApp').controller('DialogsCreatePackingListCtrl', [
       }
       $mdDialog.hide();
       shipping.$create(function (resp) {
-        console.log(resp);
+        $log.log(resp);
       });
     };
     /*
@@ -13345,7 +13443,8 @@ angular.module('employeeApp').controller('ScannerCtrl', [
   'PurchaseOrder',
   'KeyboardNavigation',
   'FileUploader',
-  function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader) {
+  '$log',
+  function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
     /*
 	 * Vars
 	 */
@@ -13397,11 +13496,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
     $scope.createEquipment = function (equipment) {
       equipment.id = equipment.id || undefined;
       if (equipment.$new) {
-        console.log(equipment);
         var savingFn = equipment.id ? '$update' : '$create';
         equipment[savingFn](function () {
           delete this.$new;
-          console.log(this);
         }.bind(equipment));
       }
     };
@@ -13411,9 +13508,7 @@ angular.module('employeeApp').controller('ScannerCtrl', [
     $scope.addEquipmentImage = function ($image, equipment) {
       var promise = FileUploader.upload($image, '/api/v1/supply/image/');
       promise.then(function (data) {
-        console.log(data);
         equipment.image = data.hasOwnProperty('data') ? data.data : data;
-        console.log(equipment);
       }, function () {
       });
     };
@@ -13453,7 +13548,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
         } else {
           $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content(response.description + ' already in checkout'));
         }
-      }, function () {
+      }, function (e) {
+        var msg = JSON.stringify(e);
+        $log.error(msg);
         $mdToast.show($mdToast.simple().hideDelay(0).position('top right').action('Close').content('Unable to find supply.'));
       });
     });
@@ -13473,8 +13570,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
         $scope.supplies.push(response[0]);
         $mdToast.hide();
         $mdToast.show($mdToast.simple().hideDelay(2000).position('top right').content('Added ' + response.description + ' to checkout.'));
-      }, function (reason) {
-        console.log(reason);
+      }, function (e) {
+        var msg = JSON.stringify(e);
+        $log.error(msg);
       });
     });
     /*
@@ -13491,8 +13589,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
         for (var j = 0; j < $scope.po.items.length; j++) {
           $scope.po.items[j].$$action = true;
         }
-      }, function (reason) {
-        console.log(reason);
+      }, function (e) {
+        var msg = JSON.stringify(e);
+        $log.error(e);
       });
     });
     /*
@@ -13503,7 +13602,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
       Equipment.get({ id: code.split('-')[1] }, function (response) {
         $mdToast.hide();
         $scope.equipmentList.push(response);
-      }, function () {
+      }, function (e) {
+        var msg = JSON.stringify(e);
+        $log.error(msg);
         $mdToast.show($mdToast.simple().content('Unable to find equipment.').position('top right').action('Close').hideDelay(0));
       });
     });
@@ -13517,7 +13618,9 @@ angular.module('employeeApp').controller('ScannerCtrl', [
       $scope.equipment = Employee.get({ id: code.split('-')[1] }, function (response) {
         $scope.employee = response;
         $mdToast.hide();
-      }, function () {
+      }, function (e) {
+        var msg = JSON.stringify(e);
+        $log.error(msg);
         $mdToast.show($mdToast.simple().content('Unable to find employee.').position('top right').action('close').hideDelay(0));
       });
     });
@@ -13586,6 +13689,7 @@ angular.module('employeeApp').controller('ScannerCtrl', [
             });
           }
         } catch (e) {
+          $log.error(e);
           checkoutActive = false;
           $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('close').content(e.message));
         }
@@ -13600,6 +13704,8 @@ angular.module('employeeApp').controller('ScannerCtrl', [
           $scope.po.$update(function () {
             delete $scope.po;
             $scope.postCheckout();
+          }, function (e) {
+            $log.error(JSON.stringify(e));
           });
         }
       }
@@ -13614,6 +13720,7 @@ angular.module('employeeApp').controller('ScannerCtrl', [
       }
     };
     $scope.checkoutError = function (e) {
+      $log.error(JSON.stringify(e));
       $mdToast.show($mdToast.simple().position('top right').hideDelay(0).action('Close').content('There was a checkout error'));
     };
     /*
@@ -13621,7 +13728,6 @@ angular.module('employeeApp').controller('ScannerCtrl', [
 	*/
     function setPrint() {
       var afterPrint = function () {
-        console.log('ok');
         $('.print').empty();
       };
       if (window.matchMedia) {

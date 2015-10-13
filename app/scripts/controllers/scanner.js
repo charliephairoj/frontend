@@ -122,9 +122,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		} catch (e) {
 		
 		}
-		
-	
-		
+				
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
 			$mdToast.hide();
 			if ($scope.supplies.indexOfById(response) == -1) {
@@ -142,9 +140,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			}
 			
 		}, function (e) {
-			var msg = "Supply code: " + code + ". " + e;
+			var msg = JSON.stringify(e);
 			$log.error(msg);
-			
 			$mdToast.show($mdToast.simple()
 				.hideDelay(0)
 				.position('top right')
@@ -176,8 +173,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				.content('Added ' + response.description + ' to checkout.'));
 			
 		}, function (e) {
-			var msg = "UPC code: " + code + ". " + e;
-			$log.error(msg)
+			var msg = JSON.stringify(e);
+			$log.error(msg);
 		});
 	});
 
@@ -204,8 +201,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			}
 			
 		}, function (e) {
-			var msg = "PO code: " + code + ". " + e;
-			
+			var msg = JSON.stringify(e);
 			$log.error(e);
 		});
 	});
@@ -225,9 +221,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 			$scope.equipmentList.push(response);
 		
 		}, function (e) {
-			
-			var msg = "Equipment code: " + code + ". " + e;
-			
+			var msg = JSON.stringify(e);
 			$log.error(msg);
 			
 			$mdToast.show($mdToast.simple()
@@ -256,8 +250,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		
 		}, function (e) {
 			
-			var msg = "Employee code: " + code + ". " + e;
-			
+			var msg = JSON.stringify(e);
 			$log.error(msg);
 			
 			$mdToast.show($mdToast.simple()
@@ -352,6 +345,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 					});
 				}
 			} catch (e) {
+				$log.error(e);
 				checkoutActive = false;
 				$mdToast.show($mdToast.simple()
 					.position('top right')
@@ -373,6 +367,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				$scope.po.$update(function () {
 					delete $scope.po;
 					$scope.postCheckout();
+				}, function (e) {
+					$log.error(JSON.stringify(e));
 				});
 			}
 		}
@@ -394,6 +390,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	};
 
 	$scope.checkoutError = function (e) {
+		$log.error(JSON.stringify(e));
 		$mdToast.show($mdToast.simple()
 			.position('top right')
 			.hideDelay(0)

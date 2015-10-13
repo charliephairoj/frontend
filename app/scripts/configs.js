@@ -7,7 +7,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 	/*
 	 * Change how the $log service works 
 	 */
-	$provide.decorator('$log', ['$delegate' '$http', function ($delegate, $http) {
+	$provide.decorator('$log', ['$delegate', function ($delegate) {
 		
 		var _info = $delegate.info;
 		var _warn = $delegate.warn;
@@ -15,33 +15,38 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 		
 		var record = function (lType, msg) {
 	
-			var promise = $http.post('/api/v1/log', {'type': lType, 'message': msg});
+			var promise = $.ajax({
+				type: 'POST',
+				url: '/api/v1/client/log/', 
+				data: {'type': lType, 'message': msg},
+				processData: true,
+			});
 		};
 		
 		$delegate.info = function () {
 			var args    = [].slice.call(arguments),
-                now     = DateTime.formattedNow();
+                now     = new Date().toUTCString();
 			var msg = now + '-' + args[0];
-			
-			record('info', msg);
+
+			record('info', args[0]);
 			_info(msg);
 		};
 		
 		$delegate.warn = function () {
 			var args    = [].slice.call(arguments),
-	            now     = DateTime.formattedNow();
+	            now     = new Date().toUTCString();
 			var msg = now + '-' + args[0];
 		
-			record('warn' msg);
+			record('warn', args[0]);
 			_warn(msg);
 		};
 		
 		$delegate.error = function () {
 			var args    = [].slice.call(arguments),
-	            now     = DateTime.formattedNow();
+	            now     = new Date().toUTCString();
 			var msg = now + '-' + args[0];
-			
-			record('error', msg);
+
+			record('error', args[0]);
 			_error(msg);
 		};
 		
@@ -91,7 +96,14 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
  */
 angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
 	
+	/*
+	 * Set the token 
+	 */
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
+	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.csrftoken);
+	});
+	
 	/*
 	 * Get the current user and place it at the top scope
 	 */

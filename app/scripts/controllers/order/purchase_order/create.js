@@ -169,8 +169,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			$scope.po.project = resp;
 			$mdToast.hide();
 			$scope.project = new Project();
-		}, function () {
-			
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -202,6 +202,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		room.$create(function (resp) {
 			$scope.po.project.rooms.push(resp);
 			$scope.po.room = resp;
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -236,6 +238,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		phase.$create(function (resp) {
 			$scope.po.project.phases.push(resp);
 			$scope.po.phase = resp;
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -328,7 +332,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				}
 			}
 		} catch (e) {
-		
+			$log.warn(JSON.stringify(e));
 		}
 	}, true);
 	
@@ -430,15 +434,17 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					$location.path("/order/purchase_order/" + response.id);
 					
 				}, function (e) {
+					$log.error(JSON.stringify(e));
 					$mdToast.show($mdToast
 						.simple()
-						.content(e));
+						.content("There was an error in creeating the purchase order. A report has been sent to Charlie"));
 				});
 			}
 			else {
 				throw Error;
 			}
 		} catch (e) {
+			$log.error(JSON.stringify(e));
 			$mdToast.show($mdToast
 				.simple()
 				.position('top right')

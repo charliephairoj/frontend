@@ -1,13 +1,20 @@
 
 angular.module('employeeApp.services')
-.factory('requestError', ['$q', 'Notification', '$log', function ($q, Notification, $log) {
+.factory('requestError', ['$q', 'Notification', function ($q, Notification) {
 	return {
 		'response': function (response) {
 			return response || $q.when(response);
 		},
 		'responseError': function (rejection) {
-			Notification.display(rejection.data || "An Error Occurred.");
-			$log.error(rejection);
+			if (rejection.status > 400) {
+				var msg = "AJAX failed. status: " + rejection.status + ". response: " + rejection.statusText;
+				var promise = $.ajax({
+					type: 'POST',
+					url: '/api/v1/client/log/', 
+					data: {'type': 'error', 'message': msg},
+					processData: true
+				});
+			}
 			return $q.reject(rejection);
 		}
 	};

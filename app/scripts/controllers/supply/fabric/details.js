@@ -70,7 +70,11 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
     
     $scope.update = function () {
         Notification.display('Updating Fabric...', false);
-        $scope.fabric.$update(Notification.display('Fabric Updated'));
+        $scope.fabric.$update(function () {
+			Notification.display('Fabric Updated');
+		}, function (e) {
+			$log.error(JSON.stringify(e));
+		});
     };
 	
 	$scope.updateLog = function ($index) {
@@ -86,6 +90,7 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 				.hideDelay(0));
 			
 			$scope.logs[$index].$update(function (response) {
+				$log.debug(JSON.stringify(response));
 				
 				if (response.supply) {
 					$scope.fabric.quantity = response.supply.quantity;
@@ -98,6 +103,8 @@ function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdT
 					.content('Updated.')
 					.hideDelay(2000));
 			}, function (e) {
+				$log.error(JSON.stringify(e));
+				
 				$mdToast.hide();
 				$mdToast.show($mdToast
 					.simple()

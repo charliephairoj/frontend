@@ -152,7 +152,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				 map.setZoom(17);
 			}
 		} catch (e) {
-			
+			$log.warn(JSON.stringify(e));
 		}
     };
 	
@@ -178,8 +178,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			$scope.ack.project = resp;
 			Notification.hide();
 			$scope.project = new Project();
-		}, function () {
-			
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -211,6 +211,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		room.$create(function (resp) {
 			$scope.ack.project.rooms.push(resp);
 			$scope.ack.room = resp;
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -245,6 +247,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		phase.$create(function (resp) {
 			$scope.ack.project.phases.push(resp);
 			$scope.ack.phase = resp;
+		}, function (e) {
+			$log.error(JSON.stringify(e));
 		});
 	};
 	
@@ -282,8 +286,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 						angular.extend($scope.ack.files[h], data);
 					}
 				}
-			}, function () {
-				
+			}, function (e) {
+				$log.error(JSON.stringify(e));
 			});
 		}
 		/* jshint ignore:end */
@@ -327,11 +331,12 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 					delete $scope.ack.newProjectName;
 					
                 }, function (e) {
-                    $log.error(e);
-					Notification.display(e, false);
+                    $log.error(JSON.stringify(e));
+					Notification.display("There was an error in creating the acknowledgement. A report has been sent to Charlie.", false);
                 });
             }
         } catch (e) {
+			$log.error(JSON.stringify({message: e, data: $scope.ack}));
 			Notification.display(e, false);
         }
     };
