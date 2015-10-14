@@ -8007,7 +8007,8 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
   'Phase',
   '$mdDialog',
   '$log',
-  function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log) {
+  '$location',
+  function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
     /*
 	 * Setup vars
 	 */

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: fabricStorage', function () {
+xdescribe('Directive: fabricStorage', function () {
 
   // load the directive's module
   beforeEach(module('frontendApp'));
