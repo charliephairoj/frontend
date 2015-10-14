@@ -3305,9 +3305,12 @@ angular.module('employeeApp.directives').directive('modal', [
                     if (scope.$$phase == '$apply' || scope.$$phase == '$digest') {
                       scope[attrs.ngModel || attrs.modal] = false;
                     } else {
-                      scope.$apply(function () {
-                        scope[attrs.ngModel || attrs.modal] = false;
-                      });
+                      try {
+                        scope.safeApply(function () {
+                          scope[attrs.ngModel || attrs.modal] = false;
+                        });
+                      } catch (e) {
+                      }
                     }
                   }
                   if (attrs.onhide) {
@@ -8117,7 +8120,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           map.setZoom(17);
         }
       } catch (e) {
-        $log.error(e);
+        $log.error(e.stack);
       }
     };
     /* 
@@ -8231,11 +8234,11 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
       /*
 		 * Apply the items unit cost or cost from supplier to the supply cost
 		 */
-      purchasedItem.cost = purchasedItem.cost || purchasedItem.unit_cost;
+      purchasedItem.cost = Number(purchasedItem.cost || purchasedItem.unit_cost || 0);
       if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers')) {
         for (var i = 0; i < purchasedItem.suppliers.length; i++) {
           if (purchasedItem.suppliers[i].supplier.id == ($scope.po.supplier.id || $scope.po.supplier.supplier.id)) {
-            purchasedItem.cost = purchasedItem.suppliers[i].cost;
+            purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
           }
         }
       }
@@ -8288,7 +8291,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           }
         }
       } catch (e) {
-        $log.warn(JSON.stringify(e));
+        $log.warn(e.stack);
       }
     }, true);
     /*
