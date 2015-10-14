@@ -140,7 +140,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				 map.setZoom(17);
 			}
 		} catch (e) {
-			$log.error(e);
+			$log.error(e.stack);
 		}
 	};
 	
@@ -267,12 +267,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		/*
 		 * Apply the items unit cost or cost from supplier to the supply cost
 		 */
-		purchasedItem.cost = purchasedItem.cost || purchasedItem.unit_cost;
+		purchasedItem.cost = Number((purchasedItem.cost || purchasedItem.unit_cost) || 0);
 		
 		if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers')) {
 			for (var i = 0; i < purchasedItem.suppliers.length; i++) {
 				if (purchasedItem.suppliers[i].supplier.id == ($scope.po.supplier.id || $scope.po.supplier.supplier.id)) {
-					purchasedItem.cost = purchasedItem.suppliers[i].cost;
+					purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
 				}
 			}
 		}
@@ -332,7 +332,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				}
 			}
 		} catch (e) {
-			$log.warn(JSON.stringify(e));
+			$log.warn(e.stack);
 		}
 	}, true);
 	

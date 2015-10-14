@@ -66,9 +66,14 @@ angular.module('employeeApp.directives')
 									if (scope.$$phase == '$apply' || scope.$$phase == '$digest') {
 										scope[attrs.ngModel || attrs.modal] = false;
 									} else {
-										scope.$apply(function () {
-											scope[attrs.ngModel || attrs.modal] = false;
-										});
+										try {
+											scope.safeApply(function () {
+												scope[attrs.ngModel || attrs.modal] = false;
+											});
+										} catch (e) {
+											
+										}
+										
 									}
 								}
 
