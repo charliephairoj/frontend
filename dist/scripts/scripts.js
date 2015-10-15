@@ -389,13 +389,16 @@ angular.module('employeeApp').run([
      * based on the value provided
      */
     $rootScope.safeApply = function (fn) {
-      var phase = this.$root.$$phase;
+      var phase = this.$rootScope.$$phase;
       if (phase == '$apply' || phase == '$digest') {
         if (fn && typeof fn === 'function') {
           fn();
         }
       } else {
-        this.$apply(fn);
+        try {
+          this.$apply(fn);
+        } catch (e) {
+        }
       }
     };
     /*
@@ -3361,6 +3364,7 @@ angular.module('employeeApp.directives').directive('modal', [
                     scope[attrs.ngModel || attrs.modal] = false;
                   });
                 } catch (e) {
+                  $log.warn(e);
                 }
               });
             }
@@ -5804,9 +5808,12 @@ angular.module('employeeApp').directive('searchBar', [
 			 * Clear Button
 			 */
         clearButton.click(function () {
-          scope.$apply(function () {
-            scope.query = '';
-          });
+          try {
+            scope.$apply(function () {
+              scope.query = '';
+            });
+          } catch (e) {
+          }
         });
         //Unbind when leaving the Page
         scope.$on('$destroy', function () {
@@ -8136,7 +8143,7 @@ angular.module('employeeApp').controller('OrderPurchaseOrderCreateCtrl', [
           map.setZoom(17);
         }
       } catch (e) {
-        $log.error(e.stack);
+        $log.warn(e.stack);
       }
     };
     /* 
@@ -9085,9 +9092,12 @@ angular.module('employeeApp').directive('fabricSelector', [
         };
         function parseKeydown(evt) {
           if (evt.which === 13) {
-            scope.$apply(function () {
-              scope.done();
-            });
+            try {
+              scope.$apply(function () {
+                scope.done();
+              });
+            } catch (e) {
+            }
           }
         }
         $(window).on('keydown', parseKeydown);

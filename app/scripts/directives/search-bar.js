@@ -57,9 +57,14 @@ angular.module('employeeApp')
 			 * Clear Button
 			 */
 			clearButton.click(function () {
-				scope.$apply(function () {
-					scope.query = '';
-				});
+				try{
+					scope.$apply(function () {
+						scope.query = '';
+					});
+				} catch (e) {
+					
+				}
+				
 			});
 
 			//Unbind when leaving the Page

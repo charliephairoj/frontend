@@ -71,9 +71,14 @@ function (Fabric, $mdToast, $parse) {
 			
 			function parseKeydown(evt) {
 				if (evt.which === 13) {
-					scope.$apply(function () {
-						scope.done();
-					});
+					try{
+						scope.$apply(function () {
+							scope.done();
+						});
+					} catch (e) {
+						
+					}
+					
 				}
 			}
 			

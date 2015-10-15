@@ -127,7 +127,7 @@ angular.module('employeeApp.directives')
 									scope[attrs.ngModel || attrs.modal] = false;
 								});
 							} catch (e) {
-								
+								$log.warn(e);
 							}
 							
 						});

@@ -140,7 +140,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				 map.setZoom(17);
 			}
 		} catch (e) {
-			$log.error(e.stack);
+			$log.warn(e.stack);
 		}
 	};
 	

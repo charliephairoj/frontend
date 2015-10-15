@@ -162,13 +162,17 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
    
     
     $rootScope.safeApply = function (fn) {
-		var phase = this.$root.$$phase;
+		var phase = this.$rootScope.$$phase;
 		if (phase == '$apply' || phase == '$digest') {
 			if (fn && (typeof(fn) === 'function')) {
 				fn();
 			}
 		} else {
-			this.$apply(fn);
+			try{
+				this.$apply(fn);
+			} catch (e) {
+			}
+			
 		}
     };
     
