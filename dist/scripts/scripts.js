@@ -270,19 +270,19 @@ angular.module('employeeApp').config([
         };
         $delegate.info = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + args[0];
+          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
           record('info', args[0]);
           _info(msg);
         };
         $delegate.warn = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + args[0];
+          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
           record('warn', args[0]);
           _warn(msg);
         };
         $delegate.error = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + args[0];
+          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
           record('error', args[0]);
           _error(msg);
         };
@@ -2751,10 +2751,12 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
       if (newVal && oldVal) {
         try {
           for (var i = 0; i < newVal.length; i++) {
-            if (newVal[i].id === oldVal[i].id) {
-              if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
-                var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
-                newVal[i].$update(postUpdate);
+            if (newVal[i] && oldVal[i]) {
+              if (newVal[i].id === oldVal[i].id) {
+                if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
+                  var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
+                  newVal[i].$update(postUpdate);
+                }
               }
             }
           }
@@ -3354,9 +3356,12 @@ angular.module('employeeApp.directives').directive('modal', [
             });
             if (closeButton) {
               closeButton.click(function () {
-                scope.$apply(function () {
-                  scope[attrs.ngModel || attrs.modal] = false;
-                });
+                try {
+                  scope.$apply(function () {
+                    scope[attrs.ngModel || attrs.modal] = false;
+                  });
+                } catch (e) {
+                }
               });
             }
           }
@@ -3373,7 +3378,8 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
   'Shipping',
   '$location',
   'scanner',
-  function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner) {
+  '$log',
+  function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
     var fetchingAck = true;
     $scope.acknowledgements = Acknowledgement.query({ limit: 20 }, function () {
       fetchingAck = false;
@@ -3402,6 +3408,16 @@ angular.module('employeeApp').controller('OrderShippingCreateCtrl', [
       $scope.shipping.customer = ack.customer;
       $scope.shipping.items = ack.items;
       $scope.shipping.delivery_date = new Date(ack.delivery_date);
+      for (var i = 0; i < $scope.shipping.items.length; i++) {
+        try {
+          $scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
+          $scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
+          $scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
+          $scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
+        } catch (e) {
+          $log.warn(e);
+        }
+      }
       //Hide Customer Panel
       $scope.showAck = false;
     };

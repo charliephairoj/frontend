@@ -122,9 +122,14 @@ angular.module('employeeApp.directives')
 
 					if (closeButton) {
 						closeButton.click(function () {
-							scope.$apply(function () {
-								scope[attrs.ngModel || attrs.modal] = false;
-							});
+							try{
+								scope.$apply(function () {
+									scope[attrs.ngModel || attrs.modal] = false;
+								});
+							} catch (e) {
+								
+							}
+							
 						});
 					}
 				}

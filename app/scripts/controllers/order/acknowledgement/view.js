@@ -143,12 +143,14 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			
 			try{
 				for (var i = 0; i < newVal.length; i++) {
-					if (newVal[i].id === oldVal[i].id) {
-						if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
+					if (newVal[i] && oldVal[i]) {
+						if (newVal[i].id === oldVal[i].id) {
+							if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
 							
-							var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
+								var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
 							
-							newVal[i].$update(postUpdate);
+								newVal[i].$update(postUpdate);
+							}
 						}
 					}
 				}

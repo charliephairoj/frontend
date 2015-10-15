@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner',     
-function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner) {
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',   
+function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
 	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function () {
@@ -41,6 +41,21 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
         $scope.shipping.customer = ack.customer;
         $scope.shipping.items = ack.items;
         $scope.shipping.delivery_date = new Date(ack.delivery_date);
+		
+		for (var i = 0; i < $scope.shipping.items.length; i++) {
+			try{
+				$scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
+				$scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
+				$scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
+				$scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
+				
+				
+			} catch (e) {
+				$log.warn(e);
+			}
+			
+		}
+		
         //Hide Customer Panel
         $scope.showAck = false;
     };
