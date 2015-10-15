@@ -270,19 +270,19 @@ angular.module('employeeApp').config([
         };
         $delegate.info = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+          var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
           record('info', args[0]);
           _info(msg);
         };
         $delegate.warn = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+          var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
           record('warn', args[0]);
           _warn(msg);
         };
         $delegate.error = function () {
           var args = [].slice.call(arguments), now = new Date().toUTCString();
-          var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+          var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
           record('error', args[0]);
           _error(msg);
         };
@@ -389,10 +389,11 @@ angular.module('employeeApp').run([
      * based on the value provided
      */
     $rootScope.safeApply = function (fn) {
+      var phase;
       try {
-        var phase = this.$root.$$phase;
+        phase = this.$root.$$phase;
       } catch (e) {
-        var phase = $rootScope.$$phase;
+        phase = $rootScope.$$phase;
       }
       if (phase == '$apply' || phase == '$digest') {
         if (fn && typeof fn === 'function') {
@@ -4029,7 +4030,10 @@ angular.module('employeeApp').controller('SupplyFabricDetailsCtrl', [
   'FileUploader',
   '$log',
   function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader, $log) {
-    $scope.fabric = Fabric.get({ 'id': $routeParams.id });
+    $scope.fabric = Fabric.get({ 'id': $routeParams.id }, function (e) {
+      $scope.fabric.quantity = Number($scope.fabric.quantity || 0);
+      $scope.fabric.width = Number($scope.fabric.width || 0);
+    });
     $scope.logs = SupplyLog.query({ supply_id: $routeParams.id });
     //Create fabric actions
     var DEFAULT_ACTIONS = [
@@ -11141,7 +11145,7 @@ angular.module('employeeApp.directives').directive('supply', [
             try {
               scope.onSelect({ '$element': element });
             } catch (e) {
-              $log.error(e);
+              $log.warn(e);
             }
             Supply.get({ id: scope.supply.id }, function (response) {
               angular.extend(scope.supply, response);

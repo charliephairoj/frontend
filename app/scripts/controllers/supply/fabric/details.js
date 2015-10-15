@@ -2,7 +2,10 @@
 angular.module('employeeApp')
 .controller('SupplyFabricDetailsCtrl', ['$scope', 'Fabric', '$routeParams', '$location', 'Notification', 'SupplyLog', '$mdToast', 'FileUploader', '$log',
 function ($scope, Fabric, $routeParams, $location, Notification, SupplyLog, $mdToast, FileUploader, $log) {
-    $scope.fabric = Fabric.get({'id': $routeParams.id});
+    $scope.fabric = Fabric.get({'id': $routeParams.id}, function (e) {
+    	$scope.fabric.quantity = Number($scope.fabric.quantity || 0);
+		$scope.fabric.width = Number($scope.fabric.width || 0);
+    });
     $scope.logs = SupplyLog.query({supply_id: $routeParams.id});
     
     //Create fabric actions

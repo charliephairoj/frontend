@@ -183,7 +183,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 					try {
 						scope.onSelect({'$element': element});
 					} catch (e) {
-						$log.error(e);
+						$log.warn(e);
 					}
 
 					Supply.get({id:scope.supply.id}, function (response) {

@@ -26,7 +26,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 		$delegate.info = function () {
 			var args    = [].slice.call(arguments),
                 now     = new Date().toUTCString();
-			var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 
 			record('info', args[0]);
 			_info(msg);
@@ -35,7 +35,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 		$delegate.warn = function () {
 			var args    = [].slice.call(arguments),
 	            now     = new Date().toUTCString();
-			var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 		
 			record('warn', args[0]);
 			_warn(msg);
@@ -44,7 +44,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 		$delegate.error = function () {
 			var args    = [].slice.call(arguments),
 	            now     = new Date().toUTCString();
-			var msg = now + '-' + (args[0].hasOwnProperty('stack') ? args[0].stack : args[0]);
+			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 
 			record('error', args[0]);
 			_error(msg);
@@ -162,10 +162,11 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
    
     
     $rootScope.safeApply = function (fn) {
+		var phase;
 		try {
-			var phase = this.$root.$$phase;
+			phase = this.$root.$$phase;
 		} catch (e) {
-			var phase = $rootScope.$$phase;
+			phase = $rootScope.$$phase;
 		}
 		if (phase == '$apply' || phase == '$digest') {
 			if (fn && (typeof(fn) === 'function')) {
