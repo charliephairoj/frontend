@@ -389,7 +389,11 @@ angular.module('employeeApp').run([
      * based on the value provided
      */
     $rootScope.safeApply = function (fn) {
-      var phase = this.$rootScope.$$phase;
+      try {
+        var phase = this.$root.$$phase;
+      } catch (e) {
+        var phase = $rootScope.$$phase;
+      }
       if (phase == '$apply' || phase == '$digest') {
         if (fn && typeof fn === 'function') {
           fn();
