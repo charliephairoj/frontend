@@ -95,11 +95,6 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Pro
 	
 	//Retrieve the purchase order from the server
 	$scope.po = PurchaseOrder.get({id: $routeParams.id}, function () {
-		for (var i = 0; i < $scope.po.items.length; i++) {
-			var item = $scope.po.items[i];
-			item.unit_cost = Number(item.unit_cost);
-			item.quantity = Number(item.quantity);
-		}
 		
 		//Reconcile the project so that it is shown to the user
 		if ($scope.po.id && $scope.po.project && $scope.projects.length) {

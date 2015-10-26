@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ProductUpholsteryDetailsCtrl', ['$scope', 'Upholstery', '$routeParams', '$mdToast', '$location', '$timeout', 'FileUploader',
-function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader) {
+.controller('ProductUpholsteryDetailsCtrl', ['$scope', 'Upholstery', '$routeParams', '$mdToast', '$location', '$timeout', 'FileUploader', 'ProductSupply', '$mdDialog', 'Notification',
+function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader, ProductSupply, $mdDialog, Notification) {
 	
 	$scope.updateLoopActive = true;
 	var timeoutPromise;
@@ -11,7 +11,10 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 			$scope.updateLoopActive = false;
 		});
     });    
+	$scope.supplies = ProductSupply.query({'product__id': $routeParams.id}, function () {
+	});
     
+	
     //Upload Image
     $scope.upload = function () {
         //Notify of uploading image        
@@ -51,6 +54,82 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 		});*/
 	};
     
+	//Supply total
+	$scope.supplyTotal = function () {
+		var total = 0;
+		for(var i = $scope.supplies.length; i--;) {
+			total += Number($scope.supplies[i].cost);
+		}
+		
+		return total;
+	};
+	
+	/* 
+	 * Dialog to add a new product supply
+	 */
+	$scope.showAddProductSupply = function () {
+		$scope.supply = new ProductSupply();
+		$scope.supply.product = $scope.uphol;
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-product-supply.html',
+			controllerAs: 'ctrl',
+			controller: function () {this.parent = $scope;}
+		});
+	};
+	
+	$scope.completeAddProductSupply = function  () {
+		$mdDialog.hide();
+		
+		Notification.display("Creating supply for " + $scope.uphol.description + "...", false);
+			
+		$scope.supply.$create(function (resp) {
+			$scope.supplies.push(resp);
+			
+			Notification.hide();
+			$scope.supply = new ProductSupply();
+			$scope.supply.product = $scope.uphol;
+		}, function (e) {
+			$log.error(JSON.stringify(e));
+		});
+	};
+	
+	$scope.cancelAddProductSupply = function  () {
+		$mdDialog.hide();
+		$scope.supply = new ProductSupply();
+		$scope.supply = $scope.uphol;
+	};
+	
+	/*
+		Watch function to detect changes in the list of supplies
+	*/
+	$scope.$watch('supplies', function (newVal, oldVal) {
+		var updateSupply = function() {
+			this.$update(function () {
+				this.$updating = false;
+			});
+		};
+		
+		if (newVal.length && oldVal.length) {
+			for (var i = newVal.length; i--;) {
+				if (newVal[i] && oldVal[i]) {
+					if (newVal[i].id == oldVal[i].id) {
+						if (!angular.equals(newVal[i], oldVal[i])) {
+							if (!newVal[i].$updating) {
+								newVal[i].$updating = true;
+								
+								setTimeout(updateSupply.bind(newVal[i]), 600);
+								
+							}
+							
+						}
+					}
+				}
+			}
+		}
+		
+	}, true);
+	
     $scope.$watch(function () {
 		var uphol = angular.copy($scope.uphol);
 		try {

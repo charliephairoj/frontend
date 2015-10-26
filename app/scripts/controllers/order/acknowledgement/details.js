@@ -13,20 +13,6 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
 		notification.hide();
 		
-		//Convert string into numbers for quantity and unit_price and fabric quantity
-		for (var i = 0; i < $scope.acknowledgement.items.length; i++) {
-			$scope.acknowledgement.items[i].quantity = Number($scope.acknowledgement.items[i].quantity);
-			$scope.acknowledgement.items[i].unit_price = Number($scope.acknowledgement.items[i].unit_price);
-			$scope.acknowledgement.items[i].fabric_quantity = Number($scope.acknowledgement.items[i].fabric_quantity);
-			
-			//Convert string into numbers for pillow fabric quantity
-			for (var h = 0; h < $scope.acknowledgement.items[i].pillows.length; h++) {
-				$scope.acknowledgement.items[i].pillows[h].fabric_quantity = Number($scope.acknowledgement.items[i].pillows[h].fabric_quantity);
-			}
-		}
-		
-		
-		
 		//Reconcile the project so that it is shown to the user
 		if ($scope.projects.length > 0 && $scope.acknowledgement.project) {
 			var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);

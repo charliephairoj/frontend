@@ -1990,13 +1990,18 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
   '$location',
   '$timeout',
   'FileUploader',
-  function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader) {
+  'ProductSupply',
+  '$mdDialog',
+  'Notification',
+  function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileUploader, ProductSupply, $mdDialog, Notification) {
     $scope.updateLoopActive = true;
     var timeoutPromise;
     $scope.uphol = Upholstery.get({ 'id': $routeParams.id }, function () {
       $scope.safeApply(function () {
         $scope.updateLoopActive = false;
       });
+    });
+    $scope.supplies = ProductSupply.query({ 'product__id': $routeParams.id }, function () {
     });
     //Upload Image
     $scope.upload = function () {
@@ -2027,6 +2032,69 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
 			}
 		});*/
     };
+    //Supply total
+    $scope.supplyTotal = function () {
+      var total = 0;
+      for (var i = $scope.supplies.length; i--;) {
+        total += Number($scope.supplies[i].cost);
+      }
+      return total;
+    };
+    /* 
+	 * Dialog to add a new product supply
+	 */
+    $scope.showAddProductSupply = function () {
+      $scope.supply = new ProductSupply();
+      $scope.supply.product = $scope.uphol;
+      $mdDialog.show({
+        templateUrl: 'views/templates/add-product-supply.html',
+        controllerAs: 'ctrl',
+        controller: function () {
+          this.parent = $scope;
+        }
+      });
+    };
+    $scope.completeAddProductSupply = function () {
+      $mdDialog.hide();
+      Notification.display('Creating supply for ' + $scope.uphol.description + '...', false);
+      $scope.supply.$create(function (resp) {
+        $scope.supplies.push(resp);
+        Notification.hide();
+        $scope.supply = new ProductSupply();
+        $scope.supply.product = $scope.uphol;
+      }, function (e) {
+        $log.error(JSON.stringify(e));
+      });
+    };
+    $scope.cancelAddProductSupply = function () {
+      $mdDialog.hide();
+      $scope.supply = new ProductSupply();
+      $scope.supply = $scope.uphol;
+    };
+    /*
+		Watch function to detect changes in the list of supplies
+	*/
+    $scope.$watch('supplies', function (newVal, oldVal) {
+      var updateSupply = function () {
+        this.$update(function () {
+          this.$updating = false;
+        });
+      };
+      if (newVal.length && oldVal.length) {
+        for (var i = newVal.length; i--;) {
+          if (newVal[i] && oldVal[i]) {
+            if (newVal[i].id == oldVal[i].id) {
+              if (!angular.equals(newVal[i], oldVal[i])) {
+                if (!newVal[i].$updating) {
+                  newVal[i].$updating = true;
+                  setTimeout(updateSupply.bind(newVal[i]), 600);
+                }
+              }
+            }
+          }
+        }
+      }
+    }, true);
     $scope.$watch(function () {
       var uphol = angular.copy($scope.uphol);
       try {
@@ -5146,16 +5214,6 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       'pdf': true
     }, function () {
       notification.hide();
-      //Convert string into numbers for quantity and unit_price and fabric quantity
-      for (var i = 0; i < $scope.acknowledgement.items.length; i++) {
-        $scope.acknowledgement.items[i].quantity = Number($scope.acknowledgement.items[i].quantity);
-        $scope.acknowledgement.items[i].unit_price = Number($scope.acknowledgement.items[i].unit_price);
-        $scope.acknowledgement.items[i].fabric_quantity = Number($scope.acknowledgement.items[i].fabric_quantity);
-        //Convert string into numbers for pillow fabric quantity
-        for (var h = 0; h < $scope.acknowledgement.items[i].pillows.length; h++) {
-          $scope.acknowledgement.items[i].pillows[h].fabric_quantity = Number($scope.acknowledgement.items[i].pillows[h].fabric_quantity);
-        }
-      }
       //Reconcile the project so that it is shown to the user
       if ($scope.projects.length > 0 && $scope.acknowledgement.project) {
         var index = $scope.projects.indexOfById($scope.acknowledgement.project.id);
@@ -9191,11 +9249,6 @@ angular.module('employeeApp').controller('OrderPurchaseOrderDetailsCtrl', [
     }
     //Retrieve the purchase order from the server
     $scope.po = PurchaseOrder.get({ id: $routeParams.id }, function () {
-      for (var i = 0; i < $scope.po.items.length; i++) {
-        var item = $scope.po.items[i];
-        item.unit_cost = Number(item.unit_cost);
-        item.quantity = Number(item.quantity);
-      }
       //Reconcile the project so that it is shown to the user
       if ($scope.po.id && $scope.po.project && $scope.projects.length) {
         var index = $scope.projects.indexOfById($scope.po.project.id);
@@ -13805,3 +13858,51 @@ angular.module('employeeApp').controller('ScannerCtrl', [
     });
   }
 ]);
+/**
+ * @ngdoc service
+ * @name frontendApp.models/productSupply
+ * @description
+ * # models/productSupply
+ * Service in the frontendApp.
+ */
+angular.module('employeeApp').factory('ProductSupply', [
+  '$resource',
+  function ($resource) {
+    return $resource('/api/v1/product/supply/:id/', { id: '@id' }, {
+      create: { method: 'POST' },
+      update: { method: 'PUT' }
+    });
+  }
+]);
+angular.module('employeeApp.services').factory('number', [
+  '$q',
+  '$log',
+  function ($q, $log) {
+    return {
+      'response': function (response) {
+        var re = /^\d+(\.\d+)?$/;
+        function refactor(obj) {
+          for (var key in obj) {
+            if (typeof obj[key] == 'object') {
+              refactor(obj[key]);
+            } else {
+              if (re.test(obj[key])) {
+                obj[key] = Number(obj[key]);
+              }
+            }
+          }
+          return obj;
+        }
+        if (typeof response == 'object') {
+          response = refactor(response);
+        }
+        return response || $q.when(response);
+      },
+      'responseError': function (rejection) {
+        return $q.reject(rejection);
+      }
+    };
+  }
+]).config(function ($httpProvider) {
+  $httpProvider.interceptors.push('number');
+});
