@@ -13881,7 +13881,9 @@ angular.module('employeeApp.services').factory('number', [
     return {
       'response': function (response) {
         var re = /^\d+(\.\d+)?$/;
+        var count = 0;
         function refactor(obj) {
+          count++;
           for (var key in obj) {
             if (typeof obj[key] == 'object') {
               refactor(obj[key]);
@@ -13893,8 +13895,12 @@ angular.module('employeeApp.services').factory('number', [
           }
           return obj;
         }
-        if (typeof response == 'object') {
-          response = refactor(response);
+        try {
+          if (typeof response == 'object') {
+            response = refactor(response);
+          }
+        } catch (e) {
+          $log.warn(count);
         }
         return response || $q.when(response);
       },
