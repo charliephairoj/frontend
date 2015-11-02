@@ -10090,7 +10090,7 @@ angular.module('employeeApp').controller('MainCtrl', [
         try {
           markers[$scope.active][i].setMap(null);
         } catch (e) {
-          console.$error(e);
+          $log.error(e);
         }
       }
       $scope.active = target;

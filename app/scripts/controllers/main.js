@@ -146,7 +146,7 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 			try {
 				markers[$scope.active][i].setMap(null);
 			} catch (e) {
-				console.$error(e);
+				$log.error(e);
 			}
 		}
 		

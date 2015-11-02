@@ -1,0 +1,33 @@
+<md-dialog class="add-product-supply">
+	<md-subheader>Add New Supply for {{ctrl.parent.uphol.description}}</md-subheader>
+	<div class="container">
+		<md-content>
+			<form name="ctrl.parent.form">
+				<table>
+					<tr>
+						<td>
+							<md-input-container>
+								<label>Description</label>
+								<input type="text" ng-model="ctrl.parent.supply.description" required>
+							</md-input-container>
+							<md-input-container>
+								<label>Quantity</label>
+								<input type="text" ng-model="ctrl.parent.supply.quantity" required>
+							</md-input-container>
+							<md-input-container>
+								<label>Cost</label>
+								<input type="text" ng-model="ctrl.parent.supply.cost" required>
+							</md-input-container>
+						</td>
+					</tr>
+				</table>
+				<div supplies>
+				</div>
+			</form>
+		</md-content>
+	</div>
+	<md-action>
+		<md-button class="md-primary md-raised" ng-disabled="!form.$valid" ng-click="ctrl.parent.completeAddProductSupply()">ADD</md-button>
+		<md-button class="md-primary md-raised" ng-click="ctrl.parent.cancelAddProductSupply()">CANCEL</md-button>
+	</md-action>
+</md-dialog>

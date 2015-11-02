@@ -49,6 +49,11 @@
 					<td>Order Date:</td>
 					<td>{{estimate.time_created | date:"MMMM d, yyyy"}}</td>
 				</tr>
+				<tr>
+					<td>Discount</td>
+					<td>
+						<input type="number" maxlength=2 size=4 ng-model="estimate.discount" />%</td>
+				</tr>
 			</table>
 			<table>
 				<tr class="due-date">
