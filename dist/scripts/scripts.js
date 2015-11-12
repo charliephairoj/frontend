@@ -2544,6 +2544,9 @@ angular.module('employeeApp').controller('OrderAcknowledgementCreateCtrl', [
       $scope.phase = undefined;
     };
     $scope.addItem = function (product) {
+      product.width = product.width || 0;
+      product.height = product.height || 0;
+      product.depth = product.depth || 0;
       $scope.ack.items.push(product);
       $scope.tempSave();
     };
