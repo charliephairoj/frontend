@@ -134,14 +134,32 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 		var uphol = angular.copy($scope.uphol);
 		try {
 			delete uphol.last_modified;
-			delete uphol.image;
-			delete uphol.model;
-			delete uphol.configuration;
+			//delete uphol.image;
+			//delete uphol.model;
+			//delete uphol.configuration;
 		}catch (e) {
 			
 		}
 		return uphol;
 	}, function (newVal, oldVal) {
+		
+		if (newVal && oldVal) {
+			if (newVal.hasOwnProperty('id')) {
+				if (!angular.equals(newVal, oldVal)) {
+					if (!newVal.$updating) {
+						
+						newVal.$updating = true;
+						
+						setTimeout(function () {
+							this.$update(function () {
+								this.$updating = false;
+							});
+						}.bind(newVal), 600)
+					}
+				}
+			}
+		}
+		
 		if (oldVal.hasOwnProperty('id')) {
 			
 			$timeout.cancel(timeoutPromise);
