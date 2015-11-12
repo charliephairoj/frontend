@@ -152,6 +152,17 @@
                     <td>{{acknowledgement.items.length}}</td>
                 </tr>
             </table>
+			
+			<div class="status-bar">
+				<div class="event" ng-class="{'acknowledged': hasEvent(acknowledgement, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">Acknowledged</div>
+				<div class="event" ng-class="{'deposit-received': hasEvent(acknowledgement, 'deposit')}">Deposit Received</div>
+				<div class="event" ng-class="{'in-production': hasEvent(acknowledgement, 'in production')}">In Production</div>
+				<div class="event" ng-class="{'ready-to-ship': hasEvent(acknowledgement, 'ready to ship')}">Ready to Ship</div>
+				<div class="event" ng-class="{'shipped': hasEvent(acknowledgement, 'shipped')}">Shipped</div>
+				<div class="event" ng-class="{'invoiced': hasEvent(acknowledgement, 'invoiced')}">Invoiced</div>
+				<div class="event" ng-class="{'paid': hasEvent(acknowledgement, 'paid')}">Paid</div>	
+			</div>
+			
         </div>
 		
 		<md-tabs class="md-primary" md-selected="selectedIndex">

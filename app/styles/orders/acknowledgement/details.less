@@ -155,12 +155,14 @@
 		right:0;
 		padding:15em 0 1em 0;
 		background:#FFF;
+		width:auto;
+		height:auto;
 		
         .details{
 			position:absolute;
 			width:100%;
 			padding:1em;
-			height:9em;
+			height:10em;
 			top:0;
 			left:0;
             color:rgba(0, 0, 0, 1);
@@ -173,11 +175,66 @@
 					margin-left:2em;
 				}
 			}
+			
+			.status-bar{
+				height:1.2em;
+				width:100%;
+				background:pink;
+				display:flex;
+				flex-direction:row;
+				position:absolute;
+				bottom:0;
+				left:0;
+				
+				.event{
+					height:100%;
+					background:#EEE;
+					width:14.285%;
+					color:rgb(0, 0, 0);
+					text-align:center;
+					padding:0.2em;
+								
+					&.acknowledged{
+						color:rgb(255, 255, 255);
+						background-color:rgb(54, 66, 140);
+					}
+
+					&.deposit-received{
+						color:rgb(255, 255, 255);
+						background-color:rgb(50, 130, 120);
+					}
+
+					&.in-production{
+						color:rgb(255, 255, 255);
+						background-color:rgb(198, 148, 77);
+					}
+
+					&.ready-to-ship{
+						color:rgb(255, 255, 255);
+						background-color:rgb(87,117,83);
+					}
+
+					&.shipped{
+						color:rgb(255, 255, 255);
+						background-color:rgb(97,92,130);
+					}
+
+					&.invoiced{
+						color:rgb(255, 255, 255);
+						background-color:rgb(163, 81, 82);
+					}
+
+					&.paid{
+						color:rgb(255, 255, 255);
+						background-color:rgb(87, 132, 87);
+					}
+				}
+			}
         }
 		
         md-tabs{
         	position:absolute;
-			top:9em;
+			top:10em;
 			left:5%;
 			width:90%;
         }

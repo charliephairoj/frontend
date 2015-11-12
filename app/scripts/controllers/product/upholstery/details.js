@@ -154,7 +154,7 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 							this.$update(function () {
 								this.$updating = false;
 							});
-						}.bind(newVal), 600)
+						}.bind(newVal), 600);
 					}
 				}
 			}

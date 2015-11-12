@@ -2098,14 +2098,27 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
     $scope.$watch(function () {
       var uphol = angular.copy($scope.uphol);
       try {
-        delete uphol.last_modified;
-        delete uphol.image;
-        delete uphol.model;
-        delete uphol.configuration;
+        delete uphol.last_modified;  //delete uphol.image;
+                                     //delete uphol.model;
+                                     //delete uphol.configuration;
       } catch (e) {
       }
       return uphol;
     }, function (newVal, oldVal) {
+      if (newVal && oldVal) {
+        if (newVal.hasOwnProperty('id')) {
+          if (!angular.equals(newVal, oldVal)) {
+            if (!newVal.$updating) {
+              newVal.$updating = true;
+              setTimeout(function () {
+                this.$update(function () {
+                  this.$updating = false;
+                });
+              }.bind(newVal), 600);
+            }
+          }
+        }
+      }
       if (oldVal.hasOwnProperty('id')) {
         $timeout.cancel(timeoutPromise);
         timeoutPromise = $timeout(function () {
@@ -2809,6 +2822,17 @@ angular.module('employeeApp').controller('OrderAcknowledgementViewCtrl', [
           createAcknowledgementMarkers();
         });
       }
+    };
+    //Help determine if an event occured for the given acknowledgement
+    $scope.hasEvent = function (ack, e) {
+      for (var i in ack.logs) {
+        if (ack.logs[i].hasOwnProperty('message')) {
+          if (ack.logs[i].message.indexOf(e) > -1) {
+            return true;
+          }
+        }
+      }
+      return false;
     };
     /*
 	 * Navigate to the details page for an acknowledgement
@@ -5235,6 +5259,17 @@ angular.module('employeeApp').controller('OrderAcknowledgementDetailsCtrl', [
       limit: 0,
       page_size: 1000
     });
+    //Help determine if an event occured for the given acknowledgement
+    $scope.hasEvent = function (ack, e) {
+      for (var i in ack.logs) {
+        if (ack.logs[i].hasOwnProperty('message')) {
+          if (ack.logs[i].message.indexOf(e) > -1) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
     //Request pdf for acknowledgements from server
     $scope.getPDF = function (type) {
       try {
@@ -13087,8 +13122,22 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
   'D3',
   '$http',
   '$filter',
-  function (D3, $http, $filter) {
-    function createChart(element, data, callback) {
+  '$log',
+  '$rootScope',
+  function (D3, $http, $filter, $log, $rootScope) {
+    function hasEvent(acknowledgement, e) {
+      if (acknowledgement) {
+        for (var i in acknowledgement.logs) {
+          if (acknowledgement.logs[i].hasOwnProperty('message')) {
+            if (acknowledgement.logs[i].message.indexOf(e) > -1) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function createChart(element, data, callback, acknowledgements) {
       //Create box charts for summary
       var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div').attr('class', function (d) {
           return d.category.toLowerCase().replace(/ /gi, '-');
@@ -13106,6 +13155,25 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
         angular.element('.acknowledgement-summary div.active').removeClass('active');
         d3.select(this).attr('class', 'active ' + d.category.toLowerCase().replace(/ /gi, '-'));
         (callback || angular.noop)({ '$category': d.category });
+      }).on('mouseenter', function (d) {
+        var cat = d.category.toLowerCase() == 'acknowledged' ? 'open' : d.category.toLowerCase();
+        $rootScope.safeApply(function () {
+          for (var i in acknowledgements || []) {
+            try {
+              if (hasEvent(acknowledgements[i], cat)) {
+                acknowledgements[i].$active = true;
+              }
+            } catch (e) {
+              $log.warn(e);
+            }
+          }
+        });
+      }).on('mouseleave', function (d) {
+        $rootScope.safeApply(function () {
+          for (var i in acknowledgements || []) {
+            acknowledgements[i].$active = false;
+          }
+        });
       });
       box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
         //Calculate bar width
@@ -13121,7 +13189,10 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
     }
     return {
       restrict: 'EA',
-      scope: { 'onClick': '&' },
+      scope: {
+        'onClick': '&',
+        'acknowledgements': '='
+      },
       link: function postLink(scope, element, attrs) {
         //Set class for this element
         element.addClass('acknowledgement-summary');
@@ -13175,7 +13246,7 @@ angular.module('employeeApp').directive('acknowledgementSummary', [
               }
             ];
           //Call fn to create chart
-          createChart(element, data, scope.onClick);
+          createChart(element, data, scope.onClick, scope.acknowledgements);
         });
       }
     };

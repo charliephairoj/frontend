@@ -30,7 +30,7 @@
     
     <div class="workspace" ng-class="{'map': map}">
 		
-		<acknowledgement-summary on-click="setCategory($category)"></acknowledgement-summary>
+		<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
 		
 		<nav>
 			<h2>Acknowledgements</h2>
@@ -60,7 +60,7 @@
 		    	<div class="outer-container" on-scroll-end="loadNext()"> 
 			
 			    	<ul class="inner-container" >
-			    		<li class="item-container" data-ng-repeat="ack in acknowledgements | filter:query">	
+			    		<li class="item-container"  ng-class="{'active': ack.$active}" data-ng-repeat="ack in acknowledgements | filter:query">	
 			    			<div class="item" ng-class="{'selected':ack.$selected}">
 								<div class="id" ng-click="navigate(ack.id)">{{ack.id}}</div>
 								<div class="order-date" ng-click="navigate(ack.id)">{{ack.time_created | date: "MMM d, yyyy"}}</div>
@@ -95,7 +95,15 @@
 			    				<span class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</span>
 								-->
 			    			</div>
-	    				
+	    					<div class="status-bar">
+								<div class="event" ng-class="{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}"></div>
+								<div class="event" ng-class="{'deposit-received': hasEvent(ack, 'deposit')}"></div>
+								<div class="event" ng-class="{'in-production': hasEvent(ack, 'in production')}"></div>
+								<div class="event" ng-class="{'ready-to-ship': hasEvent(ack, 'ready to ship')}"></div>
+								<div class="event" ng-class="{'shipped': hasEvent(ack, 'shipped')}"></div>
+								<div class="event" ng-class="{'invoiced': hasEvent(ack, 'invoiced')}"></div>
+								<div class="event" ng-class="{'paid': hasEvent(ack, 'paid')}"></div>
+							</div>
 			    		</li>
 			    	</ul>
 		    	</div>

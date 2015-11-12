@@ -225,19 +225,104 @@
 		                height:auto;
 		                .item-container{
 		                    width:100%;
-		                    background-color:red;
 		                    position:relative;
-		                    height:3em;
-		                    &:hover{
-		                        background-color:red;
-		                    }
-                    
+		                    height:3.5em;
+							display:flex;
+							flex-direction:column;
+							overflow-x:hidden;
+							z-index:0;
+		                    
+                    		&:hover{
+								z-index:1;
+								//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+								//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+								
+								.status-bar{
+									.event{
+										height:100%;
+										background:#EEE;
+										width:14.285%;
+									
+										&.acknowledged{
+											background-color:rgb(54, 66, 140);
+										}
+				
+										&.deposit-received{
+											background-color:rgb(50, 130, 120);
+										}
+				
+										&.in-production{
+											background-color:rgb(198, 148, 77);
+										}
+				
+										&.ready-to-ship{
+											background-color:rgb(87,117,83);
+										}
+				
+										&.shipped{
+											background-color:rgb(97,92,130);
+										}
+				
+										&.invoiced{
+											background-color:rgb(163, 81, 82);
+										}
+				
+										&.paid{
+											background-color:rgb(87, 132, 87);
+										}
+									}
+								}
+                 
+                    		}
+							
+                    		&.active{
+								z-index:1;
+								//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+								//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+								
+								.status-bar{
+									.event{
+										height:100%;
+										background:#EEE;
+										width:14.285%;
+									
+										&.acknowledged{
+											background-color:rgb(54, 66, 140);
+										}
+				
+										&.deposit-received{
+											background-color:rgb(50, 130, 120);
+										}
+				
+										&.in-production{
+											background-color:rgb(198, 148, 77);
+										}
+				
+										&.ready-to-ship{
+											background-color:rgb(87,117,83);
+										}
+				
+										&.shipped{
+											background-color:rgb(97,92,130);
+										}
+				
+										&.invoiced{
+											background-color:rgb(163, 81, 82);
+										}
+				
+										&.paid{
+											background-color:rgb(87, 132, 87);
+										}
+									}
+								}
+                 
+                    		}
+							
 		                    .item{
 								display:flex;
 								flex-direction:row;
 		                        width:100%;
 		                        background-color:#FFF;
-		                        position:absolute;
 		                        left:0;
 								top:0;
 		                        font-size:1em;
@@ -321,6 +406,51 @@
 									}
 								}
 		                    }
+							
+							.status-bar{
+								height:.5em;
+								width:100%;
+								background:pink;
+								display:flex;
+								flex-direction:row;
+								
+								
+								.event{
+									height:100%;
+									background:#EEE;
+									width:14.285%;
+									
+									@tint-amount: 50%;
+									
+									&.acknowledged{
+										background-color:tint(rgb(54, 66, 140), @tint-amount);
+									}
+				
+									&.deposit-received{
+										background-color:tint(rgb(50, 130, 120), @tint-amount);
+									}
+				
+									&.in-production{
+										background-color:tint(rgb(198, 148, 77), @tint-amount);
+									}
+				
+									&.ready-to-ship{
+										background-color:tint(rgb(87,117,83), @tint-amount);
+									}
+				
+									&.shipped{
+										background-color:tint(rgb(97,92,130), @tint-amount);
+									}
+				
+									&.invoiced{
+										background-color:tint(rgb(163, 81, 82), @tint-amount);
+									}
+				
+									&.paid{
+										background-color:tint(rgb(87, 132, 87), @tint-amount);
+									}
+								}
+							}
 		                }
 		            }
 		        }

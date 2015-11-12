@@ -71,6 +71,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			
 		});
 	};
+	
 	/*
 	 * Take the query in the searchbar and then sends 
 	 * the query to the server to get more results. The
@@ -121,6 +122,21 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			});
 		}
 	};
+	
+	//Help determine if an event occured for the given acknowledgement
+	$scope.hasEvent = function (ack, e) {
+		for (var i in ack.logs) {
+			if (ack.logs[i].hasOwnProperty('message')) {
+				if (ack.logs[i].message.indexOf(e) > -1) {
+					return true;
+				}
+			}
+			
+		}
+		
+		return false;
+	};
+	
 	
 	/*
 	 * Navigate to the details page for an acknowledgement
@@ -341,7 +357,6 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		//}, 1000);
 		
 		createAcknowledgementMarkers();
-	};
-	
+	};	
 	
 }]);

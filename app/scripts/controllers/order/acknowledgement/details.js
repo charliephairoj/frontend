@@ -32,6 +32,20 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 	//get all fabrics
 	$scope.fabrics = Fabric.query({limit:0, page_size:1000});
 	
+	//Help determine if an event occured for the given acknowledgement
+	$scope.hasEvent = function (ack, e) {
+		for (var i in ack.logs) {
+			if (ack.logs[i].hasOwnProperty('message')) {
+				if (ack.logs[i].message.indexOf(e) > -1) {
+					return true;
+				}
+			}
+			
+		}
+		
+		return false;
+	};
+	
 	//Request pdf for acknowledgements from server
     $scope.getPDF = function (type) {
 		try {

@@ -6,9 +6,24 @@
  * # purchaseOrderSummary
  */
 angular.module('employeeApp')
-.directive('acknowledgementSummary', ['D3', '$http', '$filter', function (D3, $http, $filter) {
+.directive('acknowledgementSummary', ['D3', '$http', '$filter', '$log', '$rootScope', function (D3, $http, $filter, $log, $rootScope) {
 	
-	function createChart(element, data, callback) {
+	function hasEvent(acknowledgement, e) {
+		if (acknowledgement) {
+			for (var i in acknowledgement.logs) {
+				if (acknowledgement.logs[i].hasOwnProperty('message')) {
+					if (acknowledgement.logs[i].message.indexOf(e) > -1) {
+						return true;
+					}
+				}
+				
+			}
+		}
+		
+		return false;
+	}
+	
+	function createChart(element, data, callback, acknowledgements) {
 		//Create box charts for summary
 		var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div')
 		.attr('class', function (d) {
@@ -29,6 +44,27 @@ angular.module('employeeApp')
 			angular.element('.acknowledgement-summary div.active').removeClass('active');
 			d3.select(this).attr('class', 'active ' + d.category.toLowerCase().replace(/ /gi, '-'));
 			(callback || angular.noop)({'$category': d.category});
+		}).on('mouseenter', function (d) {
+			
+			var cat = d.category.toLowerCase() == 'acknowledged' ? 'open' : d.category.toLowerCase();
+			$rootScope.safeApply(function () {
+				for (var i in (acknowledgements || [])) {
+					try {
+						if (hasEvent(acknowledgements[i], cat)) {
+							acknowledgements[i].$active = true;
+						}
+					} catch (e) {
+						$log.warn(e);
+					}
+				}
+			});
+			
+		}).on('mouseleave', function (d) {
+			$rootScope.safeApply(function () {
+				for (var i in (acknowledgements || [])) {
+					acknowledgements[i].$active = false;
+				}
+			});
 		});
 		
 		box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
@@ -50,7 +86,8 @@ angular.module('employeeApp')
     return {
       	restrict: 'EA',
 		scope: {
-			'onClick': '&'
+			'onClick': '&',
+			'acknowledgements': '='
 		},
       	link: function postLink(scope, element, attrs) {
         	
@@ -73,7 +110,7 @@ angular.module('employeeApp')
 				];
 				
 				//Call fn to create chart
-				createChart(element, data, scope.onClick);
+				createChart(element, data, scope.onClick, scope.acknowledgements);
 			});
       	}
     };

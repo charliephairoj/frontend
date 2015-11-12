@@ -41,49 +41,31 @@
 				<tr>
 					<td>Width:</td>
 					<td>
-						<input type="text" ec-blur="update()" data-ng-model="uphol.width" />
+						<input type="text" data-ng-model="uphol.width" />
 					</td>
 				</tr>
 				<tr>
 					<td>Depth:</td>
 					<td>
-						<input type="text" ec-blur="update()" data-ng-model="uphol.depth" />
+						<input type="text" data-ng-model="uphol.depth" />
 					</td>
 				</tr>
 				<tr>
 					<td>Height:</td>
 					<td>
-						<input type="text" ec-blur="update()" data-ng-model="uphol.height" />
+						<input type="text" data-ng-model="uphol.height" />
 					</td>
 				</tr>
-				<tr>
-					<td>Back Pillows</td>
+				<tr ng-repeat="pillow in uphol.pillows">
+					<td>{{pillow.type}} Pillow</td>
 					<td>
-						<input type='text' ec-blur="update()" ng-model="uphol.back_pillow" />
-					</td>
-				</tr>
-				<tr>
-					<td>Accent Pillows</td>
-					<td>
-						<input type="text" ec-blur="update()" ng-model="uphol.accent_pillow" />
-					</td>
-				</tr>
-				<tr>
-					<td>Lumbar Pillows</td>
-					<td>
-						<input type="text" ec-blur="update()" ng-model="uphol.lumbar_pillow" />
-					</td>
-				</tr>
-				<tr>
-					<td>Corner Pillows</td>
-					<td>
-						<input type="text" ec-blur="update()" ng-model="uphol.corner_pillow" />
+						<input type="text" ng-model="pillow.quantity">
 					</td>
 				</tr>
 				<tr>
 					<td>Price:</td>
 					<td>
-						<input type="text" ec-blur="update()" data-ng-model="uphol.price" />
+						<input type="text" data-ng-model="uphol.price" />
 					</td>
 				</tr>
 				<!--
