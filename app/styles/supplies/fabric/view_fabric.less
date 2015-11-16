@@ -24,7 +24,7 @@
 			flex-direction:row;
 			border-bottom: 1px solid #4F6874;
 			
-			div{
+			.column{
 				display:flex;
 				flex-direction:row;
 				align-items:center;
@@ -51,11 +51,15 @@
 				}
 	
 				&.color{
-					width:30%;
+					width:20%;
 				}
 				
 				&.quantity{
 					width:15%;
+				}
+				
+				&.status{
+					width:10%;
 				}
 			}
 		}
@@ -89,7 +93,6 @@
                         border-bottom:1px dotted rgba(0, 0, 0, 0.35);
                         text-decoration:none;
                         color:#000;
-                        cursor:pointer;
                         .transition(all, 150ms, linear);
                         
 						&:hover{
@@ -101,13 +104,15 @@
                         }
 						
                         
-						div{
+						.column{
 							display:flex;
 							flex-direction:row;
 							align-items:center;
 							padding-left:1em;
 							justify-content:flex-start;
 							border-left:1px dotted rgba(0, 0, 0, 0.35);
+							text-decoration:none;
+							color:rgb(0, 0, 0);
 							
 							&:first-child{
 								border-left:none;
@@ -133,11 +138,15 @@
 							}
 	
 							&.color{
-								width:30%;
+								width:20%;
 							}
 				
 							&.quantity{
 								width:15%;
+							}
+							
+							&.status{
+								width:10%;
 							}
 						}
                     }

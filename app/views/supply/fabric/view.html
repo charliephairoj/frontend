@@ -29,24 +29,32 @@
     
     <div class="workspace">
 		<div class="title-bar">
-			<div class="preview">PREVIEW</div>
-			<div class="id">ID</div>
-			<div class="pattern">PATTERN</div>
-			<div class="color">COLOR</div>
-			<div class="quantity">QUANTITY</div>
+			<div class="column preview">PREVIEW</div>
+			<div class="column id">ID</div>
+			<div class="column pattern">PATTERN</div>
+			<div class="column color">COLOR</div>
+			<div class="column quantity">QUANTITY</div>
+			<div class="column status">STATUS</div>
 		</div>
 		
     	<div class="outer-container" on-scroll-end="loadNext()">
     		<ul class="inner-container">
     			<li class="item-container" ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name'">
-    				<a class="item" ng-class="{'selected':po.$selected}" ng-href="#/supply/fabric/{{fabric.id}}">
-						<div class="preview">
+    				<div class="item" ng-class="{'selected':po.$selected}">
+						<a class="column preview" ng-href="#/supply/fabric/{{fabric.id}}">
 							<img ng-src="{{fabric.image.url}}" />
+						</a>
+						<a class="column id" ng-href="#/supply/fabric/{{fabric.id}}">{{fabric.id}}</a>
+						<a class="column pattern" ng-href="#/supply/fabric/{{fabric.id}}">{{fabric.pattern}}</a>
+						<a class="column color" ng-href="#/supply/fabric/{{fabric.id}}">{{fabric.color}}</a>
+						<a class="column quantity" ng-href="#/supply/fabric/{{fabric.id}}">{{fabric.quantity}}</a>
+						<div class="column staus">
+							<select ng-model="fabric.status">
+								<option value='current'>Current</option>
+								<option value='limited'>Limited</option>
+								<option value='discontinued'>Discontinued</option>
+							</select>
 						</div>
-						<div class="id">{{fabric.id}}</div>
-						<div class="pattern">{{fabric.pattern}}</div>
-						<div class="color">{{fabric.color}}</div>
-						<div class="quantity">{{fabric.quantity}}</div>
 						<!--
     					<span class="description">{{po.id}}</span>
 	    				<span class="customer">{{po.supplier.name}}</span>
@@ -60,7 +68,7 @@
 	    				<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
 	    				<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
 							-->
-    				</a>
+    				</div>
     			</li>
     		</ul>
     	</div>

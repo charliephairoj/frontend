@@ -4060,6 +4060,32 @@ angular.module('employeeApp').controller('SupplyFabricViewCtrl', [
       }
     });
     /*
+	 * Watch for changes in the status of the fabric
+	 */
+    $scope.$watch('fabrics', function (newVal, oldVal) {
+      // Callback to run when the acknowledgement is finished updating
+      function postUpdate(resp) {
+        var notification = Notification.display('Fabric ' + resp.description + ' status updated to \'' + resp.status.toLowerCase() + '\'', 2000);
+      }
+      if (newVal && oldVal) {
+        try {
+          for (var i = 0; i < newVal.length; i++) {
+            if (newVal[i] && oldVal[i]) {
+              if (newVal[i].id === oldVal[i].id) {
+                console.log(newVal[i], oldVal[i]);
+                if (newVal[i].status != oldVal[i].status) {
+                  var notification = Notification.display('Updating ' + newVal[i].description + ' status...', false);
+                  newVal[i].$update(postUpdate);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          $log.error(e);
+        }
+      }
+    }, true);
+    /*
 	* Load more fabrics
 	* 
 	* This function will load more fabrics based on the 
