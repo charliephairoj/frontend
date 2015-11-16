@@ -25,11 +25,18 @@ function ($scope, Upholstery, Notification, $filter, $location) {
     
 	$scope.loadNext = function () {
 		if (!fetching) {
-			Notification.display('Loading more upholstery...', false);
-			Upholstery.query({
+			var note = Notification.display('Loading more upholstery...', 6000);
+			
+			var params = {
 				offset: $scope.resources.length,
 				limit: 10
-			}, function (resources) {
+			};
+			
+			if ($scope.query) {
+				params.q = $scope.query;
+			}
+			
+			Upholstery.query(params, function (resources) {
 				Notification.hide();
 				for (var i = 0; i < resources.length; i++) {
 					$scope.resources.push(resources[i]);

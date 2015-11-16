@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('requestError', ['$q', 'Notification', function ($q, Notification) {
+.factory('requestError', ['$q', function ($q) {
 	return {
 		'response': function (response) {
 			return response || $q.when(response);

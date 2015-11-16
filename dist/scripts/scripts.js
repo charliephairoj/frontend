@@ -1669,7 +1669,8 @@ angular.module('employeeApp.services').factory('CurrentUser', [
 angular.module('employeeApp.services').factory('Notification', [
   '$timeout',
   '$rootScope',
-  function ($timeout, $rootScope) {
+  '$mdToast',
+  function ($timeout, $rootScope, $mdToast) {
     function center(target) {
       var width = angular.element(window).width();
       var tWidth = angular.element(target).width();
@@ -1694,7 +1695,12 @@ angular.module('employeeApp.services').factory('Notification', [
         close: close
       };
     }
-    function spawnToast() {
+    function spawnToast(message, autoHide) {
+      var promise = $mdToast.show($mdToast.simple().position('top right').content(message).hideDelay(autoHide));
+      return {
+        hide: $mdToast.hide,
+        close: $mdToast.hide
+      };
     }
     function spawnSimpleNotification(message, autoHide) {
       //Change message and 
@@ -1729,7 +1735,7 @@ angular.module('employeeApp.services').factory('Notification', [
       if (!('Notification' in window)) {
         this._display = spawnSimpleNotification;
       } else if (Notification.permission === 'granted') {
-        this._display = spawnNotification;
+        this._display = spawnToast;
       } else {
         Notification.requestPermission(function (permission) {
           if (permission === 'granted') {
@@ -1752,7 +1758,8 @@ angular.module('employeeApp.services').factory('Notification', [
     };
     Notifier.prototype.hide = function () {
       //Remove Message and 
-      this.notification.removeClass('active');  //$mdToast.hide();
+      this.notification.removeClass('active');
+      $mdToast.hide();
     };
     return new Notifier();
   }
@@ -1968,11 +1975,15 @@ angular.module('employeeApp').controller('ProductUpholsteryViewCtrl', [
     });
     $scope.loadNext = function () {
       if (!fetching) {
-        Notification.display('Loading more upholstery...', false);
-        Upholstery.query({
-          offset: $scope.resources.length,
-          limit: 10
-        }, function (resources) {
+        var note = Notification.display('Loading more upholstery...', 6000);
+        var params = {
+            offset: $scope.resources.length,
+            limit: 10
+          };
+        if ($scope.query) {
+          params.q = $scope.query;
+        }
+        Upholstery.query(params, function (resources) {
           Notification.hide();
           for (var i = 0; i < resources.length; i++) {
             $scope.resources.push(resources[i]);
@@ -2213,7 +2224,7 @@ angular.module('employeeApp').controller('ProductModelViewCtrl', [
   'Notification',
   function ($scope, Model, Notification) {
     var fetching = false;
-    $scope.modelList = Model.query(function () {
+    $scope.models = Model.query(function () {
     });
     $scope.$watch('query', function (q) {
       if (q) {
@@ -2234,10 +2245,10 @@ angular.module('employeeApp').controller('ProductModelViewCtrl', [
         Notification.display('Loading more models...', false);
         Model.query({
           limit: 50,
-          offset: $scope.modelList.length
+          offset: $scope.models.length
         }, function (resources) {
           for (var i = 0; i < resources.length; i++) {
-            $scope.modelList.push(resources[i]);
+            $scope.models.push(resources[i]);
           }
         });
       }
@@ -10709,8 +10720,7 @@ angular.module('employeeApp.directives').directive('camera', [
 ]);
 angular.module('employeeApp.services').factory('requestError', [
   '$q',
-  'Notification',
-  function ($q, Notification) {
+  function ($q) {
     return {
       'response': function (response) {
         return response || $q.when(response);

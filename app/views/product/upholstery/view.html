@@ -1,26 +1,57 @@
 <div class="upholstery-view-page">
-    
-    
-    
-    <div class="sidebar">
-        <header>
-            <h1><span>Upholstery</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a ng-href="#/product/upholstery/add">Add Upholstery</a>
-                </li>
-                    
-            </ul>
-        </nav>
-    </div>
-    
-
+   
     <div data-search-bar data-ng-model="query"></div>
     
     
     <div class="workspace list">
+		<nav>
+			<h2>Upholstery</h2>
+			
+			<div class="right-menu">
+				
+				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('add_upholstery')" ng-href="#/product/upholstery/add">New Upholstery</md-button>
+			</div>
+			
+		</nav>
+		
+		<div class="upholsteries-container">
+			<div class="acknowledgements">
+				<div class="title-bar">
+					<div class="preview">PREVIEW</div>
+					<div class="model">MODEL</div>
+					<div class="configuration">CONFIGURATION</div>
+					<div class="width">WIDTH</div>
+					<div class="depth">DEPTH</div>
+					<div class="height">HEIGHT</div>
+					<div class="pillows">PILLOWS</div>
+				</div>
+		
+		    	<div class="outer-container" on-scroll-end="loadNext()"> 
+			
+			    	<ul class="inner-container" >
+			    		<li class="item-container" data-ng-repeat="uphol in resources | filter:query">	
+			    			<a class="item" ng-class="{'selected':ack.$selected}" ng-href="#/product/upholstery/{{uphol.id}}">
+								<div class="preview">
+									<img ng-src="{{uphol.image.url}}" />
+								</div>
+								<div class="model">{{uphol.model.model}}</div>
+								<div class="configuration">{{uphol.configuration.configuration}}</div>		
+								<div class="width">{{uphol.width}}</div>
+								<div class="depth">{{uphol.depth}}</div>
+								<div class="height">{{uphol.height}}</div>	
+								<div class="pillows">
+									<div class="pillow" ng-repeat="pillow in uphol.pillows">
+										{{pillow.type}}: {{pillow.quantity}}
+									</div>
+								</div>					
+			    			</a>
+			    		</li>
+			    	</ul>
+		    	</div>
+			</div>
+		</div>
+		
+		<!--
     	<div class="outer-container" on-scroll-end="loadNext()">
 	    	<ul class="inner-container" >
 	    		<li class="item-container" data-ng-repeat="uphol in resources | filter:query">
@@ -30,14 +61,16 @@
 	    				</div>
 	    				
 	    				<span class="description">{{uphol.description}}</span>
-	    				<!--
+	    				
 	    				<span ng-display="currentUser.hasPermission('can_view_wholesale_price')">{{uphol.wholesale_price}}</span>
-	    				-->
+	    			
 	    			</a>
 	    				
 	    		</li>
 	    	</ul>
     	</div>
+			-->
+			
     </div>
         
 </div>

@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('Notification', ['$timeout', '$rootScope', function($timeout, $rootScope) {
+.factory('Notification', ['$timeout', '$rootScope', '$mdToast', function($timeout, $rootScope, $mdToast) {
     function center(target){
         var width = angular.element(window).width();
         var tWidth = angular.element(target).width();
@@ -31,14 +31,21 @@ angular.module('employeeApp.services')
 		};
 	}
 	
-	function spawnToast() {
-		/*
-		$mdToast.show($mdToast
-					.simple()
-					.position('top right')
-					.content(message)
-					.hideDelay(0));
-		*/
+	function spawnToast(message, autoHide) {
+		
+		var promise = $mdToast.show($mdToast
+							.simple()
+							.position('top right')
+							.content(message)
+							.hideDelay(autoHide));
+		
+		
+
+		return {
+			hide: $mdToast.hide,
+			close: $mdToast.hide
+		};
+							
 	}
 	
 	function spawnSimpleNotification(message, autoHide) {
@@ -86,7 +93,7 @@ angular.module('employeeApp.services')
 		if (!("Notification" in window)) {
 			this._display = spawnSimpleNotification;
 		} else if (Notification.permission === 'granted') {
-				this._display = spawnNotification;
+				this._display = spawnToast;
 		} else {
 			Notification.requestPermission(function (permission) {
 			
@@ -118,7 +125,7 @@ angular.module('employeeApp.services')
         //Remove Message and 
         this.notification.removeClass('active');
 		
-		//$mdToast.hide();
+		$mdToast.hide();
     };
     
     return new Notifier();

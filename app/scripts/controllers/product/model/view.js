@@ -3,7 +3,7 @@ angular.module('employeeApp')
 .controller('ProductModelViewCtrl', ['$scope', 'Model', 'Notification', function ($scope, Model, Notification) {
 	
 	var fetching = false;
-    $scope.modelList = Model.query(function () {
+    $scope.models = Model.query(function () {
 
     });
     
@@ -24,10 +24,10 @@ angular.module('employeeApp')
 			Notification.display('Loading more models...', false);
 			Model.query({
 				limit: 50,
-				offset: $scope.modelList.length
+				offset: $scope.models.length
 			}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
-					$scope.modelList.push(resources[i]);
+					$scope.models.push(resources[i]);
 				}
 			});
 		}

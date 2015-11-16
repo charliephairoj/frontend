@@ -1,4 +1,4 @@
-<div class="detailsPage" image-drop-target="upload()">
+<div class="model-details-page" image-drop-target="upload()">
     
     <!--
         Sidebar
@@ -27,23 +27,36 @@
     
     <form class="workspace">
         
-        <table>
-            <tr>
+        <table class="details">
                 
-                <tr>
-                    <td><label>Model</label></td>
-                    <td>{{model.model}}</td>
-                </tr>
-                <tr>
-                    <td><label>Name</label></td>
-                    <td>{{model.name}}</td>
-                </tr>
-                <tr>
-                    <td><label>Collection</label></td>
-                    <td>{{model.collection}}</td>
-                </tr>
-               
-            </table>
+            <tr>
+                <td><label>Model</label></td>
+                <td>{{model.model}}</td>
+            </tr>
+            <tr>
+                <td><label>Name</label></td>
+                <td>{{model.name}}</td>
+            </tr>
+            <tr>
+                <td><label>Collection</label></td>
+                <td>{{model.collection}}</td>
+            </tr>
+            <tr>
+                <td><label>Has Back Pillows</label></td>
+                <td>
+					<input type="checkbox" ng-change="update()" ng-model="model.has_back_pillows"/>
+				</td>
+            </tr>
+           
+        </table>
+		
+		<div class="gallery">
+			<div class="img-container" ng-repeat="image in model.images">
+				<img ng-src="{{image.url}}">
+			</div>
+		</div>
+			
+			
             
             
         
