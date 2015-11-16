@@ -153,6 +153,10 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 						setTimeout(function () {
 							this.$update(function () {
 								this.$updating = false;
+								$mdToast.show($mdToast.simple()
+									.position('top right')
+									.hideDelay(3000)
+									.content($scope.uphol.description + ' updated.'));
 							});
 						}.bind(newVal), 600);
 					}
@@ -160,6 +164,7 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 			}
 		}
 		
+		/*
 		if (oldVal.hasOwnProperty('id')) {
 			
 			$timeout.cancel(timeoutPromise);
@@ -186,7 +191,7 @@ function ($scope, Upholstery, $routeParams, $mdToast, $location, $timeout, FileU
 
 				});
 			}, 700);
-		}
+		}*/
     }, true);
     
     $scope.update = function () {

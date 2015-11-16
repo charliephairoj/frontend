@@ -2124,24 +2124,40 @@ angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
               setTimeout(function () {
                 this.$update(function () {
                   this.$updating = false;
+                  $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content($scope.uphol.description + ' updated.'));
                 });
               }.bind(newVal), 600);
             }
           }
         }
-      }
-      if (oldVal.hasOwnProperty('id')) {
-        $timeout.cancel(timeoutPromise);
-        timeoutPromise = $timeout(function () {
-          $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('Updating ' + $scope.uphol.description + '...'));
-          $scope.uphol.$update(function () {
-            $scope.updateLoopActive = false;
-            $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content($scope.uphol.description + ' updated.'));
-          }, function () {
-            $mdToast.show($mdToast.simple().position('top right').hideDelay(3000).content('Unable to update'));
-          });
-        }, 700);
-      }
+      }  /*
+		if (oldVal.hasOwnProperty('id')) {
+			
+			$timeout.cancel(timeoutPromise);
+			
+			timeoutPromise = $timeout(function () {
+				
+				$mdToast.show($mdToast.simple()
+					.position('top right')
+					.hideDelay(3000)
+					.content('Updating ' + $scope.uphol.description + '...'));
+				
+				$scope.uphol.$update(function () {
+					$scope.updateLoopActive = false;
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(3000)
+						.content($scope.uphol.description + ' updated.'));
+
+				}, function () {
+					$mdToast.show($mdToast.simple()
+						.position('top right')
+						.hideDelay(3000)
+						.content("Unable to update"));
+
+				});
+			}, 700);
+		}*/
     }, true);
     $scope.update = function () {
     };
