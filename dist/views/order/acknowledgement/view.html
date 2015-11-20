@@ -48,7 +48,7 @@
 				</div>
 				<div class="outer-container" on-scroll-end="loadNext()">
 					<ul class="inner-container">
-						<li class="item-container" ng-class="{'active': ack.$active}" data-ng-repeat="ack in acknowledgements | filter:query">
+						<li class="item-container" ng-class="{'active': ack.$active}" data-ng-repeat="ack in acknowledgements | filter:query track by ack.id">
 							<div class="item" ng-class="{'selected':ack.$selected}">
 								<div class="id" ng-click="navigate(ack.id)">{{ack.id}}</div>
 								<div class="order-date" ng-click="navigate(ack.id)">{{ack.time_created | date: "MMM d, yyyy"}}</div>

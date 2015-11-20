@@ -103,6 +103,20 @@
                             background-color:orange;
                         }
 						
+						@tint-amount:80%;
+						
+						&.current{
+							background-color:tint(rgb(54, 66, 140), @tint-amount);
+						}
+						
+						&.limited{
+							background-color:tint(rgb(198, 148, 77), @tint-amount);
+						}
+						
+						&.discontinued{
+							background-color:tint(rgb(163, 81, 82), @tint-amount);
+						}
+						
                         
 						.column{
 							display:flex;
