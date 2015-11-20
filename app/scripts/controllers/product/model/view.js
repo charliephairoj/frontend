@@ -11,8 +11,8 @@ angular.module('employeeApp')
 		if (q) {
 			Model.query({q: q, limit: 10}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
-					if ($scope.modelList.indexOfById(resources[i]) == -1) {
-						$scope.modelList.push(resources[i]);
+					if ($scope.models.indexOfById(resources[i]) == -1) {
+						$scope.models.push(resources[i]);
 					}		
 				}
 			});
