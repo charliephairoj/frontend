@@ -63,10 +63,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Price:</td>
-					<td>
-						<input type="text" data-ng-model="uphol.price" />
-					</td>
+					<td colspan="2">Prices</td>
+				</tr>
+				<tr ng-repeat="price in uphol.prices">
+					<td>{{price.grade}}</td>
+					<td>{{price.price}}</td>
 				</tr>
 				<!--
                 <tr>
