@@ -62,7 +62,7 @@ function ($scope, Upholstery, Notification, $filter, $location) {
 				var update = function () {
 					var notification = Notification.display('Updating ' + this.description + '.', false);
 					
-					this.$update(postUpdate);
+					this.$update(postUpdate);	
 				};
 				
 				for (var i = 0; i < newVal.length; i++) {
