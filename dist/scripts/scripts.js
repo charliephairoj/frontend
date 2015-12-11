@@ -1991,6 +1991,34 @@ angular.module('employeeApp').controller('ProductUpholsteryViewCtrl', [
         });
       }
     };
+    /*
+	 * Watch for changes in the status of the acknowledgement
+	 */
+    $scope.$watch('resources', function (newVal, oldVal) {
+      // Callback to run when the acknowledgement is finished updating
+      function postUpdate(resp) {
+        var notification = Notification.display(resp.description + ' status updated.', 2000);
+      }
+      if (newVal && oldVal) {
+        try {
+          var update = function () {
+            var notification = Notification.display('Updating ' + this.description + '.', false);
+            this.$update(postUpdate);
+          };
+          for (var i = 0; i < newVal.length; i++) {
+            if (newVal[i] && oldVal[i]) {
+              if (newVal[i].id === oldVal[i].id) {
+                if (newVal[i].width != oldVal[i].width || newVal[i].depth != oldVal[i].depth || newVal[i].height != oldVal[i].height) {
+                  setTimeout(update.bind(newVal[i]), 600);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          $log.error(e);
+        }
+      }
+    }, true);
   }
 ]);
 angular.module('employeeApp').controller('ProductUpholsteryDetailsCtrl', [
@@ -2289,7 +2317,7 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
       var promise = FileUploader.upload($scope.images[0], '/api/v1/upholstery/image/');
       promise.then(function (dataObj) {
         Notification.display('Image uploaded.');
-        $scope.model.image = dataObj.data;
+        $scope.model.images.push(dataObj.data);
         $scope.update();
         $scope.images = null;
       }, function () {
@@ -2312,6 +2340,21 @@ angular.module('employeeApp').controller('ProductModelDetailsCtrl', [
       $scope.model.$update(function () {
         Notification.display('Model Updated');
       });
+    };
+    /*
+		Make Primary Image
+	
+		Set all the images in the set primary:false and then set the image supplied in the 
+		argument as primary:true
+	*/
+    $scope.makePrimaryImage = function (image) {
+      // Set all images as primary:false
+      for (var i = $scope.model.images.length; i--;) {
+        $scope.model.images[i].primary = false;
+      }
+      // Set argument image as primary:true
+      image.primary = true;
+      $scope.update();
     };
     $scope.$on('$destroy', function () {
       $scope.update();

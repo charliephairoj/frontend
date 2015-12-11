@@ -4,7 +4,7 @@
 		<nav>
 			<h2>Upholstery</h2>
 			<div class="right-menu">
-				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('add_upholstery')" ng-href="#/product/upholstery/add">New Upholstery</md-button>
+				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('edit_dimensions')" ng-href="#/product/upholstery/add">New Upholstery</md-button>
 			</div>
 		</nav>
 		<div class="upholsteries-container">
@@ -21,21 +21,27 @@
 				<div class="outer-container" on-scroll-end="loadNext()">
 					<ul class="inner-container">
 						<li class="item-container" data-ng-repeat="uphol in resources | filter:query">
-							<a class="item" ng-class="{'selected':ack.$selected}" ng-href="#/product/upholstery/{{uphol.id}}">
-								<div class="preview">
+							<div class="item" ng-class="{'selected':ack.$selected}">
+								<a class="col preview" ng-href="#/product/upholstery/{{uphol.id}}">
 									<img ng-src="{{uphol.image.url}}" />
+								</a>
+								<a class="col model" ng-href="#/product/upholstery/{{uphol.id}}">{{uphol.model.model}}</a>
+								<a class="col configuration" ng-href="#/product/upholstery/{{uphol.id}}">{{uphol.configuration.configuration}}</a>	
+								<div class="col width">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.width" />
 								</div>
-								<div class="model">{{uphol.model.model}}</div>
-								<div class="configuration">{{uphol.configuration.configuration}}</div>
-								<div class="width">{{uphol.width}}</div>
-								<div class="depth">{{uphol.depth}}</div>
-								<div class="height">{{uphol.height}}</div>
-								<div class="pillows">
+								<div class="col depth">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.depth" />
+								</div>
+								<div class="col height">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.height" />
+								</div>
+								<a class="col pillows" ng-href="#/product/upholstery/{{uphol.id}}">
 									<div class="pillow" ng-repeat="pillow in uphol.pillows">
 										{{pillow.type}}: {{pillow.quantity}}
 									</div>
-								</div>
-							</a>
+								</a>
+							</div>
 						</li>
 					</ul>
 				</div>

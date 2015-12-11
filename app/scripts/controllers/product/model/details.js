@@ -13,7 +13,7 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 		var promise = FileUploader.upload($scope.images[0], "/api/v1/upholstery/image/");
 			promise.then(function (dataObj) {
 		        Notification.display('Image uploaded.');
-				$scope.model.image = dataObj.data;
+				$scope.model.images.push(dataObj.data);
 				
 				$scope.update();
 				
@@ -49,6 +49,25 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
         });
     };
     
+	/*
+		Make Primary Image
+	
+		Set all the images in the set primary:false and then set the image supplied in the 
+		argument as primary:true
+	*/
+	$scope.makePrimaryImage = function (image) {
+		
+		// Set all images as primary:false
+		for (var i = $scope.model.images.length; i--;) {
+			$scope.model.images[i].primary = false;
+		}
+		
+		// Set argument image as primary:true
+		image.primary = true;
+		
+		$scope.update();
+	};
+	
     $scope.$on('$destroy', function () {
         $scope.update();
     });
