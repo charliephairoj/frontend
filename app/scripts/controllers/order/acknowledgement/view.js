@@ -115,7 +115,9 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 				fetching = false;
 				notification.hide();
 				for (var i = 0; i < resources.length; i++) {
-					$scope.acknowledgements.push(resources[i]);
+					if ($scope.acknowledgements.indexOfById(resources[i]) === -1) {
+						$scope.acknowledgements.push(resources[i]);
+					}
 				}
 				
 				createAcknowledgementMarkers();
