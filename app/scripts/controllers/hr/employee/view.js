@@ -58,7 +58,6 @@ function ($scope, Employee, Notification, $mdDialog) {
 	* be using the current number of supplies as the offset
 	*/
 	$scope.loadNext = function () {
-		console.log('loading');
 		if (!fetching) {
 			Notification.display('Loading more employees...', false);
 			Employee.query({

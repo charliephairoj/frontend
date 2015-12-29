@@ -25,24 +25,8 @@
     <div data-search-bar data-ng-model="query">
     </div>
     
-    <div class="workspace" on-scroll-end="loadNext()">
+    <div class="workspace">
 
-		<md-card ng-repeat="employee in employees">
-			<md-card-title>
-	          	<md-card-title-text>
-	            	<span class="md-headline">{{employee.name}}</span>
-	          	</md-card-title-text>
-	        </md-card-title>
-			<md-card-content>
-				<md-card-title-media>
-					<div class="md-media-sm card-media">
-						<img ng-src="{{employee.image.url}}">
-					</div>
-				</md-card-title-media>
-			</md-card-content>
-		</md-card>
-		
-		<!--
 		<nav>
 			<h2>Employees</h2>
 			<md-button class="add-btn md-accent" ng-show="currentUser.hasPermission('add_user')" ng-click="showAddEmployee()">New Employee</md-button>
@@ -57,8 +41,6 @@
 			<div class="nickname">NICKNAME</div>
 		</div>
 		
-		
-			
     	<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
     		<ul class="inner-container">
     			<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
@@ -66,7 +48,7 @@
     			</li>
     		</ul>
     	</div>
-        -->
+        
     </div>
     
 </div>
