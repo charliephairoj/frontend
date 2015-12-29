@@ -9,9 +9,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	$scope.showSuppliers = false;
 	$scope.showSupplies = false;
 	//$scope.suppliers = Supplier.query({limit: 0});
-	$scope.projects = Project.query({page_size:99999});
 	$scope.po = new PurchaseOrder();
-	
 
 	/*
  	 * Map variables and settings
@@ -58,6 +56,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	//Create new map and set the map style
 	map = new google.maps.Map($('#create-po-map')[0], mapOptions);
 	map.setOptions({styles:styles});
+	
+	// Create a traffic layer and apply it to the map
+	var trafficLayer = new google.maps.TrafficLayer();
+	trafficLayer.setMap(map);
 
 	//General purpose create marker function
 	function createMarker(configs) {
@@ -90,8 +92,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			this.address.longitude = latLng.lng();
 			
 			//Ensure that the data in the supplier resource is consistent with the user's data
-			if (this.address.latitude != $scope.supplier.addresses[0].latitude || 
-				this.address.longitude != $scope.supplier.addresses[0].longitude) {
+			if (this.address.latitude != $scope.po.supplier.addresses[0].latitude || 
+				this.address.longitude != $scope.po.supplier.addresses[0].longitude) {
 					$scope.po.supplier.addresses[0].latitude = latLng.lat();
 					$scope.po.supplier.addresses[0].longitude = latLng.lng();
 			}
@@ -104,43 +106,162 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		return configs.marker;
 	}
 	
+	/*
+ 	 * CUSTOMER SECTION
+	 *
+	 * This section deals with the customer searching and what happens when a customer is selected
+	*/
+	$scope.suppliers = Supplier.query({page_size:99999, limit:0});
+	
+	$scope.searchSuppliers = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var suppliers = [];
+		for (var i = 0; i < $scope.suppliers.length; i++) {
+			if (angular.lowercase($scope.suppliers[i].name).indexOf(lowercaseQuery) !== -1) {
+				suppliers.push($scope.suppliers[i]);
+			}
+		}
+		
+		return suppliers;
+	}
+	
+	// Watch on supplierSearchText to get products from the server
+	$scope.retrieveSuppliers = function (query) {
+		if (query) {
+			Supplier.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.suppliers.indexOfById(responses[i]) === -1) {
+						$scope.suppliers.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Describe what this method does
+	 * @public
+	 * @param {String} supplierName - Name of the Supplier
+	 * @returns {null} 
+	 */
+	
+	$scope.updateSupplierName = function (supplierName) {
+		$scope.po.supplier = $scope.po.supplier || {name: ''};
+		
+		if (!$scope.po.supplier.id) {
+			$scope.po.supplier.name = supplierName || '';
+			$scope.supplies = [];
+		} else {
+			if ($scope.po.supplier.name.indexOf(supplierName) == -1) {
+				$scope.po.supplier = {name: supplierName};
+			}
+		}
+	};
 	
 	/*
 	 * Add a supplier to the purchase order
 	 */
 	$scope.addSupplier = function (supplier) {
-		//Hide Modal
-		$scope.showSuppliers = false;
+		if (supplier) {
+			//Clear old supply list
+			$scope.supplies = [];
 		
-		if ($scope.po.supplier) {
-			if (supplier.id != $scope.po.supplier.id) {
-				$scope.po.items = undefined;
+			$scope.po.supplier = supplier;
+			$scope.po.discount = supplier.discount;
+			$scope.po.terms = supplier.terms;
+			$scope.po.currency = supplier.currency;
+		
+			$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
+				$scope.supplies = $filter('filter')(response, supplier.name);
+			}), supplier.name);
+		
+			$scope.safeApply();
+		
+			if (marker) {
+				marker.setMap(null);
+			}
+			//Set marker for customer
+			try {
+				var address = $scope.po.supplier.addresses[0];
+				if (address.latitude && address.longitude) {
+					 marker = createMarker({address: address, title: $scope.po.supplier.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+					 map.panTo(marker.getPosition());
+					 map.setZoom(17);
+				}
+			} catch (e) {
+				$log.warn(e.stack);
+			}
+		
+			//Update the pricing of all items so far
+			if ($scope.po.items) {
+				for (var h = 0; h < $scope.po.items.length; h++) {
+					try{
+						if ($scope.po.items[h].hasOwnProperty('suppliers') && $scope.po.supplier) {
+							if ($scope.po.supplier.id) {
+								for (var i = 0; i < $scope.po.items[h].suppliers.length; i++) {
+									if ($scope.po.items[h].suppliers[i].supplier == $scope.po.supplier.id) {
+										$scope.po.items[h].cost = Number($scope.po.items[h].suppliers[i].cost);
+										$scope.po.items[h].purchasing_units = $scope.po.items[h].suppliers[i].purchasing_units;
+										
+									}
+								}
+							}
+						}
+					} catch (e) {
+						$log.warn(e);
+					}
+				}
 			}
 		}
-		$scope.po.supplier = supplier;
-		$scope.po.discount = supplier.discount;
-		$scope.po.terms = supplier.terms;
-		$scope.po.currency = supplier.currency;
-		
-		$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
-			$scope.supplies = $filter('filter')(response, supplier.name);
-		}), supplier.name);
-		
-		$scope.safeApply();
-		
-		if (marker) {
-			marker.setMap(null);
-		}
-		//Set marker for customer
-		try {
-			var address = $scope.po.supplier.addresses[0];
-			if (address.latitude && address.longitude) {
-				 marker = createMarker({address: address, title: $scope.po.supplier.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-				 map.panTo(marker.getPosition());
-				 map.setZoom(17);
+	};
+	
+	
+	/**
+	 * PROJECT SECTION
+	 * 
+	 * Describes the projects, room and phases
+	 */
+	
+	$scope.projects = Project.query({page_size:99999, limit:0});
+	
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searcProjects = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var projects = [];
+		for (var i = 0; i < $scope.projects.length; i++) {
+			if (angular.lowercase($scope.projects[i].codename).indexOf(lowercaseQuery) !== -1) {
+				projects.push($scope.projects[i]);
 			}
-		} catch (e) {
-			$log.warn(e.stack);
+		}
+		return projects;
+	};
+	
+	$scope.addProject = function (project) {
+		$scope.ack.project = project;
+	}
+	
+	/**
+	 * Update the project's name if a project is not selected yet. This is incase, the project
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Project
+	 * @returns {null} 
+	 */
+
+	$scope.updateProjectName = function (projectName) {
+		$scope.po.project = $scope.po.project || {codename: ''};
+	
+		if (!$scope.po.project.id) {
+			$scope.po.project.codename = projectName || '';
+		} else {
+			if ($scope.po.project.codename.indexOf(projectName) == -1) {
+				$scope.po.project = {codename: projectName};
+			}
 		}
 	};
 	
@@ -243,6 +364,56 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		});
 	};
 	
+	
+	/**
+	 * PRODUCT SECTION
+	 * 
+	 * This section deals with the product listing and search
+	 */
+	
+	// Watch on productSearchText to get products from the server
+	$scope.retrieveSupplies = function (query) {
+		if (query) {
+			$scope.supplies = $scope.supplies || [];
+			
+			var options = {q:query};
+			
+			if ($scope.po.supplier) {
+				if ($scope.po.supplier.id) {
+					options.supplier_id = $scope.po.supplier.id;
+				}
+			}
+			
+			Supply.query(options, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.supplies.indexOfById(responses[i]) === -1) {
+						$scope.supplies.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of supplies whose description matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against supply.description
+	 * @returns {Array} - An array of supplies whose description matches the search term
+	 */
+	$scope.searchSupplies = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var supplies = [];
+		$scope.supplies = $scope.supplies || [];
+		
+		for (var i = 0; i < $scope.supplies.length; i++) {
+			console.log($scope.supplies[i]);
+			if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {
+				supplies.push($scope.supplies[i]);
+			}
+		}
+		return supplies;
+	};
+	
 	/*
 	 * Cancel adding a item 
 	 */
@@ -255,30 +426,33 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * Add an item to the purchase order
 	 */
 	$scope.addItem = function (item) {
-
-		//Hide Modal
-		$scope.showSupplies = false;
 		
-		$scope.po.items = $scope.po.items || [];
-		var purchasedItem = angular.copy(item);
+		if (item.description) {
+			$scope.po.items = $scope.po.items || [];
+			var purchasedItem = angular.copy(item);
 		
-		delete purchasedItem.quantity;
+			delete purchasedItem.quantity;
 		
-		/*
-		 * Apply the items unit cost or cost from supplier to the supply cost
-		 */
-		purchasedItem.cost = Number((purchasedItem.cost || purchasedItem.unit_cost) || 0);
+			/*
+			 * Apply the items unit cost or cost from supplier to the supply cost
+			 */
+			purchasedItem.cost = Number((purchasedItem.cost || purchasedItem.unit_cost) || 0);
 		
-		if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers')) {
-			for (var i = 0; i < purchasedItem.suppliers.length; i++) {
-				if (purchasedItem.suppliers[i].supplier.id == ($scope.po.supplier.id || $scope.po.supplier.supplier.id)) {
-					purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
+			if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers') && $scope.po.supplier) {
+				if ($scope.po.supplier.id) {
+					for (var i = 0; i < purchasedItem.suppliers.length; i++) {
+						if (purchasedItem.suppliers[i].supplier == $scope.po.supplier.id) {
+							purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
+							purchasedItem.purchasing_units = purchasedItem.suppliers[i].purchasing_units;
+						}
+					}
 				}
 			}
+		
+			//Add new supply to the list of items for the purchase order
+			$scope.po.items.push(purchasedItem);
 		}
 		
-		//Add new supply to the list of items for the purchase order
-		$scope.po.items.push(purchasedItem);
 	};
 	
 	/*
@@ -306,6 +480,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * After a delay of 5 seconds, we compare the saved costs with the
 	 * current item cost, by using a reference. 
 	 */
+	/*
 	$scope.$watch('po.items', function (newVal, oldVal) {
 		try {
 			//Filter out changes in length
@@ -315,9 +490,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					//Tests if the costs are different but the id is the same
 					if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
 						var cost = newVal[i].cost;
-						/*We make a reference to the original object, 
-						 *So that we can make sure the price has settled
-						 *in x milliseconds.*/
+						//We make a reference to the original object, 
+						//So that we can make sure the price has settled
+						//in x milliseconds.
 						var obj = newVal[i];
 						$timeout(function () {
 							//Tests to make sure the cost has settled
@@ -335,6 +510,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			$log.warn(e.stack);
 		}
 	}, true);
+	*/
 	
 	/*
 	 * Unit costs

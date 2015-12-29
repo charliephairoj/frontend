@@ -11,7 +11,7 @@
     
     
     
-    <form class="ack" name="form" ec-droppable="add()" novalidate>
+    <form class="shipping" name="form" ec-droppable="add()" novalidate>
         <!--
             Sidebar
         -->
@@ -73,18 +73,15 @@
         -->
         <div class="workspace">
                 <div class="acknowledgement">
-                    <span class="title">Acknowledgement</span>
-                    <table class="details">
-                        <tr>
-                            <td>ID:</td>
-                            <td>{{shipping.acknowledgement.id}}</td>
-                        </tr>
-                        <tr>
-                            <td>Status:</td>
-                            <td>{{shipping.acknowledgement.status}}</td>
-                        </tr>
-                            
-                    </table>
+					<md-input-container>
+				        <label>Acknowledgement</label>
+				        <md-select ng-model="shipping.acknowledgement" ng-model-options="{trackBy: '$value.id'}">
+				          	<md-option ng-repeat="acknowledgement in acknowledgements" ng-value="acknowledgement">
+				            	{{acknowledgement.id}}
+				         	 </md-option>
+				        </md-select>
+				    </md-input-container>
+         			<span></span>
                 </div>
                 <div class="customer">
                     <span class="title">Customer</span>
@@ -114,12 +111,11 @@
                 </div>
                 
                 <div class="order">
-                    <table class="details">
-                        <tr>
-                            <td>Delivery Date:</td>
-                            <td>{{shipping.delivery_date | date:"MMMM d, yyyy"}}</td>
-                        </tr>
-                    </table>
+                    <md-datepicker md-placeholder="Delivery Date" ng-model="shipping.delivery_date"></md-datepicker>
+					<md-input-container>
+					  	<label>Remarks</label>
+						<textarea ng-model="shipping.remarks"></textarea>
+					</md-input-container>
                 </div>
                 
             

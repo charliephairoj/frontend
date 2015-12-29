@@ -48,6 +48,34 @@ function ($scope, Upholstery, Notification, $filter, $location) {
 	/*
 	 * Watch for changes in the status of the acknowledgement
 	 */
+	// Helper function to upate an object bind to the function
+	function update() {
+		var notification = Notification.display('Updating ' + this.description + '.', false);
+		this.$update(postUpdate);	
+	};
+	
+	//Help function to test object equality
+	function equals(newObj, oldObj) {
+		
+		//Create new array of arguments
+		var args = [];
+		for (var i = 0; i < arguments.length; i++) {
+			args.push(arguments[i]);
+		}
+		
+		// Loop through keys of the newest obj, and test that it is not
+		// in the list of arguments
+		for (i in newObj) {
+			if (args.indexOf(i) === -1 && i.indexOf('$') === -1) {
+				if (oldObj[i] != newObj[i]) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	$scope.$watch('resources', function (newVal, oldVal) {
 		
 		// Callback to run when the acknowledgement is finished updating
@@ -59,18 +87,12 @@ function ($scope, Upholstery, Notification, $filter, $location) {
 			
 			try{
 				
-				var update = function () {
-					var notification = Notification.display('Updating ' + this.description + '.', false);
-					
-					this.$update(postUpdate);	
-				};
+				
 				
 				for (var i = 0; i < newVal.length; i++) {
 					if (newVal[i] && oldVal[i]) {
 						if (newVal[i].id === oldVal[i].id) {
-							if ((newVal[i].width != oldVal[i].width) || (newVal[i].depth != oldVal[i].depth) || (newVal[i].height != oldVal[i].height)) {
-							
-							
+							if (equals(newVal, oldVal, 'images', 'last_modified', 'schematic', 'image')) {
 								setTimeout(update.bind(newVal[i]), 600);
 							}
 						}

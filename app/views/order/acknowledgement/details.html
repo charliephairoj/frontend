@@ -101,58 +101,45 @@
 
     <div class="workspace">
         <div class="details">
-            <table>
-                <tr>
-                    <td>Order #: </td>
-                    <td>{{acknowledgement.id}}</td>
-                </tr>
-                <tr class="customer">
-                    <td>Customer: </td>
-                    <td>{{acknowledgement.customer.name}}</td>
-                </tr>
-                <tr class="order-date">
-                    <td>Order Date: </td>
-                    <td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
-                </tr>
-                <tr class="due-date">
-					
-                    <td>Status: </td>
-                    <td>
-						<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-							<option value="deposit received">Deposit Received</option>
-							<option value="acknowledged">Acknowledged</optioon>
-							<option value="in production">In Production</option>
-							<option value="ready to ship">Ready to Ship</option>
-							<option value="shipped">Shipped</option>
-							<option value="invoiced">Invoiced</option>
-							<option value="paid">Paid</option>
-							<option value="cancelled">Cancelled</option>
-						</select>
-					</td>
-                </tr>
-            </table>
-            <table>
-                <tr class="due-date">
-                    <td>Devlivery Date: </td>
-                    <td>
-						<md-button class="md-accent" ng-click="showCal=true" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-							{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}
-						</md-button>
-					</td>
-                </tr>
-                <tr class="project">
-                    <td>Project:</td>
-                    <td>
-						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>Total Items: </td>
-                    <td>{{acknowledgement.items.length}}</td>
-                </tr>
-            </table>
-			
+			<div class="info">
+				<table>
+					<tr>
+						<td>Acknowledgement #:</td>
+						<td>{{acknowledgement.id}}</td>
+						<td>Delivery Date:</td>
+						<td><md-datepicker ng-model="acknowledgement.delivery_date" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></md-datepicker></td>
+					</tr>
+					<tr>
+						<td>Customer</td>
+						<td>{{acknowledgement.customer.name}}</td>
+						<td>Project</td>
+						<td>
+							<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></select>
+						</td>
+					</tr>
+					<tr>
+						<td>Order Date</td>
+						<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
+						<td>Total Items</td>
+						<td>{{acknowledgement.items.length}}</td>
+					</tr>
+					<tr>
+						<td>Status:</td>
+						<td>
+							<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+								<option value="deposit received">Deposit Received</option>
+								<option value="acknowledged">Acknowledged</optioon>
+								<option value="in production">In Production</option>
+								<option value="ready to ship">Ready to Ship</option>
+								<option value="shipped">Shipped</option>
+								<option value="invoiced">Invoiced</option>
+								<option value="paid">Paid</option>
+								<option value="cancelled">Cancelled</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
 			<div class="status-bar">
 				<div class="event" ng-class="{'acknowledged': hasEvent(acknowledgement, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">Acknowledged</div>
 				<div class="event" ng-class="{'deposit-received': hasEvent(acknowledgement, 'deposit')}">Deposit Received</div>
@@ -266,16 +253,21 @@
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
-							<div class="item-container" ng-repeat="file in acknowledgement.files">
-								<a class="item" ng-href="{{file.url}}" target="_blank">
-									<div class="filename">
-										{{file.filename}}
-										<md-progress-linear ng-show="!file.id" class="progress md-hue-2" md-mode="indeterminate"></md-progress-linear>
-									</div>
-									<div class="type">{{file.type}}</div>
-								</a>
-							</div>
-						</div>
+							<md-card ng-repeat="file in acknowledgement.files">
+					        	<md-card-title>
+					          		<md-card-title-text>
+					            		<span class="md-headline">{{file.filename}}</span>
+					            		<span class="md-subhead">{{file.type}}</span>
+					          	  	</md-card-title-text>
+					          		<md-card-title-media>
+					            		<div class="md-media-sm card-media"></div>
+					          		</md-card-title-media>
+					        	</md-card-title>
+					        	<md-card-actions layout="row" layout-align="end center">
+					          		<md-button ng-href="{{file.url}}" target="_blank">View</md-button>
+					        	</md-card-actions>
+					      </md-card>
+						</div
 					</div>
 				</div>
 				

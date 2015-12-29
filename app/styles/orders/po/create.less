@@ -7,7 +7,7 @@
     *For Panels containing the suppliers and the supplies
     */
 	
-    .suppliers  {
+    .suppliers{
         background-color:#313131;
         .container{
             position:absolute;
@@ -56,170 +56,202 @@
 		
 	    .workspace{
 	        height:auto;
-	        width:95%;
+	        width:100%;
 	        z-index:1;
 	        padding-bottom:50px;
 			position:relative;
 			top:inherit;
 			bottom:inherit;
+			display:flex;
+			flex-direction:column;
+			align-items:center;
 			
-			.map-container{
-				position:absolute;
-				right:0;
-				top:2em;
-				width:40em;
-				height:20em;
+			md-input-container{
 				
-				#create-po-map{
-					height:100%;
-					width:100%;
+				.hint{
+					/* Position the hint */
+				    //position: absolute;
+				    //left: 2px;
+				    //right: auto;
+				    //bottom: 7px;
+				    /* Copy styles from ng-messages */
+					margin-top:2px;
+				    font-size: 12px;
+				    line-height: 14px;
+				    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+				    /* Set our own color */
+				    color: rgba(0, 0, 0, 0.35);
 				}
 			}
 			
 			.submenu{
 				margin-top:2em;
-				width:95%;
+				width:90%;
 				display:flex;
 				align-items:flex-start;
-				
-				.md-button{
-					font-size:1.25em;
-					margin-right:0.5em;
-					padding:0.5em;
-					font-family:proxima;
-				}
 			}
-      	
-	      	.supplier{
-	          	margin-top:2em;
-				width:50%;
-		  	  	display:flex;
-				flex-direction:column;
-				align-items:flex-start;
+			
+			md-card{
+				width:90%;
+				margin-top:2em;
 				
-	          	h2{
-	           		font-family:proxima;
-	          	}
-		  	  
-				.supplier-menu{
-					display:flex;
-					justify-content:space-between;
-					width:22em;
-					align-items:center;
-				
-				  	.md-button{
-					  	display:none;
-						padding:0.5em;
-						font-family:proxima;
+	            .supplier{
+	                position:relative;
+					width:100%;
+	                margin-top:2em;
+	                color:rgba(0, 0, 0, 1);
+                
+		          	.info{
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
 					
-					  	&.add{
-						  	&.active{
-							  	display:block;
-						  	}
-					  	}
-			  
-					  	&.change{
-						  	&.active{
-							  	display:block;
-						  	}
-					  	}
-				
-						&.create-supplier{
-							display:block;
+						md-autocomplete{
+							.hint{
+								color: rgba(0, 0, 0, 0.35);
+							}
+						
+							input{
+								color:rgb(0,0,0);
+							}
 						}
-				  	}
+		          	}
+				
+					.address{
+						.info;
+					}
+				
+					md-input-container{
+						margin-right:1em;
+					}
+		  	  
 				}
 				
-	          	.details{
-				  	opacity:0;
-					margin-top:1em;
-				  	.transition(all, 250ms, linear);
-			  
-				  	&.active{
-					  	height:auto;
-					  	opacity:1;
-					  	z-index:0;
-				  	}
-	              	tr{
-	                  	td{
-	                      	line-height:1.6em;
-	                      	font-size:1em;
-	                      	font-family:proxima;
-	                      	letter-spacing:0.08em;
-	                      	//States
-	                      	&:first-child{
-	                          	color:rgba(0, 0, 0, 1);   
-	                      	}
-	                      	&:last-child{
-	                          	color:rgba(0, 0, 0, 1);
-	                          	padding-left:20px;   
-	                      	}
-	                  }
-	              }
-	          }
-	      }
-	      .order{
-	          .supplier;
-			  margin-top:2em;
-	          .details{
-				  margin-top:0em;
-				  opacity:1;
-				  z-index:0;
-			  
-			  
-			  
-		          tr{
-				  
-					  &.currency{
-						  opacity:0;
-						  .transition(all, 250ms, linear);
-					  
-						  &.active{
-							  opacity:1;
-						  }
-					  }
-				  
-		              td{
-		                  padding:0.25em 0;
-				  		
-						  .new-project-checkbox{
-							  margin-left:2em;
-							  margin-right:0.5em;
-						  }
-						  .new-project-name{
-				  	
-						  }
-					  
-						  input{
-							  background-color:rgba(255, 255, 255, 1);
-							  color:rgba(0, 0, 0, 1);
-							  border:1px solid rgba(0, 0, 0, 0.35);
-							  
-						  	  &.vat{
-						  	  	  width:3em;
-								  text-align:center;
-						  	  }
-							  &.discount{
-							  	  width:3em;
-								  text-align:center;
-							  }
-							  
-							  &.ng-invalid{
-								  background-color:#A54243;
-							  }
-						  }
-						  
-						  textarea{
-							  background-color:rgba(255, 255, 255, 1);
-							  color:rgba(0, 0, 0, 1);
-							  border:1px solid rgba(0, 0, 0, 0.35);
-						  }
-		              }
-		          }
-			  }
-	      }  
+	            .order{
+	                .supplier;
+            	
+					.details{
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
+					
+						.date-container{
+							md-datepicker{
+								margin-right:1em;							
+							}
+						
+							.hint{
+								/* Position the hint */
+							    //position: absolute;
+							    //left: 2px;
+							    //right: auto;
+							    //bottom: 7px;
+							    /* Copy styles from ng-messages */
+								margin-left:64px;
+							    font-size: 12px;
+							    line-height: 14px;
+							    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+							    /* Set our own color */
+							    color: rgba(0, 0, 0, 0.35);
+							}
+						}
+					
+					
+						md-input-container{
+							margin:3px 1em 18px 0;
+						}
+					}
+					
+					.details-2{
+						.details;
+						margin-top:1em;
+						
+					}
+					
+					.project{
+						.details;
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
+						margin-top:2em;
+						md-autocomplete{
+						
+							md-input-container{
+								margin:0;
+								
+								input{
+									color:rgb(0,0,0);
+								}
+							}
+							
+						}
+					
+						md-input-container{
+							margin:0;
+							margin-left:2em;
+						}
+					
+						.md-button{
+							margin-right:3em;
+						}
+					}
+					
+	            }
+				
+				.map-container{
+					height:30em;
+				
+					#create-po-map{
+						height:100%;
+						width:100%;
+					}
+				}
+				
+	            &.item{
+	            	width:90%;
+				
+					md-card-content{
+					
+						.product-details{
+							tr{
+							
+								&.fabric{
+								
+									td{
+									
+										&:last-child{
+											padding-left:1em;
+										
+											img{
+												max-height:5em;
+											}
+										}
+									
+										.hint{
+											margin-top:4px;
+										}
+									}
+								}
+							}
+						}
+					
+						.card-media{
+							max-width:100%;
+					
+							img{
+								max-height:20em;
+								max-width:100%;
+							}
+						}					
+					}
+	            }
+				
+			}
+						
+	   
+	      
 	      .order-details{
-			  .supplier;
+			  //.supplier;
 			  margin-top:2em;
 			  margin-bottom:2em;
 			  display:flex;

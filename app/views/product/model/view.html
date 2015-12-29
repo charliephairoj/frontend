@@ -20,85 +20,39 @@
 					<div class="preview">PREVIEW</div>
 					<div class="model">MODEL</div>
 					<div class="name">NAME</div>
-					<div class="collection">COLLECTION</div>
+					<div class="properties">HAS ARMS</div>
+					<div class="properties">ARM WIDTH</div>
+					<div class="properties">ARM HEIGHT</div>
+					<div class="properties">BASE HEIGHT</div>
+					<div class="properties">BACK DEPTH</div>
 					<div class="back-pillow">BACK PILLOWs</div>
-					
 				</div>
 		
 		    	<div class="outer-container" on-scroll-end="loadNext()"> 
 			
 			    	<ul class="inner-container" >
 			    		<li class="item-container" data-ng-repeat="model in models | filter:query">	
-			    			<a class="item" ng-class="{'selected':ack.$selected}" ng-href="#/product/model/{{model.id}}">
-								<div class="preview">
+			    			<div class="item" ng-class="{'selected':ack.$selected}">
+								<a class="preview col" ng-href="#/product/model/{{model.id}}">
 									<img ng-src="{{model.images[0].url}}" />
+								</a>
+								<a class="model col" ng-href="#/product/model/{{model.id}}">{{model.model}}</a>
+								<a class="name col" ng-href="#/product/model/{{model.id}}">{{model.name}}</a>
+								<div class='properties col'>
+									<md-switch ng-model="model.has_arms"></md-switch>
 								</div>
-								<div class="model">{{model.model}}</div>
-								<div class="name">{{model.name}}</div>
-								<div class="collection">{{model.collection}}</div>
-								<div class="back-pillow">{{model.has_back_pillows}}</div>
-			    			</a>
+								<div class='properties col'><input type="text" ng-model="model.arm_width" /></div>
+								<div class='properties col'><input type="text" ng-model="model.arm_height" /></div>
+								<div class='properties col'><input type="text" ng-model="model.base_height" /></div>
+								<div class='properties col'><input type="text" ng-model="model.back_depth" /></div>
+								<div class='back-pillow col'>
+									<md-switch ng-model=model.has_back_pillows></md-switch>
+								</div>
+							</div>
 			    		</li>
 			    	</ul>
 		    	</div>
 			</div>
 		</div>
-		
-		<!--
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell model">Model</div>
-                <div class="cell name">Name</div>
-                <div class="cell collection">Collection</div>
-            </div>
-        </div>
-        <div class="listContainer">
-                <div class="body"  on-scroll-end="loadNext()">
-                    <a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
-                        
-                        <div class="cell preview">
-                            <img ng-src="{{model.image.url}}" />
-                        </div>
-                        
-                        <div class="cell model">{{model.model}}</div>
-                        <div class="cell name">{{model.name}}</div>
-                        <div class="cell collection">{{model.collection}}</div>
-                     
-                    </a>
-                </div>
-        </div>
-			-->
-        <!--
-        <div class="listContainer">
-            <div class="list">
-                
-                    <a ng-repeat="model in modelList | filter:query | orderBy: 'model'" class="row" ng-href="#/product/model/{{model.id}}">
-                        <div class="profile-img cell">
-                            <div>
-                                <img fade-load ng-src="{{model.images[0]}}" />
-                            </div>
-                        </div>
-                        <div class="cell">
-                            <div class="details">
-                                <div class="details-row">
-                                    <td class="details-title">Model:</td>
-                                    <td class="details-data">{{model.model}}</td>
-                                </div>
-                                <div class="details-row">
-                                    <td class="details-title">Name:</td>
-                                    <td class="details-data">{{model.name}}</td>
-                                </div>
-                                <div class="details-row">
-                                    <td class="details-title">Collection:</td>
-                                    <td class="details-data">{{model.collection}}</td>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                        
-                
-            </div>
-        </div>-->
     </div>
 </div>
