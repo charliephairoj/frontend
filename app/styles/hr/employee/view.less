@@ -26,9 +26,28 @@
 		padding-top:3em;
 		padding-bottom:1em;
 		display:flex;
-		flex-direction:column;
+		flex-direction:row;
 		align-items:center;
+		justify-content:flex-start;
+		flex-wrap:wrap;
+		overflow-y:scroll;
+		overflow-x:hidden;
+		margin-right:1em;
 		
+		md-card{
+			width:20%;
+			
+			.card-media{
+				max-width:100%;
+				
+				img{
+					max-width:100%;
+					max-height:10em;
+				}
+				
+			}
+		}
+		/*
 		nav{
 			width:95%;
 			display:flex;
@@ -113,6 +132,7 @@
                 }
             }
         }
+		*/
     }
 }
   
