@@ -212,6 +212,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					}
 				}
 			}
+			
+			//Retrieve known supplies for this supplier
+			$scope.retrieveSupplies();
 		}
 	};
 	
@@ -263,41 +266,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				$scope.po.project = {codename: projectName};
 			}
 		}
-	};
-	
-	/* 
-	 * Dialog to add a new project
-	 */
-	$scope.showAddProject = function () {
-		$scope.project = new Project();
-		$mdDialog.show({
-			templateUrl: 'views/templates/add-project.html',
-			controllerAs: 'ctrl',
-			controller: function () {this.parent = $scope;}
-		});
-	};
-	
-	$scope.completeAddProject = function  () {
-		$mdDialog.hide();
-		
-		$mdToast.show($mdToast
-			.simple()
-			.content("Creating project...")
-			.hideDelay(0));
-			
-		$scope.project.$create(function (resp) {
-			$scope.projects.push(resp);
-			$scope.po.project = resp;
-			$mdToast.hide();
-			$scope.project = new Project();
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-		});
-	};
-	
-	$scope.cancelAddProject = function  () {
-		$mdDialog.hide();
-		$scope.project = new Project();
 	};
 	
 	/*
@@ -373,25 +341,25 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	
 	// Watch on productSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
+		$scope.supplies = $scope.supplies || [];
+		var options = {};
 		if (query) {
-			$scope.supplies = $scope.supplies || [];
-			
-			var options = {q:query};
-			
-			if ($scope.po.supplier) {
-				if ($scope.po.supplier.id) {
-					options.supplier_id = $scope.po.supplier.id;
+			options.q = query;
+		} 
+		
+		if ($scope.po.supplier) {
+			if ($scope.po.supplier.id) {
+				options.supplier_id = $scope.po.supplier.id;
+			}
+		}
+		
+		Supply.query(options, function (responses) {
+			for (var i = 0; i < responses.length; i++) {
+				if ($scope.supplies.indexOfById(responses[i]) === -1) {
+					$scope.supplies.push(responses[i]);
 				}
 			}
-			
-			Supply.query(options, function (responses) {
-				for (var i = 0; i < responses.length; i++) {
-					if ($scope.supplies.indexOfById(responses[i]) === -1) {
-						$scope.supplies.push(responses[i]);
-					}
-				}
-			});
-		}
+		});
 	};
 	
 	/**
@@ -401,15 +369,21 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * @returns {Array} - An array of supplies whose description matches the search term
 	 */
 	$scope.searchSupplies = function (query) {
-		var lowercaseQuery = angular.lowercase(query);
+		var lowercaseQuery = angular.lowercase(query.trim());
 		var supplies = [];
 		$scope.supplies = $scope.supplies || [];
 		
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			console.log($scope.supplies[i]);
-			if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {
+			
+			if (lowercaseQuery) {
+				if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {
+					supplies.push($scope.supplies[i]);
+				}
+			} else {
 				supplies.push($scope.supplies[i]);
 			}
+			
 		}
 		return supplies;
 	};
@@ -462,7 +436,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		$scope.po.items.splice(index, 1);
 		
 		if ($scope.po.items.length === 0) {
-			delete $scope.po.items;
+			$scope.po.items = [];
 		}
 	};
 	

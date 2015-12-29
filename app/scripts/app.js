@@ -3,7 +3,7 @@ angular.module('employeeApp.services', ['ngResource']);
 angular.module('employeeApp.directives', []);
 angular.module('employeeApp.filters', []);
 angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages', 'employeeApp.directives', 'employeeApp.filters',
-                               'employeeApp.services', 'ui.date', 'ngMaterial'])
+                               'employeeApp.services', 'ngMaterial'])
 .config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
 	.when('/', {

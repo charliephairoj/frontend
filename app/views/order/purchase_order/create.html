@@ -267,6 +267,7 @@
 						md-selected-item="selectedSupply"
 						md-search-text="supplySearchText"
 						md-item-text="supply.description"
+						md-no-cache="true"
 						md-floating-label="Supply Description"
 						md-min-length="0">
 					    <md-item-template>
@@ -370,7 +371,7 @@
 				
 			</md-card>
 			
-			<md-card class="order-details" ng-show="po.supplier">
+			<md-card class="order-details" >
             	<md-card-content>
 					<table ng-show="po.items">
 						<thead>
