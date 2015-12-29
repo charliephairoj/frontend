@@ -56,9 +56,10 @@
 									name='customer'
 									md-items="customer in searchCustomers(customerSearchText)" 
 									md-selected-item="selectedCustomer"
+									md-no-cache="true"
 									md-selected-item-change="addCustomer(selectedCustomer)"
 									md-search-text="customerSearchText"
-									md-search-text-change="updateCustomerName(customerSearchText)"
+									md-search-text-change="updateCustomerName(customerSearchText); retrieveCustomers(customerSearchText)"
 									md-item-text="customer.name"
 									md-floating-label="Customer Name"
 									md-min-length="0">
@@ -134,10 +135,11 @@
 								</md-input-container>
 								<md-input-container>
 								  	<label>Vat</label>
-								  	<input name="vat" type="number" ng-model="ack.vat" required max="10">								  
+								  	<input name="vat" type="number" ng-model="ack.vat" required min="0" max="10">								  
 									<div ng-messages="ackForm.vat.$error" multiple>
-										<div ng-message-exp="'required'">This is required</div>
-										<div ng-message-exp="'max'">That's too much vat!</div>
+										<div ng-message="required">This is required</div>
+										<div ng-message="min">Sorry, this can't be negative</div>
+										<div ng-message="max">That's too much vat!</div>
 									</div>
 					            	<div class="hint">How much is the government taking?</div>
 								</md-input-container>
@@ -153,8 +155,9 @@
 			
 							<div class="project">
 									<md-autocomplete flex required 
-										md-items="project in searcProjects(projectSearchText)" 
+										md-items="project in searchProjects(projectSearchText)" 
 										md-selected-item="selectedProject"
+										md-no-cache="true"
 										md-selected-item-change="addProject(selectedProject)"
 										md-search-text="projectSearchText"
 										md-search-text-change="updateProjectName(projectSearchText)"
@@ -194,14 +197,26 @@
 				Map
 			-->
 			<md-card class="map" layout="row">
-				<md-card-actions layout="row" layout-align="end center">
-		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!ack.customer.name" ng-click="addMarker()">
+				<md-card-actions layout="column" layout-align="start center">
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!ack.customer.name || marker" ng-click="addMarker()">
 						<md-tooltip>Add a Location</md-tooltip>
 						<i class="material-icons">add_location</i>				
 					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!marker" ng-click="editMarker()">
+						<md-tooltip>Edit Location</md-tooltip>
+						<i class="material-icons">edit_location</i>
+					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="directionsActive || !marker" ng-click="viewDirections()">
+						<md-tooltip>View Directions</md-tooltip>
+						<i class="material-icons">directions</i>				
+					</md-button>
 		        </md-card-actions>
-				<md-card-content class="map-container">
-					<div id="create-ack-map"></div>
+				<md-card-content>
+					<div class="map-container">
+						<div id="create-ack-map"></div>
+						
+					</div>
+					<div id="directions"></div>
 				</md-card-content>
 			</md-card>
                 
@@ -224,6 +239,7 @@
 				<md-card-content layout="row" layout-align="start center">
 					<md-autocomplete flex required 
 						md-items="product in searchProducts(productSearchText)" 
+						md-no-cache="true"
 						md-search-text-change="retrieveUpholsteries(productSearchText)"
 						md-selected-item="tempProduct"
 						md-search-text="productSearchText"
@@ -232,6 +248,7 @@
 						md-min-length="0">
 					    <md-item-template>
 					    	<span md-highlight-text="productSearchText">{{product.description}}</span>
+							<div><img ng-src="{{product.image.url}}" /></div>
 					    </md-item-template>
 						<div ng-messages="true">
 							<div class="hint" ng-message="true">Starting typing to search or just type the description and add...</div>
@@ -239,7 +256,7 @@
 					</md-autocomplete>
 				</md-card-content>
 				<md-card-title-media>
-					<div class="md-media-md card-media">
+					<div class="md-media-md card-media" ng-show="tempProduct.image">
 						<img ng-src="{{tempProduct.image.url}}">
 					</div>
 				</md-card-title-media>
@@ -268,7 +285,7 @@
 									<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
 									<div ng-messages="ackForm.quantity.$error">
 										<div ng-message="required">This required is required</div>
-										<div ng-message="min">Quantity should be greater than 0</div>
+										<div ng-message="min">We can't produce a negative quantity</div>
 									</div>
 						            <div class="hint">How many pieces did they order?</div>
 								</md-input-container>
@@ -276,9 +293,10 @@
 							<td layout="row" colspan="2">
 								<md-input-container>
 									<label>Price Per Piece</label>
-									<input name="price" type="number" ng-model="item.price" required />
+									<input name="price" type="number" ng-model="item.price" required min="0" />
 									<div ng-messages="ackForm.price.$error">
 										<div ng-message="required">This required is required</div>
+										<div ng-message="min">We should probably not owe the customer</div>
 									</div>
 						            <div class="hint">How many one piece cost?</div>
 									
@@ -289,19 +307,28 @@
 							<td>
 								<md-input-container>
 									<label>Width (mm)</label>
-									<input type="number" ng-model="item.width" min="0" required />
+									<input name="width" type="number" ng-model="item.width" min="0" required />
+									<div ng-messages="ackForm.width.$error">
+										<div ng-message="required">This required is required</div>
+									</div>
 								</md-input-container>
 							</td>
 							<td>
 								<md-input-container>
 									<label>Depth (mm)</label>
-									<input type="number" ng-model="item.depth" min="0" required />
+									<input name="depth" type="number" ng-model="item.depth" min="0" required />
+									<div ng-messages="ackForm.depth.$error">
+										<div ng-message="required">This required is required</div>
+									</div>
 								</md-input-container>
 							</td>
 							<td>
 								<md-input-container>
 									<label>Height (mm)</label>
-									<input type="number" ng-model="item.height" min="0" required />
+									<input name="height" type="number" ng-model="item.height" min="0" required />
+									<div ng-messages="ackForm.height.$error">
+										<div ng-message="required">This required is required</div>
+									</div>
 								</md-input-container>
 							</td>
 						</tr>

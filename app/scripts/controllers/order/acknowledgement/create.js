@@ -1,30 +1,18 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog', '$log', 'Upholstery', 'Fabric',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log, Upholstery, Fabric) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog', '$log', 'Upholstery', 'Fabric', '$location',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log, Upholstery, Fabric, $location) {
+   
     //Vars
     $scope.uploading = false;
     $scope.customImageScale = 100;
 	
 	$scope.projects = Project.query({page_size:99999, limit:0, status__exclude:"completed"});
     $scope.ack = new Acknowledgement();
-	$scope.customers = Customer.query({page_size:9999, limit:0});
     
     var uploadTargets = [];
     var storage = window.localStorage;
 		
-	/*
- 	 * Map variables and settings
- 	 */
-	var map,
-		marker,
-		geocoder = new google.maps.Geocoder(),
-		markers = [],
-		mapOptions = {
-				center: new google.maps.LatLng(13.776239, 100.527884),
-				zoom: 4,
-				mapTypeId: google.maps.MapTypeId.ROAD
-		},
 	
 	/**
 	 *	MAPS SECTION
@@ -32,6 +20,25 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 * Implements all the functions and necessary to initialize and control
 	 * google maps instance
 	 */
+	
+	$scope.marker;
+	
+	var map,
+		home = new google.maps.LatLng(13.935441, 100.6864353),
+		directionsService = new google.maps.DirectionsService(),
+		directionsDisplay,
+		geocoder = new google.maps.Geocoder(),
+		markers = [],
+		mapOptions = {
+				center: new google.maps.LatLng(13.776239, 100.527884),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROAD
+		},
+		
+		/**
+		 * Map styling
+		 */
+		
 		styles = [
 			{
 				featureType: "road",
@@ -65,12 +72,65 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	//Create new map and set the map style
 	map = new google.maps.Map($('#create-ack-map')[0], mapOptions);
 	
+	// Create the directions layer
+	directionsDisplay = new google.maps.DirectionsRenderer({
+		map: map,
+		draggable: true
+	});
+    directionsDisplay.setMap(map);
+	
 	// Create a traffic layer and apply it to the map
 	var trafficLayer = new google.maps.TrafficLayer();
 	trafficLayer.setMap(map);
 
 	/**
+	 * Calculate the route between two points and renders it to the map
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	function calculateRoute(start, end, errback) {
+		
+		var request = {
+			origin: start,
+			destination: end,
+			avoidHighways: false,
+			avoidTolls: false,
+			travelMode: google.maps.TravelMode.DRIVING,
+  		  	unitSystem: google.maps.UnitSystem.METRIC
+			
+		}
+		
+		directionsService.route(request, function(result, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+		    	directionsDisplay.setDirections(result);
+				$scope.directionsActive = true;
+			    //directionsDisplay.setPanel(document.getElementById("directions"));
+				
+		    } else {
+		    	(errback || angular.noop)();
+		    }
+		});
+	}
+	
+	/**
+	 * Clears the route from the map
+	 *
+	 * @private
+	 * @returns {null}
+	 */
+	
+	function clearRoute () {
+		directionsDisplay.set('directions', null);
+		$scope.directionsActive = false;
+	}
+	
+	/**
 	 * Create a new marker for the map
+	 * 
 	 * @private
 	 * @param {Object} configs - An object container latitude and longitude to create the marker
 	 * @returns {Object} marker - Returns an instance of the new marker created
@@ -90,7 +150,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lng),
-			map: map,
 			title: configs.title,
 			draggable: true
 		});
@@ -113,10 +172,10 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			this.address.longitude = latLng.lng();
 			
 			//Ensure that the data in the supplier resource is consistent with the user's data
-			if (this.address.latitude != $scope.supplier.addresses[0].latitude || 
-				this.address.longitude != $scope.supplier.addresses[0].longitude) {
-					$scope.po.supplier.addresses[0].latitude = latLng.lat();
-					$scope.po.supplier.addresses[0].longitude = latLng.lng();
+			if (this.address.latitude != $scope.ack.customer.addresses[0].latitude || 
+				this.address.longitude != $scope.ack.customer.addresses[0].longitude) {
+					$scope.ack.customer.addresses[0].latitude = latLng.lat();
+					$scope.ack.customer.addresses[0].longitude = latLng.lng();
 			}
 				
 			//Change icon color
@@ -134,10 +193,33 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 	
 	$scope.addMarker = function () {
-		var marker = createMarker({latitude: 13.776239, longitude: 100.527884, title:$scope.ack.customer.name});
-		
-		
+		$scope.marker = createMarker({address: {}, latitude: 13.935441, longitude: 100.6864353, title:$scope.ack.customer.name});
+		$scope.marker.setMap(map);
+		map.panTo($scope.marker.getPosition());
+		map.setZoom(17);
 	}
+	
+	$scope.editMarker = function () {
+		clearRoute();
+		
+		if ($scope.marker) {
+			$scope.marker.setMap(map);
+			map.panTo($scope.marker.getPosition());
+			map.setZoom(17);
+		}		
+	};
+	
+	$scope.viewDirections = function () {
+		//Clear marker
+		$scope.marker.setMap(null);
+		
+		//Get Directions and render
+		calculateRoute(home, $scope.marker.getPosition(), function () {
+			$scope.marker.setMap(map);
+			map.panTo($scope.marker.getPosition());
+			map.setZoom(17);
+		});
+	};
 	
 	
 	//Restore saved acknowledgement from localStorage
@@ -149,9 +231,14 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			if($scope.ack.customer) {
 				var address = $scope.ack.customer.addresses[0];
 				if (address.latitude && address.longitude) {
-					 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-					 map.panTo(marker.getPosition());
-					 map.setZoom(17);
+					 $scope.marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+					 
+	 				calculateRoute(home, $scope.marker.getPosition(), function () {
+	 					clearRoute();
+	 					$scope.marker.setMap(map);
+	    				map.panTo($scope.marker.getPosition());
+	    				map.setZoom(17);
+	 				});
 				} 
 			}
 		} catch (e) {
@@ -174,6 +261,33 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 *
 	 * This section deals with the customer searching and what happens when a customer is selected
 	*/
+	
+	/**
+	 * Customer Variables
+	 */
+	$scope.customers = Customer.query({page_size:9999, limit:0});
+	
+	// Watch on customerSearchText to get products from the server
+	$scope.retrieveCustomers = function (query) {
+		if (query) {
+			Customer.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.customers.indexOfById(responses[i]) === -1) {
+						$scope.customers.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of customers whose name matches the query
+	 * 
+	 * @public
+	 * @param {String} query - the string to search against the customer names
+	 * @returns {Array} - An array of customes that matches the query
+	 */
+	
 	$scope.searchCustomers = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var customers = [];
@@ -186,67 +300,25 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		return customers;
 	}
 	
-	/**
-	 * Watches $scope.ack.customer for changes. If the customer changes, and new marker is created. 
-	 * @public
-	 * @param {String}  Describe this parameter
-	 * @returns {null}
-	 */
-	/*
-	$scope.$watch('ack.customer', function (newVal, oldVal) {
-		if (newVal) {
-			if (newVal.id && !oldVal) {
-				// Temporarily save the acknowledgement
-				$scope.tempSave();
-			
-				// Create a marker for the customer
-				try {
-					var address = customer.addresses[0];
-					if (address.latitude && address.longitude) {
-						 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-						 map.panTo(marker.getPosition());
-						 map.setZoom(17);
-					}
-				} catch (e) {
-					$log.warn(JSON.stringify(e));
-				}
-				
-			} else if (newVal.id !== oldVal.id) {
-				// Temporarily save the acknowledgement
-				$scope.tempSave();
-			
-				// Create a marker for the customer
-				try {
-					var address = customer.addresses[0];
-					if (address.latitude && address.longitude) {
-						 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-						 map.panTo(marker.getPosition());
-						 map.setZoom(17);
-					}
-				} catch (e) {
-					$log.warn(JSON.stringify(e));
-				}
-			}
-		}
-		
-	})
-	*/
 	
 	/**
-	 * Describe what this method does
+	 * Updates the customer name, so that if the customer is a new one, 
+	 * a customer object is already in place to accept the new details
+	 * 
 	 * @public
 	 * @param {String} customerName - Name of the Customer
 	 * @returns {null} 
 	 */
 	
 	$scope.updateCustomerName = function (customerName) {
-		$scope.ack.customer = $scope.ack.customer || {name: ''};
+		$scope.ack.customer = $scope.ack.customer || {name: '', addresses: []};
 		
 		if (!$scope.ack.customer.id) {
+			clearRoute();
 			$scope.ack.customer.name = customerName || '';
 		} else {
 			if ($scope.ack.customer.name.indexOf(customerName) == -1) {
-				$scope.ack.customer = {name: customerName};
+				$scope.ack.customer = {name: customerName, addresses: []};
 			}
 		}
 	};
@@ -255,27 +327,40 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	//Add customer and hide modal
     $scope.addCustomer = function (customer) {
-        //Set Customer
+        //Set Customer and save
         $scope.ack.customer = customer;
-        //Hide Customer Panel
-        $scope.showCustomers = false;
         $scope.tempSave();
-		
-		if (marker) {
-			marker.setMap(null);
+			
+		//Reset the map
+		if ($scope.marker) {
+			$scope.marker.setMap(null);
 		}
+		clearRoute();
+	 	map.setZoom(9);
+		
+		
 		//Set marker for customer
 		try {
 			var address = customer.addresses[0];
+			
 			if (address.latitude && address.longitude) {
-				 marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-				 map.panTo(marker.getPosition());
-				 map.setZoom(17);
+				$scope.marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+				
+				calculateRoute(home, $scope.marker.getPosition(), function () {
+					clearRoute();
+					$scope.marker.setMap(map);
+   					map.panTo($scope.marker.getPosition());
+   					map.setZoom(17);
+				});
+							 
+			} else {
+				$scope.marker = null;
 			}
 		} catch (e) {
 			$log.warn(JSON.stringify(e));
 		}
     };
+	
 	
 	/**
 	 * PROJECT SECTION
@@ -289,7 +374,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 * @param {String} query - Search term to apply against project.codename
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
-	$scope.searcProjects = function (query) {
+	$scope.searchProjects = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var projects = [];
 		for (var i = 0; i < $scope.projects.length; i++) {
@@ -322,38 +407,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				$scope.ack.project = {codename: projectName};
 			}
 		}
-	};
-	
-	/* 
-	 * Dialog to add a new project
-	 */
-	$scope.showAddProject = function () {
-		$scope.project = new Project();
-		$mdDialog.show({
-			templateUrl: 'views/templates/add-project.html',
-			controllerAs: 'ctrl',
-			controller: function () {this.parent = $scope;}
-		});
-	};
-	
-	$scope.completeAddProject = function  () {
-		$mdDialog.hide();
-		
-		Notification.display("Creating project...", false);
-			
-		$scope.project.$create(function (resp) {
-			$scope.projects.push(resp);
-			$scope.ack.project = resp;
-			Notification.hide();
-			$scope.project = new Project();
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-		});
-	};
-	
-	$scope.cancelAddProject = function  () {
-		$mdDialog.hide();
-		$scope.project = new Project();
 	};
 	
 	/*
@@ -511,13 +564,16 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
 	$scope.searchProducts = function (query) {
-		var lowercaseQuery = angular.lowercase(query);
+		var lowercaseQuery = angular.lowercase(query.trim());
 		var products = [];
 		for (var i = 0; i < $scope.upholsteries.length; i++) {
 			if (angular.lowercase($scope.upholsteries[i].description).indexOf(lowercaseQuery) !== -1) {
 				products.push($scope.upholsteries[i]);
 			}
 		}
+		
+		console.log(lowercaseQuery, products);
+		
 		return products;
 	};
     
@@ -533,14 +589,10 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.fabrics = Fabric.query({page_size:9999, limit:0});
 	
 	// Watch on productSearchText to get products from the server
-	$scope.retrieveFabrics = function (query) {
-		console.log(query);
-		
+	$scope.retrieveFabrics = function (query) {		
 		if (query) {
 			Fabric.query({q:query}, function (responses) {
-				console.log(responses);
 				for (var i = 0; i < responses.length; i++) {
-					console.log($scope.fabrics.indexOfById(responses[i]));
 					if ($scope.fabrics.indexOfById(responses[i]) === -1) {
 						$scope.fabrics.push(responses[i]);
 					}
@@ -550,13 +602,14 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	};
 	
 	/**
-	 * Returns a list of upholsteries whose description matches the search term
+	 * Returns a list of fabric whose description matches the search term
+	 *
 	 * @public
-	 * @param {String} query - Search term to apply against project.codename
-	 * @returns {Array} - An array of projects whose codename matches the search term
+	 * @param {String} query - Search term to apply against fabric.description
+	 * @returns {Array} - An array of fabrics whose description matches the search term
 	 */
 	$scope.searchFabrics = function (query) {
-		var lowercaseQuery = angular.lowercase(query);
+		var lowercaseQuery = angular.lowercase(query.trim());
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
 			if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
@@ -567,61 +620,21 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	};
 	
 	
-    $scope.create = function () {
-		$scope.ack.employee = $scope.currentUser;
-        $scope.tempSave();
-        try {
-            if ($scope.isValidated()) {
-				
-				Notification.display("Creating new acknowledgment", false);
-				
-				/*
-				 * Preps for creation of a new project
-				 */
-				if ($scope.ack.newProject) {
-					$scope.ack.project = {codename: $scope.ack.newProjectName};
-
-					delete $scope.ack.newProject;
-					delete $scope.ack.newProjectName;
-
-				}
-				
-                $scope.ack.$create(function (response) {
-					
-					Notification.display("Acknowledgement created with ID: " + $scope.ack.id, 2000);
-						
-                    if (response.pdf.acknowledgement) {
-						$window.open(response.pdf.acknowledgement);
-                    }
-                    if (response.pdf.confirmation) {
-						$window.open(response.pdf.confirmation);
-                    }
-                    if (response.pdf.production) {
-						$window.open(response.pdf.production);
-                    }
-                    angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
-					
-					delete $scope.ack.newProject;
-					delete $scope.ack.newProjectName;
-					
-                }, function (e) {
-                    $log.error(JSON.stringify(e));
-					Notification.display("There was an error in creating the acknowledgement. A report has been sent to Charlie.", false);
-                });
-            }
-        } catch (e) {
-			$log.error(JSON.stringify({message: e, data: $scope.ack}));
-			Notification.display(e.message, false);
-        }
-    };
-    
-    $scope.reset = function () {
-        $scope.ack = new Acknowledgement();
-        $scope.ack.items = [];
-        storage.removeItem('acknowledgement-create');
-    };
-    
-    //Validations
+	/**
+	 * ACKNOWLEDGEMENT VALIDATION, PREPARATION AND CREATION
+	 * 
+	 * This section deals with validating the details of the acknowlegement, preparing 
+	 * the acknowledgement by creating new customers, projects, rooms and phases as necessary, 
+	 * and creating the actually acknowledgement
+	 */
+	
+	/**
+	 * Validates the data of the acknowledgement
+	 *
+	 * @public
+	 * @returns Boolean - Returns true if the acknowledgement is valid
+	 */
+	
     $scope.isValidated = function () {
         /*
          * The following are test to see if
@@ -662,15 +675,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
                         if (!$scope.ack.items[i].has_price) {
                             //throw new TypeError("Product missing price");
                         }
-                    }
-                    
-                    /*
-                     * Validates custom items
-                     */
-                    if (!item.hasOwnProperty('id')) {
-						if (!item.is_custom) {
-							throw new TypeError("Item without id is not custom. Please contact an Administrator.");
-						}
                     }
                 }
             }
@@ -724,8 +728,147 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				throw new TypeError(testWords[j].message);
 			}
 		}
+		
         //Return true for form validated
 		return true;
 	};
+	
+	/**
+	 * Prepare the acknowledgement for creation. Creates customers, projects, rooms, and phases 
+	 * if they are respectively new
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	function prepareAcknowledgement (acknowledgement, callback) {
+		//Object used to track progress of sub-resource creations
+		var progress = {};
+		
+		//Check the progress of customer, project creation
+		function checkProgress (callback) {
+			for (var key in progress) {
+				if (progress[key] === false) {
+					return false;
+				} else if (progress[key] === 'error') {
+					throw new Error();
+				}
+			}
+			console.log(progress);
+			console.log(callback);
+			(callback || angular.noop)();
+		}
+		
+		//Checks if customer exists and creates if not
+		if (!acknowledgement.customer.id && acknowledgement.customer.name) {
+			progress.customer = false;
+			var customer = new Customer();
+			angular.extend(customer, acknowledgement.customer);
+
+			customer.$create(function (resp) {
+				angular.extend(acknowledgement.customer, resp);
+				progress.customer = true;
+				checkProgress(callback);
+			}, function () {
+				progress.customer = 'error';
+			});
+		} else if (acknowledgement.customer.id) {
+			progress.customer = false;
+
+			acknowledgement.customer.$update(function (resp) {
+				angular.extend(acknowledgement.customer, resp);
+				progress.customer = true;
+				checkProgress(callback);
+			}, function () {
+				progress.customer = 'error';
+			});
+		}
+		
+		//Checks if the project exists and create if not
+		if (acknowledgement.project) {
+			if (!acknowledgement.project.id && acknowledgement.project.codename) {
+				progress.project = false;
+				var project = new Project();
+				angular.extend(project, acknowledgement.project);
+				
+				project.$create(function (resp) {
+					angular.extend(acknowledgement.project, resp);
+					progress.project = true;
+					checkProgress(callback);
+				}, function () {
+					progress.project = 'error';
+				});
+			}
+		}
+		
+		//Check if items are custom
+		for (var i = 0; i < acknowledgement.items.length; i++) {
+			if (!acknowledgement.items[i].hasOwnProperty('id')) {
+				acknowledgement.items[i].is_custom = true;
+			}
+		}
+		
+		
+	}
+	
+	/**
+	 * Describe what this method does
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+    $scope.create = function () {
+		$scope.ack.employee = $scope.currentUser;
+        $scope.tempSave();
+		
+        try {
+            if ($scope.isValidated()) {
+				
+				Notification.display("Creating new acknowledgment...", false);
+				
+				prepareAcknowledgement($scope.ack, function () {
+	                $scope.ack.$create(function (response) {
+					
+						Notification.display("Acknowledgement created with ID: " + $scope.ack.id, 2000);
+						
+	                    if (response.pdf.acknowledgement) {
+							$window.open(response.pdf.acknowledgement);
+	                    }
+	                    if (response.pdf.confirmation) {
+							$window.open(response.pdf.confirmation);
+	                    }
+	                    if (response.pdf.production) {
+							$window.open(response.pdf.production);
+	                    }
+						
+	                    $scope.reset();
+						$location.path("order/acknowledgement/" + response.id);
+						
+					
+	                }, function (e) {
+	                    $log.error(JSON.stringify(e));
+						Notification.display("There was an error in creating the acknowledgement. A report has been sent to Charlie.", false);
+	                });
+				});
+				
+                
+            }
+        } catch (e) {
+			$log.error(JSON.stringify({message: e, data: $scope.ack}));
+			Notification.display(e.message, false);
+        }
+    };
+    
+    $scope.reset = function () {
+        $scope.ack = new Acknowledgement();
+        $scope.ack.items = [];
+        storage.removeItem('acknowledgement-create');
+    };
+    
+    
         
 }]);
