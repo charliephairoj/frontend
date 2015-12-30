@@ -1,6 +1,7 @@
 .user-view-page{
     .view-page;
-    
+    left:0;
+	
     .workspace{
         position:absolute;
         top:0;
@@ -8,11 +9,19 @@
         left:0;
 		right:0;
 		background:#FFF;
-		padding-top:5em;
-		padding-bottom:1em;
+		/*
 		display:flex;
-		flex-direction:column;
+		flex-direction:row;
 		align-items:center;
+		flex-wrap:wrap;
+		justify-content:space-around;
+		//overflow-y:scroll;
+		overflow-x:hidden;
+		*/
+		
+		md-card{
+			width:100%;
+		}
 		
 		.title-bar{
 			display:flex;
