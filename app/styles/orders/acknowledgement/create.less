@@ -3,308 +3,272 @@
 .createAcknowledgementPage{
     .addPage;
     left:0;
-    
-	.file-drag-drop-modal{
-		display:none;
-		height:100%;
-		width:100%;
-		z-index:1000;
-		position:absolute;
-		background:rgba(255, 255, 255, 0.75);
-		padding: 0.5em;
-		color:rgba(0, 0, 0, 0.30);
-		pointer-events:none;
-		
-		.container{
-			border: 0.35em dashed rgba(0, 0, 0, 0.30);
-			display:flex;
-			align-items:center;
-			justify-content:center;
-			height:100%;
-			width:100%;
-			
-			h2{
-				font-size:2.5em;
-				color:rgba(0, 0, 0, 0.25);
-			}
-		}
-	}
-	&.active{
-		.file-drag-drop-modal{
-			//display:block;
-		}
-	}
 	
     .ack{
-		overflow-y:scroll;
-	    overflow-x:hidden;
 	    position:absolute;
-	    top:0px;
-	    bottom:0px;
-	    left:0px;
-	    right:0px;
+	    top:0;
+	    bottom:0;
+	    left:0;
+	    right:0;
 	    background:rgba(255, 255, 255, 1);
-		display:flex;
-		flex-direction:row;
-		justify-content:space-around;
 		
         .workspace{
-	        height:auto;
+	        height:100%;
 	        width:100%;
-	        z-index:1;
 	        padding-bottom:50px;
-			position:relative;
-			top:inherit;
-			bottom:inherit;
-			display:flex;
-			align-items:center;
-			flex-direction:column;
+			position:absolute;
+			top:0;
+			left:0;
 			
-			md-input-container{
-				
-				.hint{
-					/* Position the hint */
-				    //position: absolute;
-				    //left: 2px;
-				    //right: auto;
-				    //bottom: 7px;
-				    /* Copy styles from ng-messages */
-					margin-top:2px;
-				    font-size: 12px;
-				    line-height: 14px;
-				    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-				    /* Set our own color */
-				    color: rgba(0, 0, 0, 0.35);
-				}
+			md-toolbar{
+				padding:0 5%;
 			}
 			
-			.submenu{
-				margin-top:2em;
-				width:90%;
+			md-content{
+				height:100%;
 				display:flex;
-				align-items:flex-start;
-				margin-bottom:2em;
-				
-				.md-button{
-					margin-right:0.5em;
-					font-family:proxima;
-				}
-			}
-			
-			.files{
-				position:absolute;
-				width:40em;
-				height:auto;
-				right:1em;
-				top:22em;
-				padding:1em;
-				z-index:2;
-				
-                .title{
-					margin-bottom:1em;  
-					color:rgb(0, 0, 0);
-	           		font-family:proxima;
-                }
-				
-				.file{
-					margin:0.5em 0;
-					padding-left:0.5em;
-					background:#575757;
-					height:2em;
-					display:flex;
-					color:rgb(255, 255, 255);
-					font-family:proxima;
-					flex-direction:row;
-					align-items:center;
-					justify-content:space-between;
-					text-decoration:none;
-					
-					.progress{
-						display:none;
-						color:rgb(255, 255, 255);
-						
-					}
-					
-					.checkmark{
-						margin-right:0.75em;
-						color:rgb(255, 255, 255);
-						
-					}
-					&.uploading{
-						
-						.progress{
-							display:block;
-						}
-					}
-				}				
-			}
-			
-            .customer{
-                position:relative;
-				width:100%;
-                margin-top:2em;
-                color:rgba(0, 0, 0, 1);
-                
-	          	.info{
-	          		display:flex;
-					justify-content:flex-start;
-					align-items:flex-start;
-					
-					md-autocomplete{
-						.hint{
-							color: rgba(0, 0, 0, 0.35);
-						}
-						
-						input{
-							color:rgb(0,0,0);
-						}
-					}
-	          	}
-				
-				.address{
-					.info;
-				}
+				flex-direction:column;
+				align-items:center;
 				
 				md-input-container{
-					margin-right:1em;
-				}
-		  	  
-			}
-			
-			.company{
-				.customer;
 				
-				.details{
-				  	opacity:1;
-				}
-			}
-			
-            .order{
-                .customer;
-            	
-				.details{
-	          		display:flex;
-					justify-content:flex-start;
-					align-items:flex-start;
-					
-					.date-container{
-						md-datepicker{
-							margin-right:1em;							
-						}
-						
-						.hint{
-							/* Position the hint */
-						    //position: absolute;
-						    //left: 2px;
-						    //right: auto;
-						    //bottom: 7px;
-						    /* Copy styles from ng-messages */
-							margin-left:64px;
-						    font-size: 12px;
-						    line-height: 14px;
-						    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-						    /* Set our own color */
-						    color: rgba(0, 0, 0, 0.35);
-						}
-					}
-					
-					
-					md-input-container{
-						margin:3px 1em 18px 0;
-					}
-				}
-				
-				.project{
-					.details;
-	          		display:flex;
-					justify-content:flex-start;
-					align-items:flex-start;
-					margin-top:2em;
-					md-autocomplete{
-						
-						input{
-							color:rgb(0,0,0);
-						}
-					}
-					
-					md-input-container{
-						margin:0;
-						margin-left:2em;
-					}
-					
-					.md-button{
-						margin-right:3em;
-					}
-				}
-					
-            }
-       
-	   	 	md-card.map{
-				width:90%;
-				margin:2em 0;
-				
-				.map-container{
-					height:30em;
-					width:100%;
-					
-					#create-ack-map{
-						height:100%;
-						width:100%;
-					}
-				}
-	   	 	}
-			
-			.add-product{
-				width:90%;
-				
-				md-card-content{
-					width:60%;
-					
 					.hint{
-						color:rgba(0, 0, 0, 0.35);
+						/* Position the hint */
+					    //position: absolute;
+					    //left: 2px;
+					    //right: auto;
+					    //bottom: 7px;
+					    /* Copy styles from ng-messages */
+						margin-top:2px;
+					    font-size: 12px;
+					    line-height: 14px;
+					    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+					    /* Set our own color */
+					    color: rgba(0, 0, 0, 0.35);
 					}
 				}
-			}
+			
+
+				.files{
+					position:absolute;
+					width:40em;
+					height:auto;
+					right:1em;
+					top:22em;
+					padding:1em;
+					z-index:2;
+					display:none;
+				
+	                .title{
+						margin-bottom:1em;  
+						color:rgb(0, 0, 0);
+		           		font-family:proxima;
+	                }
+				
+					.file{
+						margin:0.5em 0;
+						padding-left:0.5em;
+						background:#575757;
+						height:2em;
+						display:flex;
+						color:rgb(255, 255, 255);
+						font-family:proxima;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-between;
+						text-decoration:none;
+					
+						.progress{
+							display:none;
+							color:rgb(255, 255, 255);
+						
+						}
+					
+						.checkmark{
+							margin-right:0.75em;
+							color:rgb(255, 255, 255);
+						
+						}
+						&.uploading{
+						
+							.progress{
+								display:block;
+							}
+						}
+					}				
+				}
+			
+	            .customer{
+	                position:relative;
+					width:100%;
+	                margin-top:2em;
+	                color:rgba(0, 0, 0, 1);
+                
+		          	.info{
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
+					
+						md-autocomplete{
+							.hint{
+								color: rgba(0, 0, 0, 0.35);
+							}
+						
+							input{
+								color:rgb(0,0,0);
+							}
+						}
+		          	}
+				
+					.address{
+						.info;
+					}
+				
+					md-input-container{
+						margin-right:1em;
+					}
+		  	  
+				}
+			
+				.company{
+					.customer;
+				
+					.details{
+					  	opacity:1;
+					}
+				}
+			
+	            .order{
+	                .customer;
+            	
+					.details{
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
+					
+						.date-container{
+							md-datepicker{
+								margin-right:1em;							
+							}
+						
+							.hint{
+								/* Position the hint */
+							    //position: absolute;
+							    //left: 2px;
+							    //right: auto;
+							    //bottom: 7px;
+							    /* Copy styles from ng-messages */
+								margin-left:64px;
+							    font-size: 12px;
+							    line-height: 14px;
+							    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+							    /* Set our own color */
+							    color: rgba(0, 0, 0, 0.35);
+							}
+						}
+					
+					
+						md-input-container{
+							margin:3px 1em 18px 0;
+						}
+					}
+				
+					.project{
+						.details;
+		          		display:flex;
+						justify-content:flex-start;
+						align-items:flex-start;
+						margin-top:2em;
+						md-autocomplete{
+						
+							input{
+								color:rgb(0,0,0);
+							}
+						}
+					
+						md-input-container{
+							margin:0;
+							margin-left:2em;
+						}
+					
+						.md-button{
+							margin-right:3em;
+						}
+					}
+					
+	            }
+       
+		   	 	md-card.map{
+					width:90%;
+					margin:2em 0;
+				
+					.map-container{
+						height:30em;
+						width:100%;
+					
+						#create-ack-map{
+							height:100%;
+							width:100%;
+						}
+					}
+		   	 	}
+			
+				.add-product{
+					width:90%;
+				
+					md-card-content{
+						width:60%;
+					
+						.hint{
+							color:rgba(0, 0, 0, 0.35);
+						}
+					}
+				}
 			
             
-            .item{
-            	width:90%;
+	            .item{
+	            	width:90%;
 				
-				md-card-content{
+					md-card-content{
 					
-					.product-details{
-						tr{
+						.product-details{
+							tr{
 							
-							&.fabric{
+								&.fabric{
 								
-								td{
+									td{
 									
-									&:last-child{
-										padding-left:1em;
+										&:last-child{
+											padding-left:1em;
 										
-										img{
-											max-height:5em;
+											img{
+												max-height:5em;
+											}
 										}
-									}
 									
-									.hint{
-										margin-top:4px;
+										.hint{
+											margin-top:4px;
+										}
 									}
 								}
 							}
 						}
+					
+						.card-media{
+							max-width:100%;
+					
+							img{
+								max-height:20em;
+								max-width:100%;
+							}
+						}
+											
 					}
 					
-					.card-media{
-						max-width:100%;
-					
-						img{
-							max-height:20em;
-							max-width:100%;
-						}
-					}					
-				}
-            }
+	            }
+				
+			}
+			
         }
     }
     //Page States
