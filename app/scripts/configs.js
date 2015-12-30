@@ -99,9 +99,9 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 	/*
 	 * Set the token 
 	 */
-	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
+	$http.defaults.headers.common['X-CSRFToken'] = $cookies.get('csrftoken');
 	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.csrftoken);
+	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.get('csrftoken'));
 	});
 	
 	/*
