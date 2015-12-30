@@ -71,15 +71,15 @@
 					<md-tooltip>
 					    Cancel
 					</md-tooltip>
-					<i class="material-icons">cancel</i>
+					<i class="material-icons">clear</i>
 				</md-button>
 			</div>
 			
-			<md-card style="width:90%;" layout="column" layout-align="center center">
+			<md-card style="width:90%;" layout="column">
 				<md-card-content>
 		            <div class="supplier">				
 						<div class='info'>
-							<md-autocomplete flex="onshrink" required 
+							<md-autocomplete flex="noshrink" required 
 								name='supplier'
 								md-items="supplier in searchSuppliers(supplierSearchText)" 
 								md-selected-item="selectedSupplier"
@@ -120,7 +120,7 @@
 						</div>
 			
 						<div class="address">
-							<md-input-container>
+							<md-input-container flex="noshrink">
 							  <label>Address</label>
 							  <input type="text" ng-model="po.supplier.addresses[0].address1">
 							</md-input-container>
@@ -246,12 +246,34 @@
 				</md-card-content>
 			</md-card>
 			
-			<md-card>
-				<md-card-content class="map-container">
-					<div id="create-po-map">
+			<!--
+				MAP SECTION
+				-->
+			<md-card class="map" layout="row">
+				<md-card-actions layout="column" layout-align="start center">
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!po.supplier.name || marker" ng-click="addMarker()">
+						<md-tooltip>Add a Location</md-tooltip>
+						<i class="material-icons">add_location</i>				
+					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!marker" ng-click="editMarker()">
+						<md-tooltip>Edit Location</md-tooltip>
+						<i class="material-icons">edit_location</i>
+					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="directionsActive || !marker" ng-click="viewDirections()">
+						<md-tooltip>View Directions</md-tooltip>
+						<i class="material-icons">directions</i>				
+					</md-button>
+		        </md-card-actions>
+				<md-card-content>
+					<div class="map-container">
+						<div id="create-po-map"></div>
+						
 					</div>
+					<div id="directions"></div>
 				</md-card-content>
 			</md-card>
+
+			
 			
 			<md-card class="add-product" layout="row" layout-align="start center">
 				<md-card-actions layout="row" layout-align="center center">

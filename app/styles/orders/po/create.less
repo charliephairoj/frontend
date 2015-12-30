@@ -198,14 +198,33 @@
 					
 	            }
 				
-				.map-container{
-					height:30em;
+		   	 	&.map{
+					width:90%;
+					margin:2em 0;
 				
-					#create-po-map{
-						height:100%;
+					md-card-content{
 						width:100%;
+						height:auto;
+						display:flex;
+						flex-direction:column;
+					
+						.map-container{
+							height:30em;
+							width:100%;
+					
+							#create-po-map{
+								height:100%;
+								width:100%;
+							}
+						}
+					
+						#directions{
+							width:100%;
+							height:auto;
+						}
 					}
-				}
+				
+		   	 	}
 				
 	            &.item{
 	            	width:90%;

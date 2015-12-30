@@ -6,23 +6,33 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	/*
 	 * Setup vars
 	 */
-	$scope.showSuppliers = false;
-	$scope.showSupplies = false;
-	//$scope.suppliers = Supplier.query({limit: 0});
 	$scope.po = new PurchaseOrder();
 
-	/*
- 	 * Map variables and settings
- 	 */ 
+	/**
+	 *	MAPS SECTION
+	 *  
+	 * Implements all the functions and necessary to initialize and control
+	 * google maps instance
+	 */
+	
+	$scope.marker;
+	
 	var map,
-		marker,
+		home = new google.maps.LatLng(13.935441, 100.6864353),
+		directionsService = new google.maps.DirectionsService(),
+		directionsDisplay,
 		geocoder = new google.maps.Geocoder(),
+		markers = [],
 		mapOptions = {
 				center: new google.maps.LatLng(13.776239, 100.527884),
 				zoom: 4,
 				mapTypeId: google.maps.MapTypeId.ROAD
 		},
-		//Style for the map
+		
+		/**
+		 * Map styling
+		 */
+		
 		styles = [
 			{
 				featureType: "road",
@@ -55,21 +65,85 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
     
 	//Create new map and set the map style
 	map = new google.maps.Map($('#create-po-map')[0], mapOptions);
-	map.setOptions({styles:styles});
+	
+	// Create the directions layer
+	directionsDisplay = new google.maps.DirectionsRenderer({
+		map: map,
+		draggable: true
+	});
+    directionsDisplay.setMap(map);
 	
 	// Create a traffic layer and apply it to the map
 	var trafficLayer = new google.maps.TrafficLayer();
 	trafficLayer.setMap(map);
 
-	//General purpose create marker function
+	/**
+	 * Calculate the route between two points and renders it to the map
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	function calculateRoute(start, end, errback) {
+		
+		var request = {
+			origin: start,
+			destination: end,
+			avoidHighways: false,
+			avoidTolls: false,
+			travelMode: google.maps.TravelMode.DRIVING,
+  		  	unitSystem: google.maps.UnitSystem.METRIC
+			
+		}
+		
+		directionsService.route(request, function(result, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+		    	directionsDisplay.setDirections(result);
+				$scope.directionsActive = true;
+			    //directionsDisplay.setPanel(document.getElementById("directions"));
+				
+		    } else {
+		    	(errback || angular.noop)();
+		    }
+		});
+	}
+	
+	/**
+	 * Clears the route from the map
+	 *
+	 * @private
+	 * @returns {null}
+	 */
+	
+	function clearRoute () {
+		directionsDisplay.set('directions', null);
+		$scope.directionsActive = false;
+	}
+	
+	/**
+	 * Create a new marker for the map
+	 * 
+	 * @private
+	 * @param {Object} configs - An object container latitude and longitude to create the marker
+	 * @returns {Object} marker - Returns an instance of the new marker created
+	 */
+	
 	function createMarker(configs) {
-		var lat = configs.address.latitude || configs.latitude,
-			lng = configs.address.longitude || configs.longitude;
+		
+		if (configs.address) {
+			var lat = configs.address.latitude || configs.latitude,
+				lng = configs.address.longitude || configs.longitude;
+		} else {
+			var lat = configs.latitude,
+				lng = configs.longitude;
+		}
+		
 		
 	
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lng),
-			map: map,
 			title: configs.title,
 			draggable: true
 		});
@@ -106,6 +180,42 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		return configs.marker;
 	}
 	
+	/**
+	 * Creates a marker and then adds it to the map
+	 * @public
+	 * @returns {Object} Marker - returns and instance of the new marker
+	 */
+	
+	$scope.addMarker = function () {
+		$scope.marker = createMarker({address: {}, latitude: 13.935441, longitude: 100.6864353, title:$scope.po.supplier.name});
+		$scope.marker.setMap(map);
+		map.panTo($scope.marker.getPosition());
+		map.setZoom(17);
+	}
+	
+	$scope.editMarker = function () {
+		clearRoute();
+		
+		if ($scope.marker) {
+			$scope.marker.setMap(map);
+			map.panTo($scope.marker.getPosition());
+			map.setZoom(17);
+		}		
+	};
+	
+	$scope.viewDirections = function () {
+		//Clear marker
+		$scope.marker.setMap(null);
+		
+		//Get Directions and render
+		calculateRoute(home, $scope.marker.getPosition(), function () {
+			$scope.marker.setMap(map);
+			map.panTo($scope.marker.getPosition());
+			map.setZoom(17);
+		});
+	};
+	
+	
 	/*
  	 * CUSTOMER SECTION
 	 *
@@ -114,7 +224,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	$scope.suppliers = Supplier.query({page_size:99999, limit:0});
 	
 	$scope.searchSuppliers = function (query) {
-		var lowercaseQuery = angular.lowercase(query);
+		var lowercaseQuery = angular.lowercase(query.trim());
 		var suppliers = [];
 		for (var i = 0; i < $scope.suppliers.length; i++) {
 			if (angular.lowercase($scope.suppliers[i].name).indexOf(lowercaseQuery) !== -1) {
@@ -139,21 +249,21 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	};
 	
 	/**
-	 * Describe what this method does
+	 * Updates the supplier name incase this is a new supplier
 	 * @public
 	 * @param {String} supplierName - Name of the Supplier
 	 * @returns {null} 
 	 */
 	
 	$scope.updateSupplierName = function (supplierName) {
-		$scope.po.supplier = $scope.po.supplier || {name: ''};
+		$scope.po.supplier = $scope.po.supplier || {name: '', addresses:[]};
 		
 		if (!$scope.po.supplier.id) {
 			$scope.po.supplier.name = supplierName || '';
 			$scope.supplies = [];
 		} else {
 			if ($scope.po.supplier.name.indexOf(supplierName) == -1) {
-				$scope.po.supplier = {name: supplierName};
+				$scope.po.supplier = {name: supplierName, addresses: []};
 			}
 		}
 	};
@@ -162,60 +272,72 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * Add a supplier to the purchase order
 	 */
 	$scope.addSupplier = function (supplier) {
-		if (supplier) {
-			//Clear old supply list
-			$scope.supplies = [];
+		//Clear old supply list
+		$scope.supplies = [];
+	
+		$scope.po.supplier = supplier;
+		$scope.po.discount = supplier.discount;
+		$scope.po.terms = supplier.terms;
+		$scope.po.currency = supplier.currency;
+	
+		$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
+			$scope.supplies = $filter('filter')(response, supplier.name);
+		}), supplier.name);
+	
+		$scope.safeApply();
+	
+		//Reset the map
+		if ($scope.marker) {
+			$scope.marker.setMap(null);
+		}
+		clearRoute();
+	 	map.setZoom(9);
 		
-			$scope.po.supplier = supplier;
-			$scope.po.discount = supplier.discount;
-			$scope.po.terms = supplier.terms;
-			$scope.po.currency = supplier.currency;
 		
-			$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
-				$scope.supplies = $filter('filter')(response, supplier.name);
-			}), supplier.name);
-		
-			$scope.safeApply();
-		
-			if (marker) {
-				marker.setMap(null);
+		//Set marker for customer
+		try {
+			var address = supplier.addresses[0];
+			
+			if (address.latitude && address.longitude) {
+				$scope.marker = createMarker({address: address, title: $scope.po.supplier.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+				
+				calculateRoute(home, $scope.marker.getPosition(), function () {
+					clearRoute();
+					$scope.marker.setMap(map);
+   					map.panTo($scope.marker.getPosition());
+   					map.setZoom(17);
+				});
+							 
+			} else {
+				$scope.marker = null;
 			}
-			//Set marker for customer
-			try {
-				var address = $scope.po.supplier.addresses[0];
-				if (address.latitude && address.longitude) {
-					 marker = createMarker({address: address, title: $scope.po.supplier.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-					 map.panTo(marker.getPosition());
-					 map.setZoom(17);
-				}
-			} catch (e) {
-				$log.warn(e.stack);
-			}
+		} catch (e) {
+			$log.warn(JSON.stringify(e));
+		}
 		
-			//Update the pricing of all items so far
-			if ($scope.po.items) {
-				for (var h = 0; h < $scope.po.items.length; h++) {
-					try{
-						if ($scope.po.items[h].hasOwnProperty('suppliers') && $scope.po.supplier) {
-							if ($scope.po.supplier.id) {
-								for (var i = 0; i < $scope.po.items[h].suppliers.length; i++) {
-									if ($scope.po.items[h].suppliers[i].supplier == $scope.po.supplier.id) {
-										$scope.po.items[h].cost = Number($scope.po.items[h].suppliers[i].cost);
-										$scope.po.items[h].purchasing_units = $scope.po.items[h].suppliers[i].purchasing_units;
-										
-									}
+		//Update the pricing of all items so far
+		if ($scope.po.items) {
+			for (var h = 0; h < $scope.po.items.length; h++) {
+				try{
+					if ($scope.po.items[h].hasOwnProperty('suppliers') && $scope.po.supplier) {
+						if ($scope.po.supplier.id) {
+							for (var i = 0; i < $scope.po.items[h].suppliers.length; i++) {
+								if ($scope.po.items[h].suppliers[i].supplier == $scope.po.supplier.id) {
+									$scope.po.items[h].cost = Number($scope.po.items[h].suppliers[i].cost);
+									$scope.po.items[h].purchasing_units = $scope.po.items[h].suppliers[i].purchasing_units;
+									
 								}
 							}
 						}
-					} catch (e) {
-						$log.warn(e);
 					}
+				} catch (e) {
+					$log.warn(e);
 				}
 			}
-			
-			//Retrieve known supplies for this supplier
-			$scope.retrieveSupplies();
 		}
+		
+		//Retrieve known supplies for this supplier
+		$scope.retrieveSupplies();
 	};
 	
 	
@@ -520,6 +642,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		var total = $scope.total();
 		return total + (total * ($scope.po.vat / 100));
 	};
+	
+	
 	/*
 	 * Verfication of order
 	 */
@@ -541,6 +665,86 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		return true;
 	};
 	
+	/**
+	 * Prepare the purchase order for creation. Creates supplier, project, room, and phase 
+	 * if they are respectively new
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @param {Function} callback - Function to call if the creations are successful
+	 */
+	
+	function preparePurchaseOrder (purchaseOrder, callback) {
+		//Object used to track progress of sub-resource creations
+		var progress = {};
+		
+		//Check the progress of customer, project creation
+		function checkProgress (callback) {
+			for (var key in progress) {
+				if (progress[key] === false) {
+					return false;
+				} else if (progress[key] === 'error') {
+					throw new Error();
+				}
+			}
+			console.log(progress);
+			console.log(callback);
+			(callback || angular.noop)();
+		}
+		
+		//Checks if customer exists and creates if not
+		if (!purchaseOrder.supplier.id && purchaseOrder.supplier.name) {
+			progress.supplier = false;
+			var supplier = new Supplier();
+			angular.extend(supplier, purchaseOrder.supplier);
+
+			supplier.$create(function (resp) {
+				angular.extend(purchaseOrder.supplier, resp);
+				progress.supplier = true;
+				checkProgress(callback);
+			}, function () {
+				progress.supplier = 'error';
+			});
+		} else if (purchaseOrder.supplier.id) {
+			progress.supplier = false;
+
+			purchaseOrder.supplier.$update(function (resp) {
+				angular.extend(purchaseOrder.supplier, resp);
+				progress.supplier = true;
+				checkProgress(callback);
+			}, function () {
+				progress.supplier = 'error';
+			});
+		}
+		
+		//Checks if the project exists and create if not
+		if (purchaseOrder.project) {
+			if (!purchaseOrder.project.id && purchaseOrder.project.codename) {
+				progress.project = false;
+				var project = new Project();
+				angular.extend(project, purchaseOrder.project);
+				
+				project.$create(function (resp) {
+					angular.extend(purchaseOrder.project, resp);
+					progress.project = true;
+					checkProgress(callback);
+				}, function () {
+					progress.project = 'error';
+				});
+			}
+		}
+		
+		//Check if items are custom
+		for (var i = 0; i < purchaseOrder.items.length; i++) {
+			if (!purchaseOrder.items[i].hasOwnProperty('id')) {
+		  		purchaseOrder.items[i].supply = {id: purchaseOrder.items[i].id};
+				delete purchaseOrder.items[i].id;
+			}
+		}
+		
+		
+	}
+	
 	/*
 	 * Save the purchase order to the server
 	 */
@@ -553,46 +757,31 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 					.content('Creating new purchase order...')
 					.hideDelay(0));
 				
-				/*
-				 * prep the items by moving the supply id to a separate hash
-				 */
-			  	for (var i = 0; i < $scope.po.items.length; i++) {
-			  		$scope.po.items[i].supply = {id: $scope.po.items[i].id};
-					delete $scope.po.items[i].id;
-			  	}
-				/*
-				 * Preps for creation of a new project
-				 */
-				if ($scope.po.newProject) {
-					$scope.po.project = {codename: $scope.po.newProjectName};
-					delete $scope.po.newProject;
-					delete $scope.po.newProjectName;
-				}
-				
-				$scope.po.$save(function (response) {
-					try {
-						$window.open(response.pdf.url);
-					} catch (e) {
-						$log.warn(e);
-					}
-					$mdToast.show($mdToast
-						.simple()
-						.position('top right')
-						.content('Purchase order created.'));
+				preparePuchaseOrder($scope.po, function () {
+					$scope.po.$save(function (response) {
+						try {
+							$window.open(response.pdf.url);
+						} catch (e) {
+							$log.warn(e);
+						}
+						$mdToast.show($mdToast
+							.simple()
+							.position('top right')
+							.content('Purchase order created.'));
 											
-					//Change page to newly saved purchase order page
-					$location.path("/order/purchase_order/" + response.id);
+						//Change page to newly saved purchase order page
+						$location.path("/order/purchase_order/" + response.id);
 					
-				}, function (e) {
-					$log.error(JSON.stringify(e));
-					$mdToast.show($mdToast
-						.simple()
-						.content("There was an error in creeating the purchase order. A report has been sent to Charlie"));
+					}, function (e) {
+						$log.error(JSON.stringify(e));
+						$mdToast.show($mdToast
+							.simple()
+							.content("There was an error in creeating the purchase order. A report has been sent to Charlie"));
+					});
 				});
-			}
-			else {
-				throw Error;
-			}
+				
+				
+			} 
 		} catch (e) {
 			$log.error(JSON.stringify(e));
 			$mdToast.show($mdToast

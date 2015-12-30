@@ -809,8 +809,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				acknowledgement.items[i].is_custom = true;
 			}
 		}
-		
-		
 	}
 	
 	/**
