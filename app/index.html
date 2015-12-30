@@ -31,16 +31,19 @@
    <link rel="stylesheet" media="(min-device-width:320px) and (max-device-width:480px)" href="iphone4_style/main.css">
    
   </head>
-  <body ng-app="employeeApp" ng-init="activate=true" ng-class="{'inventory': inventory}">
+  <body ng-app="employeeApp" ng-init="activate=false" ng-class="{'inventory': inventory}">
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
-    <md-toolbar class="mainMenu" style="background: #566C7A" ng-click="activate=!activate" ng-class="{activate:activate}">
+    <md-toolbar class="mainMenu" style="background: #566C7A" ng-class="{'activate':activate}">
         <img class="logo" src="img/DellaLogo.png" />
         <!--Holds all the different menu options. Determined which are visible based
             on the permissions of the current user-->
 			
+        
+		
         <div class="mainMenuContainer scroll-enabled">
+			
 			<!--
                 <a class="menu-item" href="#/contact" touchstart touchmove touchend>Contacts</a>
                 <a class="menu-item" href="#/product" touchstart touchmove touchend>Products</a>
@@ -52,20 +55,79 @@
             
                 <a href="#/hr" touchstart touchmove touchend>HR</a>
 				-->
-        	
-                <md-button href="#/contact" class="menu-item" ng-show="currentUser.hasModule('contacts')">Contacts</md-button>
-                <md-button href="#/product" class="menu-item" ng-show="currentUser.hasModule('products')">Products</md-button>
-                <md-button href="#/supply" class="menu-item" ng-show="currentUser.hasModule('supplies')">Supplies</md-button>
-				 <md-button href="#/equipment" class="menu-item" ng-show="currentUser.hasModule('equipment')">Equipment</md-button>
-                <md-button href="#/order" class="menu-item" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">Orders</md-button>
-                <md-button href="#/accounting" class="menu-item" ng-show="currentUser.hasModule('accounting')">Accounting</md-button>
-                <md-button href="#/project" class="menu-item">Projects</md-button>
+		        <md-button class="menu-item menu-btn md-icon-button" ng-click="activate=!activate">
+					<md-tooltip md-direction="right">Expand Menu</md-tooltip>
+					<i class="material-icons">menu</i>
+				</md-button>
+        		
+				<!--
+				<div class="contacts-container">
+				<md-fab-speed-dial class="md-fling" md-direction="right" ng-show="currentUser.hasModule('contacts')">
+					<md-fab-trigger>
+		                
+					</md-fab-trigger>
+						
+	           	 	<md-fab-actions>
+		                <md-button href="#/contacts/customer" class="md-fab md-mini">
+							<md-tooltip md-direction="right">Products</md-tooltip>
+							<i class="material-icons">weekend</i>
+						</md-button>
+		                <md-button href="#/contacts/suppplier" class="md-fab md-mini">
+							<md-tooltip md-direction="right">Supplies</md-tooltip>
+							<i class="material-icons">build</i>
+						</md-button>
+					</md-fab-actions>					
+				</md-fab-speed-dial>
+			</div>
+					-->
+					
+                <md-button href="#/contact" class="menu-item md-icon-button">
+					<md-tooltip md-direction="right">Contacts</md-tooltip>
+					<i class="material-icons">contacts</i>
+				</md-button>
+                <md-button href="#/product" class="menu-item md-icon-button" ng-show="currentUser.hasModule('products')">
+					<md-tooltip md-direction="right">Products</md-tooltip>
+					<i class="material-icons">weekend</i>
+				</md-button>
+                <md-button href="#/supply" class="menu-item md-icon-button" ng-show="currentUser.hasModule('supplies')">
+					<md-tooltip md-direction="right">Supplies</md-tooltip>
+					<i class="material-icons">build</i>
+				</md-button>
+				<md-button href="#/equipment" class="menu-item md-icon-button" ng-show="currentUser.hasModule('equipment')">Equipment</md-button>
+                <md-button href="#/order" class="menu-item md-icon-button" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
+					<md-tooltip md-direction="right">Orders</md-tooltip>
+					<i class="material-icons">shopping_cart</i>
+				</md-button>
+				
+                <md-button href="#/accounting" class="menu-item md-icon-button" ng-show="currentUser.hasModule('accounting')">
+					<md-tooltip md-direction="right">Accounting</md-tooltip>
+					<i class="material-icons">account_balance_wallet</i>
+				</md-button>
+                <md-button href="#/project" class="menu-item md-icon-button">
+					<md-tooltip md-direction="right">Projects</md-tooltip>
+					<i class="material-icons">developer_board</i>
+				</md-button>
 
-				<md-button href="#/administrator" class="menu-item" ng-show="currentUser.hasModule('administrator')">Administrator</md-button>
+				<md-button href="#/administrator" class="menu-item md-icon-button" ng-show="currentUser.hasModule('administrator')">
+					<md-tooltip md-direction="right">Administrator</md-tooltip>
+					<i class="material-icons">vpn_key</i>
+				</md-button>
             
-                <md-button href="#/hr" class="menu-item" ng-show="currentUser.hasModule('hr')">HR</md-button>
+                <md-button href="#/hr" class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
+					<md-tooltip md-direction="right">Human Resources</md-tooltip>
+					<i class="material-icons">supervisor_account</i>
+				</md-button>
+                <md-button href="#/hr" class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
+					<md-tooltip md-direction="right">Settings</md-tooltip>
+					<i class="material-icons">settings</i>
+				</md-button>
+                <md-button href="/logout" class="menu-item md-icon-button">
+					<md-tooltip md-direction="right">Logout</md-tooltip>
+					<i class="material-icons">exit_to_app</i>
+				</md-button>
            
         </div>
+		<!--
 		<ul class="settings" >
 			<li class="settings-img-container">
 				<i class="material-icons">settings</i>
@@ -77,12 +139,13 @@
 		        <md-button href="/logout" class="logout">Logout</md-button>
 			</li>
 		</ul>
+			-->
     </md-toolbar>
     
     
     
     
-    <div ng-view class="mainContainer md-background">
+    <div ng-view class="mainContainer md-background" ng-class="{'activate': activate}">
         
     </div>
 	<div class="print">

@@ -1,9 +1,15 @@
 .mainContainer{
     position:absolute;
     bottom:0;
-    top:64px;
+    top:0;
     right:0;
-    left:0;
+    left:2em;
     background-color:#FFFFFF;
     overflow:hidden; 
+	.transition(left, 100ms);
+	
+	&.activate{
+		left:8em;
+	}
+	
 }
