@@ -3,439 +3,404 @@
 .create-po-page{
     .addPage;
 	color:rgba(0, 0, 0, 1);
-    /*
-    *For Panels containing the suppliers and the supplies
-    */
-	
-    .suppliers{
-        background-color:#313131;
-        .container{
-            position:absolute;
-            width:100%;
-            overflow-x:hidden;
-            overflow-y:scroll;
-            .list{
-                width:100%;
-                
-                .item{
-                    width:100%;
-                    background:#313131;
-                    padding:1em;
-                    font-size:1em;
-                    font-family:proxima;
-                    color:#CCCCCC;
-                    border-top: 1px solid #3c3c3c;
-                    border-bottom: 1px solid #282828;
-                    cursor:pointer;
-                    .transition(all, 250ms, linear);
-                    &:hover{
-                        background:orange;
-                        color:#FFFFFF;
-                    }
-                }
-            }
-        }
-    }
-   
-    .supplies{
-        .suppliers;
-    }
-
+  
 	.po{
-		overflow-y:scroll;
-	    overflow-x:hidden;
+		
 	    position:absolute;
 	    top:0px;
 	    bottom:0px;
 	    left:0px;
 	    right:0px;
 	    background:rgba(255, 255, 255, 1);
-		display:flex;
-		flex-direction:row;
-		justify-content:space-around;
 		
 	    .workspace{
-	        height:auto;
+	        height:100%;
 	        width:100%;
-	        z-index:1;
-	        padding-bottom:50px;
-			position:relative;
-			top:inherit;
-			bottom:inherit;
-			display:flex;
-			flex-direction:column;
-			align-items:center;
+	    	position:absolute;
+			top:0;
+			left:0;
 			
-			md-input-container{
+			md-toolbar{
+				padding:0 5%;
+			}
+			
+			md-content{
+				height:100%;
 				
-				.hint{
-					/* Position the hint */
-				    //position: absolute;
-				    //left: 2px;
-				    //right: auto;
-				    //bottom: 7px;
-				    /* Copy styles from ng-messages */
-					margin-top:2px;
-				    font-size: 12px;
-				    line-height: 14px;
-				    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-				    /* Set our own color */
-				    color: rgba(0, 0, 0, 0.35);
+				md-input-container{
+				
+					.hint{
+						/* Position the hint */
+					    //position: absolute;
+					    //left: 2px;
+					    //right: auto;
+					    //bottom: 7px;
+					    /* Copy styles from ng-messages */
+						margin-top:2px;
+					    font-size: 12px;
+					    line-height: 14px;
+					    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+					    /* Set our own color */
+					    color: rgba(0, 0, 0, 0.35);
+					}
 				}
-			}
 			
-			.submenu{
-				margin-top:2em;
-				width:90%;
-				display:flex;
-				align-items:flex-start;
-			}
+				.submenu{
+					margin-top:2em;
+					width:90%;
+					display:flex;
+					align-items:flex-start;
+				}
 			
-			md-card{
-				width:90%;
-				margin-top:2em;
+				md-card{
+					width:90%;
+					margin-top:2em;
 				
-	            .supplier{
-	                position:relative;
-					width:100%;
-	                margin-top:2em;
-	                color:rgba(0, 0, 0, 1);
+		            .supplier{
+		                position:relative;
+						width:100%;
+		                margin-top:2em;
+		                color:rgba(0, 0, 0, 1);
                 
-		          	.info{
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
+			          	.info{
+			          		display:flex;
+							justify-content:flex-start;
+							align-items:flex-start;
 					
-						md-autocomplete{
-							.hint{
-								color: rgba(0, 0, 0, 0.35);
-							}
+							md-autocomplete{
+								.hint{
+									color: rgba(0, 0, 0, 0.35);
+								}
 						
-							input{
-								color:rgb(0,0,0);
-							}
-						}
-		          	}
-				
-					.address{
-						.info;
-					}
-				
-					md-input-container{
-						margin-right:1em;
-					}
-		  	  
-				}
-				
-	            .order{
-	                .supplier;
-            	
-					.details{
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
-					
-						.date-container{
-							md-datepicker{
-								margin-right:1em;							
-							}
-						
-							.hint{
-								/* Position the hint */
-							    //position: absolute;
-							    //left: 2px;
-							    //right: auto;
-							    //bottom: 7px;
-							    /* Copy styles from ng-messages */
-								margin-left:64px;
-							    font-size: 12px;
-							    line-height: 14px;
-							    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-							    /* Set our own color */
-							    color: rgba(0, 0, 0, 0.35);
-							}
-						}
-					
-					
-						md-input-container{
-							margin:3px 1em 18px 0;
-						}
-					}
-					
-					.details-2{
-						.details;
-						margin-top:1em;
-						
-					}
-					
-					.project{
-						.details;
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
-						margin-top:2em;
-						md-autocomplete{
-						
-							md-input-container{
-								margin:0;
-								
 								input{
 									color:rgb(0,0,0);
 								}
 							}
-							
+			          	}
+				
+						.address{
+							.info;
 						}
-					
+				
 						md-input-container{
-							margin:0;
-							margin-left:2em;
+							margin-right:1em;
 						}
-					
-						.md-button{
-							margin-right:3em;
-						}
+		  	  
 					}
-					
-	            }
 				
-		   	 	&.map{
-					width:90%;
-					margin:2em 0;
-				
-					md-card-content{
-						width:100%;
-						height:auto;
-						display:flex;
-						flex-direction:column;
+		            .order{
+		                .supplier;
+            	
+						.details{
+			          		display:flex;
+							justify-content:flex-start;
+							align-items:flex-start;
 					
-						.map-container{
-							height:30em;
-							width:100%;
+							.date-container{
+								md-datepicker{
+									margin-right:1em;							
+								}
+						
+								.hint{
+									/* Position the hint */
+								    //position: absolute;
+								    //left: 2px;
+								    //right: auto;
+								    //bottom: 7px;
+								    /* Copy styles from ng-messages */
+									margin-left:64px;
+								    font-size: 12px;
+								    line-height: 14px;
+								    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+								    /* Set our own color */
+								    color: rgba(0, 0, 0, 0.35);
+								}
+							}
 					
-							#create-po-map{
-								height:100%;
-								width:100%;
+					
+							md-input-container{
+								margin:3px 1em 18px 0;
 							}
 						}
 					
-						#directions{
+						.details-2{
+							.details;
+							margin-top:1em;
+						
+						}
+					
+						.project{
+							.details;
+			          		display:flex;
+							justify-content:flex-start;
+							align-items:flex-start;
+							margin-top:2em;
+							md-autocomplete{
+						
+								md-input-container{
+									margin:0;
+								
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+							
+							}
+					
+							md-input-container{
+								margin:0;
+								margin-left:2em;
+							}
+					
+							.md-button{
+								margin-right:3em;
+							}
+						}
+					
+		            }
+				
+			   	 	&.map{
+						width:90%;
+						margin:2em 0;
+				
+						md-card-content{
 							width:100%;
 							height:auto;
-						}
-					}
-				
-		   	 	}
-				
-	            &.item{
-	            	width:90%;
-				
-					md-card-content{
+							display:flex;
+							flex-direction:column;
 					
-						.product-details{
-							tr{
+							.map-container{
+								height:30em;
+								width:100%;
+					
+								#create-po-map{
+									height:100%;
+									width:100%;
+								}
+							}
+					
+							#directions{
+								width:100%;
+								height:auto;
+							}
+						}
+				
+			   	 	}
+				
+		            &.item{
+		            	width:90%;
+				
+						md-card-content{
+					
+							.product-details{
+								tr{
 							
-								&.fabric{
+									&.fabric{
 								
-									td{
+										td{
 									
-										&:last-child{
-											padding-left:1em;
+											&:last-child{
+												padding-left:1em;
 										
-											img{
-												max-height:5em;
+												img{
+													max-height:5em;
+												}
 											}
-										}
 									
-										.hint{
-											margin-top:4px;
+											.hint{
+												margin-top:4px;
+											}
 										}
 									}
 								}
 							}
-						}
 					
-						.card-media{
-							max-width:100%;
-					
-							img{
-								max-height:20em;
+							.card-media{
 								max-width:100%;
-							}
-						}					
-					}
-	            }
+					
+								img{
+									max-height:20em;
+									max-width:100%;
+								}
+							}					
+						}
+		            }
 				
-			}
+				}
 						
 	   
 	      
-	      .order-details{
-			  //.supplier;
-			  margin-top:2em;
-			  margin-bottom:2em;
-			  display:flex;
-			  flex-direction:column;
-			  align-items:center;
-			  
-			  h2{
-				  align-self:flex-start;
-			  }
-			  
-			  .item-menu{
+		      .order-details{
+				  //.supplier;
 				  margin-top:2em;
-				  height:2.2em;
-				  width:100%;
+				  margin-bottom:2em;
 				  display:flex;
-				  align-items:flex-start;
-				  
-				  .md-button{
-					  padding:0.5em;
-					  font-family:proxima;
-					  margin-right:1.25em;
+				  flex-direction:column;
+				  align-items:center;
+			  
+				  h2{
+					  align-self:flex-start;
 				  }
-			  }
+			  
+				  .item-menu{
+					  margin-top:2em;
+					  height:2.2em;
+					  width:100%;
+					  display:flex;
+					  align-items:flex-start;
+				  
+					  .md-button{
+						  padding:0.5em;
+						  font-family:proxima;
+						  margin-right:1.25em;
+					  }
+				  }
 		  
-		      	table{
-					margin-top:2em;
-					width:100%;
+			      	table{
+						margin-top:2em;
+						width:100%;
 			
-					tr{
-						td{
-							padding:0.25em 0.5em;
-						}
-					}
-					thead{
 						tr{
 							td{
-								color:rgba(255, 255, 255, 1);
-								padding:1em;
-								text-align:center;
-								background-color:rgb(96,125,139);
-								border-left:1px dotted rgba(0, 0, 0, 0.35);
+								padding:0.25em 0.5em;
+							}
+						}
+						thead{
+							tr{
+								td{
+									color:rgba(255, 255, 255, 1);
+									padding:1em;
+									text-align:center;
+									background-color:rgb(96,125,139);
+									border-left:1px dotted rgba(0, 0, 0, 0.35);
 								
-								&:first-child{
-									border:none;
+									&:first-child{
+										border:none;
+									}
 								}
 							}
 						}
-					}
-					tbody{
-						font-family:proxima;
-						letter-spacing:0.08em;
-		        		.items{
-							border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+						tbody{
+							font-family:proxima;
+							letter-spacing:0.08em;
+			        		.items{
+								border-bottom:1px dotted rgba(0, 0, 0, 0.35);
 		        			
-							td{
-		        				color:rgba(0, 0, 0, 1);
-								border-left:1px dotted rgba(0, 0, 0, 0.35);
-								padding:0;
+								td{
+			        				color:rgba(0, 0, 0, 1);
+									border-left:1px dotted rgba(0, 0, 0, 0.35);
+									padding:0;
 								
-								input{
-									width:100%;
-									height:100%;
-									background-color:rgba(255, 255, 255, 1);
-									color:rgba(0, 0, 0, 1);
-									border-radius:none;
-									border:none;
+									input{
+										width:100%;
+										height:100%;
+										background-color:rgba(255, 255, 255, 1);
+										color:rgba(0, 0, 0, 1);
+										border-radius:none;
+										border:none;
 									
-									&.ng-invalid{
-										background-color:#A54243;
+										&.ng-invalid{
+											background-color:#A54243;
+										}
 									}
-								}
 								
-								textarea{
-									width:100%;
-									background-color:rgba(255, 255, 255, 1);
-									color:rgba(0, 0, 0, 1);
-									border:none;
+									textarea{
+										width:100%;
+										background-color:rgba(255, 255, 255, 1);
+										color:rgba(0, 0, 0, 1);
+										border:none;
 									
-									&.ng-invalid{
-										background-color:#A54243;
-									}
+										&.ng-invalid{
+											background-color:#A54243;
+										}
 									
-									&:focus{
-										//width:10em;
+										&:focus{
+											//width:10em;
+										}
 									}
-								}
 							
 								
-								&:first-child{
-									border-left:none;
-								}
+									&:first-child{
+										border-left:none;
+									}
 								
-								&:last-child{
-									border-left:none;
-								}
+									&:last-child{
+										border-left:none;
+									}
 								
-								&.description{
-									text-align:left;
-									width:30%;
-								}
-				
-								&.discount{
-									text-align:center;
-									input{
-										text-align:center;
+									&.description{
+										text-align:left;
+										width:30%;
 									}
-								}
 				
-								&.quantity{
-									width:3em;
-									text-align:center;
-									input{
+									&.discount{
 										text-align:center;
+										input{
+											text-align:center;
+										}
 									}
-								}
 				
-								&.unit-cost{
-									text-align:center;
-									input{
+									&.quantity{
+										width:3em;
 										text-align:center;
+										input{
+											text-align:center;
+										}
 									}
-								}
 				
-								&.total{
-									text-align:right;
-									padding-right:3em;
-									width:10%;
-								}
+									&.unit-cost{
+										text-align:center;
+										input{
+											text-align:center;
+										}
+									}
+				
+									&.total{
+										text-align:right;
+										padding-right:3em;
+										width:10%;
+									}
 							
-								.remove-btn{
-									position:relative;
-									top:0;
-									opacity:1;
-									z-index:0;
-								}
-		        			}
-		        		}
+									.remove-btn{
+										position:relative;
+										top:0;
+										opacity:1;
+										z-index:0;
+									}
+			        			}
+			        		}
 			
-						.summary{
-							color:rgba(0, 0, 0, 1);
-							td{
-								&.title{
-									text-align:right;
-									padding-right:3em;
-								}
+							.summary{
+								color:rgba(0, 0, 0, 1);
+								td{
+									&.title{
+										text-align:right;
+										padding-right:3em;
+									}
 					
-								&.value{
-									text-align:right;
-									padding-right:3em;
+									&.value{
+										text-align:right;
+										padding-right:3em;
+									}
 								}
 							}
-						}
-						.subtotal{
-							color:rgba(0, 0, 0, 1);
-						}
+							.subtotal{
+								color:rgba(0, 0, 0, 1);
+							}
 			
-						.discount{
-							color:rgba(0, 0, 0, 1);
+							.discount{
+								color:rgba(0, 0, 0, 1);
+							}
 						}
-					}
-					.totals{
+						.totals{
 			
-					}
+						}
+			      	}
 		      	}
-	      	}
-	    }
+		    
+			}
+			
+		}
+			
 	}
 }
