@@ -35,7 +35,7 @@
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
-    <md-toolbar class="mainMenu md-primary" ng-click="activate=!activate" ng-class="{activate:activate}">
+    <md-toolbar class="mainMenu" style="background: #566C7A" ng-click="activate=!activate" ng-class="{activate:activate}">
         <img class="logo" src="img/DellaLogo.png" />
         <!--Holds all the different menu options. Determined which are visible based
             on the permissions of the current user-->
@@ -66,7 +66,7 @@
                 <md-button href="#/hr" class="menu-item" ng-show="currentUser.hasModule('hr')">HR</md-button>
            
         </div>
-		<ul class="settings">
+		<ul class="settings" >
 			<li class="settings-img-container">
 				<i class="material-icons">settings</i>
 			</li>
