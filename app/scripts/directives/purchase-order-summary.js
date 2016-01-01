@@ -16,13 +16,16 @@ angular.module('employeeApp')
 		});
 		
 		//Attach amount
-		box.append('h2').text(function (d) {
+		box.append('span').text(function (d) {
 			return "$" + $filter('number')(d.amount);
 		});
 		//Attach count
-		box.append('h2').text(function (d) {
+		box.append('span').text(function (d) {
 			return d.category + " " + d.count;
 		});
+		
+		//Add arrow
+		box.append('div').attr('class', 'arrow');
 		
 		box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
 			//Calculate bar width
