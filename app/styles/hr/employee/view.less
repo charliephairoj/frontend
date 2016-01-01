@@ -5,15 +5,6 @@
 .employee-view-page{
     .view-page;
     
-    .sidebar{
-        .scanner-mode{
-            &.on{
-                background-color:orange;
-                color:#313131;
-            }
-        }
-    }
-    
 	left:0;
 
     .workspace{
@@ -23,96 +14,70 @@
         left:0;
 		right:0;
 		background:#FFF;
-		padding-top:3em;
-		padding-bottom:1em;
-		display:flex;
-		flex-direction:column;
-		align-items:center;
 		
-		nav{
-			width:95%;
-			display:flex;
-			flex-direction:row;
-			justify-content:space-between;
-			align-items:center;
-			margin-bottom:2em;
+		md-toolbar{
+			padding:0 6px;
 			
-			.title{
-				
-			}
-			.add-btn{
-				align-self:flex-end;
-				text-decoration:none;
+			.search{
+				color:rgb(0, 0, 0);
 				font-family:proxima;
-				background:#607d8b;
-				color:#FFF;
-				padding:1em;
-				width:10em;
+				outline:none;
+				margin:0 1em;
+				padding:0 1em;
 			}
 		}
-	
-		.title-bar{
-			width:95%;
+		
+		md-content{
+			height:100%;
+			width:100%;
 			display:flex;
 			flex-direction:row;
-			border-bottom: 1px solid #4F6874;
+			flex-wrap:wrap;
+			justify-content:space-between;
 			
-			div{
-				display:flex;
-				flex-direction:row;
-				align-items:center;
-				justify-content:space-around;
-				padding:1em 0;
-				background:#607d8b;
-				color:rgba(255, 255, 255, 1);
-				border-left:1px dotted rgba(0, 0, 0, 0.35);
-				overflow:hidden;
+			md-card{
+				width:23%;
+				height:15em;
+				.transition(all, 350ms);
 				
-				&:first-child{
-					border-left:none;
+				&.active{
+					width:48%;
+					height:31em;
 				}
 				
-				&.preview{
-					width:15%;
+				md-card-title{
+					outline:none;
+					cursor:pointer;
+					
+					md-card-title-media{
+						width:50%;
+					
+						.card-media{
+							
+							i{
+								font-size:4.5em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+							
+							img{
+								max-width:100%;
+								max-height:5em;
+							}
+						}
+					}
 				}
 				
-				&.id{
-					width:10%;
-				}
-
-				&.name{
-					width:25%;
-				}
-			
-				&.first-name{
-					width:20%
-				}
-			
-				&.last-name{
-					width:20%
-				}
-			
-				&.nickname{
-					width:10%;
+				
+				md-card-content{
+					
+					
 				}
 			}
 		}
-        
-        .outer-container{
-            height:100%;
-            width:95%;
-            overflow-y:scroll;
-			
-            .inner-container{
-                width:100%;
-                height:auto;
-                .item-container{
-                    width:100%;
-                    position:relative;
-                    height:auto;
-                }
-            }
-        }
+		
+		
+		
+		
     }
 }
   

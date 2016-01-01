@@ -98,6 +98,10 @@
 					<md-tooltip md-direction="right">Orders</md-tooltip>
 					<i class="material-icons">shopping_cart</i>
 				</md-button>
+                <md-button href="#/order/shipping" class="menu-item md-icon-button" ng-show="currentUser.hasModule('shipping')">
+					<md-tooltip md-direction="right">Shipping</md-tooltip>
+					<i class="material-icons">local_shipping</i>
+				</md-button>
 				
                 <md-button href="#/accounting" class="menu-item md-icon-button" ng-show="currentUser.hasModule('accounting')">
 					<md-tooltip md-direction="right">Accounting</md-tooltip>
