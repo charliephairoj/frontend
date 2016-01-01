@@ -30,12 +30,11 @@
     
     <div class="workspace" ng-class="{'map': map}">
 		
-		<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
 		
-		<nav>
-			<h2>Acknowledgements</h2>
-			
-			<div class="right-menu">
+		<md-toolbar layout="column" layout-align="center center" md-scroll-shrink="true">
+			<div class="container" layout="row" layout-align="center center">
+				<h3><span>Acknowledgements</span></h3>
+				<div flex></div>
 				<md-button class="md-icon-button md-accent" ng-hide="map" ng-click="viewMap()">
 					<md-tooltip>
 						Show Map
@@ -54,80 +53,97 @@
 					</md-tooltip>
 					<i class="material-icons">create</i>
 				</md-button>
+				<input class="search" type="text" ng-model="query.$.$" />
 			</div>
 			
-		</nav>
-		
-		<div class="acknowledgements-container">
-			<div class="acknowledgements">
-				<div class="title-bar">
-					<div class="id">ORDER ID</div>
-					<div class="order-date">DATE</div>
-					<div class="customer">CUSTOMER</div>
-					<div class="po">PO #</div>
-					<div class="project">PROJECT</div>
-					<div class="delivery-date">DELIVERY DATE</div>
-					<div class="total">TOTAL</div>
-					<div class="status">STATUS</div>
-					<div class="remarks">REMARKS</div>
-				</div>
-		
-		    	<div class="outer-container" on-scroll-end="loadNext()"> 
+			<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
 			
-			    	<ul class="inner-container" >
-			    		<li class="item-container"  ng-class="{'active': ack.$active}" data-ng-repeat="ack in acknowledgements | filter:query track by ack.id">	
-			    			<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="id" ng-click="navigate(ack.id)">{{ack.id}}</div>
-								<div class="order-date" ng-click="navigate(ack.id)">{{ack.time_created | date: "MMM d, yyyy"}}</div>
-								<div class="customer" ng-click="navigate(ack.id)">{{ack.customer.name}}</div>
-								<div class="po" ng-click="navigate(ack.id)">{{ack.po_id}}</div>
-								<div class="project-id" ng-click="navigate(ack.id)">{{ack.project.id}}</div>
-								<div class="project" ng-click="navigate(ack.id)">{{ack.project.codename}}</div>
-								<div class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
-								<div class="total" ng-click="navigate(ack.id)">{{ack.total}}</div>
-								<div class="status" ng-class="ack.status.toLowerCase()">
-									<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-										<option value="deposit received">Deposit Received</option>
-										<option value="acknowledged">Acknowledged</optioon>
-										<option value="in production">In Production</option>
-										<option value="ready to ship">Ready to Ship</option>
-										<option value="shipped">Shipped</option>
-										<option value="invoiced">Invoiced</option>
-										<option value="paid">Paid</option>
-										<option value="cancelled">Cancelled</option>
-									</select>
-								</div>
-								<div class="remarks">
-									{{ack.remarks}}
-								</div>
-								<!--
-			    				<span class="description">{{ack.id}}</span>
-			    				<span class="customer">{{ack.customer.name}}</span>
-			    				<span class="status" ng-class="{acknowledged:ack.status == 'ACKNOWLEDGED', shipped:ack.status == 'SHIPPED'}">
-			    					{{ack.status}}
-			    				</span>
-			    				<span class="items">{{ack.items.length}} Items</span>
-			    				<span class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</span>
-								-->
-			    			</div>
-	    					<div class="status-bar">
-								<div class="event" ng-class="{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}"></div>
-								<div class="event" ng-class="{'deposit-received': hasEvent(ack, 'deposit')}"></div>
-								<div class="event" ng-class="{'in-production': hasEvent(ack, 'in production')}"></div>
-								<div class="event" ng-class="{'ready-to-ship': hasEvent(ack, 'ready to ship')}"></div>
-								<div class="event" ng-class="{'shipped': hasEvent(ack, 'shipped')}"></div>
-								<div class="event" ng-class="{'invoiced': hasEvent(ack, 'invoiced')}"></div>
-								<div class="event" ng-class="{'paid': hasEvent(ack, 'paid')}"></div>
-							</div>
-			    		</li>
-			    	</ul>
-		    	</div>
+			
+			<div class="title-bar">
+				<div class="id">ID</div>
+				<div class="order-date">DATE</div>
+				<div class="customer">CUSTOMER</div>
+				<div class="po">PO #</div>
+				<div class="project">PROJECT</div>
+				<div class="delivery-date">SHIP DATE</div>
+				<div class="total">TOTAL</div>
+				<div class="status">STATUS</div>
+				<div class="remarks">REMARKS</div>
 			</div>
+			
+			
+			
+		</md-toolbar>
+		<md-content>
 		
-			<div class="map-container">
-				<div id="acknowledgement-map"><div>
-			</div>
-		</div>
+		
+					
+			    	<div class="outer-container" on-scroll-end="loadNext()"> 
+			
+				    	<ul class="inner-container" >
+				    		<li class="item-container"  ng-class="{'active': ack.$active}" data-ng-repeat="ack in acknowledgements | filter:query track by ack.id">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="id" ng-click="navigate(ack.id)">{{ack.id}}</div>
+									<div class="order-date" ng-click="navigate(ack.id)">{{ack.time_created | date: "MMM d, yyyy"}}</div>
+									<div class="customer" ng-click="navigate(ack.id)">{{ack.customer.name}}</div>
+									<div class="po" ng-click="navigate(ack.id)">{{ack.po_id}}</div>
+									<div class="project-id" ng-click="navigate(ack.id)">{{ack.project.id}}</div>
+									<div class="project" ng-click="navigate(ack.id)">{{ack.project.codename}}</div>
+									<div class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
+									<div class="total" ng-click="navigate(ack.id)">{{ack.total}}</div>
+									<div class="status" ng-class="ack.status.toLowerCase()">
+										<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+											<option value="deposit received">Deposit Received</option>
+											<option value="acknowledged">Acknowledged</optioon>
+											<option value="in production">In Production</option>
+											<option value="ready to ship">Ready to Ship</option>
+											<option value="shipped">Shipped</option>
+											<option value="invoiced">Invoiced</option>
+											<option value="paid">Paid</option>
+											<option value="cancelled">Cancelled</option>
+										</select>
+									</div>
+									<div class="remarks">
+										{{ack.remarks}}
+									</div>
+									<!--
+				    				<span class="description">{{ack.id}}</span>
+				    				<span class="customer">{{ack.customer.name}}</span>
+				    				<span class="status" ng-class="{acknowledged:ack.status == 'ACKNOWLEDGED', shipped:ack.status == 'SHIPPED'}">
+				    					{{ack.status}}
+				    				</span>
+				    				<span class="items">{{ack.items.length}} Items</span>
+				    				<span class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</span>
+									-->
+				    			</div>
+		    					<div class="status-bar">
+									<div class="event" ng-class="{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'deposit-received': hasEvent(ack, 'deposit')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'in-production': hasEvent(ack, 'in production')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'ready-to-ship': hasEvent(ack, 'ready to ship')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'shipped': hasEvent(ack, 'shipped')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'invoiced': hasEvent(ack, 'invoiced')}">
+										<div class="arrow"></div>
+									</div>
+									<div class="event" ng-class="{'paid': hasEvent(ack, 'paid')}">
+										<div class="arrow"></div>
+									</div>
+								</div>
+				    		</li>
+				    	</ul>
+			    	</div>
+
+		</md-content>
 		
     </div>
     

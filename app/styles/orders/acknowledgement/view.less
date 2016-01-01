@@ -9,21 +9,26 @@
     left:0;
     background-color:rgba(0, 0, 0, 0);
     
-    .nav-bar{
-        height:2em;
-        top:0;
-        background-color:black;
-        .add{
-            position:absolute;
-            right:1em;
-            color:white;
-            text-decoration:none;
-            margin:0.5em 0;
-            &:active{
-              color:blue;
-            }
-        }
-    }
+	/*
+	 * Helper classes
+	 */
+	.arrow(@arrowColor: transparent, @arrowHeight:1em, @arrowWidth: 10px){
+		
+		.arrow{
+			font-size:16px;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width:(@arrowHeight/2) 0 (@arrowHeight/2) @arrowWidth;
+			border-color: transparent transparent transparent @arrowColor;
+			position:absolute;
+			left:100%;
+			top:0;
+			padding:0;
+			margin:0;
+		}
+	}
+   
     .workspace{
         position:absolute;
         top:0;
@@ -31,81 +36,181 @@
         left:0;
 		right:0;
 		background:#FFF;
-		padding-top:3em;
-		padding-bottom:1em;
-		display:flex;
-		flex-direction:column;
-		align-items:center;
+		padding:0;
 		
-		.acknowledgement-summary{
-			width:95%;
-			height:5em;
-			display:flex;
-			flex-direction:row;
-			align-items:center;
-			overflow:visible;
-			margin-bottom:2em;
+		md-toolbar{
 			
 			div{
-				padding:1em 0;
-				width:0em;
-				overflow:hidden;
-				z-index:1;
-				cursor:pointer;
+				
+				&.container{
+					width:100%;
+					padding:0.5em 1em;
+						
+					.search{
+						color:rgb(0, 0, 0);
+						font-family:proxima;
+						outline:none;
+						margin:0 1em;
+						padding:0 1em;
+					}
+				}
+				
+				
+				&.title-bar{
+					display:flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					border-top: 1px solid #4F6874;
+					width:100%;
+			
+					div{
+						display:flex;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-around;
+						padding:0.25em;
+						background:#607d8b;
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+						font-size:0.8em;
+						
+						&:first-child{
+							border-left:none;
+						}
+			
+						&.id{
+							width:5%;
+						}
+
+						&.order-date{
+							width:9%;
+						}
+
+						&.customer{
+							width:15%;
+						}
+			
+						&.po{
+							width:8%
+						}
+			
+						&.project{
+							width:15%;
+						}
+
+						&.delivery-date{
+							width:10%;
+						}
+			
+						&.total{
+							width:8%;
+						}
+			
+						&.status{
+							width:15%;
+						}
+			
+						&.remarks{
+							width:15%;
+						}
+					}
+				}
+			}
+			
+			.acknowledgement-summary{
+				width:100%;
+				height:auto;
 				display:flex;
-				flex-direction:column;
-				align-items:flex-start;
-				justify-content:space-between;
-				box-shadow:0 5px 10px 1px rgba(0, 0, 0, 0);
-				transition-property: margin-bottom, box-shadow;
-				transition-duration:250ms;
+				flex-direction:row;
+				align-items:center;
+				overflow:visible;
+				font-size:16px;
 				
-				&:hover{
-					margin-bottom:0.35em;
-					//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.15);
-					box-shadow: 0 5px 10px 1px rgba(0,0,0,0.25);
-					z-index:0;
-				}
+				div{
+					@zIndex:0;
+					@fontSize:1em;
+					@padding:0.25em;
+					font-size:16px;
+					padding:0.25em 0;
+					height:(2 * 0.25em) + @fontSize;
+					width:0em;
+					overflow:hidden;
+					z-index:1;
+					cursor:pointer;
+					display:flex;
+					flex-direction:column;
+					align-items:flex-start;
+					justify-content:space-between;
+					box-shadow:0 5px 10px 1px rgba(0, 0, 0, 0);
+					transition-property: margin-bottom, box-shadow;
+					transition-duration:250ms;
+					position:relative;
+					overflow:visible;
+					min-width:14%;
+					
+					&:hover{
+						margin-bottom:0.35em;
+						//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.15);
+						box-shadow: 0 5px 10px 1px rgba(0,0,0,0.25);
+						z-index:0;
+					}
 				
-				&.acknowledged{
-					background-color:rgb(54, 66, 140);
-				}
+					&.acknowledged{
+						background-color:rgb(54, 66, 140);
+						z-index:@zIndex + 6;
+						.arrow(rgb(54, 66, 140), (2 * @padding) + @fontSize);
+					}
 				
-				&.deposit-received{
-					background-color:rgb(50, 130, 120);
-				}
+					&.deposit-received{
+						background-color:rgb(50, 130, 120);
+						z-index:@zIndex + 5;
+						.arrow(rgb(50, 130, 120), (2 * @padding) + @fontSize);
+					}
 				
-				&.in-production{
-					background-color:rgb(198, 148, 77);
-				}
+					&.in-production{
+						background-color:rgb(198, 148, 77);
+						z-index:@zIndex + 4;
+						.arrow(rgb(198, 148, 77), (2 * @padding) + @fontSize);
+					}
 				
-				&.ready-to-ship{
-					background-color:rgb(87,117,83);
-				}
+					&.ready-to-ship{
+						background-color:rgb(87,117,83);
+						z-index:@zIndex + 3;
+						.arrow(rgb(87,117,83), (2 * @padding) + @fontSize);
+					}
 				
-				&.shipped{
-					background-color:rgb(97,92,130);
-				}
+					&.shipped{
+						background-color:rgb(97,92,130);
+						z-index:@zIndex + 2;
+						.arrow(rgb(97,92,130), (2 * @padding) + @fontSize);
+					}
 				
-				&.invoiced{
-					background-color:rgb(163, 81, 82);
-				}
+					&.invoiced{
+						background-color:rgb(163, 81, 82);
+						z-index:@zIndex + 1;
+						.arrow(rgb(163, 81, 82), (2 * @padding) + @fontSize);
+					}
 				
-				&.paid{
-					background-color:rgb(87, 132, 87);
-				}
+					&.paid{
+						background-color:rgb(87, 132, 87);
+						z-index:@zIndex;
+						.arrow(rgb(87, 132, 87), (2 * @padding) + @fontSize);
+					}
 				
+					
 				
-				
-				h2{
-					color:rgba(255, 255, 255, 1);
-					font-family:proxima;
-					font-size:1em;
-					white-space:nowrap;
-					margin:0 0 0 1em;
+					span{
+						color:rgba(255, 255, 255, 1);
+						font-family:proxima;
+						font-size:1em;
+						white-space:nowrap;
+						margin:0 0 0 1em;
+					}
 				}
 			}
 		}
+		
+		
 		
 		nav{
 			width:95%;
@@ -141,6 +246,343 @@
 			
 		}
 		
+		md-content{
+			height:100%;
+			
+			.title-bar{
+				display:flex;
+				flex-direction:row;
+				border-bottom: 1px solid #4F6874;
+				background-color:rgb(96,125,139);
+				width:100%;
+			
+				div{
+					display:flex;
+					flex-direction:row;
+					align-items:center;
+					justify-content:space-around;
+					padding:1em;
+					background:rgb(96,125,139);
+					color:rgba(255, 255, 255, 1);
+					border-left:1px dotted rgba(0, 0, 0, 0.35);
+			
+					&:first-child{
+						border-left:none;
+					}
+			
+					&.id{
+						width:5%;
+					}
+
+					&.order-date{
+						width:9%;
+					}
+
+					&.customer{
+						width:15%;
+					}
+			
+					&.po{
+						width:8%
+					}
+			
+					&.project{
+						width:15%;
+					}
+
+					&.delivery-date{
+						width:10%;
+					}
+			
+					&.total{
+						width:8%;
+					}
+			
+					&.status{
+						width:15%;
+					}
+			
+					&.remarks{
+						width:15%;
+					}
+				}
+			}
+	
+	        .outer-container{
+	            height:auto;
+				width:100%;
+		
+	            .inner-container{
+	                width:100%;
+	                height:auto;
+					
+	                .item-container{
+	                    width:100%;
+	                    position:relative;
+	                    height:3.5em;
+						display:flex;
+						flex-direction:column;
+						overflow-x:hidden;
+						z-index:0;
+	                    
+                		&:hover{
+							z-index:1;
+							//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+							//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+							
+							.status-bar{
+								
+								.event{
+									height:100%;
+									background:#EEE;
+									width:14.285%;
+									.arrow(transparent, 0.5em);
+									
+									&.acknowledged{
+										background-color:rgb(54, 66, 140);
+										.arrow(rgb(54, 66, 140), 0.5em, 5px);
+									}
+			
+									&.deposit-received{
+										background-color:rgb(50, 130, 120);
+										.arrow(rgb(50, 130, 120), 0.5em, 5px);
+									}
+			
+									&.in-production{
+										background-color:rgb(198, 148, 77);
+										.arrow(rgb(198, 148, 77), 0.5em, 5px);
+									}
+			
+									&.ready-to-ship{
+										background-color:rgb(87,117,83);
+										.arrow(rgb(87,117,83), 0.5em, 5px);
+									}
+			
+									&.shipped{
+										background-color:rgb(97,92,130);
+										.arrow(rgb(97,92,130), 0.5em, 5px);
+									}
+			
+									&.invoiced{
+										background-color:rgb(163, 81, 82);
+										.arrow(rgb(163, 81, 82), 0.5em, 5px);
+									}
+			
+									&.paid{
+										background-color:rgb(87, 132, 87);
+										.arrow(rgb(87, 132, 87), 0.5em, 5px);
+									}
+								}
+							}
+             
+                		}
+						
+                		&.active{
+							z-index:1;
+							//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+							//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
+							
+							.status-bar{
+								
+								.event{
+									height:100%;
+									background:#EEE;
+									width:14.285%;
+								
+									&.acknowledged{
+										background-color:rgb(54, 66, 140);
+										.arrow(rgb(54, 66, 140), 0.5em, 5px);
+									}
+			
+									&.deposit-received{
+										background-color:rgb(50, 130, 120);
+										.arrow(rgb(50, 130, 120), 0.5em, 5px);
+									}
+			
+									&.in-production{
+										background-color:rgb(198, 148, 77);
+										.arrow(rgb(198, 148, 77), 0.5em, 5px);
+									}
+			
+									&.ready-to-ship{
+										background-color:rgb(87,117,83);
+										.arrow(rgb(87,117,83), 0.5em, 5px);
+									}
+			
+									&.shipped{
+										background-color:rgb(97,92,130);
+										.arrow(rgb(97,92,130), 0.5em, 5px);
+									}
+			
+									&.invoiced{
+										background-color:rgb(163, 81, 82);
+										.arrow(rgb(163, 81, 82), 0.5em, 5px);
+									}
+			
+									&.paid{
+										background-color:rgb(87, 132, 87);
+										.arrow(rgb(87, 132, 87), 0.5em, 5px);
+									}
+								}
+							}
+             
+                		}
+						
+	                    .item{
+							display:flex;
+							flex-direction:row;
+	                        width:100%;
+	                        background-color:#FFF;
+	                        left:0;
+							top:0;
+	                        font-size:1em;
+	                        height: 3em;
+	                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+	                        text-decoration:none;
+	                        color:#000;
+	                        cursor:pointer;
+	                        .transition(all, 150ms, linear);
+                    
+							&:hover{
+	                            background-color:#E4EEF4;
+	                        }
+                    
+	                        &.selected{
+	                            background-color:orange;
+	                        }
+					
+                    
+							div{
+								display:flex;
+								flex-direction:row;
+								align-items:center;
+								padding-left:1em;
+								justify-content:flex-start;
+								border-left:1px dotted rgba(0, 0, 0, 0.35);
+						
+								&:first-child{
+									border-left:none;
+								}
+						
+								&.id{
+									width:5%;
+								}
+
+								&.order-date{
+									width:9%;
+								}
+
+								&.customer{
+									width:15%;
+								}
+						
+								&.po{
+									width:8%;
+								}
+			
+								&.project-id{
+									width:3%;
+									padding-left:0.2em;
+								}
+						
+								&.project{
+									width:12%;
+								}
+
+								&.delivery-date{
+									width:10%;
+								}
+			
+								&.total{
+									width:8%;
+									justify-content:flex-end;
+									padding:0 1em 0 0;
+								}
+			
+								&.status{
+									width:15%;
+							
+									&.acknowledged{
+										color:#0098cd;
+									}
+							
+									&.shipped{
+										color:#54947A;
+									}
+								}
+						
+								&.remarks{
+									width:15%;
+								}
+							}
+	                    }
+						
+						.status-bar{
+							height:.5em;
+							width:100%;
+							background:pink;
+							display:flex;
+							flex-direction:row;
+							position:relative;
+							@zIndex:0;
+							
+							.event{
+								height:100%;
+								background:#EEE;
+								width:14.285%;
+								position:relative;
+								
+								@tint-amount: 50%;
+								
+								&.acknowledged{
+									background-color:tint(rgb(54, 66, 140), @tint-amount);
+									z-index:@zIndex + 6;
+									.arrow(tint(rgb(54, 66, 140), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.deposit-received{
+									background-color:tint(rgb(50, 130, 120), @tint-amount);
+									z-index:@zIndex + 5;
+									.arrow(tint(rgb(50, 130, 120), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.in-production{
+									background-color:tint(rgb(198, 148, 77), @tint-amount);
+									z-index:@zIndex + 4;
+									.arrow(tint(rgb(198, 148, 77), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.ready-to-ship{
+									background-color:tint(rgb(87,117,83), @tint-amount);
+									z-index:@zIndex + 3;
+									.arrow(tint(rgb(87,117,83), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.shipped{
+									background-color:tint(rgb(97,92,130), @tint-amount);
+									z-index:@zIndex + 2;
+									.arrow(tint(rgb(97,92,130), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.invoiced{
+									background-color:tint(rgb(163, 81, 82), @tint-amount);
+									z-index:@zIndex + 1;
+									.arrow(tint(rgb(163, 81, 82), @tint-amount), 0.5em, 5px);
+								}
+			
+								&.paid{
+									background-color:tint(rgb(87, 132, 87), @tint-amount);
+									z-index:@zIndex + 0;
+									.arrow(tint(rgb(87, 132, 87), @tint-amount), 0.5em, 5px);
+								}
+							}
+						}
+	                }
+	            }
+	        }
+			
+		}
+		
 		.acknowledgements-container{
 			display:flex;
 			flex-wrap:nowrap;
@@ -156,305 +598,7 @@
 				left:0;
 				z-index:1;
 				
-				.title-bar{
-					display:flex;
-					flex-direction:row;
-					border-bottom: 1px solid #4F6874;
-					background-color:rgb(96,125,139);
-					width:100%;
 				
-					div{
-						display:flex;
-						flex-direction:row;
-						align-items:center;
-						justify-content:space-around;
-						padding:1em;
-						background:rgb(96,125,139);
-						color:rgba(255, 255, 255, 1);
-						border-left:1px dotted rgba(0, 0, 0, 0.35);
-				
-						&:first-child{
-							border-left:none;
-						}
-				
-						&.id{
-							width:5%;
-						}
-	
-						&.order-date{
-							width:9%;
-						}
-	
-						&.customer{
-							width:15%;
-						}
-				
-						&.po{
-							width:8%
-						}
-				
-						&.project{
-							width:15%;
-						}
-	
-						&.delivery-date{
-							width:10%;
-						}
-				
-						&.total{
-							width:8%;
-						}
-				
-						&.status{
-							width:15%;
-						}
-				
-						&.remarks{
-							width:15%;
-						}
-					}
-				}
-		
-		        .outer-container{
-		            height:100%;
-		            overflow-y:scroll;
-					width:100%;
-			
-		            .inner-container{
-		                width:100%;
-		                height:auto;
-						
-		                .item-container{
-		                    width:100%;
-		                    position:relative;
-		                    height:3.5em;
-							display:flex;
-							flex-direction:column;
-							overflow-x:hidden;
-							z-index:0;
-		                    
-                    		&:hover{
-								z-index:1;
-								//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-								//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-								
-								.status-bar{
-									.event{
-										height:100%;
-										background:#EEE;
-										width:14.285%;
-									
-										&.acknowledged{
-											background-color:rgb(54, 66, 140);
-										}
-				
-										&.deposit-received{
-											background-color:rgb(50, 130, 120);
-										}
-				
-										&.in-production{
-											background-color:rgb(198, 148, 77);
-										}
-				
-										&.ready-to-ship{
-											background-color:rgb(87,117,83);
-										}
-				
-										&.shipped{
-											background-color:rgb(97,92,130);
-										}
-				
-										&.invoiced{
-											background-color:rgb(163, 81, 82);
-										}
-				
-										&.paid{
-											background-color:rgb(87, 132, 87);
-										}
-									}
-								}
-                 
-                    		}
-							
-                    		&.active{
-								z-index:1;
-								//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-								//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-								
-								.status-bar{
-									.event{
-										height:100%;
-										background:#EEE;
-										width:14.285%;
-									
-										&.acknowledged{
-											background-color:rgb(54, 66, 140);
-										}
-				
-										&.deposit-received{
-											background-color:rgb(50, 130, 120);
-										}
-				
-										&.in-production{
-											background-color:rgb(198, 148, 77);
-										}
-				
-										&.ready-to-ship{
-											background-color:rgb(87,117,83);
-										}
-				
-										&.shipped{
-											background-color:rgb(97,92,130);
-										}
-				
-										&.invoiced{
-											background-color:rgb(163, 81, 82);
-										}
-				
-										&.paid{
-											background-color:rgb(87, 132, 87);
-										}
-									}
-								}
-                 
-                    		}
-							
-		                    .item{
-								display:flex;
-								flex-direction:row;
-		                        width:100%;
-		                        background-color:#FFF;
-		                        left:0;
-								top:0;
-		                        font-size:1em;
-		                        height: 3em;
-		                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
-		                        text-decoration:none;
-		                        color:#000;
-		                        cursor:pointer;
-		                        .transition(all, 150ms, linear);
-                        
-								&:hover{
-		                            background-color:#E4EEF4;
-		                        }
-                        
-		                        &.selected{
-		                            background-color:orange;
-		                        }
-						
-                        
-								div{
-									display:flex;
-									flex-direction:row;
-									align-items:center;
-									padding-left:1em;
-									justify-content:flex-start;
-									border-left:1px dotted rgba(0, 0, 0, 0.35);
-							
-									&:first-child{
-										border-left:none;
-									}
-							
-									&.id{
-										width:5%;
-									}
-	
-									&.order-date{
-										width:9%;
-									}
-	
-									&.customer{
-										width:15%;
-									}
-							
-									&.po{
-										width:8%;
-									}
-				
-									&.project-id{
-										width:3%;
-										padding-left:0.2em;
-									}
-							
-									&.project{
-										width:12%;
-									}
-	
-									&.delivery-date{
-										width:10%;
-									}
-				
-									&.total{
-										width:8%;
-										justify-content:flex-end;
-										padding:0 1em 0 0;
-									}
-				
-									&.status{
-										width:15%;
-								
-										&.acknowledged{
-											color:#0098cd;
-										}
-								
-										&.shipped{
-											color:#54947A;
-										}
-									}
-							
-									&.remarks{
-										width:15%;
-									}
-								}
-		                    }
-							
-							.status-bar{
-								height:.5em;
-								width:100%;
-								background:pink;
-								display:flex;
-								flex-direction:row;
-								
-								
-								.event{
-									height:100%;
-									background:#EEE;
-									width:14.285%;
-									
-									@tint-amount: 50%;
-									
-									&.acknowledged{
-										background-color:tint(rgb(54, 66, 140), @tint-amount);
-									}
-				
-									&.deposit-received{
-										background-color:tint(rgb(50, 130, 120), @tint-amount);
-									}
-				
-									&.in-production{
-										background-color:tint(rgb(198, 148, 77), @tint-amount);
-									}
-				
-									&.ready-to-ship{
-										background-color:tint(rgb(87,117,83), @tint-amount);
-									}
-				
-									&.shipped{
-										background-color:tint(rgb(97,92,130), @tint-amount);
-									}
-				
-									&.invoiced{
-										background-color:tint(rgb(163, 81, 82), @tint-amount);
-									}
-				
-									&.paid{
-										background-color:tint(rgb(87, 132, 87), @tint-amount);
-									}
-								}
-							}
-		                }
-		            }
-		        }
 			}
 		
 			.map-container{

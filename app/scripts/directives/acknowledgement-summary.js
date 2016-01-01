@@ -36,9 +36,11 @@ angular.module('employeeApp')
 			return "$" + $filter('number')(d.amount);
 		});*/
 		//Attach count
-		box.append('h2').text(function (d) {
+		box.append('span').text(function (d) {
 			return d.category + " " + d.count;
 		});
+		
+		box.append('div').attr('class', 'arrow');
 		
 		box.on('click', function (d) {
 			angular.element('.acknowledgement-summary div.active').removeClass('active');

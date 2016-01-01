@@ -345,8 +345,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	
 	
 	//Initialize map
-	map = new google.maps.Map($('#acknowledgement-map')[0], mapOptions);
-	map.setOptions({styles:styles});
+	//map = new google.maps.Map($('#acknowledgement-map')[0], mapOptions);
+	//map.setOptions({styles:styles});
 	
 	
 	//Open map, resize and create markers
