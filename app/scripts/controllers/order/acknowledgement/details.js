@@ -10,7 +10,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 	$scope.showCal = false;
 	
 	//GET request server for Acknowledgements
-	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
+	$scope.ack = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
 		notification.hide();
 		
 		//Reconcile the project so that it is shown to the user

@@ -78,7 +78,7 @@
 											<div class="po" ng-click="active=true">{{ack.po_id}}</div>
 											<div class="project-id" ng-click="active=true">{{ack.project.id}}</div>
 											<div class="project" ng-click="active=true">{{ack.project.codename}}</div>
-											<div class="delivery-date">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
+											<div class="delivery-date" ng-click="active=true">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
 											<div class="total" ng-click="active=true">{{ack.total}}</div>
 											<div class="status" ng-class="ack.status.toLowerCase()">
 												<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')" ng-change="update(ack)">
@@ -92,7 +92,7 @@
 													<option value="cancelled">Cancelled</option>
 												</select>
 											</div>
-											<div class="remarks">
+											<div class="remarks" ng-click="active=true">
 												{{ack.remarks}}
 											</div>
 									

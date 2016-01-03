@@ -382,6 +382,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				projects.push($scope.projects[i]);
 			}
 		}
+		console.log(projects);
 		return projects;
 	};
 	

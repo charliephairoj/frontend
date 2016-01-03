@@ -367,7 +367,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	};
 	
 	$scope.addProject = function (project) {
-		$scope.ack.project = project;
+		$scope.po.project = project;
 	}
 	
 	/**
