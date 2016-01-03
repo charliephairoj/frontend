@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log',
-function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric) {
 	
 	
 	/*
@@ -120,7 +120,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 					}
 				}
 				
-				createAcknowledgementMarkers();
+				//createAcknowledgementMarkers();
 			});
 		}
 	};
@@ -146,39 +146,6 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	$scope.navigate = function (id) {
 		$location.path('/order/acknowledgement/' + id);
 	};
-	
-	/*
-	 * Watch for changes in the status of the acknowledgement
-	 */
-	$scope.$watch('acknowledgements', function (newVal, oldVal) {
-		
-		// Callback to run when the acknowledgement is finished updating
-		function postUpdate (resp) {
-			var notification = Notification.display('Acknowledgement #' + resp.id + " status updated to '" + resp.status.toLowerCase() + "'", 2000);
-		}
-		
-		if (newVal && oldVal) {
-			
-			try{
-				for (var i = 0; i < newVal.length; i++) {
-					if (newVal[i] && oldVal[i]) {
-						if (newVal[i].id === oldVal[i].id) {
-							if (newVal[i].status.toLowerCase() != oldVal[i].status.toLowerCase()) {
-							
-								var notification = Notification.display('Updating Acknowledgement #' + newVal[i].id + ' status...', false);
-							
-								newVal[i].$update(postUpdate);
-							}
-						}
-					}
-				}
-			} catch (e) {
-				$log.error(e);
-			}
-			
-		}
-		
-	}, true);
 	
 	function filter(array) {
 		return $filter('filter')(array, $scope.query);
@@ -240,125 +207,60 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		keyboardNav.disable();
 	});
 	
-	
-	/*
-	 * Map Section
+	/**
+	 * FABRIC SECTION
+	 * 
+	 * This section deals with the product listing and search
 	 */
-	var latLng = {},
-	    map,
-	    marker,
-		markers = [];
-	    //Options for the map 
-		mapOptions = {
-			center: new google.maps.LatLng(13.776239, 100.527884),
-			zoom: 4,
-			mapTypeId: google.maps.MapTypeId.ROAD
-		};
-
-
-	var styles = [
-		{
-			featureType: "road",
-			stylers: [
-				{visibility: "on"}
-			]
-		},
-		{
-			featureType: "water",
-			elementType: "geometry.fill",
-			stylers: [
-				{color:"#DDDDDD"}
-			]
-		},
-		{
-			featureType: "landscape",
-			elementType: "geometry.fill",
-			stylers: [
-				{color:"#FFFFFF"}
-			]
-		},
-		{
-		    "featureType": "administrative.province",
-		    "elementType": "geometry.stroke",
-		    "stylers": [
-		      { "visibility": "off" }
-		    ]
-		}
-	];
-
-	//Function to get zoom and position
-	function setMapFocus(latArray, lngArray){
-		var ne = new google.maps.LatLng(Math.max.apply(null, latArray), Math.max.apply(null, lngArray)),
-			sw = new google.maps.LatLng(Math.min.apply(null, latArray), Math.min.apply(null, lngArray));
 	
-		var bounds = new google.maps.LatLngBounds(sw, ne);
-		map.fitBounds(bounds);	
-	}
-
-	//Function to create markers for acknowledgements
-	function createAcknowledgementMarkers (acknowledgements) {
-		
-		acknowledgements = acknowledgements || $scope.acknowledgements;
-		
-		var lats = [],
-			lngs = [];
-		
-		for (var h = 0; h < markers.length; h++) {
-			markers[h].setMap(null);
-		}
-		
-		markers = [];
-		
-		function focusOnMarker() {
-			map.panTo(this.getPosition());
-			map.setZoom(17);
-		}
-		
-		for (var i = 0; i < acknowledgements.length; i++) {
-			try {
-				var address = acknowledgements[i].customer;
-				if (address.latitude && address.longitude) {
-					
-					//Add to lats and lngs for later calculations 
-					lats.push(address.latitude);
-					lngs.push(address.longitude);
-					
-					marker = new google.maps.Marker({
-						position: new google.maps.LatLng(address.latitude, address.longitude),
-						map: map,
-						title: "Order #" + acknowledgements.id,
-						draggable: false
-					});
-				
-					//Zoom to marker
-					google.maps.event.addListener(marker, 'click', focusOnMarker.bind(marker));
-					
-					markers.push(marker);
+	// Inital list of upholsteries
+	$scope.fabricSearchText = null;
+	$scope.fabrics = Fabric.query({page_size:9999, limit:0});
+	
+	// Watch on productSearchText to get products from the server
+	$scope.retrieveFabrics = function (query) {		
+		if (query) {
+			Fabric.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.fabrics.indexOfById(responses[i]) === -1) {
+						$scope.fabrics.push(responses[i]);
+					}
 				}
-			} catch (e) {
-				$log.error(e);
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of fabric whose description matches the search term
+	 *
+	 * @public
+	 * @param {String} query - Search term to apply against fabric.description
+	 * @returns {Array} - An array of fabrics whose description matches the search term
+	 */
+	$scope.searchFabrics = function (query) {
+		var lowercaseQuery = angular.lowercase(query.trim());
+		var fabrics = [];
+		for (var i = 0; i < $scope.fabrics.length; i++) {
+			if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+				fabrics.push($scope.fabrics[i]);
 			}
 		}
+		return fabrics;
+	};
 	
-		setMapFocus(lats, lngs);
-	}
-	
-	
-	//Initialize map
-	//map = new google.maps.Map($('#acknowledgement-map')[0], mapOptions);
-	//map.setOptions({styles:styles});
-	
-	
-	//Open map, resize and create markers
-	$scope.viewMap = function () {
+	/**
+	 * Save the acknowledgement
+	 * 
+	 * @public
+	 * @param {Object} acknowledgement - The acknowledgement to be saved
+	 */
+	$scope.update = function (acknowledgement) {
 		
-		$scope.map = true;
+		Notification.display("Updating order #" + acknowledgement.id);
 		
-		//setTimeout(function () {
-		//	google.maps.event.trigger(map, 'resize');
-		//}, 1000);
-		
-		createAcknowledgementMarkers();
-	};	
+		acknowledgement.$update(function () {
+			Notification.display("Order #" + acknowledgement.id + " updated");
+		});
+	};
 	
 }]);

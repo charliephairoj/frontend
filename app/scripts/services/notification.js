@@ -35,6 +35,7 @@ angular.module('employeeApp.services')
 		
 		var promise = $mdToast.show($mdToast
 							.simple()
+							.action('CLOSE')
 							.position('top right')
 							.content(message)
 							.hideDelay(autoHide));

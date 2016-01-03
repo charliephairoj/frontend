@@ -212,75 +212,40 @@
 		
 		md-content{
 			height:100%;
+			width:100%;
+			overflow-x:hidden;
+			display:flex;
+			flex-direction:column;
+			align-items:center;
 			
-			.title-bar{
-				display:flex;
-				flex-direction:row;
-				border-bottom: 1px solid #4F6874;
-				background-color:rgb(96,125,139);
+			md-card{
+				margin:0;
+				max-height:3.5em;
+				.transition(margin, 150ms);
+				.transition(max-height, 750ms);
+				.transition(width, 150ms);
+				
+				
 				width:100%;
-			
-				div{
-					display:flex;
-					flex-direction:row;
-					align-items:center;
-					justify-content:space-around;
-					padding:1em;
-					background:rgb(96,125,139);
-					color:rgba(255, 255, 255, 1);
-					border-left:1px dotted rgba(0, 0, 0, 0.35);
-			
-					&:first-child{
-						border-left:none;
-					}
-			
-					&.id{
-						width:5%;
-					}
-
-					&.order-date{
-						width:9%;
-					}
-
-					&.customer{
-						width:15%;
-					}
-			
-					&.po{
-						width:8%
-					}
-			
-					&.project{
-						width:15%;
-					}
-
-					&.delivery-date{
-						width:10%;
-					}
-			
-					&.total{
-						width:8%;
-					}
-			
-					&.status{
-						width:15%;
-					}
-			
-					&.remarks{
-						width:15%;
-					}
-				}
-			}
-	
-	        .outer-container{
-	            height:auto;
-				width:100%;
-		
-	            .inner-container{
-	                width:100%;
-	                height:auto;
+				
+				md-card-content{
+					position:relative;
+					padding:0;
+					max-height:3.5em;
+					.transition(padding, 150ms);
+					.transition(max-height, 750ms);
+					background-color:rgba(255, 255, 255, 1);
 					
-	                .item-container{
+					.background-switch{
+						position:absolute;
+						top:0;
+						left:0;
+						right:0;
+						bottom:0;
+						z-index:-1;
+					}
+					
+	                .item-preview-container{
 	                    width:100%;
 	                    position:relative;
 	                    height:3.5em;
@@ -288,110 +253,110 @@
 						flex-direction:column;
 						overflow-x:hidden;
 						z-index:0;
-	                    
-                		&:hover{
+                    
+	            		&:hover{
 							z-index:1;
 							//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
 							//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-							
+						
 							.status-bar{
-								
+							
 								.event{
 									height:100%;
 									background:#EEE;
 									width:14.285%;
 									.arrow(transparent, 0.5em);
-									
+								
 									&.acknowledged{
 										background-color:rgb(54, 66, 140);
 										.arrow(rgb(54, 66, 140), 0.5em, 5px);
 									}
-			
+		
 									&.deposit-received{
 										background-color:rgb(50, 130, 120);
 										.arrow(rgb(50, 130, 120), 0.5em, 5px);
 									}
-			
+		
 									&.in-production{
 										background-color:rgb(198, 148, 77);
 										.arrow(rgb(198, 148, 77), 0.5em, 5px);
 									}
-			
+		
 									&.ready-to-ship{
 										background-color:rgb(87,117,83);
 										.arrow(rgb(87,117,83), 0.5em, 5px);
 									}
-			
+		
 									&.shipped{
 										background-color:rgb(97,92,130);
 										.arrow(rgb(97,92,130), 0.5em, 5px);
 									}
-			
+		
 									&.invoiced{
 										background-color:rgb(163, 81, 82);
 										.arrow(rgb(163, 81, 82), 0.5em, 5px);
 									}
-			
+		
 									&.paid{
 										background-color:rgb(87, 132, 87);
 										.arrow(rgb(87, 132, 87), 0.5em, 5px);
 									}
 								}
 							}
-             
-                		}
-						
-                		&.active{
+         
+	            		}
+					
+	            		&.active{
 							z-index:1;
 							//-webkit-box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
 							//box-shadow: 0 5px 10px 1px rgba(0,0,0,0.35);
-							
+						
 							.status-bar{
-								
+							
 								.event{
 									height:100%;
 									background:#EEE;
 									width:14.285%;
-								
+							
 									&.acknowledged{
 										background-color:rgb(54, 66, 140);
 										.arrow(rgb(54, 66, 140), 0.5em, 5px);
 									}
-			
+		
 									&.deposit-received{
 										background-color:rgb(50, 130, 120);
 										.arrow(rgb(50, 130, 120), 0.5em, 5px);
 									}
-			
+		
 									&.in-production{
 										background-color:rgb(198, 148, 77);
 										.arrow(rgb(198, 148, 77), 0.5em, 5px);
 									}
-			
+		
 									&.ready-to-ship{
 										background-color:rgb(87,117,83);
 										.arrow(rgb(87,117,83), 0.5em, 5px);
 									}
-			
+		
 									&.shipped{
 										background-color:rgb(97,92,130);
 										.arrow(rgb(97,92,130), 0.5em, 5px);
 									}
-			
+		
 									&.invoiced{
 										background-color:rgb(163, 81, 82);
 										.arrow(rgb(163, 81, 82), 0.5em, 5px);
 									}
-			
+		
 									&.paid{
 										background-color:rgb(87, 132, 87);
 										.arrow(rgb(87, 132, 87), 0.5em, 5px);
 									}
 								}
 							}
-             
-                		}
-						
+         
+	            		}
+					
 	                    .item{
 							display:flex;
 							flex-direction:row;
@@ -401,21 +366,22 @@
 							top:0;
 	                        font-size:1em;
 	                        height: 3em;
-	                        border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+	                        border-bottom:none;
 	                        text-decoration:none;
 	                        color:#000;
 	                        cursor:pointer;
+							outline:none;
 	                        .transition(all, 150ms, linear);
-                    
+                
 							&:hover{
 	                            background-color:#E4EEF4;
 	                        }
-                    
+                
 	                        &.selected{
 	                            background-color:orange;
 	                        }
-					
-                    
+				
+                
 							div{
 								display:flex;
 								flex-direction:row;
@@ -423,11 +389,13 @@
 								padding-left:1em;
 								justify-content:flex-start;
 								border-left:1px dotted rgba(0, 0, 0, 0.35);
-						
+								overflow:hidden;
+								outline:none;
+					
 								&:first-child{
 									border-left:none;
 								}
-						
+					
 								&.id{
 									width:5%;
 								}
@@ -439,16 +407,16 @@
 								&.customer{
 									width:15%;
 								}
-						
+					
 								&.po{
 									width:8%;
 								}
-			
+		
 								&.project-id{
 									width:3%;
 									padding-left:0.2em;
 								}
-						
+					
 								&.project{
 									width:12%;
 								}
@@ -456,31 +424,31 @@
 								&.delivery-date{
 									width:10%;
 								}
-			
+		
 								&.total{
 									width:8%;
 									justify-content:flex-end;
 									padding:0 1em 0 0;
 								}
-			
+		
 								&.status{
 									width:15%;
-							
+						
 									&.acknowledged{
 										color:#0098cd;
 									}
-							
+						
 									&.shipped{
 										color:#54947A;
 									}
 								}
-						
+					
 								&.remarks{
 									width:15%;
 								}
 							}
 	                    }
-						
+					
 						.status-bar{
 							height:.5em;
 							width:100%;
@@ -492,48 +460,48 @@
 							
 							.event{
 								height:100%;
-								background:#EEE;
+								background:;
 								width:14.285%;
 								position:relative;
-								
+								background-color:#EEE;
 								@tint-amount: 50%;
-								
+							
 								&.acknowledged{
 									background-color:tint(rgb(54, 66, 140), @tint-amount);
 									z-index:@zIndex + 6;
 									.arrow(tint(rgb(54, 66, 140), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.deposit-received{
 									background-color:tint(rgb(50, 130, 120), @tint-amount);
 									z-index:@zIndex + 5;
 									.arrow(tint(rgb(50, 130, 120), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.in-production{
 									background-color:tint(rgb(198, 148, 77), @tint-amount);
 									z-index:@zIndex + 4;
 									.arrow(tint(rgb(198, 148, 77), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.ready-to-ship{
 									background-color:tint(rgb(87,117,83), @tint-amount);
 									z-index:@zIndex + 3;
 									.arrow(tint(rgb(87,117,83), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.shipped{
 									background-color:tint(rgb(97,92,130), @tint-amount);
 									z-index:@zIndex + 2;
 									.arrow(tint(rgb(97,92,130), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.invoiced{
 									background-color:tint(rgb(163, 81, 82), @tint-amount);
 									z-index:@zIndex + 1;
 									.arrow(tint(rgb(163, 81, 82), @tint-amount), 0.5em, 5px);
 								}
-			
+		
 								&.paid{
 									background-color:tint(rgb(87, 132, 87), @tint-amount);
 									z-index:@zIndex + 0;
@@ -542,116 +510,346 @@
 							}
 						}
 	                }
-	            }
-	        }
-			
-		}
-		
-		.acknowledgements-container{
-			display:flex;
-			flex-wrap:nowrap;
-			width:95%;
-			position:relative;
-			height:100%;
-			
-			.acknowledgements{
-				width:100%;
-				height:100%;
-				position:absolute;
-				top:0;
-				left:0;
-				z-index:1;
-				
-				
-			}
-		
-			.map-container{
-				width:48%;
-				position:absolute;
-				height:100%;
-				right:0;
-				top:0;
-				z-index: 0;
-				visibility:none;
-				.opacity(0);
-				
-				#acknowledgement-map{
-					height:100%;
-					width:100%;
 				}
-			}
-		}
-		
-		
-		&.map{
-						
-			.acknowledgements-container{
-	
-				.acknowledgements{
-					width:50%;
+				
+				&.active{
+					@maxHeight:300em;
+					margin:1em;
+					max-height:@maxHeight;
+					width:90%;
 					
-					.title-bar{
-						div{
-							&.id{
-								width:15%;
-							}
-							
-							&.delivery-date{
-								width:18%;
-							}
-							
-							&.order-date{
-								display:none;
-							}
-							
-							&.customer{
-								width:30%;
-							}
-							
-							&.po{
-								width:15%;
-							}
-							
-							&.status{
-								display:none;
-							}
-							
-							&.date{
-								display:none;
-							}
-							
-							&.project-id{
-								display:none;
-							}
-							
-							&.project{
-								display:none;
-							}
-
-							&.total{
-								display:none;
-							}
-
-							&.remarks{
-								width:22%;
-							}
+					md-card-content{
+						padding:2em;
+						background-color:rgba(0,0,0, 0.1);
+						max-height:@maxHeight;
+						
+						.item-preview-container{
+							display:block;
 						}
-					}
+						
+						.item-container{
+							height:auto;
+							width:100%;
+							display:flex;
+							background-color:rgb(255, 255, 255);
+							flex-direction:column;
+							align-items:center;
+							
+					        .details{
+								width:100%;
+								padding:1em 1em 0 1em;
+								margin-bottom:0.25em;
+					            color:rgba(0, 0, 0, 1);
+								display:flex;
+								flex-direction:column;
+								justify-content:space-between;
 			
-					.outer-container{
-						.inner-container{
-							.item{
+								.info{
+									display:flex;
+									align-items:flex-start;
+									justify-content:space-between;
+									flex-wrap:wrap;
+									flex-direction:column;
+									margin-bottom:2em;
+									padding-left:5%;
+				
+									table{
+										margin-right:2em
+					
+										tr{
+						
+											td{
+												height:100px;
+											}
+										}
+									}
+								}
+			
+				
+					        }
+		
+							.status-bar{
+								/*
+								 * Helper classes
+								 */
+								.arrow(@arrowColor: transparent, @arrowHeight:1em, @arrowWidth: 10px){
+		
+									.arrow{
+										font-size:16px;
+										width: 0;
+										height: 0;
+										border-style: solid;
+										border-width:(@arrowHeight/2) 0 (@arrowHeight/2) @arrowWidth;
+										border-color: transparent transparent transparent @arrowColor;
+										position:absolute;
+										left:100%;
+										top:0;
+										padding:0;
+										margin:0;
+										z-index:1;
+									}
+		
+									.arrow2{
+										font-size:16px;
+										width: 0;
+										height: 0;
+										border-style: solid;
+										border-width:(@arrowHeight/2) 0 (@arrowHeight/2) (@arrowWidth + 1px);
+										position:absolute;
+										left:100%;
+										margin-left:1px;
+										top:0;
+										padding:0;
+										margin:0;
+										z-index:0;
+									}
+								}
 								
-								.title-bar;
+								@statusBarHeight:2em;
+								@borderRadius:@statusBarHeight/2;
+								height:@statusBarHeight;
+								width:90%;
+								display:flex;
+								flex-direction:row;
+								font-size:16px;
+								border-radius:3px;
+								margin:1em 0;
+								
+								.event{
+									background-color:rgba(0, 0, 0, 0.15);
+									width:14.285%;
+									color:rgba(0, 0, 0, 0.5);
+									text-align:center;
+									padding:0;
+									position:relative;
+									font-size:16px;
+									display:flex;
+									align-items:center;
+									flex-direction:row;
+									flex-wrap:nowrap;
+									justify-content:center;
+									@zIndex:0;
+									.arrow(rgba(0, 0, 0, 0.15), @statusBarHeight, 10px);
+									.transition(background-color, 5s);
+									
+									span{
+										font-size:1em;
+										padding:0.5em 0;
+										margin:0;
+										display:flex;
+										flex-direction:row;
+										align-items:center;
+									}
+					
+									&.active{
+										color:rgb(255, 255, 255);
+						
+										&.acknowledged{
+											background-color:rgba(54, 66, 140, 1);
+											.arrow(rgb(54, 66, 140), @statusBarHeight, 10px);
+											z-index:@zIndex + 6;
+										}
+
+										&.deposit-received{
+											background-color:rgba(50, 130, 120, 1);
+											.arrow(rgb(50, 130, 120), @statusBarHeight, 10px);
+											z-index:@zIndex + 5;
+										}
+
+										&.in-production{
+											background-color:rgba(198, 148, 77, 1);
+											.arrow(rgb(198, 148, 77), @statusBarHeight, 10px);
+											z-index:@zIndex + 4;
+										}
+
+										&.ready-to-ship{
+											background-color:rgba(87,117,83, 1);
+											.arrow(rgb(87,117,83), @statusBarHeight, 10px);
+											z-index:@zIndex + 3;
+										}
+
+										&.shipped{
+											background-color:rgba(97,92,130, 1);
+											.arrow(rgb(97,92,130), @statusBarHeight, 10px);
+											z-index:@zIndex + 2;
+										}
+
+										&.invoiced{
+											background-color:rgba(163, 81, 82, 1);
+											.arrow(rgb(163, 81, 82), @statusBarHeight, 10px);
+											z-index:@zIndex + 1;
+										}
+
+										&.paid{
+											background-color:rgba(87, 132, 87, 1);
+											.arrow(rgb(87, 132, 87), @statusBarHeight, 10px);
+											z-index:@zIndex + 0;
+										}
+						
+										.arrow2{
+											border-color:transparent;
+										}
+									}
+					
+									&.acknowledged{
+						
+										z-index:@zIndex + 6;
+										border-radius:@borderRadius 0 0 @borderRadius;
+									}
+
+									&.deposit-received{
+						
+										z-index:@zIndex + 5;
+									}
+
+									&.in-production{
+						
+										z-index:@zIndex + 4;
+									}
+
+									&.ready-to-ship{
+						
+										z-index:@zIndex + 3;
+									}
+
+									&.shipped{
+						
+										z-index:@zIndex + 2;
+									}
+
+									&.invoiced{
+						
+										z-index:@zIndex + 1;
+									}
+
+									&.paid{
+						
+										z-index:@zIndex + 0;
+										border-radius:0 @borderRadius @borderRadius 0;
+										.arrow{
+											display:none;
+										}
+						
+										.arrow2{
+											display:none;
+										}
+									}
+					
+									.arrow2{
+										border-color: transparent transparent transparent white;
+									}
+					
+								}
 							}
+							
+							section{
+								width:90%;
+								
+								.files{
+									width:100%;
+									display:flex;
+									flex-direction:row;
+									justify-content:flex-start;
+									
+									md-card.file{
+										margin:1em 0;
+										margin-right:1em;
+										width:23%;
+										max-height:none;
+										overflow:hidden;
+
+										md-card-title{
+											md-card-title-media{
+												height:16px;
+												width:16px;
+												
+												.card-media{
+													max-width:100%;
+					
+													img{
+														max-height:20em;
+														max-width:100%;
+													}
+												}
+											}
+										}
+										md-card-content{
+											padding:1em;
+											background:rgb(255, 255, 255);
+											max-height:none;
+									
+											
+							
+										}
+									}
+								}
+							
+								.items{
+									width:100%;
+									
+									md-card.item{
+										margin:1em 0;
+										width:100%;
+										max-height:none;
+								
+										md-card-content{
+											padding:1em;
+											background:rgb(255, 255, 255);
+											max-height:none;
+											display:flex;
+											flex-direction:row;
+											justify-content:space-between;
+											
+											.product-details{
+												max-width:55%;
+												tr{
+							
+													&.fabric{
+								
+														td{
+									
+															&:last-child{
+																padding-left:1em;
+										
+																img{
+																	max-height:5em;
+																}
+															}
+									
+															.hint{
+																margin-top:4px;
+															}
+														}
+													}
+												}
+											}
+											
+											md-card-title-media{
+												width:40%;
+												margin:0.5em;
+												
+												.card-media{
+													max-width:100%;
+					
+													img{
+														max-height:20em;
+														max-width:100%;
+													}
+												}
+											}
+											
+										}
+									}
+								}
+							}
+		
 						}
 					}
+						
+						
+					
 				}
-			
-				.map-container{
-					visibility:visible;
-					.opacity(1);
-				}
+                
 			}
 		}
     }
