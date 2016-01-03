@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', '$mdToast', 'KeyboardNavigation', '$location',
-function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $location) {
+.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'KeyboardNavigation', '$location', 'Notification',
+function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notification) {
 	
 	//Flags and variables
 	var fetching = true,
@@ -10,16 +10,18 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 		search = $location.search();
 		
 	//System wide message
-	$mdToast.show($mdToast
-		.simple()
-		.position('top right')
-		.content('Loading purchasing orders...')
-		.hideDelay(0));
-	
+	Notification.display('Loading purchasing orders...');
+		
 	//Poll Server for pos
 	$scope.poList = PurchaseOrder.query({limit: 20}, function () {
+		for (var i = 0; i < $scope.poList.length; i++) {
+			var rD = $scope.poList[i].receive_date;
+			var pD = $scope.poList[i].paid_date;
+			$scope.poList[i].receive_date = rD ? new Date(rD) : rD; 
+			$scope.poList[i].paid_date = pD ? new Date(pD) : pD; 
+		}
+		
 		fetching = false;
-		$mdToast.hide();
 		changeSelection(index);
 	}, function () {
 		fetching = false;
@@ -40,6 +42,11 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 			$location.search('q', q);
 			PurchaseOrder.query({limit: q ? 10 * q.length : 5, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
+					var rD = resources[i].receive_date;
+					var pD = resources[i].paid_date;
+					resources[i].receive_date = rD ? new Date(rD) : rD; 
+					resources[i].paid_date = pD ? new Date(pD) : pD; 
+				
 					if ($scope.poList.indexOfById(resources[i].id) == -1) {
 						$scope.poList.push(resources[i]);
 					}
@@ -61,11 +68,7 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	$scope.loadNext = function () {
 		if (!fetching) {
 			//System wide message
-			$mdToast.show($mdToast
-				.simple()
-				.position('top right')
-				.content('Loading more purchasing orders...')
-				.hideDelay(0));
+			Notification.display('Loading more purchasing orders...');
 			fetching = true;
 			
 			var config = {
@@ -85,7 +88,6 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 			
 			
 			PurchaseOrder.query(config, function (resources) {
-				$mdToast.hide();
 				fetching = false;
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.poList.indexOfById(resources[i].id) == -1) {
@@ -151,6 +153,20 @@ function ($scope, PurchaseOrder, $filter, $mdToast, KeyboardNavigation, $locatio
 	};
 	
 	keyboardNav.enable();
+	
+	/**
+	 * Save the purchase order
+	 *
+	 * @public
+	 * @param {Object} purchaseOrder - Purchase Order to be updated
+	 */
+	$scope.update = function (purchaseOrder) {
+		Notification.display("Updating purchase order #" + purchaseOrder.id);
+		
+		purchaseOrder.$update(function () {
+			Notification.display("Purchase Order #" + purchaseOrder.id + " updated.");
+		});
+	};
 	
 	$scope.$on('$destroy', function () {
 		keyboardNav.disable();
