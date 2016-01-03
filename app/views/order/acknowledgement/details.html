@@ -63,240 +63,256 @@
     <!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Acknowledgement</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="save()">Save</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="showCal=true">Change Delivery Date</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <a ng-href="{{acknowledgement.pdf.acknowledgement}}"target="_blank">View Acknowledgement</a>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <a ng-href="{{acknowledgement.pdf.confirmation}}"target="_blank">View Confirmation</a>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <a ng-href="{{acknowledgement.pdf.production}}"target="_blank">View Production</a>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <a ng-href="{{acknowledgement.pdf.label}}"target="_blank">View Shipping Labels</a>
-                </li>
-				<!--
-                <li>
-                    <div ng-click="viewLog()">View Log</div>
-                </li>
-					-->
-                <li ng-show="currentUser.hasPermission('delete_acknowledgement')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
     <div class="workspace">
-        <div class="details">
-			<div class="info">
-				<table>
-					<tr>
-						<td>Acknowledgement #:</td>
-						<td>{{acknowledgement.id}}</td>
-						<td>Delivery Date:</td>
-						<td><md-datepicker ng-model="acknowledgement.delivery_date" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></md-datepicker></td>
-					</tr>
-					<tr>
-						<td>Customer</td>
-						<td>{{acknowledgement.customer.name}}</td>
-						<td>Project</td>
-						<td>
-							<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></select>
-						</td>
-					</tr>
-					<tr>
-						<td>Order Date</td>
-						<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
-						<td>Total Items</td>
-						<td>{{acknowledgement.items.length}}</td>
-					</tr>
-					<tr>
-						<td>Status:</td>
-						<td>
-							<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-								<option value="deposit received">Deposit Received</option>
-								<option value="acknowledged">Acknowledged</optioon>
-								<option value="in production">In Production</option>
-								<option value="ready to ship">Ready to Ship</option>
-								<option value="shipped">Shipped</option>
-								<option value="invoiced">Invoiced</option>
-								<option value="paid">Paid</option>
-								<option value="cancelled">Cancelled</option>
-							</select>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="status-bar">
-				<div class="event" ng-class="{'acknowledged': hasEvent(acknowledgement, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">Acknowledged</div>
-				<div class="event" ng-class="{'deposit-received': hasEvent(acknowledgement, 'deposit')}">Deposit Received</div>
-				<div class="event" ng-class="{'in-production': hasEvent(acknowledgement, 'in production')}">In Production</div>
-				<div class="event" ng-class="{'ready-to-ship': hasEvent(acknowledgement, 'ready to ship')}">Ready to Ship</div>
-				<div class="event" ng-class="{'shipped': hasEvent(acknowledgement, 'shipped')}">Shipped</div>
-				<div class="event" ng-class="{'invoiced': hasEvent(acknowledgement, 'invoiced')}">Invoiced</div>
-				<div class="event" ng-class="{'paid': hasEvent(acknowledgement, 'paid')}">Paid</div>	
-			</div>
-			
-        </div>
 		
-		<md-tabs class="md-primary" md-selected="selectedIndex">
-			<md-tab label="Items">
-				
-			</md-tab>
-			<md-tab label="Attachments">
-				
-			</md-tab>
-			<md-tab label="Logs">
-				
-			</md-tab>
-				
-		</md-tabs>
+		<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
+			<h3><span>Acknowledgement {{acknowledgement.id}}</span></h3>
+			<div flex></div>
+			<md-button class="md-icon-button md-raised md-accent" ng-click="save()">
+				<md-tooltip>Save</md-tooltip>
+				<i class="material-icons">save</i>
+			</md-button>
+			<md-button class="md-icon-button md-raised md-warn" ng-click="remove()" ng-disabled="currentUser.hasPermission('delete_acknowledgement')">
+				<md-tooltip>Delete</md-tooltip>
+				<i class="material-icons">clear</i>
+			</md-button>
+		</md-toolbar>
 		
-		<div class="panel-container">
-			<ng-switch on="selectedIndex">
-				<div ng-switch-when="0" class="items-panel">
-					<!--
-					<table>
-						<thead>
-							<tr>
-								<td>PREVIEW</td>
-								<td>DESCRIPTION</td>
-								<td>WIDTH</td>
-								<td>DEPTH</td>
-								<td>HEIGHT</td>
-								<td>FABRIC</td>
-								<td>STATUS</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="item in acknowledgement.items">
-								<td class="preview">
-									<div class="img-container">
-										<img ng-src="{{item.image.url}}" />
-									</div>
-								</td>
-								<td class="description">{{item.description}}</td>
-								<td class="width">{{item.width}}</td>
-								<td class="depth">{{item.depth}}</td>
-								<td class="height">{{item.height}}</td>
-								<td class="fabric">{{item.fabric.description}}</td>
-								<td class="status" ng-class="item.status.toLowerCase()">{{item.status}}</td>
-							</tr>
-						</tbody>
-					</table>
-					-->
-					
-					<div class="title-bar">
-						<div class="preview">PREVIEW</div>
-						<div class="description">DESCRIPTION</div>
-						<div class="fabric">FABRIC</div>
-						<div class="status">STATUS</div>
-						<div class="unit-price">UNIT PRICE</div>
-						<div class="qty">QTY</div>
-						<div class="total">TOTAL</div>
+		<md-content layout="column">
+	        <div class="details"> 
+				<div class="info" layout="column" layout-align="center center">
+					<div layout="row">
+						<span>{{acknowledgement.customer.name}}</span>
+						<span>{{acknowledgement.customer.telephone}}</span>
+						<span>{{acknowledgement.customer.email}}</span>
 					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<div class="item-container" ng-repeat="item in acknowledgement.items"  ng-class="{'active': active}" ng-click="active=true">
-								<div class="item">
-						
-									<div class="preview">
+					<table>
+						<tr>
+							<td>Acknowledgement #:</td>
+							<td>{{acknowledgement.id}}</td>
+							<td>Delivery Date:</td>
+							<td><md-datepicker ng-model="acknowledgement.delivery_date" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></md-datepicker></td>
+						</tr>
+						<tr>
+							<td>Customer</td>
+							<td>{{acknowledgement.customer.name}}</td>
+							<td>Project</td>
+							<td>
+								<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')"></select>
+							</td>
+						</tr>
+						<tr>
+							<td>Order Date</td>
+							<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
+							<td>Total Items</td>
+							<td>{{acknowledgement.items.length}}</td>
+						</tr>
+						<tr>
+							<td>Status:</td>
+							<td>
+								<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+									<option value="deposit received">Deposit Received</option>
+									<option value="acknowledged">Acknowledged</optioon>
+									<option value="in production">In Production</option>
+									<option value="ready to ship">Ready to Ship</option>
+									<option value="shipped">Shipped</option>
+									<option value="invoiced">Invoiced</option>
+									<option value="paid">Paid</option>
+									<option value="cancelled">Cancelled</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</div>				
+	        </div>
+			
+			<div class="status-bar">
+				<div class="event acknowledged" ng-class="{'active': hasEvent(acknowledgement, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
+					<span>Acknowledged</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event deposit-received" ng-class="{'active': hasEvent(acknowledgement, 'deposit')}">
+					<span>Deposit</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event in-production" ng-class="{'active': hasEvent(acknowledgement, 'in production')}">
+					<span>In Production<span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event ready-to-ship" ng-class="{'active': hasEvent(acknowledgement, 'ready to ship')}">
+					<span>Ready to Ship</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event shipped" ng-class="{'active': hasEvent(acknowledgement, 'shipped')}">
+					<span>Shipped</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event invoiced" ng-class="{'active': hasEvent(acknowledgement, 'invoiced')}">
+					<span>Invoiced</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event paid" ng-class="{'active': hasEvent(acknowledgement, 'paid')}">
+					<span>Paid</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>	
+			</div>
+		
+			<md-tabs class="md-primary" md-selected="selectedIndex">
+				<md-tab label="Items">
+				
+				</md-tab>
+				<md-tab label="Attachments">
+				
+				</md-tab>
+				<md-tab label="Logs">
+				
+				</md-tab>
+				
+			</md-tabs>
+		
+			<div class="panel-container">
+				<ng-switch on="selectedIndex">
+					<div ng-switch-when="0" class="items-panel">
+						<!--
+						<table>
+							<thead>
+								<tr>
+									<td>PREVIEW</td>
+									<td>DESCRIPTION</td>
+									<td>WIDTH</td>
+									<td>DEPTH</td>
+									<td>HEIGHT</td>
+									<td>FABRIC</td>
+									<td>STATUS</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in acknowledgement.items">
+									<td class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
 										</div>
-									</div>
-									<div class="description">{{item.description}}</div>
+									</td>
+									<td class="description">{{item.description}}</td>
+									<td class="width">{{item.width}}</td>
+									<td class="depth">{{item.depth}}</td>
+									<td class="height">{{item.height}}</td>
+									<td class="fabric">{{item.fabric.description}}</td>
+									<td class="status" ng-class="item.status.toLowerCase()">{{item.status}}</td>
+								</tr>
+							</tbody>
+						</table>
+						-->
+					
+						<div class="title-bar">
+							<div class="preview">PREVIEW</div>
+							<div class="description">DESCRIPTION</div>
+							<div class="fabric">FABRIC</div>
+							<div class="status">STATUS</div>
+							<div class="unit-price">UNIT PRICE</div>
+							<div class="qty">QTY</div>
+							<div class="total">TOTAL</div>
+						</div>
+						<div class="outer-container">
+							<div class="inner-container">
+								<div class="item-container" ng-repeat="item in acknowledgement.items"  ng-class="{'active': active}" ng-click="active=true">
+									<div class="item">
+						
+										<div class="preview">
+											<div class="img-container">
+												<img ng-src="{{item.image.url}}" />
+											</div>
+										</div>
+										<div class="description">{{item.description}}</div>
 									
-									<div class="fabric">{{item.fabric.description}}</div>
-									<div class="status" ng-class="item.status.toLowerCase()">
-										{{item.status}}
+										<div class="fabric">{{item.fabric.description}}</div>
+										<div class="status" ng-class="item.status.toLowerCase()">
+											{{item.status}}
 										
-									</div>
-									<div class="unit-price">
-										<input type="number" min="0" ng-model="item.unit_price" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-									</div>
-									<div class="qty">
-										<input type="number" min="0" ng-model="item.quantity" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-									</div>
-									<div class="total">
-										{{item.unit_price * item.quantity}}
-									</div>
-									<div class="item-menu">
-										<md-button ng-click="changeFabric($index)" class="md-accent md-raised" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">Change Fabric</md-button>
+										</div>
+										<div class="unit-price">
+											<input type="number" min="0" ng-model="item.unit_price" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+										</div>
+										<div class="qty">
+											<input type="number" min="0" ng-model="item.quantity" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+										</div>
+										<div class="total">
+											{{item.unit_price * item.quantity}}
+										</div>
+										<div class="item-menu">
+											<md-button ng-click="changeFabric($index)" class="md-accent md-raised" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">Change Fabric</md-button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+							
 					</div>
+					<div ng-switch-when="1" class="file-panel">
+						<div class="title-bar">
+							<div class="filename">
+								FILENAME
 							
-				</div>
-				<div ng-switch-when="1" class="file-panel">
-					<div class="title-bar">
-						<div class="filename">
-							FILENAME
-							
+							</div>
+							<div class="type">TYPE</div>
 						</div>
-						<div class="type">TYPE</div>
+						<div class="outer-container">
+							<div class="inner-container">
+								<md-card ng-repeat="file in acknowledgement.files">
+						        	<md-card-title>
+						          		<md-card-title-text>
+						            		<span class="md-headline">{{file.filename}}</span>
+						            		<span class="md-subhead">{{file.type}}</span>
+						          	  	</md-card-title-text>
+						          		<md-card-title-media>
+						            		<div class="md-media-sm card-media"></div>
+						          		</md-card-title-media>
+						        	</md-card-title>
+						        	<md-card-actions layout="row" layout-align="end center">
+						          		<md-button ng-href="{{file.url}}" target="_blank">View</md-button>
+						        	</md-card-actions>
+						      </md-card>
+							</div
+						</div>
 					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<md-card ng-repeat="file in acknowledgement.files">
-					        	<md-card-title>
-					          		<md-card-title-text>
-					            		<span class="md-headline">{{file.filename}}</span>
-					            		<span class="md-subhead">{{file.type}}</span>
-					          	  	</md-card-title-text>
-					          		<md-card-title-media>
-					            		<div class="md-media-sm card-media"></div>
-					          		</md-card-title-media>
-					        	</md-card-title>
-					        	<md-card-actions layout="row" layout-align="end center">
-					          		<md-button ng-href="{{file.url}}" target="_blank">View</md-button>
-					        	</md-card-actions>
-					      </md-card>
-						</div
-					</div>
-				</div>
 				
-				<div ng-switch-when="2" class="log-panel">
-					<div class="title-bar">
-						<div class="message">
-							MESSAGE
+					<div ng-switch-when="2" class="log-panel">
+						<div class="title-bar">
+							<div class="message">
+								MESSAGE
 							
+							</div>
+							<div class="employee">EMPLOYEE</div>
+							<div class="timestamp">TIMESTAMP</div>
 						</div>
-						<div class="employee">EMPLOYEE</div>
-						<div class="timestamp">TIMESTAMP</div>
-					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<div class="item-container" ng-repeat="log in acknowledgement.logs">
-								<div class="item" target="_blank">
-									<div class="message">
-										{{log.message}}
+						<div class="outer-container">
+							<div class="inner-container">
+								<div class="item-container" ng-repeat="log in acknowledgement.logs">
+									<div class="item" target="_blank">
+										<div class="message">
+											{{log.message}}
+										</div>
+										<div class="message">
+											{{log.employee}}
+										</div>
+										<div class="timestamp">{{log.timestamp | date:"MMMM d, yyyy"}}</div>
 									</div>
-									<div class="message">
-										{{log.employee}}
-									</div>
-									<div class="timestamp">{{log.timestamp | date:"MMMM d, yyyy"}}</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</ng-switch>
+				</ng-switch>
+			
+			</md-content>
 		</div>
+		
 </div>
 
