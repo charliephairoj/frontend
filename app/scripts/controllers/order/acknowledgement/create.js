@@ -518,6 +518,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		$scope.ack.files = $scope.ack.files || []; 
 		
 		/* jshint ignore:start */
+		
 		for (var i = 0; i < files.length; i++) {
 			$scope.ack.files.push({filename: files[i].name});
 			
@@ -533,6 +534,28 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				$log.error(JSON.stringify(e));
 			});
 		}
+		
+		/* jshint ignore:end */
+	};
+	
+	/**
+	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+	 * @public
+	 * @param {Array} files - Array of files with raw data
+	 * @returns {null}
+	 */
+	$scope.addImage = function (files, item) {
+		console.log(files);
+		$scope.ack.files = $scope.ack.files || []; 
+	
+		/* jshint ignore:start */		
+		var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
+		promise.then(function (result) {
+			var data = result.data || result;
+			item.image = data
+		}, function (e) {
+			$log.error(JSON.stringify(e));
+		});
 		/* jshint ignore:end */
 	};
 	

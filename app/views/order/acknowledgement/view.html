@@ -53,7 +53,7 @@
 		</md-toolbar>
 		<md-content on-scroll-end="loadNext()">
 							
-							<md-card ng-class="{'active': active}" ng-repeat="ack in acknowledgements | filter:query track by ack.id">
+							<md-card ng-class="{'active': active}" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)">
 								<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
 									<md-card-title-text>
 										<span>Acknowledgement {{ack.id}}</span>
@@ -69,7 +69,6 @@
 									</md-button>
 								</md-card-title>
 								<md-card-content>
-									<div class="background-switch" ng-click="active=false"></div>
 						    		<div class="item-preview-container" ng-hide="active">	
 						    			<div class="item" ng-class="{'selected':ack.$selected}">
 											<div class="id" ng-click="active=true">{{ack.id}}</div>
@@ -232,7 +231,7 @@
 										<section>
 											<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
 											<div class="files">
-				  								<md-card class="file" ng-repeat="file in ack.files">
+				  								<md-card class="file" ng-repeat="file in ack.files" ng-class="{'uploaded': file.id}">
 				  						        	<md-card-title>
 				  						          		<md-card-title-media>
 				  						            		<div class="md-media-sm card-media">
@@ -246,7 +245,7 @@
 				  						          		
 				  						        	</md-card-title>
 				  						        	<md-card-actions layout="row" layout-align="end center">
-				  						          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
+				  						          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank" ng-disabled="!file.id">
 															<md-tooltip>Open in a New Window</md-tooltip>
 															<i class="material-icons">open_in_browser</i>
 														</md-button>
@@ -258,7 +257,7 @@
 										<section>
 											<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
 											<div class="items">
-												<md-card class="item" ng-repeat="item in ack.items">
+												<md-card class="item" ng-repeat="item in ack.items" file-drop="addImage($files, item)">
 													<md-card-title>
 											          	<md-card-title-text>
 											            	<span class="md-headline">{{item.description}}</span>

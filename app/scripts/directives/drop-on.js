@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.directives')
-.directive('dropOn', [function () {
+.directive('onDrop', [function () {
     function emptyStrFilter(element, index, array) {
         return (element !== "");
     }
@@ -47,13 +47,15 @@ angular.module('employeeApp.directives')
         restrict: 'A',
         replace: false,
 		scope: {
-			'dropOn': '=',
-			'onDropAction': '&'
+			'onDrop': '=',
 		},
         link: function (scope, element, attrs) {
             element.bind('drop', function (event) {
+				console.log(event);
+				
                 preventPropagation(event);
                 element.removeClass('drag');
+				console.log(event);
                 /*
                  * Gets the target and copies
                  * the data from the dragged 
@@ -66,8 +68,8 @@ angular.module('employeeApp.directives')
 					*/
 					scope.dropOn = getData(event);
 					
-					if (attrs.onDropAction) {
-						scope.onDropAction({$data:getData(event)});
+					if (attrs.onDrop) {
+						scope.onDrop({$file:getData(event)});
 					}
                 });
                 

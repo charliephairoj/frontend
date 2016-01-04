@@ -28,23 +28,37 @@ angular.module('employeeApp')
              * Add functions to deal with the drag enter,leave and
              * over actions of the user
              */
+			
+            //Drag Enter
+            element.bind('drag', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+				
+                element.addClass('drag-active');
+            });
             
             //Drag Enter
             element.bind('dragenter', function (evt) {
                 evt.preventDefault();
-                element.addClass('active');
+                evt.stopPropagation();
+				
+                element.addClass('drag-activeactive');
             });
             
             //Drag Leave
             element.bind('dragleave', function (evt) {
 				evt.preventDefault(); 
-				element.removeClass('active');
+                evt.stopPropagation();
+				
+				element.removeClass('drag-activeactive');
             });
             
             //Drag over
             element.bind('dragover', function (evt) {
                 evt.preventDefault();
-                element.addClass('active');
+                evt.stopPropagation();
+				
+                element.addClass('drag-activeactive');
             });
             
             /*
@@ -58,7 +72,7 @@ angular.module('employeeApp')
                 //prevent default
                 evt.preventDefault();
                 evt.stopPropagation();
-                element.removeClass('active');
+                element.removeClass('drag-activeactive');
                 
                 //Get original evt within jquery evt
                 var e = evt.originalEvent;

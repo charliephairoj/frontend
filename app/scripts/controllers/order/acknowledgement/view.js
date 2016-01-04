@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric',
-function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric', 'FileUploader',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric, FileUploader) {
 	
 	
 	/*
@@ -207,6 +207,66 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		keyboardNav.disable();
 	});
 	
+	
+	/**
+	 * FILES SECTIONs
+	 *
+	 * This section deals with files that are associated or to be associated with this acknowledgement
+	 */
+
+	/**
+	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+	 * @public
+	 * @param {Array} files - Array of files with raw data
+	 * @returns {null}
+	 */
+	$scope.addFiles = function (files, acknowledgement) {
+		
+		acknowledgement.files = acknowledgement.files || []; 
+	
+		/* jshint ignore:start */
+	
+		for (var i = 0; i < files.length; i++) {
+			acknowledgement.files.push({filename: files[i].name});
+		
+			var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+			promise.then(function (result) {
+				var data = result.data || result;
+				for (var h = 0; h < acknowledgement.files.length; h++) {
+					if (data.filename == acknowledgement.files[h].filename) {
+						angular.extend(acknowledgement.files[h], data);
+					}
+				}
+			}, function (e) {
+				$log.error(JSON.stringify(e));
+			});
+		}
+	
+		/* jshint ignore:end */
+	};
+
+	/**
+	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+	 * @public
+	 * @param {Array} files - Array of files with raw data
+	 * @returns {null}
+	 */
+	$scope.addImage = function (files, item) {
+		
+		if (files.length > 0) {
+			/* jshint ignore:start */		
+			var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
+			promise.then(function (result) {
+				var data = result.data || result;
+				item.image = data
+			}, function (e) {
+				$log.error(JSON.stringify(e));
+			});
+			/* jshint ignore:end */
+		}
+	};
+
+
 	/**
 	 * FABRIC SECTION
 	 * 
