@@ -33,7 +33,6 @@
 		
 		
 		<md-content  on-scroll-end="loadNext()">
-			<md-content on-scroll-end="loadNext()">
 							
 				<md-card ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
 					<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">

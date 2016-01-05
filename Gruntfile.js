@@ -1,53 +1,151 @@
 
 
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
 
+var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+var serveStatic = require('serve-static');
+
+
 module.exports = function (grunt) {
 //grunt.loadNpmTasks('grunt-proxy');
 
-  grunt.loadNpmTasks('grunt-recess');
-  grunt.loadNpmTasks('grunt-prettify');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-protractor-runner');
+  	grunt.loadNpmTasks('grunt-recess');
+  	grunt.loadNpmTasks('grunt-prettify');
+  	grunt.loadNpmTasks('grunt-contrib-less');
+  	grunt.loadNpmTasks('grunt-contrib-cssmin');
+  	grunt.loadNpmTasks('grunt-contrib-connect');
+  	grunt.loadNpmTasks('grunt-protractor-runner');
+    grunt.loadNpmTasks('grunt-connect-proxy');
+		
+  	// load all grunt tasks
+  	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  // load all grunt tasks
-  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  	// configurable paths
+  	var yeomanConfig = {
+    	app: 'app',
+   	 	dist: 'dist'
+  	};
 
-  // configurable paths
-  var yeomanConfig = {
-    app: 'app',
-    dist: 'dist'
-  };
+  	try {
+    	yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+  	} catch (e) {}
 
-  try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
-  } catch (e) {}
+  	grunt.initConfig({
+    	yeoman: yeomanConfig,
+     	// Watches files for changes and runs tasks based on the changed files
+      	watch: {
+        	bower: {
+          	  files: ['bower.json'],
+          	  tasks: ['wiredep']
+        	},
+	        js: {
+	          	files: [
+	    			'{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+	    			'{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
+		  				],
+	          	tasks: [],//'jshint'],
+	  	  		options: {
+	  	  			livereload: true
+	  	  		}
+	        },
+	        jstest: {
+	          	files: ['test/spec/{,*/}*.js'],
+	          	tasks: ['test:watch']
+	        },
+	        gruntfile: {
+	          	files: ['Gruntfile.js']
+	        },
+	        styles: {
+	          	files: [
+			  		'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+	        		'{.tmp,<%= yeoman.app %>}/styles/**/*.css',
+	    	  		'{.tmp,<%= yeoman.app %>}/m_styles/{,*/}*.css',
+	    	  		'{.tmp,<%= yeoman.app %>}/m_styles/**/*.css',
+	  	  			'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.css',
+	  	  			'{.tmp,<%= yeoman.app %>}/print_styles/**/*.css',
+	  				'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.css',
+	    			'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.css',
+	  			],
+	          	tasks: ['less:development'],
+	  	  		options: {
+	  	  			livereload: true
+	  	  		}
+	        },
+	  	  	html: {
+	  	  	 	files: [
+	  		  		'<%= yeoman.app %>/{,*/}*.html',
+	  		  		'{.tmp,<%= yeoman.app %>}/views/**/*.html',
+	  	  	 	]
+	  	  	},
+	    },
 
-  grunt.initConfig({
-    yeoman: yeomanConfig,
+	    // The actual grunt server settings
+	    connect: {
+		      	options: {
+		        port: 9001,
+		        open: true,
+		        livereload: 35729,
+		        // Change this to '0.0.0.0' to access the server from outside
+		        hostname: '0.0.0.0',
+				base: ['app'],
+	      	},
+			proxies: [
+				{
+					context: '/api',
+                    host: 'localhost',
+                    port: 8000,
+					https: false,
+                    changeOrigin: true,
+                    xforward: false
+				},
+				{
+					context: '/login',
+                    host: 'localhost',
+                    port: 8000,
+					https: false,
+                    changeOrigin: true,
+                    xforward: false
+				},
+			],
+	      	livereload: {
+	      	  	options: {
+					
+					middleware: function (connect, options, middlewares) {
+						
+						return [
+              			  	serveStatic(options.base[0]),
+		                    proxySnippet
+		                ];
+					}
+	        	},
+	      	}
+		},
+		
+    // Run some tasks in parallel to speed up build process
+    concurrent: {
+      server: [
+        'copy:styles'
+      ],
+      test: [
+        'copy:styles'
+      ],
+      dist: [
+        'copy:styles',
+        'imagemin',
+        'svgmin'
+      ]
+    },
+		/*
     watch: {
 		
       	livereload: {
 		  	
           	files: [
-      		  	'<%= yeoman.app %>/{,*/}*.html',
-      		  	'{.tmp,<%= yeoman.app %>}/views/**/*.html',
-      		  	'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-	          	'{.tmp,<%= yeoman.app %>}/styles/**/*.css',
-	      	  	'{.tmp,<%= yeoman.app %>}/m_styles/{,*/}*.css',
-	      	  	'{.tmp,<%= yeoman.app %>}/m_styles/**/*.css',
-		  	  	'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.css',
-		  	  	'{.tmp,<%= yeoman.app %>}/print_styles/**/*.css',
-  		  		'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.css',
-          		'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.css',
-	          	'{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-	          	'{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
-	          	'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
+      		  	
+      		  
+	          	
 				
           	],
 			//tasks: ['jshint'],
@@ -55,30 +153,9 @@ module.exports = function (grunt) {
 				livereload: 35729
 			}
 
-        
-        //files: [
-          //'<%= yeoman.dist %>/{,*/}*.html',
-          //'{.tmp,<%= yeoman.dist %>}/views/**/*.html',
-          //'{.tmp,<%= yeoman.dist %>}/styles/{,*/}*.css',
-          //'{.tmp,<%= yeoman.dist %>}/styles/**/*.css',
-          //'{.tmp,<%= yeoman.dist %>}/scripts/{,*/}*.js',
-          //'{.tmp,<%= yeoman.dist %>}/scripts/**/*.js',
-          //'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
-        //],
-        //tasks: ['livereload']
-      	},
-		
+      
       	less: {
-          	files: [
-          		'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.less',
-          		'{.tmp,<%= yeoman.app %>}/styles/**/*.less',
-      			'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.less',
-      			'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.less',
-      			'{.tmp,<%= yeoman.app %>}/m_styles/{,*/}*.less',
-      			'{.tmp,<%= yeoman.app %>}/m_styles/**/*.less',
-	  			'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.less',
-	  			'{.tmp,<%= yeoman.app %>}/print_styles/**/*.less',
-          	  ],
+          	
           	  tasks: ['less'],
 		  	 
       	},
@@ -134,6 +211,7 @@ module.exports = function (grunt) {
         	}
       	}
     },
+		*/
 	
     open: {
       //server: {
@@ -350,11 +428,31 @@ module.exports = function (grunt) {
         }]
       }
     }
+    
   });
 
   //grunt.renameTask('regarde', 'watch');
   // remove when mincss task is renamed
-  grunt.renameTask('mincss', 'cssmin');
+  
+  grunt.registerTask('serve', 'start the server and preview your app, --allow-remote for remote access', function (target) {
+    if (grunt.option('allow-remote')) {
+      grunt.config.set('connect.options.hostname', '0.0.0.0');
+    }
+    if (target === 'dist') {
+      return grunt.task.run(['build', 'connect:dist:keepalive']);
+    }
+
+    grunt.task.run([
+      'configureProxies',
+      'clean:server',
+      //'wiredep',
+      //'concurrent:server',
+	  //'less', 
+      //'autoprefixer',
+      'connect:livereload',
+      'watch'
+    ]);
+  });
   
   grunt.registerTask('server', [
     'clean:server',
@@ -380,20 +478,20 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'jshint',
+    //'jshint',
     //'test',
     'less',
     //'recess',
-    'useminPrepare',
-    'imagemin',
+    //'useminPrepare',
+    //'imagemin',
     //'cssmin',
     'prettify',
     //'htmlmin',
     'concat',
     'copy',
     //'cdnify',
-    'usemin',
-    'ngmin',
+    //'usemin',
+    //'ngmin',
     
     //'uglify'
   ]);

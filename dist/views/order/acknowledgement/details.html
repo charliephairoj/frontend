@@ -51,228 +51,247 @@
 	<!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1><span>Acknowledgement</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<div ng-click="save()">Save</div>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<div ng-click="showCal=true">Change Delivery Date</div>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<a ng-href="{{acknowledgement.pdf.acknowledgement}}" target="_blank">View Acknowledgement</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<a ng-href="{{acknowledgement.pdf.confirmation}}" target="_blank">View Confirmation</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<a ng-href="{{acknowledgement.pdf.production}}" target="_blank">View Production</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<a ng-href="{{acknowledgement.pdf.label}}" target="_blank">View Shipping Labels</a>
-				</li>
-				<!--
-                <li>
-                    <div ng-click="viewLog()">View Log</div>
-                </li>
-					-->
-				<li ng-show="currentUser.hasPermission('delete_acknowledgement')">
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
 	<div class="workspace">
-		<div class="details">
-			<table>
-				<tr>
-					<td>Order #:</td>
-					<td>{{acknowledgement.id}}</td>
-				</tr>
-				<tr class="customer">
-					<td>Customer:</td>
-					<td>{{acknowledgement.customer.name}}</td>
-				</tr>
-				<tr class="order-date">
-					<td>Order Date:</td>
-					<td>{{acknowledgement.time_created | date:"MMMM d, yyyy"}}</td>
-				</tr>
-				<tr class="due-date">
-					<td>Status:</td>
-					<td>
-						<select ng-model="acknowledgement.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-							<option value="deposit received">Deposit Received</option>
-							<option value="acknowledged">Acknowledged</optioon>
-								<option value="in production">In Production</option>
-								<option value="ready to ship">Ready to Ship</option>
-								<option value="shipped">Shipped</option>
-								<option value="invoiced">Invoiced</option>
-								<option value="paid">Paid</option>
-								<option value="cancelled">Cancelled</option>
-						</select>
-					</td>
-				</tr>
-			</table>
-			<table>
-				<tr class="due-date">
-					<td>Devlivery Date:</td>
-					<td>
-						<md-button class="md-accent" ng-click="showCal=true" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-							{{acknowledgement.delivery_date | date:"MMMM d, yyyy"}}
-						</md-button>
-					</td>
-				</tr>
-				<tr class="project">
-					<td>Project:</td>
-					<td>
-						<select ng-options="project.codename for project in projects" ng-model="acknowledgement.project" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-					</td>
-				</tr>
-				<tr>
-					<td>Total Items:</td>
-					<td>{{acknowledgement.items.length}}</td>
-				</tr>
-			</table>
+		<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
+			<h3><span>Acknowledgement {{acknowledgement.id}}</span></h3>
+			<div flex></div>
+			<md-button class="md-icon-button md-raised md-accent" ng-click="save()">
+				<md-tooltip>Save</md-tooltip>
+				<i class="material-icons">save</i>
+			</md-button>
+			<md-button class="md-icon-button md-raised md-warn" ng-click="remove()" ng-disabled="currentUser.hasPermission('delete_acknowledgement')">
+				<md-tooltip>Delete</md-tooltip>
+				<i class="material-icons">clear</i>
+			</md-button>
+		</md-toolbar>
+		<md-content layout="column">
+			<section>
+				<md-subheader class="md-primary md-no-sticky">Customer</md-subheader>
+				<div layout="row" layout-align="start center">
+					<span>{{ack.customer.name}}</span>
+				</div>
+			</section>
+			<section>
+				<md-subheader class="md-primary md-no-sticky">Order</md-subheader>
+				<div layout="row" layout-align="start start" style="align-items:baseline;">
+					<md-input-container>
+						<label>Status</label>
+						<md-select ng-model="ack.status">
+							<md-option value="deposit received">Deposit Received</md-option>
+							<md-option value="acknowledged">Acknowledged</md-option>
+							<md-option value="in production">In Production</md-option>
+							<md-option value="ready to ship">Ready to Ship</md-option>
+							<md-option value="shipped">Shipped</md-option>
+							<md-option value="invoiced">Invoiced</md-option>
+							<md-option value="paid">Paid</md-option>
+							<md-option value="cancelled">Cancelled</md-option>
+						</md-select>
+					</md-input-container>
+					<md-datepicker ng-model="ack.delivery_date"></md-datepicker>
+				</div>
+				<div layout="row" layout-align="start start">
+					<md-input-container>
+						<label>Purchase Order #</label>
+						<input name="po" type="text" ng-model="ack.po_id" required>
+						<div ng-messages="ackForm.po.$error">
+							<div ng-message-exp="'required'">This is required</div>
+						</div>
+					</md-input-container>
+					<md-input-container>
+						<label>Vat</label>
+						<input name="vat" type="number" ng-model="ack.vat" required max="10">
+						<div ng-messages="ackForm.vat.$error" multiple>
+							<div ng-message-exp="'required'">This is required</div>
+							<div ng-message-exp="'max'">That's too much vat!</div>
+						</div>
+					</md-input-container>
+					<md-input-container>
+						<label>Remarks</label>
+						<md-icon md-font-icon="material-icons">comment</md-icon>
+						<textarea ng-model="ack.remarks"></textarea>
+					</md-input-container>
+				</div>
+				<div layout="row" layout-align="start center">
+					<md-input-container>
+						<label>Project</label>
+						<input name="project" type="text" ng-model="ack.project.codename" ng-disabled="true">
+					</md-input-container>
+					<md-input-container ng-show="ack.room" ng-disabled="true">
+						<label>Room</label>
+						<input name="room" type="text" ng-model="ack.room.description" ng-disabled="true">
+					</md-input-container>
+					<md-input-container ng-show="ack.phase" ng-disabled="true">
+						<label>Phase</label>
+						<input name="phase" type="text" ng-model="ack.phase.description" ng-disabled="true">
+					</md-input-container>
+				</div>
+			</section>
 			<div class="status-bar">
-				<div class="event" ng-class="{'acknowledged': hasEvent(acknowledgement, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">Acknowledged</div>
-				<div class="event" ng-class="{'deposit-received': hasEvent(acknowledgement, 'deposit')}">Deposit Received</div>
-				<div class="event" ng-class="{'in-production': hasEvent(acknowledgement, 'in production')}">In Production</div>
-				<div class="event" ng-class="{'ready-to-ship': hasEvent(acknowledgement, 'ready to ship')}">Ready to Ship</div>
-				<div class="event" ng-class="{'shipped': hasEvent(acknowledgement, 'shipped')}">Shipped</div>
-				<div class="event" ng-class="{'invoiced': hasEvent(acknowledgement, 'invoiced')}">Invoiced</div>
-				<div class="event" ng-class="{'paid': hasEvent(acknowledgement, 'paid')}">Paid</div>
+				<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
+					<span>Acknowledged</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event deposit-received" ng-class="{'active': hasEvent(ack, 'deposit')}">
+					<span>Deposit</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event in-production" ng-class="{'active': hasEvent(ack, 'in production')}">
+					<span>In Production</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event ready-to-ship" ng-class="{'active': hasEvent(ack, 'ready to ship')}">
+					<span>Ready to Ship</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event shipped" ng-class="{'active': hasEvent(ack, 'shipped')}">
+					<span>Shipped</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event invoiced" ng-class="{'active': hasEvent(ack, 'invoiced')}">
+					<span>Invoiced</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
+				<div class="event paid" ng-class="{'active': hasEvent(ack, 'paid')}">
+					<span>Paid</span>
+					<div class="arrow"></div>
+					<div class="arrow2"></div>
+				</div>
 			</div>
-		</div>
-		<md-tabs class="md-primary" md-selected="selectedIndex">
-			<md-tab label="Items">
-			</md-tab>
-			<md-tab label="Attachments">
-			</md-tab>
-			<md-tab label="Logs">
-			</md-tab>
-		</md-tabs>
-		<div class="panel-container">
-			<ng-switch on="selectedIndex">
-				<div ng-switch-when="0" class="items-panel">
-					<!--
-					<table>
-						<thead>
-							<tr>
-								<td>PREVIEW</td>
-								<td>DESCRIPTION</td>
-								<td>WIDTH</td>
-								<td>DEPTH</td>
-								<td>HEIGHT</td>
-								<td>FABRIC</td>
-								<td>STATUS</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="item in acknowledgement.items">
-								<td class="preview">
-									<div class="img-container">
-										<img ng-src="{{item.image.url}}" />
-									</div>
-								</td>
-								<td class="description">{{item.description}}</td>
-								<td class="width">{{item.width}}</td>
-								<td class="depth">{{item.depth}}</td>
-								<td class="height">{{item.height}}</td>
-								<td class="fabric">{{item.fabric.description}}</td>
-								<td class="status" ng-class="item.status.toLowerCase()">{{item.status}}</td>
-							</tr>
-						</tbody>
-					</table>
-					-->
-					<div class="title-bar">
-						<div class="preview">PREVIEW</div>
-						<div class="description">DESCRIPTION</div>
-						<div class="fabric">FABRIC</div>
-						<div class="status">STATUS</div>
-						<div class="unit-price">UNIT PRICE</div>
-						<div class="qty">QTY</div>
-						<div class="total">TOTAL</div>
-					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<div class="item-container" ng-repeat="item in acknowledgement.items" ng-class="{'active': active}" ng-click="active=true">
-								<div class="item">
-									<div class="preview">
-										<div class="img-container">
-											<img ng-src="{{item.image.url}}" />
-										</div>
-									</div>
-									<div class="description">{{item.description}}</div>
-									<div class="fabric">{{item.fabric.description}}</div>
-									<div class="status" ng-class="item.status.toLowerCase()">
-										{{item.status}}
-									</div>
-									<div class="unit-price">
-										<input type="number" min="0" ng-model="item.unit_price" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-									</div>
-									<div class="qty">
-										<input type="number" min="0" ng-model="item.quantity" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-									</div>
-									<div class="total">
-										{{item.unit_price * item.quantity}}
-									</div>
-									<div class="item-menu">
-										<md-button ng-click="changeFabric($index)" class="md-accent md-raised" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">Change Fabric</md-button>
-									</div>
+			<section>
+				<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
+				<div class="files">
+					<md-card class="file" ng-repeat="file in ack.files">
+						<md-card-title>
+							<md-card-title-media>
+								<div class="md-media-sm card-media">
+									<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png" ng-show="file.type == 'pdf'">
 								</div>
-							</div>
-						</div>
-					</div>
+							</md-card-title-media>
+							<md-card-title-text>
+								<span class="md-headline">{{file.filename}}</span>
+							</md-card-title-text>
+						</md-card-title>
+						<md-card-actions layout="row" layout-align="end center">
+							<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
+								<md-tooltip>Open in a New Window</md-tooltip>
+								<i class="material-icons">open_in_browser</i>
+							</md-button>
+						</md-card-actions>
+					</md-card>
 				</div>
-				<div ng-switch-when="1" class="file-panel">
-					<div class="title-bar">
-						<div class="filename">
-							FILENAME
-						</div>
-						<div class="type">TYPE</div>
-					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<div class="item-container" ng-repeat="file in acknowledgement.files">
-								<a class="item" ng-href="{{file.url}}" target="_blank">
-									<div class="filename">
-										{{file.filename}}
-										<md-progress-linear ng-show="!file.id" class="progress md-hue-2" md-mode="indeterminate"></md-progress-linear>
-									</div>
-									<div class="type">{{file.type}}</div>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div ng-switch-when="2" class="log-panel">
-					<div class="title-bar">
-						<div class="message">
-							MESSAGE
-						</div>
-						<div class="employee">EMPLOYEE</div>
-						<div class="timestamp">TIMESTAMP</div>
-					</div>
-					<div class="outer-container">
-						<div class="inner-container">
-							<div class="item-container" ng-repeat="log in acknowledgement.logs">
-								<div class="item" target="_blank">
-									<div class="message">
-										{{log.message}}
-									</div>
-									<div class="message">
-										{{log.employee}}
-									</div>
-									<div class="timestamp">{{log.timestamp | date:"MMMM d, yyyy"}}</div>
+			</section>
+			<section>
+				<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
+				<div class="items">
+					<md-card class="item" ng-repeat="item in ack.items">
+						<md-card-title>
+							<md-card-title-text>
+								<span class="md-headline">{{item.description}}</span>
+							</md-card-title-text>
+						</md-card-title>
+						<md-card-content layout="row">
+							<table class="product-details">
+								<tr>
+									<td>
+										<md-input-container>
+											<label>Quantity</label>
+											<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
+											<div ng-messages="ackForm.quantity.$error">
+												<div ng-message="required">This required is required</div>
+												<div ng-message="min">Quantity should be greater than 0</div>
+											</div>
+											<div class="hint">How many pieces did they order?</div>
+										</md-input-container>
+									</td>
+									<td layout="row" colspan="2">
+										<md-input-container>
+											<label>Price Per Piece</label>
+											<input name="price" type="number" ng-model="item.total" required />
+											<div ng-messages="ackForm.price.$error">
+												<div ng-message="required">This required is required</div>
+											</div>
+											<div class="hint">How many one piece cost?</div>
+										</md-input-container>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<md-input-container>
+											<label>Width (mm)</label>
+											<input type="number" ng-model="item.width" min="0" required />
+										</md-input-container>
+									</td>
+									<td>
+										<md-input-container>
+											<label>Depth (mm)</label>
+											<input type="number" ng-model="item.depth" min="0" required />
+										</md-input-container>
+									</td>
+									<td>
+										<md-input-container>
+											<label>Height (mm)</label>
+											<input type="number" ng-model="item.height" min="0" required />
+										</md-input-container>
+									</td>
+								</tr>
+								<tr class="fabric">
+									<td colspan="2">
+										<md-autocomplete flex md-items="fabric in searchFabrics(fabricSearchText)" md-search-text-change="retrieveFabrics(fabricSearchText)" md-selected-item="item.fabric" md-search-text="fabricSearchText" md-item-text="fabric.description" md-floating-label="Fabric"
+										md-min-length="0">
+											<md-item-template>
+												<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
+											</md-item-template>
+											<div ng-messages="true">
+												<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+											</div>
+										</md-autocomplete>
+									</td>
+									<td>
+										<img ng-src="{{item.fabric.image.url}}" />
+									</td>
+								</tr>
+								<tr class="fabric" ng-repeat="pillow in item.pillows">
+									<td colspan="2">
+										<md-autocomplete flex md-items="fabric in searchFabrics(fabricSearchText)" md-search-text-change="retrieveFabrics(fabricSearchText)" md-selected-item="pillow.fabric" md-search-text="fabricSearchText" md-item-text="fabric.description" md-floating-label="{{pillow.type}} pillow fabric"
+										md-min-length="0">
+											<md-item-template>
+												<span md-highlight-text="fabricSearchText">{{pillow.type}} pillow {{pillow.fabric.description}}</span>
+											</md-item-template>
+											<div ng-messages="true">
+												<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+											</div>
+										</md-autocomplete>
+									</td>
+									<td>
+										<img ng-src="{{pillow.fabric.image.url}}" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<md-input-container>
+											<label>Remarks</label>
+											<md-icon md-font-icon="material-icons">comment</md-icon>
+											<textarea ng-model="item.comments"></textarea>
+											<div class="hint">Any other details?</div>
+										</md-input-container>
+									</td>
+								</tr>
+							</table>
+							<md-card-title-media>
+								<div class="md-media-sm card-media">
+									<img ng-src="{{item.image.url}}">
 								</div>
-							</div>
-						</div>
-					</div>
+							</md-card-title-media>
+						</md-card-content>
+					</md-card>
 				</div>
-			</ng-switch>
-		</div>
+			</section>
+		</md-content>
 	</div>
+</div>

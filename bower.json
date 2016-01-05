@@ -23,11 +23,12 @@
     "angular-route": ">=1.3",
     "angular-resource": ">=1.3",
     "angular-cookies": "",
+	"angular-messages": "",
     "es5-shim": "~2.0.5",
-    "angular-ui-date": "*",
     "json3": "~3.2.4",
     "d3": ">=3.4.11",
-    "normalize-css": ">=3.0.2"
+    "normalize-css": ">=3.0.2",
+    "angular-material": ">=0.6.1"
   },
   "resolutions": {
     "angular": ">=1.3"

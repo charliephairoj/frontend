@@ -229,5 +229,22 @@ angular.module('employeeApp.mocks', [])
 	});
 	
 	return KeyNav;
+}])
+
+.factory('google', [function () {
+	function Google() {
+		this.maps = {
+			LatLng: angular.noop,
+			DirectionsService: angular.noop,
+			Geocoder: angular.noop,
+			MapTypeId: {ROAD: 'road'},
+			Map: angular.noop,
+			DirectionsRenderer: function () {this.setMap = angular.noop},
+			Marker: function () {this.setMap = angular.noop},
+			TrafficLayer: function () {this.setMap = angular.noop},
+		}
+	}
+	
+	return new Google();
 }]);
 

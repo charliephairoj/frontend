@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', '$mdToast', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
-function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
+function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
 	
 	/*
 	 * Setup vars
@@ -217,7 +217,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	
 	
 	/*
- 	 * CUSTOMER SECTION
+ 	 * SUPPLIER SECTION
 	 *
 	 * This section deals with the customer searching and what happens when a customer is selected
 	*/
@@ -260,7 +260,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		
 		if (!$scope.po.supplier.id) {
 			$scope.po.supplier.name = supplierName || '';
-			$scope.supplies = [];
+			//$scope.supplies = [];
 		} else {
 			if ($scope.po.supplier.name.indexOf(supplierName) == -1) {
 				$scope.po.supplier = {name: supplierName, addresses: []};
@@ -272,17 +272,21 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * Add a supplier to the purchase order
 	 */
 	$scope.addSupplier = function (supplier) {
-		//Clear old supply list
+		
+		// Clear the old supplies list to start with a fresh list
+		// dominated by supplies that belong to this supplier
 		$scope.supplies = [];
 	
+		// Apply the supplier to purchase order
 		$scope.po.supplier = supplier;
 		$scope.po.discount = supplier.discount;
 		$scope.po.terms = supplier.terms;
 		$scope.po.currency = supplier.currency;
 	
-		$scope.supplies = $filter('filter')(Supply.query({supplier_id: supplier.id}, function (response) {
+		
+		Supply.query({supplier_id: supplier.id, limit: 0, page_size: 99999}, function (response) {
 			$scope.supplies = $filter('filter')(response, supplier.name);
-		}), supplier.name);
+		});
 	
 		$scope.safeApply();
 	
@@ -471,7 +475,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 		
 		if ($scope.po.supplier) {
 			if ($scope.po.supplier.id) {
-				options.supplier_id = $scope.po.supplier.id;
+				//options.supplier_id = $scope.po.supplier.id;
 			}
 		}
 		
@@ -537,9 +541,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers') && $scope.po.supplier) {
 				if ($scope.po.supplier.id) {
 					for (var i = 0; i < purchasedItem.suppliers.length; i++) {
-						if (purchasedItem.suppliers[i].supplier == $scope.po.supplier.id) {
+						if (purchasedItem.suppliers[i].supplier.id === $scope.po.supplier.id) {
 							purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
 							purchasedItem.purchasing_units = purchasedItem.suppliers[i].purchasing_units;
+							purchasedItem.suppliers[i].supplier = {id: $scope.po.supplier.id};
 						}
 					}
 				}
@@ -561,6 +566,28 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 			$scope.po.items = [];
 		}
 	};
+	
+	/**
+	 * Check if a supply is new for a supplier
+	 *
+	 * @public
+	 * @param {String|Object|Array|Boolean|Number} supply - supply to be check
+	 * @param {String|Object|Array|Boolean|Number} supplier - supplier to be checked against
+	 * @returns {Boolean} - a boolean indicating if this is a new supply or not
+	 */
+	$scope.isNewSupply = function (supply, supplier) {
+		if (supply.id && supplier) {
+			for (var i = 0; i < supply.suppliers.length; i++) {
+				if (supply.suppliers[i].supplier.id === supplier.id) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	};
+	
+	
 	
 	/*
 	 * Watch Items for change
@@ -647,22 +674,164 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	/*
 	 * Verfication of order
 	 */
-	$scope.verifyOrder = function () {
-		if (!$scope.po.hasOwnProperty('supplier')) {
+	$scope.validatePurchaseOrder = function (purchaseOrder) {
+		purchaseOrder = purchaseOrder || $scope.po;
+		
+		if (!purchaseOrder.hasOwnProperty('supplier')) {
 			throw new Error("Please select a supplier");
 		}
 		
-		if ($scope.po.items.length <= 0) {
+		if (purchaseOrder.items.length <= 0) {
 			throw new Error("Please add items to the purchase order");
 		}
 		
-		for (var i = 0; i < ($scope.po.items.length ||[]); i++) {
-			if (!$scope.po.items[i].quantity || $scope.po.items[i].quantity <= 0) {
-				throw new Error($scope.po.items[i].description + " is missing a quantity");
+		for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
+			if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
+				throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
 			}
 		} 
 		
 		return true;
+	};
+	
+	//Check the progress of customer, project creation
+	$scope._checkProgress = function (progress, callback) {
+		
+		for (var key in progress) {
+			if (progress[key] === false) {
+				return false;
+			} else if (progress[key] === 'error') {
+				throw new Error();
+			}
+		}
+		(callback || angular.noop)();
+	}
+	
+	/**
+	 * Create or update the supplier
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	$scope._prepareSupplier = function (purchaseOrder, progress, callback) {
+		//Checks if customer exists and creates if not
+		if (!purchaseOrder.supplier.id && purchaseOrder.supplier.name) {
+			progress.supplier = false;
+			var supplier = new Supplier();
+			angular.extend(supplier, purchaseOrder.supplier);
+
+			supplier.$create(function (resp) {
+				angular.extend(purchaseOrder.supplier, resp);
+				progress.supplier = true;
+				$scope._checkProgress(progress, callback);
+			}, function () {
+				progress.supplier = 'error';
+			});
+		} else if (purchaseOrder.supplier.id) {
+			progress.supplier = false;
+
+			purchaseOrder.supplier.$update(function (resp) {
+				angular.extend(purchaseOrder.supplier, resp);
+				progress.supplier = true;
+				$scope._checkProgress(progress, callback);
+			}, function () {
+				progress.supplier = 'error';
+			});
+		}
+	}
+	
+	
+	/**
+	 * Create a new supply 
+	 *
+	 * @private
+	 * @param {Object} supply - supply object to create
+	 * @param {Object} supplier - supplier to be associated with the supply
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	$scope._createSupply = function (supply, supplier, progress, callback) {
+		
+		// Add progress check
+		progress[supply.description] = false;
+		
+		// Associate this supplier with the supply
+		supply.suppliers = [supplier];
+		supply.suppliers[0].supplier = {id: supplier.id};
+		supply.suppliers[0].cost = supply.cost;
+		
+		var resource = new Supply(supply);
+		
+		// Create a new supply
+		resource.$create(function (response) {
+			
+			angular.extend(supply, response);
+			
+			// Move supply id location to avoid item update 
+			// instead of item creation
+	  		supply.supply = {id: supply.id};
+			delete supply.id;
+			
+			// Check the progress
+			progress[supply.description] = true;
+			$scope._checkProgress(progress, callback);
+			
+		}, function (reason) {
+			$log.error(reason);
+		});
+		
+		// New Vewsion
+	}
+
+	/**
+	 * Update and existing supply 
+	 *
+	 * @private
+	 * @param {Object} supply - supply object to create
+	 * @param {Object} supplier - supplier to be associated with the supply
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	$scope._updateSupply = function (supply, supplier, progress, callback) {
+		
+		// Update supply with new supplier
+		if ($scope.isNewSupply(supply, supplier)) {
+			var supplierData = angular.copy(supplier);
+			supplierData.cost = supply.cost;
+			
+			// Move the supplier id
+			supplierData.supplier = {'id': supplierData.id};
+			delete supplierData.id;
+			
+			// Add new supplier
+			supply.suppliers.push(supplierData);
+			
+			// Add progress check
+			progress[supply.id] = false;
+			
+			var resource = new Supply(supply);
+			
+			resource.$update(function (response) {
+				angular.extend(supply, response);
+				
+				// Move supply id location to avoid item update 
+				// instead of item creation
+		  		supply.supply = {id: supply.id};
+				delete supply.id;
+				
+				// Check the progress
+				progress[supply.supply.id] = true;
+				$scope._checkProgress(progress, callback);
+				
+			}, function (reason) {
+				$log.error(reason);
+			});
+		}
 	};
 	
 	/**
@@ -674,49 +843,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 	 * @param {Function} callback - Function to call if the creations are successful
 	 */
 	
-	function preparePurchaseOrder (purchaseOrder, callback) {
+	$scope._preparePurchaseOrder = function (purchaseOrder, callback) {
+		
 		//Object used to track progress of sub-resource creations
-		var progress = {};
-		
-		//Check the progress of customer, project creation
-		function checkProgress (callback) {
-			for (var key in progress) {
-				if (progress[key] === false) {
-					return false;
-				} else if (progress[key] === 'error') {
-					throw new Error();
-				}
-			}
-			console.log(progress);
-			console.log(callback);
-			(callback || angular.noop)();
-		}
-		
-		//Checks if customer exists and creates if not
-		if (!purchaseOrder.supplier.id && purchaseOrder.supplier.name) {
-			progress.supplier = false;
-			var supplier = new Supplier();
-			angular.extend(supplier, purchaseOrder.supplier);
-
-			supplier.$create(function (resp) {
-				angular.extend(purchaseOrder.supplier, resp);
-				progress.supplier = true;
-				checkProgress(callback);
-			}, function () {
-				progress.supplier = 'error';
-			});
-		} else if (purchaseOrder.supplier.id) {
-			progress.supplier = false;
-
-			purchaseOrder.supplier.$update(function (resp) {
-				angular.extend(purchaseOrder.supplier, resp);
-				progress.supplier = true;
-				checkProgress(callback);
-			}, function () {
-				progress.supplier = 'error';
-			});
-		}
-		
+		var progress = {supplies:false};
+		$scope._prepareSupplier(purchaseOrder, progress, callback);
+				
 		//Checks if the project exists and create if not
 		if (purchaseOrder.project) {
 			if (!purchaseOrder.project.id && purchaseOrder.project.codename) {
@@ -727,68 +859,60 @@ function ($scope, PurchaseOrder, Supplier, Supply, $mdToast, $filter, $timeout, 
 				project.$create(function (resp) {
 					angular.extend(purchaseOrder.project, resp);
 					progress.project = true;
-					checkProgress(callback);
+					$scope._checkProgress(progress, callback);
 				}, function () {
 					progress.project = 'error';
 				});
 			}
 		}
-		
+				
 		//Check if items are custom
 		for (var i = 0; i < purchaseOrder.items.length; i++) {
-			if (!purchaseOrder.items[i].hasOwnProperty('id')) {
-		  		purchaseOrder.items[i].supply = {id: purchaseOrder.items[i].id};
-				delete purchaseOrder.items[i].id;
+			if (purchaseOrder.items[i].hasOwnProperty('id')) {
+		  		// Update the supply
+				$scope._updateSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
+			} else {
+				// Create a new supply
+				$scope._createSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
 			}
 		}
 		
+		// Signal to progress check that supplies preparation has passed
+		progress.supplies = true;
+		$scope._checkProgress(progress, callback);
+	};
+	
+	$scope._sendCreateRequest = function () {
+		purchaseOrder = this || $scope.po;
 		
+		purchaseOrder.$create(function (response) {
+			Notification.display('Purchase order created.');
+								
+			angular.extend(purchaseOrder, response);
+			//Change page to newly saved purchase order page
+			//$location.path("/order/purchase_order/" + response.id);
+		
+		}, function (e) {
+			$log.error(JSON.stringify(e));
+			Notification.display("There was an error in creeating the purchase order. A report has been sent to Charlie");
+			
+		});
 	}
 	
 	/*
 	 * Save the purchase order to the server
 	 */
-	$scope.save = function () {
-		try {
-			if ($scope.verifyOrder()) {
-				$mdToast.show($mdToast
-					.simple()
-					.position('top right')
-					.content('Creating new purchase order...')
-					.hideDelay(0));
-				
-				preparePuchaseOrder($scope.po, function () {
-					$scope.po.$save(function (response) {
-						try {
-							$window.open(response.pdf.url);
-						} catch (e) {
-							$log.warn(e);
-						}
-						$mdToast.show($mdToast
-							.simple()
-							.position('top right')
-							.content('Purchase order created.'));
-											
-						//Change page to newly saved purchase order page
-						$location.path("/order/purchase_order/" + response.id);
-					
-					}, function (e) {
-						$log.error(JSON.stringify(e));
-						$mdToast.show($mdToast
-							.simple()
-							.content("There was an error in creeating the purchase order. A report has been sent to Charlie"));
-					});
-				});
-				
-				
-			} 
+	$scope.create = function (purchaseOrder) {
+		purchaseOrder = purchaseOrder || $scope.po;
+		try {			
+			$scope.validatePurchaseOrder(purchaseOrder);
+			
+			Notification.display('Creating new purchase order...');
+			
+			$scope._preparePurchaseOrder(purchaseOrder, $scope._sendCreateRequest.bind(purchaseOrder));
 		} catch (e) {
 			$log.error(JSON.stringify(e));
-			$mdToast.show($mdToast
-				.simple()
-				.position('top right')
-				.content(e)
-				.hideDelay(0));
+			Notification.display(e.message);
 		}
 	};
 	

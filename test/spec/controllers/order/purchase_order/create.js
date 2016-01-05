@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
+fdescribe('Controller: OrderPurchaseOrderCreateCtrl', function () {
 
   	// load the controller's module
   	beforeEach(module('employeeApp'));
@@ -10,272 +10,358 @@ describe('Controller: OrderPurchaseOrderCreateCtrl', function () {
   		ctrl,
   		Ctrl,
   		$http,
+		element,
   		$timeout,
     	scope,
+		$compile,
+		Supplier,
+		PurchaseOrder,
     	notification;
 
   	// Initialize the controller and a mock scope
   	beforeEach(inject(function ($controller, $injector, $rootScope) {
+		$compile = $injector.get('$compile');
   		Ctrl = $controller;
   		$http = $injector.get('$httpBackend');
   		$timeout = $injector.get('$timeout');
     	scope = $rootScope.$new();
     	notification = $injector.get('Notification');
+    	PurchaseOrder = $injector.get('PurchaseOrder');
+    	Supplier = $injector.get('Supplier');
+    	window.google = $injector.get('google');
+		
     	
   	}));
 
   	describe('Phase: Initiation', function(){
-  		
+  	
   		afterEach(function(){
   			$http.verifyNoOutstandingExpectation();
   			$http.verifyNoOutstandingRequest();	
   		});
   		
-		it('should make http request and projects', function(){
+		it('should make initial request for projects and suppliers', function(){
+			$http.expectGET('/api/v1/supplier/?limit=0&page_size=99999').respond([]);
+			$http.expectGET('/api/v1/project/?limit=0&page_size=99999').respond([{id:4, codename:'Ladawan'}]);
 			
-			$http.expectGET('/api/v1/project/?page_size=99999').respond([{id:4, codename:'Ladawan'}]);
 	  		ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
 	  		$http.flush();
-	  		
 			expect(scope.projects.length).toBe(1);
  		}); 	
- 			 
+		
+		it('should set the purchase order attached to the scope', function () {
+			$http.whenGET('/api/v1/supplier/?limit=0&page_size=99999').respond([]);
+			$http.whenGET('/api/v1/project/?limit=0&page_size=99999').respond([{id:4, codename:'Ladawan'}]);
+			
+	  		ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
+	  		$http.flush();
+			
+			expect(scope.po).toBeDefined();
+		});
+		
   	});
+	
+	describe('After the page is initialized', function () {
+		
+		beforeEach(function () {
+			$http.whenGET('/api/v1/supplier/?limit=0&page_size=99999').respond([]);
+			$http.whenGET('/api/v1/project/?limit=0&page_size=99999').respond([{id:4, codename:'Ladawan'}]);
+			
+	  		ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
+	  		$http.flush();
+		});
+		
+		describe('When the User creates the Purchase Order', function () {
+		
+			describe('Validating the purchase order', function () {
+			
+				it("it should call 'validatePurchaseOrder'", function () {
+					
+					spyOn(scope, 'validatePurchaseOrder').and.returnValue(false);
+					
+					//Call the create fn
+					scope.create({supplier:{id:2, }});
+					
+					//Tests
+					expect(scope.validatePurchaseOrder).toHaveBeenCalled();
+					expect(scope.validatePurchaseOrder.calls.count()).toEqual(1);
+				});
+			});
+			
+			describe('Preparing the purchase order', function () {
+				
+				it("it should call '_preparePurchaseOrder if 'validatePurchaseOrder' return true", function () {
+					//Prepare spies
+					spyOn(scope, 'validatePurchaseOrder').and.returnValue(true);
+					spyOn(scope, '_preparePurchaseOrder').and.returnValue(false);
+					
+					//Call the create fn
+					scope.create();
+					
+					//Tests
+					expect(scope.validatePurchaseOrder).toHaveBeenCalled();
+					expect(scope.validatePurchaseOrder.calls.count()).toEqual(1);
+					
+					expect(scope._preparePurchaseOrder).toHaveBeenCalled();
+					expect(scope._preparePurchaseOrder.calls.count()).toEqual(1);
+				});
+				
+				describe('Preparing the items', function () {
+					
+			  		afterEach(function(){
+			  			$http.verifyNoOutstandingExpectation();
+			  			$http.verifyNoOutstandingRequest();	
+			  		});
+					
+					it("should 'createSupply' if it does not have an 'id'", function () {
+						spyOn(scope, '_prepareSupplier').and.returnValue(true);
+						spyOn(scope, '_createSupply');
+						
+						scope._preparePurchaseOrder({
+							items: [
+								{
+									description: 'testing item',
+									quantity: 2,
+									cost: 4
+								}
+							]
+						});
+						
+						// Tests
+						expect(scope._prepareSupplier).toHaveBeenCalled();
+						
+						expect(scope._createSupply).toHaveBeenCalled();
+						expect(scope._createSupply.calls.count()).toEqual(1);
+						
+					});
+					
+					it('should send a POST request if the supply new', function () {
+						spyOn(scope, '_prepareSupplier').and.returnValue(true);
+						spyOn(scope, '_createSupply').and.callThrough();
+					
+						var testResource = {
+							description: 'testing item',
+							quantity: 2,
+							cost: 4
+						};
+					
+						// Set up expectation
+						$http.expectPOST('/api/v1/supply/').respond({
+							id: 5
+						});
+					
+						scope._preparePurchaseOrder({
+							supplier:  {
+								id: 214, 
+								cos: 23
+							},
+							items: [testResource]
+						});
+						
+						$http.flush();
+						expect(testResource.supply).toBeDefined();
+						expect(testResource.supply).toEqual(jasmine.any(Object));
+						expect(testResource.supply.id).toBeDefined();
+						expect(testResource.supply.id).toEqual(5);
+						
+					});
+				
+					it("should call 'updateSupply' if it has an 'id' and is not associated with the supplier", function () {
+						spyOn(scope, '_prepareSupplier').and.returnValue(true);
+						spyOn(scope, '_updateSupply').and.callThrough();
+						spyOn(scope, 'isNewSupply').and.returnValue(false);
+						spyOn(scope, '_createSupply');
+						
+						scope._preparePurchaseOrder({
+							supplier:  {
+								id: 214, 
+								cos: 23
+							},
+							items: [
+								{
+									id: 23,
+									description: 'testing item',
+									quantity: 2,
+									cost: 4,
+									suppliers: [
+										{supplier: {id: 222}}
+									]
+								}
+							]
+						});
+						
+						// Tests
+						expect(scope._prepareSupplier).toHaveBeenCalled();
+						
+						expect(scope._updateSupply).toHaveBeenCalled();
+						expect(scope._updateSupply.calls.count()).toEqual(1);
+						
+						expect(scope.isNewSupply).toHaveBeenCalled();
+						expect(scope.isNewSupply.calls.count()).toEqual(1);
+						
+						expect()
+					});
+				});
+				
+				it('should send a PUT request if the supply is not associated with the supplier', function () {
+					spyOn(scope, '_prepareSupplier').and.returnValue(true);
+					spyOn(scope, '_updateSupply').and.callThrough();
+					spyOn(scope, 'isNewSupply').and.returnValue(true);
+					
+					var testResource = new PurchaseOrder({
+						id: 23,
+						description: 'testing item',
+						quantity: 2,
+						cost: 4,
+						suppliers: [
+							{supplier: {id: 222}}
+						]
+					});
+					
+					// Spy on the $update fn
+					spyOn(testResource, '$update');
+					
+					// Set up expectation
+					$http.expectPUT('/api/v1/supply/23').respond({
+						
+					});
+					
+					scope._preparePurchaseOrder({
+						supplier:  {
+							id: 214, 
+							cos: 23
+						},
+						items: [testResource]
+					});
+					
+					// Tests
+					expect(testResource.$update).toHaveBeenCalled();
+					expect(testResource.$update.calls.count()).toEqual(1);
+				});
+			});
+			
+			describe('Where the purchase order is valid', function () {
+				
+				var supplier,
+					items;
+					
+				beforeEach(function () {
+					element = angular.element("<button id='po-create' ng-click='create(po)'></button>");
+				    $compile(element)(scope);
+				    scope.$digest();
+					
+					supplier = new Supplier({
+						id: 222,
+						name: 'testing company'
+					});
+					items = [
+						{
+							description: 'testing item',
+							quantity: 4,
+							cost: 11
+						},
+						{
+							id: 444,
+							description: 'supply',
+							suppliers: [
+								{
+									supplier: {id: 222}
+								}
+							]
+						}
+					];
+					
+				});
+				
+		  		afterEach(function(){
+		  			$http.verifyNoOutstandingExpectation();
+		  			$http.verifyNoOutstandingRequest();	
+		  		});
+				
+				it('should call the $scope.save function', function() {
+					spyOn(scope, 'create').and.callThrough();
+					spyOn(scope, 'validatePurchaseOrder').and.returnValue(true);
+					spyOn(scope, '_preparePurchaseOrder').and.callThrough();
+				
+			        element.click();
+					
+					expect(scope.create).toHaveBeenCalled();
+					
+					expect(scope.validatePurchaseOrder).toHaveBeenCalled();
+					expect(scope.validatePurchaseOrder.calls.count()).toEqual(1);
+					
+					expect(scope._preparePurchaseOrder).toHaveBeenCalled();
+					expect(scope._preparePurchaseOrder.calls.count()).toEqual(1);
+				});
+				
+				it('should send a POST request', function () {
+					spyOn(scope, 'create').and.callThrough();
+					spyOn(scope, 'validatePurchaseOrder').and.returnValue(true);
+					spyOn(scope, '_preparePurchaseOrder').and.callThrough();
+					spyOn(scope, '_prepareSupplier').and.callThrough(true);
+					spyOn(scope, '_createSupply').and.callThrough();
+					spyOn(scope, '_updateSupply').and.callThrough();
+					spyOn(scope, '_sendCreateRequest').and.callThrough();
+					spyOn(scope, '_checkProgress').and.callThrough();
+					
+					//Expect
+					$http.expectPUT('/api/v1/supplier/222/').respond(supplier);
+					$http.expectPOST('/api/v1/supply/').respond({
+							id: 222,
+							name: 'testing company'
+					});
+					$http.expectPOST('/api/v1/purchase-order/').respond({
+						id:87780,
+						supplier: supplier,
+						items: items
+					});
+					
+					
+					var purchaseOrder = new PurchaseOrder({
+						supplier: supplier,
+						items: items
+					});
+					
+					scope.po = purchaseOrder
+					element.click();
+					
+					
+					
+					$http.flush();
+					
+					
+					// Tests
+					expect(scope.create).toHaveBeenCalled();
+					
+					expect(scope.validatePurchaseOrder).toHaveBeenCalled();
+					expect(scope.validatePurchaseOrder.calls.count()).toEqual(1);
+					
+					expect(scope._preparePurchaseOrder).toHaveBeenCalled();
+					expect(scope._preparePurchaseOrder.calls.count()).toEqual(1);
+					
+					expect(scope._prepareSupplier).toHaveBeenCalled();
+					expect(scope._prepareSupplier.calls.count()).toEqual(1);
+					
+					expect(scope._updateSupply).toHaveBeenCalled();
+					expect(scope._updateSupply.calls.count()).toEqual(1);
+					
+					expect(scope._createSupply).toHaveBeenCalled();
+					expect(scope._createSupply.calls.count()).toEqual(1);
+					
+					expect(scope._checkProgress).toHaveBeenCalled();
+					expect(scope._checkProgress.calls.count()).toEqual(3);
+					
+					expect(scope._sendCreateRequest).toHaveBeenCalled();
+					expect(scope._preparePurchaseOrder.calls.count()).toEqual(1);
+					
+					expect(purchaseOrder.id).toBeDefined();
+					expect(purchaseOrder.id).toEqual(87780);
+					
+				});
+			});
+		});
+	});
+	
+	
   	
-  	describe('Phase: Putting together po', function() {
-  		
-  		beforeEach(function() {
-			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
-  			ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
-			scope.po.items = [];
-  			$http.flush();
-  		});
-  		
-  		afterEach(function() {
-  			$http.verifyNoOutstandingExpectation();
-  			$http.verifyNoOutstandingRequest();
-  		});
-  		
-  		it('should add a supplier to the po', function() {
-  			$http.expectGET('/api/v1/supply/?supplier_id=3').respond([{id:7, 
-  																	  description:'tape', 
-  																	  supplier: {name:'zipper test'},
-  																	  cost: 90}]);
-  			scope.addSupplier({id:3, name:'zipper test'});
-  			$http.flush();
-  			
-  			expect(scope.po.supplier).toBeDefined();
-  			expect(scope.po.supplier).toEqual({id:3, name:'zipper test'});
-  			expect(scope.supplies.length).toBe(1);
-  			expect(angular.equals(scope.supplies[0], {id:7, description:'tape', supplier: {name:'zipper test'}, cost:90})).toBeTruthy();
-  			$timeout.flush();
-  		});
-  		
-  		it('should add an item to the po', function() {
-  			scope.addItem({id: 100, cost:100});
-  			expect(scope.po.items.length).toBe(1);
-  			expect(scope.po.items[0]).toEqual({id:100, cost:100});
-  			$timeout.flush();
-  		});
-  		
-		it("should set the item's cost from the unit cost", function () {
-			scope.addItem({id:101, unit_cost:99.99});
-			expect(scope.po.items.length).toBe(1);
-			expect(scope.po.items[0]).toEqual({id:101, cost:99.99, unit_cost:99.99});
-			$timeout.flush();
-		});
-		
-		it("should set the item's cost from the unit cost", function () {
-			scope.po.supplier = {id:3};
-			scope.addItem({id:101, quantity:1, suppliers: [{cost:2, supplier:{id:4}}, {cost:1.99, supplier:{id: 3}}]});
-			expect(scope.po.items.length).toBe(1);
-			expect(scope.po.items[0].cost).toEqual(1.99);
-			$timeout.flush();
-		});
-		
-  		it('should remove an item from the po', function() { 
-  			scope.po.items = [{id:101, cost:99}];
-  			expect(scope.po.items.length).toBe(1);
-  			expect(scope.po.items[0]).toEqual({id:101, cost:99});
-  			scope.removeItem(0);
-  			
-  			expect(scope.po.items).not.toBeDefined();
-  			$timeout.flush();
-  		});
-  		
-  		it('should not update the item if the price has not settled after 5 seconds;', function () {
-  			scope.po.items = [
-  				{
-  					id:1, 
-  					cost:50.50
-  				},
-  				{
-  					id:4,
-  					cost:75.99
-  				}
-  			]
-  			scope.$digest();
-  			scope.po.items[0].cost = 50.59;
-  			scope.$digest();
-  			scope.po.items[0].cost = 50.60;
-  			$timeout.flush();
-    	});
-  		
-  		
-  		describe('Totals', function () {
-			
-			it('should calculate the subtotal of the order', function () {
-				scope.po.items.push({id:6, cost:51.44, quantity:2});
-				expect(scope.subtotal()).toEqual(102.88);
-			});
-			
-  			it('should calculate the totals of the order with no vat and additional discount', function () {
-  				scope.po.items.push({id:4, cost:50.48, quantity:2});
-  				expect(scope.total()).toEqual(100.96);
-  			});
-  			
-  			it('should calculate the total with vat', function () {
-  				scope.po.items.push({id:4, cost:10, quantity:1});
-  				scope.po.vat = 7;
-  				expect(scope.subtotal()).toEqual(10);
-  				expect(scope.grandTotal()).toEqual(10.7);
-  			});
-  			
-  			it('should calculate the discount of the supplier', function () {
-  				scope.po.items.push({id:4, cost:10, quantity:1});
-  				scope.po.discount = 10;
-  				expect(scope.subtotal()).toEqual(10);
-  				expect(scope.total()).toEqual(9);
-  				expect(scope.discount()).toEqual(1);
-  			});
-  			
-  			it('should calculate the discount of the po', function () {
-  				scope.po.items.push({id:4, cost:10, quantity:1});
-  				scope.po.discount = 12;
-  				expect(scope.subtotal()).toEqual(10);
-  				expect(scope.total()).toEqual(8.80);
-  				expect(scope.discount()).toEqual(1.2);
-  			});
-  		});
-  	});
-  	
-  	describe('Phase: Verification', function () {
-  		beforeEach(function () {
-			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
-  			$http.whenGET('/api/v1/supplier/?limit=0').respond([]);
-  			ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});
-  			$http.flush();
-  		});
-  		
-  		
-  		
-  		
-  		
-  		it('should not save if items are missing quantities', function () {
-  			scope.po.supplier = {id:3};
-			scope.po.vat = 7;
-  			scope.po.items = [{id: 4, description: 'test'}];
-  			scope.save();
-  			
-  		});
-  	});
-  	describe('Phase: Saving', function(){
-  		beforeEach(function() {
-			$http.whenGET('/api/v1/project/?page_size=99999').respond([]);
-  			$http.whenGET('/api/v1/supplier/?limit=0').respond([]);
-  		    ctrl = Ctrl('OrderPurchaseOrderCreateCtrl', {$scope: scope});	
-  		    $http.flush();
-  		});
-  		
-  		afterEach(function() {
-  			$http.verifyNoOutstandingExpectation();
-  			$http.verifyNoOutstandingRequest()
-  		})
-		
-		describe("Verify data sent via POST", function () {
-			
-			beforeEach(function () {
-	  			scope.po.supplier = {id:3};
-				scope.po.vat = 7;
-	  			scope.po.items = [{id:4, cost:90, quantity: 1}];
-			});
-			
-			it('should include project data for an existing project', function () {
-				scope.po.project = {id:1, codename: "Ladawan"};
-				
-				$http.expectPOST('/api/v1/purchase-order/', {
-	  				supplier: {
-	  					id: 3
-	  				},
-					vat: 7,
-					items: [{
-						cost:90,
-						quantity:1,
-						supply: {id: 4}
-					}],
-					project: {
-						id:1,
-						codename: "Ladawan"
-					}
-				}).respond();
-				
-				scope.save(); 
-				$http.flush();
-			});
-			
-			it('should include project data for a new project', function () {
-				scope.po.newProject = true;
-				scope.po.newProjectName = "LR331";
-				
-				$http.expectPOST('/api/v1/purchase-order/', {
-	  				supplier: {
-	  					id: 3
-	  				},
-					vat: 7,
-					items: [{
-						cost:90,
-						quantity:1,
-						supply: {id: 4}
-					}],
-					project: {
-						codename: "LR331"
-					}
-				}).respond();
-				
-				scope.save(); 
-				$http.flush();
-			});
-			
-			
-		});
-		
-  		it('should make a POST request to the server', function(){
-  			$http.expectPOST('/api/v1/purchase-order/', {
-  				supplier: {
-  					id: 3
-  				},
-				vat: 7,
-				items: [{
-					cost:90,
-					quantity:1,
-					supply: {id: 4}
-				}]
-  			}).respond();
-  			scope.po.supplier = {id:3};
-			scope.po.vat = 7;
-  			scope.po.items = [{id:4, cost:90, quantity: 1}];
-  			scope.save(); 
-  			$http.flush();
-  		});
-  		
-  		it('should notify the user in the case of a failed request', function () {
-  			$http.whenPOST('/api/v1/purchase-order/').respond(500);
-  			scope.po.supplier = {id:4};
-			scope.po.vat = 7;
-  			scope.po.items = [{id:4, cost:90, quantity:2}];
-  			scope.save();
-  			$http.flush();
-  			
-  		});
-  	})
 });

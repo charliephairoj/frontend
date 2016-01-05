@@ -1,14 +1,5 @@
 <div class="supply-view-page">
 	<!--
-		Modals
-	-->
-	<div add-supply="showAddSupply"></div>
-	<div add-supplier="showAddSupplier"></div>
-	<!--
-	<div supply-scanner-modal="scannerMode"></div>
-	-->
-	<div add-equipment="showAddEquipment"></div>
-	<!--
         Sidebar
     -->
 	<div class="sidebar">
@@ -57,52 +48,52 @@
 		</nav>
 	</div>
 	<!--
-        Search Bar
-    -->
-	<div data-search-bar data-ng-model="query">
-		<div class="filter-by">
-			Filter By:
-			<select ng-model="search.type" ng-options="t|beautify for t in types"></select>
-		</div>
-	</div>
-	<!--
         Workspace
     -->
 	<div class="workspace" style="z-index:1;">
-		<div class="title-bar">
-			<div class="preview">PREVIEW</div>
-			<div class="id">ID</div>
-			<div class="description">DESCRIPTION</div>
-			<div class="quantity">QUANTITY</div>
-			<div class="units">UNITS</div>
-			<div class="nickname">NICKNAME</div>
-		</div>
-		<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
-			<ul class="inner-container">
-				<li class="item-container" ng-repeat="supply in supplies | filter:query track by supply.id">
-					<div supply="supply" on-select="focus($element)"></div>
-					<!--
-	   				<div class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" touchstart touchmove touchend>
-    					<div class="img-container">
-    						<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
-    						<img ng-src="{{supply.image.url}}" />
-    					</div>
-    					<a class="details" ng-href="#/supply/{{supply.id}}" touchselect> 
-    						<span class="description">
-    							{{supply.description}}
-    						</span>
-    						<span class="supplier">
-    							{{supply.supplier.name}}
-    						</span>
-    						<span class="quantity">
-    							Qty: {{supply.quantity}}{{supply.units}}
-    						</span>
-    					</a>
+		<md-toolbar layout="column" md-scroll-shrink="true">
+			<div class="container" layout="row" layout-align="center center">
+				<h3><span>Supplies</span></h3>
+				<div flex></div>
+				<input class="search" type="text" ng-model="query" />
+			</div>
+			<div class="title-bar">
+				<div class="preview">PREVIEW</div>
+				<div class="id">ID</div>
+				<div class="description">DESCRIPTION</div>
+				<div class="quantity">QUANTITY</div>
+				<div class="units">UNITS</div>
+				<div class="nickname">NICKNAME</div>
+			</div>
+		</md-toolbar>
+		<md-content>
+			<div class="outer-container scroll-enabled" ng-hide="scannerMode" on-scroll-end="loadNext()">
+				<ul class="inner-container">
+					<li class="item-container" ng-repeat="supply in supplies | filter:query track by supply.id">
+						<div supply="supply" on-select="focus($element)"></div>
+						<!--
+		   				<div class="item" ng-class="{'selected':supply.$selected, 'admin-only':supply.admin_only}" touchstart touchmove touchend>
+	    					<div class="img-container">
+	    						<input type="file" ng-model="supply.raw_image" class="image-capture" accept="image/*" capture="camera" onchange="angular.element(this).scope().addImage(this, angular.element(this).scope().supply)">
+	    						<img ng-src="{{supply.image.url}}" />
+	    					</div>
+	    					<a class="details" ng-href="#/supply/{{supply.id}}" touchselect> 
+	    						<span class="description">
+	    							{{supply.description}}
+	    						</span>
+	    						<span class="supplier">
+	    							{{supply.supplier.name}}
+	    						</span>
+	    						<span class="quantity">
+	    							Qty: {{supply.quantity}}{{supply.units}}
+	    						</span>
+	    					</a>
     					
-    				</div>
-						-->
-				</li>
-			</ul>
-		</div>
+	    				</div>
+							-->
+					</li>
+				</ul>
+			</div>
+		</md-content>
 	</div>
 </div>

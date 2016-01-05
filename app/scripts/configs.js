@@ -47,7 +47,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 
 			record('error', args[0]);
-			_error(msg);
+			//_error(msg);
 		};
 		
 		return $delegate;
