@@ -31,7 +31,7 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 	$scope.hasEvent = function (ack, e) {
 		for (var i in ack.logs) {
 			if (ack.logs[i].hasOwnProperty('message')) {
-				if (ack.logs[i].message.indexOf(e) > -1) {
+				if (ack.logs[i].message.toLowerCase().indexOf(e) > -1) {
 					return true;
 				}
 			}

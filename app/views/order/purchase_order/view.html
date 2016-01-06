@@ -81,6 +81,9 @@
 							        	<label>Status</label>
 								        <md-select ng-model="po.status">
 											<md-option value='Processed'>Processed</md-option>
+											<md-option value='deposited'>Deposited</md-option>
+											<md-option value='received'>Received</md-option>
+											<md-option value='received'>invoice</md-option>
 											<md-option value='paid'>Paid</md-option>
 											<md-option value='cancelled'>Cancelled</md-option>
 								        </md-select>
@@ -132,22 +135,28 @@
 							</section>
 							
 							<div class="status-bar">
-								<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
+								<div class="event processed" ng-class="{'active': hasEvent(po, 'processed') || hasEvent(po, 'acknowledged')}">
 									<span>Processed</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
-								<div class="event deposit-received" ng-class="{'active': hasEvent(ack, 'deposit')}">
+								<div class="event deposited" ng-class="{'active': hasEvent(po, 'deposited')}">
+									<span>Deposited</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
+								<div class="event received" ng-class="{'active': hasEvent(po, 'received')}">
 									<span>Received</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
-								<div class="event in-production" ng-class="{'active': hasEvent(ack, 'in production')}">
+								
+								<div class="event invoiced" ng-class="{'active': hasEvent(po, 'invoice')}">
 									<span>Invoiced</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
-								<div class="event ready-to-ship" ng-class="{'active': hasEvent(ack, 'ready to ship')}">
+								<div class="event paid" ng-class="{'active': hasEvent(po, 'paid')}">
 									<span>Paid</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>

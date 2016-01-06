@@ -471,7 +471,7 @@
 								
 								.event{
 									background-color:rgba(0, 0, 0, 0.15);
-									width:14.285%;
+									width:20%;
 									color:rgba(0, 0, 0, 0.5);
 									text-align:center;
 									padding:0;
@@ -498,39 +498,27 @@
 									&.active{
 										color:rgb(255, 255, 255);
 						
-										&.acknowledged{
+										&.processed{
 											background-color:rgba(54, 66, 140, 1);
 											.arrow(rgb(54, 66, 140), @statusBarHeight, 10px);
-											z-index:@zIndex + 6;
-										}
-
-										&.deposit-received{
-											background-color:rgba(50, 130, 120, 1);
-											.arrow(rgb(50, 130, 120), @statusBarHeight, 10px);
-											z-index:@zIndex + 5;
-										}
-
-										&.in-production{
-											background-color:rgba(198, 148, 77, 1);
-											.arrow(rgb(198, 148, 77), @statusBarHeight, 10px);
 											z-index:@zIndex + 4;
 										}
 
-										&.ready-to-ship{
-											background-color:rgba(87,117,83, 1);
-											.arrow(rgb(87,117,83), @statusBarHeight, 10px);
+										&.deposited{
+											background-color:rgba(50, 130, 120, 1);
+											.arrow(rgb(50, 130, 120), @statusBarHeight, 10px);
 											z-index:@zIndex + 3;
 										}
 
-										&.shipped{
-											background-color:rgba(97,92,130, 1);
-											.arrow(rgb(97,92,130), @statusBarHeight, 10px);
+										&.received{
+											background-color:rgba(198, 148, 77, 1);
+											.arrow(rgb(198, 148, 77), @statusBarHeight, 10px);
 											z-index:@zIndex + 2;
 										}
 
 										&.invoiced{
-											background-color:rgba(163, 81, 82, 1);
-											.arrow(rgb(163, 81, 82), @statusBarHeight, 10px);
+											background-color:rgba(87,117,83, 1);
+											.arrow(rgb(87,117,83), @statusBarHeight, 10px);
 											z-index:@zIndex + 1;
 										}
 
@@ -545,28 +533,18 @@
 										}
 									}
 					
-									&.acknowledged{
+									&.processed{
 						
-										z-index:@zIndex + 6;
+										z-index:@zIndex + 4;
 										border-radius:@borderRadius 0 0 @borderRadius;
 									}
 
-									&.deposit-received{
-						
-										z-index:@zIndex + 5;
-									}
-
-									&.in-production{
-						
-										z-index:@zIndex + 4;
-									}
-
-									&.ready-to-ship{
+									&.deposited{
 						
 										z-index:@zIndex + 3;
 									}
 
-									&.shipped{
+									&.received{
 						
 										z-index:@zIndex + 2;
 									}
