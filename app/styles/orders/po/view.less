@@ -209,10 +209,32 @@
 				max-height:3.5em;
 				.transition(margin, 150ms);
 				.transition(max-height, 750ms);
-				.transition(width, 150ms);
-				
-				
+				.transition(width, 150ms);				
 				width:100%;
+				
+				md-card-title{
+					padding:0;
+					outline:none;
+					
+					md-card-title-text{
+						padding:24px 16px;
+						cursor:pointer;
+						outline:none;
+					}
+					
+					.filler{
+						height:100%;
+						cursor:pointer;
+						min-height:66px;
+						outline:none;
+					}
+					
+					.md-button{
+						&:last-child{
+							margin-right:16px;
+						}
+					}
+				}
 				
 				md-card-content{
 					position:relative;

@@ -35,11 +35,11 @@
 		<md-content  on-scroll-end="loadNext()">
 							
 				<md-card ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
-					<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
-						<md-card-title-text>
+					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
+						<md-card-title-text ng-click="active=false">
 							<span>Purchase Order {{po.id}}</span>
 						</md-card-title-text>
-						<div flex></div>
+						<div class="filler" flex ng-click="active=false"></div>
 						<md-button class="md-icon-button md-raised md-primary" ng-click="update(po)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 							<md-tooltip>Save</md-tooltip>
 							<i class="material-icons">save</i>
@@ -90,6 +90,12 @@
 								</div>		
 								<div layout="row" layout-align="start start">
 									<md-input-container>
+									  	<label>Terms</label>
+									  	<input name="terms" type="number" ng-model="po.terms" required max="10">								  
+										<div ng-messages="ackForm.terms.$error" multiple>
+										</div>
+									</md-input-container>
+									<md-input-container>
 									  	<label>Discount</label>
 									  	<input name="discount" type="number" ng-model="po.discount" required max="10">								  
 										<div ng-messages="ackForm.discount.$error" multiple>
@@ -127,40 +133,25 @@
 							
 							<div class="status-bar">
 								<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
-									<span>Acknowledged</span>
+									<span>Processed</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
 								<div class="event deposit-received" ng-class="{'active': hasEvent(ack, 'deposit')}">
-									<span>Deposit</span>
+									<span>Received</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
 								<div class="event in-production" ng-class="{'active': hasEvent(ack, 'in production')}">
-									<span>In Production</span>
-									<div class="arrow"></div>
-									<div class="arrow2"></div>
-								</div>
-								<div class="event ready-to-ship" ng-class="{'active': hasEvent(ack, 'ready to ship')}">
-									<span>Ready to Ship</span>
-									<div class="arrow"></div>
-									<div class="arrow2"></div>
-								</div>
-								<div class="event shipped" ng-class="{'active': hasEvent(ack, 'shipped')}">
-									<span>Shipped</span>
-									<div class="arrow"></div>
-									<div class="arrow2"></div>
-								</div>
-								<div class="event invoiced" ng-class="{'active': hasEvent(ack, 'invoiced')}">
 									<span>Invoiced</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
-								<div class="event paid" ng-class="{'active': hasEvent(ack, 'paid')}">
+								<div class="event ready-to-ship" ng-class="{'active': hasEvent(ack, 'ready to ship')}">
 									<span>Paid</span>
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
-								</div>	
+								</div>
 							</div>
 							
 							<section>

@@ -59,16 +59,16 @@ module.exports = function (grunt) {
 	        },
 	        styles: {
 	          	files: [
-			  		'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-	        		'{.tmp,<%= yeoman.app %>}/styles/**/*.css',
-	    	  		'{.tmp,<%= yeoman.app %>}/m_styles/{,*/}*.css',
-	    	  		'{.tmp,<%= yeoman.app %>}/m_styles/**/*.css',
-	  	  			'{.tmp,<%= yeoman.app %>}/print_styles/{,*/}*.css',
-	  	  			'{.tmp,<%= yeoman.app %>}/print_styles/**/*.css',
-	  				'{.tmp,<%= yeoman.app %>}/iphone4_style/{,*/}*.css',
-	    			'{.tmp,<%= yeoman.app %>}/iphone4_style/**/*.css',
+			  		'<%= yeoman.app %>/styles/{,*/}*.less',
+	        		'<%= yeoman.app %>/styles/**/*.less',
+	    	  		'{<%= yeoman.app %>}/m_styles/{,*/}*.less',
+	    	  		'{<%= yeoman.app %>}/m_styles/**/*.less',
+	  	  			'{<%= yeoman.app %>}/print_styles/{,*/}*.less',
+	  	  			'{<%= yeoman.app %>}/print_styles/**/*.less',
+	  				'{<%= yeoman.app %>}/iphone4_style/{,*/}*.less',
+	    			'{<%= yeoman.app %>}/iphone4_style/**/*.less',
 	  			],
-	          	tasks: ['less:development'],
+	          	tasks: ['less:developement'],
 	  	  		options: {
 	  	  			livereload: true
 	  	  		}
@@ -108,6 +108,14 @@ module.exports = function (grunt) {
                     changeOrigin: true,
                     xforward: false
 				},
+				{
+					context: '/logout',
+                    host: 'localhost',
+                    port: 8000,
+					https: false,
+                    changeOrigin: true,
+                    xforward: false
+				}
 			],
 	      	livereload: {
 	      	  	options: {

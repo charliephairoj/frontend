@@ -52,6 +52,7 @@
 										md-search-text-change="updateSupplierName(supplierSearchText); retrieveSuppliers(supplierSearchText)"
 										md-item-text="supplier.name"
 										md-floating-label="Supplier Name"
+										md-no-cache="true"
 										md-min-length="0">
 									    <md-item-template>
 									    	<span md-highlight-text="supplierSearchText">{{supplier.name}}</span>
@@ -312,6 +313,16 @@
 												<div ng-message="required">This required is required</div>
 											</div>
 								            <div class="hint">How many one piece cost?</div>
+									
+										</md-input-container>
+									</td>
+									<td>
+										<md-input-container>
+											<label>Discount</label>
+											<input name="discount" type="number" ng-model="item.discount" required />
+											<div ng-messages="poForm.discount.$error">
+												<div ng-message="required">This required is required</div>
+											</div>
 									
 										</md-input-container>
 									</td>
