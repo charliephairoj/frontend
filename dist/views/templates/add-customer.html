@@ -1,75 +1,91 @@
 <form name="form" novalidate class="add-customer" modal="visible" title="Add a new Customer">
-    <div class="container">
-        <table>
-            <tr>
-                <td>First Name</td>
-                <td><input type="text" required beautify ng-model="customer.first_name"
-                	tooltip="{{firstNameTip}}" tooltip-trigger="focus"/></td>
-            </tr>
-            <tr>
-                <td>Last Name</td>
-                <td><input type="text" beautify ng-model="customer.last_name" tooltip="{{lastNameTip}}" tooltip-trigger="focus" /></td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="email" required ng-model="customer.email" tooltip="{{emailTip}}" tooltip-trigger="focus" /></td>
-            </tr>
-            <tr>
-                <td>Telephone</td>
-                <td><input type="text" required beautify ng-model="customer.telephone" 
-                	tooltip="{{telTip}}" tooltip-trigger="focus" /></td>
-            </tr>
-            <tr>
-                <td>Customer Type</td>
-                <td>
-                    <select required ng-model="customer.type" tooltip="{{typeTip}} tooltip-trigger="focus"">
-                        <option value="Dealer">Dealer</option>
-                        <option value="Retail">Retail</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Currency</td>
-                <td>
-                    <select required ng-model="customer.currency" tooltip="{{currencyTip}} tooltip-trigger="focus"">
-                        <option value="USD">US Dollar</option>
-                        <option value="EUR">Euro</option>
-                        <option value="THB">Thai Baht</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Address 1</td>
-                <td><input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.address1" /></td>
-            </tr>
-            <tr>
-                <td>Address 2</td>
-                <td><input type="text" ec-blur="getLocation()" beautify ng-model="customer.address.address2" /></td>
-            </tr>
-            <tr>
-                <td>City/Amphur</td>
-                <td><input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.city" /></td>
-            </tr>
-            <tr>
-                <td>Territory/Chaeng Wat</td>
-                <td><input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.territory" /></td>
-            </tr>
-            <tr>
-                <td>Country</td>
-                <td><input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.country" /></td>
-            </tr>
-            <tr>
-                <td>Zipcode</td>
-                <td><input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.zipcode" /></td>
-            </tr>
-        </table> 
-        
-        <div class="map_container">
-            <div id="map_canvas" data-map></div>
-        </div>
-    </div>
-    <div class="bottom_bar">
-        <button ng-click="add()">Add</button>
-      
-    </div>
+	<div class="container">
+		<table>
+			<tr>
+				<td>First Name</td>
+				<td>
+					<input type="text" required beautify ng-model="customer.first_name" tooltip="{{firstNameTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td>Last Name</td>
+				<td>
+					<input type="text" beautify ng-model="customer.last_name" tooltip="{{lastNameTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>
+					<input type="email" required ng-model="customer.email" tooltip="{{emailTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td>Telephone</td>
+				<td>
+					<input type="text" required beautify ng-model="customer.telephone" tooltip="{{telTip}}" tooltip-trigger="focus" />
+				</td>
+			</tr>
+			<tr>
+				<td>Customer Type</td>
+				<td>
+					<select required ng-model="customer.type" tooltip="{{typeTip}} tooltip-trigger=" focus "">
+						<option value="Dealer">Dealer</option>
+						<option value="Retail">Retail</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Currency</td>
+				<td>
+					<select required ng-model="customer.currency" tooltip="{{currencyTip}} tooltip-trigger=" focus "">
+						<option value="USD">US Dollar</option>
+						<option value="EUR">Euro</option>
+						<option value="THB">Thai Baht</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Address 1</td>
+				<td>
+					<input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.address1" />
+				</td>
+			</tr>
+			<tr>
+				<td>Address 2</td>
+				<td>
+					<input type="text" ec-blur="getLocation()" beautify ng-model="customer.address.address2" />
+				</td>
+			</tr>
+			<tr>
+				<td>City/Amphur</td>
+				<td>
+					<input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.city" />
+				</td>
+			</tr>
+			<tr>
+				<td>Territory/Chaeng Wat</td>
+				<td>
+					<input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.territory" />
+				</td>
+			</tr>
+			<tr>
+				<td>Country</td>
+				<td>
+					<input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.country" />
+				</td>
+			</tr>
+			<tr>
+				<td>Zipcode</td>
+				<td>
+					<input type="text" required ec-blur="getLocation()" beautify ng-model="customer.address.zipcode" />
+				</td>
+			</tr>
+		</table>
+		<div class="map_container">
+			<div id="map_canvas" data-map></div>
+		</div>
+	</div>
+	<div class="bottom_bar">
+		<button ng-click="add()">Add</button>
+	</div>
 </form>

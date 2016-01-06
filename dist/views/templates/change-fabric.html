@@ -3,45 +3,39 @@
 	<div class="container">
 		<md-content>
 			<div class="container">
-	            <div class="product_container">
-	                <div class="product" data-drop-on="ctrl.item.fabric">
-	                    <div>{{ctrl.item.description}}</div>
-                    
-	                    <div class="fabric" ui-if="ctrl.item.fabric">
-	                        Fabric:  {{ctrl.item.fabric.description}}
-	                        <img ng-src="{{ctrl.item.fabric.image_url}}" />
-							<br />
-							Fabric Quantity: <input type="number" min="0" ng-model="ctrl.item.fabric_quantity">
-	                    </div>
-						
-                    
-	                </div>
-	                <div class="pillow" ng-repeat="pillow in ctrl.item.pillows" data-drop-on="pillow.fabric">
-	                    <div>{{pillow.type | beautify}} Pillow</div>
-	                    <div class="fabric">
-	                        Fabric: {{pillow.fabric.description}}
-	                        <img ng-src="{{pillow.fabric.image_url}}" />
-							<br />
-							Fabric Quantity: <input type="number" min="0" ng-model="pillow.fabric_quantity">
-	                    </div>
-	                </div>
-	            </div>
-	            <div class="fabric_container">
-	                <div data-search-bar ng-model="ctrl.query"></div>
-	                <ul class="list">
-	                    <li class="item" ng-repeat="fabric in ctrl.fabrics | filter:ctrl.query" data-drag-on="fabric">
-	                        <img ng-src="{{fabric.image_url}}" />
-	                        <div class="details">
-	                            Pattern: {{fabric.pattern}}
-	                            <br />
-	                            Color: {{fabric.color}}
-	                        </div>
-                        
-	                    </li>
-	                </ul>
-	            </div>
+				<div class="product_container">
+					<div class="product" data-drop-on="ctrl.item.fabric">
+						<div>{{ctrl.item.description}}</div>
+						<div class="fabric" ui-if="ctrl.item.fabric">
+							Fabric: {{ctrl.item.fabric.description}}
+							<img ng-src="{{ctrl.item.fabric.image_url}}" />
+							<br />Fabric Quantity:
+							<input type="number" min="0" ng-model="ctrl.item.fabric_quantity">
+						</div>
+					</div>
+					<div class="pillow" ng-repeat="pillow in ctrl.item.pillows" data-drop-on="pillow.fabric">
+						<div>{{pillow.type | beautify}} Pillow</div>
+						<div class="fabric">
+							Fabric: {{pillow.fabric.description}}
+							<img ng-src="{{pillow.fabric.image_url}}" />
+							<br />Fabric Quantity:
+							<input type="number" min="0" ng-model="pillow.fabric_quantity">
+						</div>
+					</div>
+				</div>
+				<div class="fabric_container">
+					<div data-search-bar ng-model="ctrl.query"></div>
+					<ul class="list">
+						<li class="item" ng-repeat="fabric in ctrl.fabrics | filter:ctrl.query" data-drag-on="fabric">
+							<img ng-src="{{fabric.image_url}}" />
+							<div class="details">
+								Pattern: {{fabric.pattern}}
+								<br />Color: {{fabric.color}}
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
-            
 		</md-content>
 	</div>
 	<md-action>

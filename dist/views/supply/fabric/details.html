@@ -1,60 +1,76 @@
-
-
 <div class="fabricDetailsPage" ng-init="showAdd=false;showSubtract=false; showReset=false; showLog=false; showReserve=false;" image-drop-target="upload()">
-  
-   
 	<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
 		<h3><span>{{fabric.description}}</span></h3>
 		<div flex></div>
 		<md-button class="md-icon-button md-raised md-accent" ng-click="update()">
 			<md-tooltip>Save</md-tooltip>
 			<i class="material-icons">save</i>	
-		</md-button>	
-   	</md-toolbar>
-
+		</md-button>
+	</md-toolbar>
 	<md-content>
-	    <div class="workspace" layout="column" laytout-align="center center">
-		
+		<div class="workspace" layout="column" laytout-align="center center">
 			<!--
 			Fabic Storage directive
 				-->
-				<!--
+			<!--
 	        <fabric-storage></fabric-storage>
 					-->
-					
 			<div class="info">
-	            
-		        <table class="details">
-		        	<tr>
-                
-		            <tr>
-		                <td><label>Supplier</label></td>
-		                <td>{{fabric.supplier.name}}</td>
-		            </tr>
-		            <td><label>Location</label></td>
-		                <td><input type="text" ng-model="fabric.location" /></td>
-		            </tr>
-		            <tr>
-		                <td><label>Description</label></td>
-		                <td><input type="text" ng-model="fabric.description" /></td>
-		            </tr>
-		            <tr>
-		                <td><label>Reference Number</label></td>
-		                <td><input type="text" ng-model="fabric.reference" /></td>
-		            </tr>
-		            <tr>
-		                <td><label>Pattern</label></td>
-		                <td><input type="text" ng-model="fabric.pattern" /></td>
-		            </tr>
-            
-		            <tr>
-		                <td><label>Color</label></td>
-		                <td><input type="text" ng-model="fabric.color" /></td>  
-		            </tr>
-		            <tr>
-		                <td><label>Content</label></td>
-		                <td><input type="text" ng-model="fabric.content" /></td>  
-		            </tr>
+				<table class="details">
+					<tr>
+						<tr>
+							<td>
+								<label>Supplier</label>
+							</td>
+							<td>{{fabric.supplier.name}}</td>
+						</tr>
+						<td>
+							<label>Location</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.location" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Description</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.description" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Reference Number</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.reference" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Pattern</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.pattern" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Color</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.color" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Content</label>
+						</td>
+						<td>
+							<input type="text" ng-model="fabric.content" />
+						</td>
+					</tr>
 					<tr>
 						<td>
 							<label>Units</label>
@@ -76,35 +92,46 @@
 							</select>
 						</td>
 					</tr>
-		            <tr>
-		                <td><label>Width</label></td>
-		                <td><input class="length" type="text" ng-model="fabric.width"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" /></td>
-		            </tr>
-		            <tr>
-		                <td><label>Cost per Yard</label></td>
-		                <td><input class="price" type="text" ng-model="fabric.cost"  ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
-		            </tr>
-		            <tr>
-		                <td><label>Current Length</label></td>
-		                <td><input type="number" ng-model="fabric.quantity"></td>
-		            </tr> 
-		            <tr>
-		                <td><label>Reserved</label></td>
-		                <td>{{fabric.reserved}}</td>
-		            </tr>
-		            <tr>
-		                <td><label>Quantity Need</label></td>
-		                <td>{{quantityNeeded()}}</td>
-		            </tr>
-            
-            
+					<tr>
+						<td>
+							<label>Width</label>
+						</td>
+						<td>
+							<input class="length" type="text" ng-model="fabric.width" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Cost per Yard</label>
+						</td>
+						<td>
+							<input class="price" type="text" ng-model="fabric.cost" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" />{{fabric.supplier.currency}}</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Current Length</label>
+						</td>
+						<td>
+							<input type="number" ng-model="fabric.quantity">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Reserved</label>
+						</td>
+						<td>{{fabric.reserved}}</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Quantity Need</label>
+						</td>
+						<td>{{quantityNeeded()}}</td>
+					</tr>
 				</table>
-				
-	            <div class="fabric-img" ui-if="fabric.image">
-	                <img ng-src="{{fabric.image.url}}" />
-	            </div>
+				<div class="fabric-img" ui-if="fabric.image">
+					<img ng-src="{{fabric.image.url}}" />
+				</div>
 			</div>
-		
 			<div class="title-bar">
 				<div class="message">MESSAGE</div>
 				<div class="date">DATE</div>
@@ -112,13 +139,12 @@
 				<div class="action">ACTION</div>
 				<div class="quantity">QUANTITY</div>
 			</div>
-		
 			<div class="outer-container">
 				<ul class="inner-container">
-					<li class="item-container"  ng-repeat="log in logs">
+					<li class="item-container" ng-repeat="log in logs">
 						<div class="item">
 							<div class="message">
-								<md-button class="save-btn"  ng-show="log.action == 'CUT' || log.action == 'CANCEL'" ng-click="updateLog($index)">
+								<md-button class="save-btn" ng-show="log.action == 'CUT' || log.action == 'CANCEL'" ng-click="updateLog($index)">
 									SAVE
 								</md-button>
 								{{log.message}}
@@ -129,9 +155,8 @@
 								<select ng-show="log.action == 'RESERVE'" ng-model="log.action">
 									<option value="CUT">CUT</option>
 									<option value="RESERVE">RESERVE</opiton>
-									<option value="CANCEL">CANCEL</option>
+										<option value="CANCEL">CANCEL</option>
 								</select>
-							
 								<span ng-hide="log.action == 'RESERVE'">{{log.action}}</span>
 							</div>
 							<div class="quantity">
@@ -141,14 +166,7 @@
 						</div>
 					</li>
 				</ul>
-			
 			</div>
-            
-            
-        
-	    </div>
-		
+		</div>
 	</md-content>
-	
-	
 </div>

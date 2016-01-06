@@ -1,58 +1,49 @@
 <div class="foam-view-page">
-    
-    
-    <!--
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Foam</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a ng-href="#/supply/foam/add">Add Foam</a>
-                </li>
-                
-            </ul>
-        </nav>
-    </div>
-    
-    
-    <!--
+	<div class="sidebar">
+		<header>
+			<h1><span>Foam</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a ng-href="#/supply/foam/add">Add Foam</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    <div data-search-bar></div>
-    
-    
-    <div class="workspace grid">
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell id">ID</div>
-                <div class="cell supplier">Supplier</div>
-                <div class="cell reference">Reference</div>
-                <div class="cell cost">Cost</div>
-            </div>
-        </div>
-        <div class="listContainer">
-            <div class="grid">
-                <div class="body">
-                    <a ng-repeat="foam in foamList | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/foam/{{foam.id}}">
-                        
-                        <div class="cell preview">
-                            <img ng-src="{{foam.image_url}}" />
-                        </div>
-                        
-                        <div class="cell id">{{foam.id}}</div>
-                        <div class="cell supplier">{{foam.supplier.name}}</div>
-                        <div class="cell reference">{{foam.reference}}</div>
-                        <div class="cell cost">{{foam.cost}}</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!--
+	<div data-search-bar></div>
+	<div class="workspace grid">
+		<div class="header">
+			<div class="row">
+				<div class="cell preview">Preview</div>
+				<div class="cell id">ID</div>
+				<div class="cell supplier">Supplier</div>
+				<div class="cell reference">Reference</div>
+				<div class="cell cost">Cost</div>
+			</div>
+		</div>
+		<div class="listContainer">
+			<div class="grid">
+				<div class="body">
+					<a ng-repeat="foam in foamList | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/foam/{{foam.id}}">
+						<div class="cell preview">
+							<img ng-src="{{foam.image_url}}" />
+						</div>
+						<div class="cell id">{{foam.id}}</div>
+						<div class="cell supplier">{{foam.supplier.name}}</div>
+						<div class="cell reference">{{foam.reference}}</div>
+						<div class="cell cost">{{foam.cost}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!--
         <div class="listContainer">
             <div class="list">
                     <a ng-repeat="foam in foamList | filter:query | orderBy:'supplier.name'" class="row" ng-href="#/supply/foam/{{foam.id}}">
@@ -89,7 +80,5 @@
                     </a>
             </div>
         </div>-->
-        
-    </div>
-    
+	</div>
 </div>

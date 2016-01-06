@@ -1,60 +1,52 @@
 <div class="view-prop-page" ea-add="add()">
-
-    <!--
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Prop</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a ng-href="#/supply/prop/add">Add Prop</a>
-                </li>
-                
-            </ul>
-        </nav>
-    </div>
-    
-    <!--
+	<div class="sidebar">
+		<header>
+			<h1><span>Prop</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a ng-href="#/supply/prop/add">Add Prop</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    <div search-bar></div>
-    
-    
-    <!--
+	<div search-bar></div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace grid" style="z-index:1;">
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell id">ID</div>
-                <div class="cell supplier">Supplier</div>
-                <div class="cell reference">Reference</div>
-                <div class="cell cost">Cost</div>
-            </div>
-        </div>
-        <div class="listContainer">
-            <div class="grid">
-                <div class="body">
-                    <a ng-repeat="supply in supplyList | filter:query | limitTo:100 | orderBy:'supplier.name'" class="row" ng-href="#/supply/prop/{{supply.id}}" image-drop-target="upload($index, images[0])">
-                        
-                        <div class="cell preview">
-                            <img ng-src="{{supply.image_url}}" />
-                        </div>
-                        
-                        <div class="cell id">{{supply.id}}</div>
-                        <div class="cell supplier">{{supply.supplier.name}}</div>
-                        <div class="cell reference">{{supply.reference}}</div>
-                        <div class="cell cost">{{supply.cost}}</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!--
+	<div class="workspace grid" style="z-index:1;">
+		<div class="header">
+			<div class="row">
+				<div class="cell preview">Preview</div>
+				<div class="cell id">ID</div>
+				<div class="cell supplier">Supplier</div>
+				<div class="cell reference">Reference</div>
+				<div class="cell cost">Cost</div>
+			</div>
+		</div>
+		<div class="listContainer">
+			<div class="grid">
+				<div class="body">
+					<a ng-repeat="supply in supplyList | filter:query | limitTo:100 | orderBy:'supplier.name'" class="row" ng-href="#/supply/prop/{{supply.id}}" image-drop-target="upload($index, images[0])">
+						<div class="cell preview">
+							<img ng-src="{{supply.image_url}}" />
+						</div>
+						<div class="cell id">{{supply.id}}</div>
+						<div class="cell supplier">{{supply.supplier.name}}</div>
+						<div class="cell reference">{{supply.reference}}</div>
+						<div class="cell cost">{{supply.cost}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!--
         <div class="listContainer">
             <div class="list">
                 
@@ -88,6 +80,5 @@
                     </a>
             </div>
         </div>-->
-    </div>
-    
+	</div>
 </div>

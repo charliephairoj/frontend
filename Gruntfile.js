@@ -12,8 +12,6 @@ module.exports = function (grunt) {
 //grunt.loadNpmTasks('grunt-proxy');
 
   	grunt.loadNpmTasks('grunt-recess');
-  	grunt.loadNpmTasks('grunt-usemin');
-	
   	grunt.loadNpmTasks('grunt-prettify');
   	grunt.loadNpmTasks('grunt-contrib-less');
   	grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -296,13 +294,11 @@ module.exports = function (grunt) {
       }
     },
     usemin: {
-		html: '<%= yeoman.dist %>/index.html',
-        options: {
-          assetsDirs: ['<%= yeoman.dist %>',
-  	  		   		   '<%= yeoman.dist %>/scripts']
-        }
-		
-      
+      html: ['<%= yeoman.dist %>/{,*/}*.html'],
+      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      options: {
+        dirs: ['<%= yeoman.dist %>']
+      }
     },
     imagemin: {
       dist: {
@@ -312,6 +308,15 @@ module.exports = function (grunt) {
           src: '{,*/}*.{png,jpg,jpeg}',
           dest: '<%= yeoman.dist %>/image'
         }]
+      }
+    },
+    cssmin: {
+      dist: {
+        expand: true,
+	    cwd: '<%= yeoman.app %>/styles',
+	    src: ['main.css'],
+	    dest: '<%= yeoman.dist %>/styles',
+	    ext: '.min.css'
       }
     },
     less: {
@@ -331,6 +336,39 @@ module.exports = function (grunt) {
     		}
     	}
     },
+    recess: {
+	    dist: {
+	        options: {
+	            compile: true
+	        },
+	        files: {
+	            'dist/styles/main.css': ['app/styles/main.less'],
+	            'app/styles/main.css': ['app/styles/main.less']
+	        }
+	    },
+	    app: {
+	    	options: {
+	    		compile: true
+	    	},
+	    	files: { 
+	    		'app/styles/main.css': ['app/styles/main.less']
+	    	}
+	    }
+	},
+	prettify: {
+		options: {
+			condense: true,
+			padcomments: true,
+			indent: 1,
+			indent_char: '	'
+		},
+		all: {
+			expand: true,
+		    cwd: '<%= yeoman.app %>',
+		    src: ['*.html', 'views/*.html', 'views/**/*.html'],
+		    dest: '<%= yeoman.dist %>'
+		}
+	},
     htmlmin: {
       dist: {
         options: {
@@ -349,6 +387,21 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           src: ['*.html', 'views/*.html', 'views/**/*.html'],
           dest: '<%= yeoman.dist %>'
+        }]
+      }
+    },
+    cdnify: {
+      dist: {
+        html: ['<%= yeoman.dist %>/*.html']
+      }
+    },
+    ngmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.dist %>/scripts',
+          src: '*.js',
+          dest: '<%= yeoman.dist %>/scripts'
         }]
       }
     },
@@ -376,8 +429,6 @@ module.exports = function (grunt) {
             'images/{,*/}*.{gif,webp}',
             'img/**/*',
             'fonts/**/*',
-            '**/*.html',
-			
             'styles/main.css',
 			'm_styles/main.css',
 			'iphone4_style/main.css'
@@ -430,23 +481,27 @@ module.exports = function (grunt) {
     'clean:server',
     'connect:test',
     'karma',
+	//'protractor:run'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
     //'jshint',
+    //'test',
     'less',
-    'useminPrepare',
+    //'recess',
+    //'useminPrepare',
     //'imagemin',
     //'cssmin',
+    'prettify',
+    //'htmlmin',
     'concat',
-    'uglify',
-	  
     'copy',
     //'cdnify',
-    'usemin',
-    //'htmlmin',
+    //'usemin',
+    //'ngmin',
     
+    //'uglify'
   ]);
 
   grunt.registerTask('default', ['build']);

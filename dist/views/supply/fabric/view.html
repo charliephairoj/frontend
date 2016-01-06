@@ -1,14 +1,12 @@
 <div class="viewFabricPage">
-    
-    <div class="workspace">
-		
+	<div class="workspace">
 		<md-toolbar md-scroll-shrink="true" layout="column">
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Fabrics</span></h3>
 				<div flex></div>
 				<md-button class="md-accent md-icon-button md-raised" ng-href="#/supply/fabric/add">
-					 <md-tooltip>Create Fabric</md-tooltip>
-					 <i class="material-icons">create</i>		
+					<md-tooltip>Create Fabric</md-tooltip>
+					<i class="material-icons">create</i>	
 				</md-button>
 				<input type="text" class="search" ng-model="query" />
 			</div>
@@ -21,12 +19,11 @@
 				<div class="column status">STATUS</div>
 			</div>
 		</md-toolbar>
-		
 		<md-content>
-	    	<div class="outer-container" on-scroll-end="loadNext()">
-	    		<ul class="inner-container">
-	    			<li class="item-container" ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name' track by fabric.id">
-	    				<div class="item" ng-class="[fabric.status, {'selected':fabric.$selected}]">
+			<div class="outer-container" on-scroll-end="loadNext()">
+				<ul class="inner-container">
+					<li class="item-container" ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name' track by fabric.id">
+						<div class="item" ng-class="[fabric.status, {'selected':fabric.$selected}]">
 							<a class="column preview" ng-href="#/supply/fabric/{{fabric.id}}">
 								<img ng-src="{{fabric.image.url}}" />
 							</a>
@@ -54,10 +51,10 @@
 		    				<span class="order-date">Order Date: {{po.created | date:"MMMM d, yyyy"}}</span>
 		    				<span class="receive-date">Receive Date: {{po.receive_date  || "Awaiting Delivery" | date: "MMM d, yyyy"}}</span>
 								-->
-	    				</div>
-	    			</li>
-	    		</ul>
-	    	</div>
+						</div>
+					</li>
+				</ul>
+			</div>
 		</md-content>
 	</div>
 </div>

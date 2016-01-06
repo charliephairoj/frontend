@@ -1,47 +1,39 @@
 <div class="project-view-page">
-    
-    <!--
+	<!--
         Sidebar
     -->
-    
-    <div class="sidebar">
-        <header>
-            <h1>
+	<div class="sidebar">
+		<header>
+			<h1>
                 <span>Projects</span>
             </h1>
-        </header>
-        <nav>
-            <ul class="list">
-                <li ng-show="currentUser.hasPermission('add_project')">
-                    <button ng-click="showAddProject()">Create</button>
-                </li>
-            </ul>
-        </nav>
-        
-    </div>
-    
-    <!--
+		</header>
+		<nav>
+			<ul class="list">
+				<li ng-show="currentUser.hasPermission('add_project')">
+					<button ng-click="showAddProject()">Create</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    
-    <div data-search-bar data-ng-model="query"></div>
-    
-    <!--
+	<div data-search-bar data-ng-model="query"></div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace">
-    	
+	<div class="workspace">
 		<div class="title-bar">
 			<div class="id">PROJECT ID</div>
 			<div class="codename">NAME</div>
 			<div class="customer">CUSTOMER</div>
 			<div class="status">STATUS</div>
 		</div>
-    	<div class="outer-container" on-scroll-end="loadNext()"> 
-	    	<ul class="inner-container" >
-	    		<li class="item-container" data-ng-repeat="project in projects | filter:query">
-	    			<div class="item" ng-class="{'selected':project.$selected}">
+		<div class="outer-container" on-scroll-end="loadNext()">
+			<ul class="inner-container">
+				<li class="item-container" data-ng-repeat="project in projects | filter:query">
+					<div class="item" ng-class="{'selected':project.$selected}">
 						<div class="id" ng-click="navigate(project.id)">{{project.id}}</div>
 						<div class="codename" ng-click="navigate(project.id)">{{project.codename}}</div>
 						<div class="customer" ng-click="navigate(project.id)">{{project.customer.name}}</div>
@@ -53,10 +45,8 @@
 							</select>
 						</div>
 					</div>
-	    				
-	    		</li>
-	    	</ul>
-    	</div>
-    </div>
-    
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>

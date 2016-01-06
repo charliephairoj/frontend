@@ -1,95 +1,106 @@
 <div class="userDetailsPage">
-    
-    <!--
+	<!--
 		Modals
 	-->
 	<div modal="showAddImage" class="add-profile-picture">
-		<div class="container" image-uploader  url="api/v1/user/image" on-upload="addImage(data)">
-			
+		<div class="container" image-uploader url="api/v1/user/image" on-upload="addImage(data)">
 		</div>
 	</div>
-	
-    <form name="passForm" modal novalidate ng-model="showChangePassword" title="Change {{user.username}}'s Password">
-        <div class="container">
-            <table>
-                <tr>
-                    <td>New Password</td>
-                    <td><input type="text" required ng-model="password.new_password" /></td>
-                </tr>
-                <tr>
-                    <td>Repeat New Password</td>
-                    <td><input type="text" required ng-model="password.repeat_new_password" /></td>
-                </tr>
-            </table>
-        </div>
-        <div class="bottom-bar">
-            <button ng-disabled="passForm.$invalid" ng-click="changePassword()">Change Password</button>
-        </div>
-    </form>
-    
-    <!--
+	<form name="passForm" modal novalidate ng-model="showChangePassword" title="Change {{user.username}}'s Password">
+		<div class="container">
+			<table>
+				<tr>
+					<td>New Password</td>
+					<td>
+						<input type="text" required ng-model="password.new_password" />
+					</td>
+				</tr>
+				<tr>
+					<td>Repeat New Password</td>
+					<td>
+						<input type="text" required ng-model="password.repeat_new_password" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="bottom-bar">
+			<button ng-disabled="passForm.$invalid" ng-click="changePassword()">Change Password</button>
+		</div>
+	</form>
+	<!--
         Sidebar
     -->
-    
-    <div class="sidebar">
-        <header>
-        	<div class="profilePic" ui-if="user.image" ng-click="showAddImage=true">
-	            <img ng-src="{{user.image.url}}" />
-	        </div>
-	        
-            <h1><span>Add User</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <div ng-click="showChangePassword=true">
-                        Change Password
-                    </div>
-                </li>
-                <li>
-                    <div ng-click="remove()">
-                        Delete
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    
-    
-    
-    <!--
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="user.image" ng-click="showAddImage=true">
+				<img ng-src="{{user.image.url}}" />
+			</div>
+			<h1><span>Add User</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<div ng-click="showChangePassword=true">
+						Change Password
+					</div>
+				</li>
+				<li>
+					<div ng-click="remove()">
+						Delete
+					</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Edit Panel
     -->
-    <div class="workspace">
-        <div class="details">
-            <div class="table">
-                <div class="row">
-                    <div class="cell"><label>First Name</label></div>
-                    <div class="cell"><input type="text" ng-model="user.first_name" ec-blur="update()" /></div>
-                </div>
-                <div class="row">
-                    <div class="cell"><label> Last Name</label></div>
-                    <div class="cell"><input type="text" ng-model="user.last_name" ec-blur="update()" /></div>
-                </div>
-                <div class="row">
-                    <div class="cell"><label>Telephone</label></div>
-                    <div class="cell"><input type="text" ng-model="user.telephone" ec-blur="update()" /></div>
-                </div>  
-                <div class="row">
-                    <div class="cell"><label>Email</label></div>
-                    <div class="cell"><input type="text" ng-model="user.email" ec-blur="update()" /></div>
-                </div>  
-            </div>      
-        </div> 
-        <div class="groups">
-            <div class="table">
-                <div class="row" ng-repeat="group in groupList">
-                    <div class="cell">
-                        <input type="checkbox" ng-model="group.$checked" ng-change="updateGroup(group)"/>
-                    </div>
-                    <div class="cell">{{group.name}}</div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="workspace">
+		<div class="details">
+			<div class="table">
+				<div class="row">
+					<div class="cell">
+						<label>First Name</label>
+					</div>
+					<div class="cell">
+						<input type="text" ng-model="user.first_name" ec-blur="update()" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell">
+						<label>Last Name</label>
+					</div>
+					<div class="cell">
+						<input type="text" ng-model="user.last_name" ec-blur="update()" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell">
+						<label>Telephone</label>
+					</div>
+					<div class="cell">
+						<input type="text" ng-model="user.telephone" ec-blur="update()" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell">
+						<label>Email</label>
+					</div>
+					<div class="cell">
+						<input type="text" ng-model="user.email" ec-blur="update()" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="groups">
+			<div class="table">
+				<div class="row" ng-repeat="group in groupList">
+					<div class="cell">
+						<input type="checkbox" ng-model="group.$checked" ng-change="updateGroup(group)" />
+					</div>
+					<div class="cell">{{group.name}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

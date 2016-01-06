@@ -1,28 +1,21 @@
 <div class="user-view-page">
-    
-    
-    
-    <!--
+	<!--
         Sidebar
     -->
-        
-    <div class="workspace" layout="column">
+	<div class="workspace" layout="column">
 		<md-toolbar class="md-primary" md-scroll-shrink="true" layout-align="center center" layout="row">
 			<h3>
 				<span>Users</span>
 			</h3>
 			<span flex></span>
 			<md-input-container class="md-block" md-no-float>
-				<input type="text" ng-model="query" placeholder="Search Users..."/>
+				<input type="text" ng-model="query" placeholder="Search Users..." />
 			</md-input-container>
-			<md-button class="add md-accent md-raised md-icon-button" 
-				href="#/administrator/user/add"
-				ng-disabled="!currentUser.hasPermission('add_user')">
+			<md-button class="add md-accent md-raised md-icon-button" href="#/administrator/user/add" ng-disabled="!currentUser.hasPermission('add_user')">
 				<md-tooltip>Save User</md-tooltip>
 				<i class="material-icons">save</i>
 			</md-button>
 		</md-toolbar>
-		
 		<!--
 		<div class="title-bar">
 			<div class="id">ID</div>
@@ -49,7 +42,7 @@
 		<md-content>
 			<md-card ng-repeat="user in users | filter:query">
 				<md-card-title>
-		          	<md-card-title-text layout="row">
+					<md-card-title-text layout="row">
 						<md-input-container>
 							<label>First Name</label>
 							<input type="text" ng-model="user.first_name" />
@@ -58,38 +51,29 @@
 							<label>Last Name</label>
 							<input type="text" ng-model="user.last_name" />
 						</md-input-container>
-		          	</md-card-title-text>
-		        </md-card-title>
+					</md-card-title-text>
+				</md-card-title>
 				<md-card-content>
 					<md-input-container flex="100">
 						<label>Email</label>
 						<input type="email" ng-model="user.email" />
 					</md-input-container>
-					<md-contact-chips 
-						ng-model="user.groups" 
-						md-contact-name="name"
-						md-contacts="searchGroups($query)">
-					
+					<md-contact-chips ng-model="user.groups" md-contact-name="name" md-contacts="searchGroups($query)">
 					</md-contact-chips>
-			
 				</md-card-content>
 				<md-card-actions layout="row" layout-align="end center">
-					<md-button class="add md-accent md-raised md-icon-button" ng-click="save(user)"
-						ng-disabled="!currentUser.hasPermission('change_user')">
+					<md-button class="add md-accent md-raised md-icon-button" ng-click="save(user)" ng-disabled="!currentUser.hasPermission('change_user')">
 						<md-tooltip>Save User</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
-	            	<md-button class="md-icon-button md-warn md-raised" ng-click="remove(user, $index)"
-						ng-disabled="!currentUser.hasPermission('delete_user')">
+					<md-button class="md-icon-button md-warn md-raised" ng-click="remove(user, $index)" ng-disabled="!currentUser.hasPermission('delete_user')">
 						<md-tooltip>
-						    Delete User
+							Delete User
 						</md-tooltip>
 						<i class="material-icons">clear</i>
 					</md-button>
-		        </md-card-actions>
+				</md-card-actions>
 			</md-card>
 		</md-content>
-			
 	</div>
-    
 </div>

@@ -1,34 +1,29 @@
 <div class="upholstery-list">
-    
-
-        
-    <div class="container">
-    	<div search-bar data-ng-model="query"></div>
-    	<div class="inner-container"  on-scroll-end="loadNext()">
-	        <ul class="upholstery-container">
-	            <li class="upholstery" ng-class="{'selected':upholstery.$selected}" data-ng-repeat="upholstery in upholsteries | filter:query" data-ng-click="select(upholstery)">
-	            	<div class="image-container">
-	            		<img ng-src="{{upholstery.image.url}}" />
-	            	</div>
-	            	{{upholstery.description}}
-	            	
-	            	<table class="dimensions">
-	            		<tr>
-	            			<td>Width</td>
-	            			<td>{{upholstery.width}}mm</td>
-	            		</tr>
-	            		<tr>
-	            			<td>Depth</td>
-	            			<td>{{upholstery.depth}}mm</td>
-	            		</tr>
-	            		<tr>
-	            			<td>Height</td>
-	            			<td>{{upholstery.height}}mm</td>
-	            		</tr>
-	            	</table>
-	            </li>
-	        </ul>
-	    </div>
-    </div>
-    
+	<div class="container">
+		<div search-bar data-ng-model="query"></div>
+		<div class="inner-container" on-scroll-end="loadNext()">
+			<ul class="upholstery-container">
+				<li class="upholstery" ng-class="{'selected':upholstery.$selected}" data-ng-repeat="upholstery in upholsteries | filter:query" data-ng-click="select(upholstery)">
+					<div class="image-container">
+						<img ng-src="{{upholstery.image.url}}" />
+					</div>
+					{{upholstery.description}}
+					<table class="dimensions">
+						<tr>
+							<td>Width</td>
+							<td>{{upholstery.width}}mm</td>
+						</tr>
+						<tr>
+							<td>Depth</td>
+							<td>{{upholstery.depth}}mm</td>
+						</tr>
+						<tr>
+							<td>Height</td>
+							<td>{{upholstery.height}}mm</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>

@@ -1,71 +1,63 @@
-
-
-<div class="shipping-details-page" >
-    
-    
-    <div class="calendar-modal" data-modal  ng-model="showCal">
-        <div ui-date ng-model="shipping.delivery_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="showCal = !showCal">Select</button>
-        </div>
-            
-    </div>
-    <!--
+<div class="shipping-details-page">
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="shipping.delivery_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="showCal = !showCal">Select</button>
+		</div>
+	</div>
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Shipping</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="save()">Save</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="showCal=true">Change Delivery Date</div>
-                </li>
-                 <li>
-                    <div ng-click="getPDF()">View PDF</div>
-                </li>
-                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="workspace">
-        <div class="details">
-            <div class="table">
-                <div class="row">
-                    <div class="cell">Shipping#:</div>
-                    <div class="cell">{{shipping.id}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Acknowledgement#:</div>
-                    <a ng-href="#/order/acknowledgement/{{shipping.acknowledgement.id}}" class="cell">
+	<div class="sidebar">
+		<header>
+			<h1><span>Shipping</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="save()">Save</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="showCal=true">Change Delivery Date</div>
+				</li>
+				<li>
+					<div ng-click="getPDF()">View PDF</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<div class="details">
+			<div class="table">
+				<div class="row">
+					<div class="cell">Shipping#:</div>
+					<div class="cell">{{shipping.id}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Acknowledgement#:</div>
+					<a ng-href="#/order/acknowledgement/{{shipping.acknowledgement.id}}" class="cell">
                         {{shipping.acknowledgement.id}}
                     </a>
-                </div>
-                <div class="row">
-                    <div class="cell">Customer</div>
-                    <div class="cell">{{shipping.customer.name}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Delivery Date</div>
-                    <div class="cell">{{shipping.delivery_date | date:"MMMM d, yyyy"}}</div>
-                </div>
-                <div class="row">
-                    <div class="cell">Shipped By</div>
-                    <div class="cell">{{shipping.employee}}</div>
-                </div>
-            </div>
-        </div>
-        
+				</div>
+				<div class="row">
+					<div class="cell">Customer</div>
+					<div class="cell">{{shipping.customer.name}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Delivery Date</div>
+					<div class="cell">{{shipping.delivery_date | date:"MMMM d, yyyy"}}</div>
+				</div>
+				<div class="row">
+					<div class="cell">Shipped By</div>
+					<div class="cell">{{shipping.employee}}</div>
+				</div>
+			</div>
+		</div>
 		<md-tabs class="md-primary" md-selected="selectedIndex">
 			<md-tab label="Items">
-				
 			</md-tab>
 			<!--
 			<md-tab label="Attachments">
@@ -73,11 +65,9 @@
 			</md-tab>
 			-->
 		</md-tabs>
-		
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="items-panel">
-					
 					<table>
 						<thead>
 							<tr>
@@ -100,13 +90,14 @@
 								<td class="description">{{item.description}}</td>
 								<td class="width">{{item.width}}</td>
 								<td class="depth">{{item.depth}}</td>
-								<td class="height"><input type="text" ng-model="item.net_weight"/>kg</td>
-								<td class="fabric"><input type="text" ng-model="item.gross_weight"/>kg</td>
+								<td class="height">
+									<input type="text" ng-model="item.net_weight" />kg</td>
+								<td class="fabric">
+									<input type="text" ng-model="item.gross_weight" />kg</td>
 								<td class="status" ng-class="item.status.toLowerCase()">{{item.status}}</td>
 							</tr>
 						</tbody>
 					</table>
-					
 					<!--
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
@@ -120,8 +111,8 @@
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="item in acknowledgement.items">
-								<a class="item"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
-						<!--
+								<a class="item">
+ <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">--> <!--
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -143,7 +134,6 @@
 					<div class="title-bar">
 						<div class="filename">
 							FILENAME
-							
 						</div>
 						<div class="type">TYPE</div>
 					</div>
@@ -163,9 +153,5 @@
 				</div>
 			</ng-switch>
 		</div>
-    </div>
-    
-    
-    
+	</div>
 </div>
-

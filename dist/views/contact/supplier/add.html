@@ -1,118 +1,132 @@
-<div class="addSupplierPage" ui-animate  ng-init="showAddContact=false" fade-in>
-    
-    
-    <!--
+<div class="addSupplierPage" ui-animate ng-init="showAddContact=false" fade-in>
+	<!--
         The popup modal to add a new contact
         to the supplier
     -->
-    <form name="contactForm" novalidate class="addContactModal" ng-show="showAddContact">
-            <div class="title" ng-click="showAddContact=false">Add Supplier Contact</div>
-            <table class="supplier_contact_table">
-                <tr>
-                    <td>Name</td>
-                    <td><input beautify type="text" required ng-model="contact.name" /></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><input beautify type="email" ng-model="contact.email" /></td>
-                </tr>
-                <tr>
-                    <td>Telephone</td>
-                    <td><input beautify type="text" ng-model="contact.telephone" /></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button type="button" ng-disabled="contactForm.$invalid" ng-click="addContact()">Add Contact</button></td>
-                </tr>
-            </table>
-        </form>
-        
-    <!--
+	<form name="contactForm" novalidate class="addContactModal" ng-show="showAddContact">
+		<div class="title" ng-click="showAddContact=false">Add Supplier Contact</div>
+		<table class="supplier_contact_table">
+			<tr>
+				<td>Name</td>
+				<td>
+					<input beautify type="text" required ng-model="contact.name" />
+				</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>
+					<input beautify type="email" ng-model="contact.email" />
+				</td>
+			</tr>
+			<tr>
+				<td>Telephone</td>
+				<td>
+					<input beautify type="text" ng-model="contact.telephone" />
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<button type="button" ng-disabled="contactForm.$invalid" ng-click="addContact()">Add Contact</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<!--
         Form that adds a new Supplier
     -->
-    <form name="form" novalidate>
-        <div class="sidebar">
-            <header>
-                <h1><span>New Supplier</span></h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
-                    </li>
-                    <li>
-                        <div ng-click="showAddContact=true">
-                            Add Contact
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        
-        
-        <div class="workspace">
-            <table class="inputTable">
-                <tr>
-                    <td><input placeholder="Supplier Name" beautify type="text" size="40" required ng-model="supplier.name" /></td>
-                </tr>
-                
-                
-                <tr>
-                    <td><input placeholder="Address 1" beautify ec-blur="getLocation()" size="40" type="text" required ng-model="supplier.address.address1" /></td>
-                </tr>
-                
-                
-                <tr>
-                    <td><input beautify placeholder="Address 2" ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="City" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.city" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Territory/Chaengwat" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.territory" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Country" placeholder="required" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.country" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Zipcode" ec-blur="getLocation()" type="text" required ng-model="supplier.address.zipcode" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Email" size="30" type="email" ng-model="supplier.email" /></td>
-                </tr>
-                <tr>
-                    <td><input telephone placeholder="Telephone" type="text" ng-pattern="/\d+/" ng-model="supplier.telephone" /></td>
-                </tr>
-                <tr>
-                    <td><input telephone placeholder="Fax" type="text" ng-pattern="/\d+/"  ng-model="supplier.fax" /></td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Discount" type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" /> %</td>
-                </tr>
-                <tr>
-                    <td><input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" /> Days</td>
-                </tr>
-                <tr>
-                    <td>
-                        <select ng-model="supplier.currency">
-                            <option value="THB">Thai Baht</option>
-                            <option value="USD">US Dollar</option>
-                            <option value="EUR">Euro</option>
-                        </select>
-                    </td>
-                </tr>
-            </table> 
-            <div class="mapContainer">
-                <div id="map_canvas" map >
-            
-                </div>
-            </div>
-            
-            
-        </div>
-        
-        
-        
-    </form>
-    
+	<form name="form" novalidate>
+		<div class="sidebar">
+			<header>
+				<h1><span>New Supplier</span></h1>
+			</header>
+			<nav>
+				<ul>
+					<li>
+						<div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
+					</li>
+					<li>
+						<div ng-click="showAddContact=true">
+							Add Contact
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="workspace">
+			<table class="inputTable">
+				<tr>
+					<td>
+						<input placeholder="Supplier Name" beautify type="text" size="40" required ng-model="supplier.name" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Address 1" beautify ec-blur="getLocation()" size="40" type="text" required ng-model="supplier.address.address1" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input beautify placeholder="Address 2" ec-blur="getLocation()" size="40" type="text" ng-model="supplier.address.address2" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="City" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.city" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Territory/Chaengwat" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.territory" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Country" placeholder="required" beautify ec-blur="getLocation()" type="text" required ng-model="supplier.address.country" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Zipcode" ec-blur="getLocation()" type="text" required ng-model="supplier.address.zipcode" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Email" size="30" type="email" ng-model="supplier.email" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input telephone placeholder="Telephone" type="text" ng-pattern="/\d+/" ng-model="supplier.telephone" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input telephone placeholder="Fax" type="text" ng-pattern="/\d+/" ng-model="supplier.fax" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Discount" type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" />%</td>
+				</tr>
+				<tr>
+					<td>
+						<input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" />Days</td>
+				</tr>
+				<tr>
+					<td>
+						<select ng-model="supplier.currency">
+							<option value="THB">Thai Baht</option>
+							<option value="USD">US Dollar</option>
+							<option value="EUR">Euro</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div class="mapContainer">
+				<div id="map_canvas" map>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>

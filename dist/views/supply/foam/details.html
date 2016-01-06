@@ -1,63 +1,77 @@
 <div class="detailsPage" image-drop-target="upload()">
-    <!--
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <div class="profilePic" ui-if="foam.image">
-                <img ng-src="{{foam.image.url}}" />
-            </div>
-            
-            <h1><span>{{foam.reference}}<br />{{foam.height}}x{{foam.width}}x{{foam.length}}</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <div ng-click="showReserve=!showReserve">Reserve Length</div>
-                </li>
-                <li>
-                    <div ng-click="showAdd=!showAdd">Add Length</div>
-                </li>
-                <li>
-                    <div ng-click="showSubtract=!showSubtract">Subtract Length</div>
-                </li>
-                <li>
-                    <div ng-click="showReset=!showReset">Reset Length</div>
-                </li>
-                <li>
-                    <div ng-click="viewLog();showLog=!showLog">View Log</div>
-                </li>
-                <li ui-if="currentUser.hasPermission('delete_foam')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-                    
-            </ul>
-        </nav>
-    </div>
-    <table>
-            
-            <tr>
-                <td><label>Reference</label></td>
-                <td><input type="text" ng-model="foam.reference" ec-blur="update()" /></td>
-            </tr>
-            
-            <tr>
-                <td><label>Color</label></td>
-                <td><input type="text" ng-model="foam.color" ec-blur="update()" /></td>
-            </tr>
-            <tr>
-                <td><label>Width</label></td>
-                <td><input type="text" ng-model="foam.width" ec-blur="update()" /></td>
-            </tr>
-            <tr>
-                <td><label>Length</label></td>
-                <td><input type="text" ng-model="foam.depth" ec-blur="update()" /></td>
-            </tr>
-            <tr>
-                <td><label>Thickness</label></td>
-                <td><input type="text" ng-model="foam.height" ec-blur="update()" /></td>
-            </tr>
-            
-        </table> 
-    
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="foam.image">
+				<img ng-src="{{foam.image.url}}" />
+			</div>
+			<h1><span>{{foam.reference}}<br />{{foam.height}}x{{foam.width}}x{{foam.length}}</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<div ng-click="showReserve=!showReserve">Reserve Length</div>
+				</li>
+				<li>
+					<div ng-click="showAdd=!showAdd">Add Length</div>
+				</li>
+				<li>
+					<div ng-click="showSubtract=!showSubtract">Subtract Length</div>
+				</li>
+				<li>
+					<div ng-click="showReset=!showReset">Reset Length</div>
+				</li>
+				<li>
+					<div ng-click="viewLog();showLog=!showLog">View Log</div>
+				</li>
+				<li ui-if="currentUser.hasPermission('delete_foam')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<table>
+		<tr>
+			<td>
+				<label>Reference</label>
+			</td>
+			<td>
+				<input type="text" ng-model="foam.reference" ec-blur="update()" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Color</label>
+			</td>
+			<td>
+				<input type="text" ng-model="foam.color" ec-blur="update()" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Width</label>
+			</td>
+			<td>
+				<input type="text" ng-model="foam.width" ec-blur="update()" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Length</label>
+			</td>
+			<td>
+				<input type="text" ng-model="foam.depth" ec-blur="update()" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Thickness</label>
+			</td>
+			<td>
+				<input type="text" ng-model="foam.height" ec-blur="update()" />
+			</td>
+		</tr>
+	</table>
 </div>

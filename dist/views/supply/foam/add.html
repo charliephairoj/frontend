@@ -1,79 +1,92 @@
-    <form name="form" class="addFoamPage addPage"  image-drop-target="upload()">
-        
-        <!--
+<form name="form" class="addFoamPage addPage" image-drop-target="upload()">
+	<!--
             Sidebar
         -->
-        <div class="sidebar">
-            <header>
-                <div class="profilePic" ui-if="imagePreviews"><img ng-src="{{foam.image.url}}" /></div>
-                <h1><span>Add Foam</span></h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <button ng-disabled="form.$invalid" ng-click="save()">Save</button>
-                    </li>
-                    
-                </ul>
-            </nav>
-        </div>
-        
-        <div class="workspace">
-            <table class="data-table">
-                <tr>
-                    <td><label>Supplier</label></td>
-                    <td><select required ng-options="supplier.name for supplier in supplierList" ng-model="foam.supplier"></select></td>
-                </tr>
-                <tr>
-                    <td><label>Reference Number</label></td>
-                    <td><input type="text" ng-model="foam.reference" /></td>
-                </tr>
-                <tr>
-                    <td><label>Color</label></td>
-                    <td>
-                        <select required ng-model="foam.color">
-                            <option value="Blue">Blue</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Green">Green</option>
-                            <option value="Pink">Pink</option>
-                            <option value="White">White</option>
-                            <option value="Grey">Grey</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Width</label></td>
-                    <td>
-                        <input type="text" ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.width" />
-                        in
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Length</label></td>
-                    <td>
-                        <input type="text" ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.depth" />
-                        in
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Thickness</label></td>
-                    <td>
-                        <input type="text"  ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.height" />
-                        <select ng-required ng-model="height_units">
-                            <option value="in">in</option>
-                            <option value="mm">mm</option>
-                            <option value="cm">cm</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Cost per Piece</label></td>
-                    <td><input type="text" ng-model="foam.cost" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" required/></td>
-                </tr>
-            </table> 
-        </div>
-        
-        
-        
-    </form>
-    
+	<div class="sidebar">
+		<header>
+			<div class="profilePic" ui-if="imagePreviews">
+				<img ng-src="{{foam.image.url}}" />
+			</div>
+			<h1><span>Add Foam</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<button ng-disabled="form.$invalid" ng-click="save()">Save</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<table class="data-table">
+			<tr>
+				<td>
+					<label>Supplier</label>
+				</td>
+				<td>
+					<select required ng-options="supplier.name for supplier in supplierList" ng-model="foam.supplier"></select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Reference Number</label>
+				</td>
+				<td>
+					<input type="text" ng-model="foam.reference" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Color</label>
+				</td>
+				<td>
+					<select required ng-model="foam.color">
+						<option value="Blue">Blue</option>
+						<option value="Yellow">Yellow</option>
+						<option value="Green">Green</option>
+						<option value="Pink">Pink</option>
+						<option value="White">White</option>
+						<option value="Grey">Grey</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Width</label>
+				</td>
+				<td>
+					<input type="text" ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.width" />in
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Length</label>
+				</td>
+				<td>
+					<input type="text" ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.depth" />in
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Thickness</label>
+				</td>
+				<td>
+					<input type="text" ng-pattern="/^[0-9](\d+)?(\.\d+)?$/" ng-model="foam.height" />
+					<select ng-required ng-model="height_units">
+						<option value="in">in</option>
+						<option value="mm">mm</option>
+						<option value="cm">cm</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Cost per Piece</label>
+				</td>
+				<td>
+					<input type="text" ng-model="foam.cost" ng-pattern="/^[1-9](\d+)?(\.\d{2})?$/" required/>
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>

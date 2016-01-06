@@ -1,11 +1,8 @@
 <div class="shipping-view-page">
-        
-    <!--
+	<!--
         Workspace
     -->
-     
-    <div class="workspace">
-		
+	<div class="workspace">
 		<md-toolbar md-scroll-shrink="true" layout="column" layout-align="start center">
 			<div class="container" layout="row" layout-align="center center">
 				<h3>
@@ -31,13 +28,10 @@
 			</div>
 		</md-toolbar>
 		<md-content>
-		
-			
-		
-	    	<div class="outer-container" on-scroll-end="loadNext()">
-	    		<ul class="inner-container">
-		        	<li class="item-container" ng-repeat="shipping in shippingList | filter:query" >
-		        		<a class="item" ng-href="#/order/shipping/{{shipping.id}}">
+			<div class="outer-container" on-scroll-end="loadNext()">
+				<ul class="inner-container">
+					<li class="item-container" ng-repeat="shipping in shippingList | filter:query">
+						<a class="item" ng-href="#/order/shipping/{{shipping.id}}">
 							<div class="id">{{shipping.id}}</div>
 							<div class="ack-id">{{shipping.acknowledgement.id}}</div>
 							<div class="order-date">{{shipping.time_created | date: "MMM d, yyyy"}}</div>
@@ -46,16 +40,10 @@
 							<div class="project">{{shipping.acknowledgement.project.codename}}</div>
 							<div class="delivery-date">{{shipping.delivery_date | date: "MMM d, yyyy"}}</div>
 							<div class="status" ng-class="po.status.toLowerCase()">{{shipping.acknowledgement.status}}</div>
-		        		</a>
-	        		
-	        		
-		        	</li>
-		        </ul>
-	    	</div>
-		
+						</a>
+					</li>
+				</ul>
+			</div>
 		</md-content>
-        
-        
-    </div>
-    
+	</div>
 </div>

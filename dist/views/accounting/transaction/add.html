@@ -1,78 +1,78 @@
 <form name="form" novalidate class="addTransactionPage">
-    
-    <!--
+	<!--
         Sidebar
     -->
-    
-    <div class="sidebar">
-        <header> 
-            <h1>
+	<div class="sidebar">
+		<header>
+			<h1>
                 <span>Add a Transaction</span>
             </h1>
-        </header>
-        <nav>
-            <ul class="list">
-                <li ui-if="currentUser.hasPermission('add_transaction')">
-                    <button ng-disabled="form.$invalid" ng-click="save()">Save</button>
-                </li>
-            </ul>
-        </nav>
-        
-    </div>
-    
-    
-    <!--
+		</header>
+		<nav>
+			<ul class="list">
+				<li ui-if="currentUser.hasPermission('add_transaction')">
+					<button ng-disabled="form.$invalid" ng-click="save()">Save</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace">
-        
-        <div class="transaction">
-            <label class="title">Transaction</label>
-            <table class="details">
-                <tr>
-                    <td class="cell">Name</td>
-                    <td class="cell">
-                        <select required ng-options="contact.name for contact in contactList" ng-model="transaction.contact">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="cell">Amount</td>
-                    <td class="cell">
-                        <input type="text" required ng-pattern="/^\d+(\.\d{2})?$/" data-ng-model="transaction.amount"/>
-                        <select required data-ng-model="transaction.currency">
-                            <option value="THB">THB</option>
-                            <option value="USD">USD</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="cell">Transaction Type</td>
-                    <td class="cell">
-                        <select required data-ng-model="transaction.type">
-                            <option value="credit">Credit</option>
-                            <option value="debit">Debit</option>
-                        </select>
-                    </td>
-                </tr>
-                 <tr>
-                    <td class="cell">Transaction Date</td>
-                    <td class="cell"><div data-ng-model="transaction.transaction_date" ui-date></div></td>
-                </tr>
-                <tr>
-                    <td class="cell">Bank/Vendor</td>
-                    <td class="cell"><input data-ng-model="transaction.vendor" type="text" /></td>
-                </tr>
-                <tr>
-                    <td class="cell">Invoice Number</td>
-                    <td class="cell"><input data-ng-model="transaction.invoice.id" type="text" /></td>
-                </tr>
-                <tr>
-                    <td class="cell">Comments</td>
-                    <td class="cell"><textarea data-ng-model="transaction.comments"></textarea></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    
+	<div class="workspace">
+		<div class="transaction">
+			<label class="title">Transaction</label>
+			<table class="details">
+				<tr>
+					<td class="cell">Name</td>
+					<td class="cell">
+						<select required ng-options="contact.name for contact in contactList" ng-model="transaction.contact">
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Amount</td>
+					<td class="cell">
+						<input type="text" required ng-pattern="/^\d+(\.\d{2})?$/" data-ng-model="transaction.amount" />
+						<select required data-ng-model="transaction.currency">
+							<option value="THB">THB</option>
+							<option value="USD">USD</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Transaction Type</td>
+					<td class="cell">
+						<select required data-ng-model="transaction.type">
+							<option value="credit">Credit</option>
+							<option value="debit">Debit</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Transaction Date</td>
+					<td class="cell">
+						<div data-ng-model="transaction.transaction_date" ui-date></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Bank/Vendor</td>
+					<td class="cell">
+						<input data-ng-model="transaction.vendor" type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Invoice Number</td>
+					<td class="cell">
+						<input data-ng-model="transaction.invoice.id" type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">Comments</td>
+					<td class="cell">
+						<textarea data-ng-model="transaction.comments"></textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </form>

@@ -1,59 +1,47 @@
 <div class="upholstery-view-page">
-    
-    <form class="addTable" >
-        
-    </form>
-    
-    <div class="sidebar">
-        <header>
-            <h1><span>Table</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <a ng-href="#/product/table/add">Add Table</a>
-                </li>
-                    
-            </ul>
-        </nav>
-    </div>
-    
-
-    <div data-search-bar data-ng-model="query"></div>
-    
-    
-    <div class="workspace grid">
-        <div class="header">
-            <div class="row">
-                <div class="cell preview">Preview</div>
-                <div class="cell id">ID</div>
-                <div class="cell model">Model</div>
-                <div class="cell name">Name</div>
-                <div class="cell configuration">Configuration</div>
-                <div class="cell width">Width</div>
-                <div class="cell depth">Depth</div>
-                <div class="cell height">Height</div>
-            </div>
-        </div>
-        <div class="listContainer">
-                <div class="body" on-scroll-end="loadNext()">
-                    <a ng-repeat="table in tableList | filter:query | orderBy: 'model.model'" class="row" ng-href="#/product/table/{{table.id}}">
-                        
-                        <div class="cell preview">
-                            <img ng-src="{{table.image.url}}" />
-                        </div>
-                        
-                        <div class="cell id">{{table.id}}</div>
-                        <div class="cell model">{{table.model.model}}</div>
-                        <div class="cell name">{{table.model.name}}</div>
-                        <div class="cell configuration">{{table.configuration.configuration}}</div>
-                        <div class="cell width">{{table.width}}</div>
-                        <div class="cell depth">{{table.depth}}</div>
-                        <div class="cell height">{{table.height}}</div>
-                    
-                    </a>
-                </div>
-        </div>
-        
-    </div>
+	<form class="addTable">
+	</form>
+	<div class="sidebar">
+		<header>
+			<h1><span>Table</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li>
+					<a ng-href="#/product/table/add">Add Table</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div data-search-bar data-ng-model="query"></div>
+	<div class="workspace grid">
+		<div class="header">
+			<div class="row">
+				<div class="cell preview">Preview</div>
+				<div class="cell id">ID</div>
+				<div class="cell model">Model</div>
+				<div class="cell name">Name</div>
+				<div class="cell configuration">Configuration</div>
+				<div class="cell width">Width</div>
+				<div class="cell depth">Depth</div>
+				<div class="cell height">Height</div>
+			</div>
+		</div>
+		<div class="listContainer">
+			<div class="body" on-scroll-end="loadNext()">
+				<a ng-repeat="table in tableList | filter:query | orderBy: 'model.model'" class="row" ng-href="#/product/table/{{table.id}}">
+					<div class="cell preview">
+						<img ng-src="{{table.image.url}}" />
+					</div>
+					<div class="cell id">{{table.id}}</div>
+					<div class="cell model">{{table.model.model}}</div>
+					<div class="cell name">{{table.model.name}}</div>
+					<div class="cell configuration">{{table.configuration.configuration}}</div>
+					<div class="cell width">{{table.width}}</div>
+					<div class="cell depth">{{table.depth}}</div>
+					<div class="cell height">{{table.height}}</div>
+				</a>
+			</div>
+		</div>
+	</div>
 </div>

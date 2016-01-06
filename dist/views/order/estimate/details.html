@@ -1,98 +1,87 @@
-
-
 <div class="estimate-details-page">
-    
-    
-    <div class="calendar-modal" data-modal  ng-model="showCal">
-        <div ui-date ng-model="estimate.delivery_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="showCal=false">Select</button>
-        </div>
-            
-    </div>
-    
-    <!--
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="estimate.delivery_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="showCal=false">Select</button>
+		</div>
+	</div>
+	<!--
         Sidebar
     -->
-    <div class="sidebar">
-        <header>
-            <h1><span>Estimate</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="save()">Save</div>
-                </li>
-                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
-                    <div ng-click="showCal=true">Change Delivery Date</div>
-                </li>
-                <li>
-                    <a ng-href="{{estimate.pdf}}"target="_blank">View PDF</a>
-                </li>
+	<div class="sidebar">
+		<header>
+			<h1><span>Estimate</span></h1>
+		</header>
+		<nav>
+			<ul>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="save()">Save</div>
+				</li>
+				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
+					<div ng-click="showCal=true">Change Delivery Date</div>
+				</li>
+				<li>
+					<a ng-href="{{estimate.pdf}}" target="_blank">View PDF</a>
+				</li>
 				<!--
                 <li>
                     <div ng-click="viewLog()">View Log</div>
                 </li>
 					-->
-                <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="workspace">
-        <div class="details">
-            <table>
-                <tr>
-                    <td>Order #: </td>
-                    <td>{{estimate.id}}</td>
-                </tr>
-                <tr class="customer">
-                    <td>Customer: </td>
-                    <td>{{estimate.customer.name}}</td>
-                </tr>
-                <tr class="due-date">
-                    <td>Order Date: </td>
-                    <td>{{estimate.time_created | date:"MMMM d, yyyy"}}</td>
-                </tr>
+				<li ui-if="currentUser.hasPermission('delete_acknowledgement')">
+					<div ng-click="remove()">Delete</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div class="workspace">
+		<div class="details">
+			<table>
+				<tr>
+					<td>Order #:</td>
+					<td>{{estimate.id}}</td>
+				</tr>
+				<tr class="customer">
+					<td>Customer:</td>
+					<td>{{estimate.customer.name}}</td>
+				</tr>
+				<tr class="due-date">
+					<td>Order Date:</td>
+					<td>{{estimate.time_created | date:"MMMM d, yyyy"}}</td>
+				</tr>
 				<tr>
 					<td>Discount</td>
-					<td><input type="number" maxlength=2 size=4 ng-model="estimate.discount" />%</td>
+					<td>
+						<input type="number" maxlength=2 size=4 ng-model="estimate.discount" />%</td>
 				</tr>
-            </table>
-            <table>
-                <tr class="due-date">
-                    <td>Devlivery Date: </td>
-                    <td>{{estimate.delivery_date | date:"MMMM d, yyyy"}}</td>
-                </tr>
-                <tr class="due-date">
-                    <td>Status: </td>
-                    <td>{{estimate.status}}</td>
-                </tr>
-                <tr>
-                    <td>Total Items: </td>
-                    <td>{{estimate.items.length}}</td>
-                </tr>
-            </table>
-        </div>
-		
+			</table>
+			<table>
+				<tr class="due-date">
+					<td>Devlivery Date:</td>
+					<td>{{estimate.delivery_date | date:"MMMM d, yyyy"}}</td>
+				</tr>
+				<tr class="due-date">
+					<td>Status:</td>
+					<td>{{estimate.status}}</td>
+				</tr>
+				<tr>
+					<td>Total Items:</td>
+					<td>{{estimate.items.length}}</td>
+				</tr>
+			</table>
+		</div>
 		<md-tabs md-selected="selectedIndex">
 			<md-tab label="Items">
-				
 			</md-tab>
-			
 			<!--
 			<md-tab label="Attachments">
 				
 			</md-tab>
 			-->
 		</md-tabs>
-		
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="items-panel">
-					
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -105,7 +94,9 @@
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="item in estimate.items">
-								<a class="item"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+								<a class="item">
+
+									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -148,5 +139,4 @@
 					-->
 			</ng-switch>
 		</div>
-</div>
-
+	</div>

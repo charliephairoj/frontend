@@ -1,19 +1,12 @@
 <div class="upholstery-view-page">
-   
-    <div data-search-bar data-ng-model="query"></div>
-    
-    
-    <div class="workspace list">
+	<div data-search-bar data-ng-model="query"></div>
+	<div class="workspace list">
 		<nav>
 			<h2>Upholstery</h2>
-			
 			<div class="right-menu">
-				
 				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('edit_dimensions')" ng-href="#/product/upholstery/add">New Upholstery</md-button>
 			</div>
-			
 		</nav>
-		
 		<div class="upholsteries-container">
 			<div class="acknowledgements">
 				<div class="title-bar">
@@ -25,33 +18,35 @@
 					<div class="height">HEIGHT</div>
 					<div class="pillows">PILLOWS</div>
 				</div>
-		
-		    	<div class="outer-container" on-scroll-end="loadNext()"> 
-			
-			    	<ul class="inner-container" >
-			    		<li class="item-container" data-ng-repeat="uphol in resources | filter:query">	
-			    			<div class="item" ng-class="{'selected':ack.$selected}" >
+				<div class="outer-container" on-scroll-end="loadNext()">
+					<ul class="inner-container">
+						<li class="item-container" data-ng-repeat="uphol in resources | filter:query">
+							<div class="item" ng-class="{'selected':ack.$selected}">
 								<a class="col preview" ng-href="#/product/upholstery/{{uphol.id}}">
 									<img ng-src="{{uphol.image.url}}" />
 								</a>
 								<a class="col model" ng-href="#/product/upholstery/{{uphol.id}}">{{uphol.model.model}}</a>
-								<a class="col configuration" ng-href="#/product/upholstery/{{uphol.id}}">{{uphol.configuration.configuration}}</a>		
-								
-								<div class="col width"><input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.width" /></div>
-								<div class="col depth"><input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.depth" /></div>
-								<div class="col height"><input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.height" /></div>	
+								<a class="col configuration" ng-href="#/product/upholstery/{{uphol.id}}">{{uphol.configuration.configuration}}</a>	
+								<div class="col width">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.width" />
+								</div>
+								<div class="col depth">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.depth" />
+								</div>
+								<div class="col height">
+									<input ng-disabled="!currentUser.hasPermission('edit_dimensions')" type="number" ng-model="uphol.height" />
+								</div>
 								<a class="col pillows" ng-href="#/product/upholstery/{{uphol.id}}">
 									<div class="pillow" ng-repeat="pillow in uphol.pillows">
 										{{pillow.type}}: {{pillow.quantity}}
 									</div>
-								</a>					
+								</a>
 							</div>
-			    		</li>
-			    	</ul>
-		    	</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-		
 		<!--
     	<div class="outer-container" on-scroll-end="loadNext()">
 	    	<ul class="inner-container" >
@@ -71,7 +66,5 @@
 	    	</ul>
     	</div>
 			-->
-			
-    </div>
-        
+	</div>
 </div>

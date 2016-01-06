@@ -2,7 +2,6 @@
 	<md-subheader>
 		Create A New Employee
 	</md-subheader>
-	
 	<div class="container">
 		<md-content>
 			<table>
@@ -18,7 +17,7 @@
 				</tr>
 				<tr class="department">
 					<td>
-						<label>Nationality: </label>
+						<label>Nationality:</label>
 						<select ng-model="employee.nationality">
 							<option value="thai">Thai</option>
 							<option value="cambodian">Cambodian</option>
@@ -30,8 +29,8 @@
 				</tr>
 				<tr class="department">
 					<td>
-						<label>Department: </label>
-        				<select ng-model="employee.department" ng-options="t | beautify for t in departments">
+						<label>Department:</label>
+						<select ng-model="employee.department" ng-options="t | beautify for t in departments">
 							<!--
         					<option value="fabric">Fabric</option>
 							<option value="metal">Metal</option>
@@ -46,12 +45,12 @@
 							<option value="screw">Screw</option>
 							<option value="staple">Staple</option>
 								-->
-        				</select>
+						</select>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label>Profile Image: </label>
+						<label>Profile Image:</label>
 						<div class="img-container">
 							<img ng-src="{{employee.image.url}}">
 						</div>

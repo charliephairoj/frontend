@@ -1,91 +1,76 @@
 <div class="delivery-page">
-    
-    <!--
+	<!--
         Sidebar
     -->
-    
-    <div class="sidebar">
-        <header>
-            <h1>
+	<div class="sidebar">
+		<header>
+			<h1>
                 <span>Delivery</span>
             </h1>
-        </header>
-        <nav>
-            <ul class="list">
-                <li>
-                    <button ng-disabled="form.$invalid" ng-click="showAdd=true">Add</button>
-                </li>
-            </ul>
-        </nav>
-        
-    </div>
-    
-    <!--
+		</header>
+		<nav>
+			<ul class="list">
+				<li>
+					<button ng-disabled="form.$invalid" ng-click="showAdd=true">Add</button>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<!--
         Search Bar
     -->
-    
-    <div data-search-bar search-bar-date ng-model="dateQuery">
-        
-    </div>
-    
-    <!--
+	<div data-search-bar search-bar-date ng-model="dateQuery">
+	</div>
+	<!--
         Add Modal 
     -->
-    <div class="add" data-modal data-ng-model="showAdd">
-        <div class="title">Add New Delivery</div>
-        <div class="container">
-            <table>
-                <tr>
-                    <td class="cell">
-                        Description
-                    </td>
-                    <td class="cell">
-                        <textarea cols="30" rows="4" data-ng-model="newDelivery.description"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="cell">
-                        Delivery Date
-                    </td>
-                    <td class="cell">
-                        <div ui-date data-ng-model="newDelivery.delivery_date"></div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="bottom-bar">
-            <button click="addDelivery()">Add</button>
-        </div>
-    </div>
-    
-    <!--
+	<div class="add" data-modal data-ng-model="showAdd">
+		<div class="title">Add New Delivery</div>
+		<div class="container">
+			<table>
+				<tr>
+					<td class="cell">
+						Description
+					</td>
+					<td class="cell">
+						<textarea cols="30" rows="4" data-ng-model="newDelivery.description"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="cell">
+						Delivery Date
+					</td>
+					<td class="cell">
+						<div ui-date data-ng-model="newDelivery.delivery_date"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="bottom-bar">
+			<button click="addDelivery()">Add</button>
+		</div>
+	</div>
+	<!--
         Workspace
     -->
-    
-    <div class="workspace">
-        
-        <div class="listContainer">
-            <div class="list">
-                
-                    <a ng-repeat="delivery in deliveryList | dateFilter:'delivery_date':dateQuery:'equals' | limitTo:50 | orderBy:'-id'" class="row">
-                        <div class="cell">
-                            <div class="details">
-                                
-                                <div class="details-row">
-                                    <div class="details-title">Description:</div>
-                                    <div class="details-data">{{delivery.description}}</div>
-                                </div>
-                                <div class="details-row">
-                                    <div class="details-title">Delivery Date:</div>
-                                    <div class="details-data">{{delivery.delivery_date | date:"MMMM d, yyyy"}}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-    
+	<div class="workspace">
+		<div class="listContainer">
+			<div class="list">
+				<a ng-repeat="delivery in deliveryList | dateFilter:'delivery_date':dateQuery:'equals' | limitTo:50 | orderBy:'-id'" class="row">
+					<div class="cell">
+						<div class="details">
+							<div class="details-row">
+								<div class="details-title">Description:</div>
+								<div class="details-data">{{delivery.description}}</div>
+							</div>
+							<div class="details-row">
+								<div class="details-title">Delivery Date:</div>
+								<div class="details-data">{{delivery.delivery_date | date:"MMMM d, yyyy"}}</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
 </div>

@@ -1,34 +1,25 @@
-
-
-<div class="po-details-page" >
-    
-    <!--
+<div class="po-details-page">
+	<!--
     	Modals
    	-->
-   	
-   	<div supply-list="showAddItem" supplier="po.supplier" on-select="addItem($supply)"></div>
-	
+	<div supply-list="showAddItem" supplier="po.supplier" on-select="addItem($supply)"></div>
 	<div add-supply="showCreateItem" supplier="po.supplier" on-add="addItem($supply)"></div>
-    
-    <div class="calendar-modal" data-modal  ng-model="showCal">
-        <div ui-date ng-model="po.receive_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="receive()">Select</button>
-        </div>
-    </div>
-	
-    <div class="calendar-modal" data-modal  ng-model="showPaidCal">
-        <div ui-date ng-model="po.paid_date"></div>
-        <div class="bottom_bar">
-            <button ng-click="pay()">Select</button>
-        </div>
-    </div>
-    
-   
-    <!--
+	<div class="calendar-modal" data-modal ng-model="showCal">
+		<div ui-date ng-model="po.receive_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="receive()">Select</button>
+		</div>
+	</div>
+	<div class="calendar-modal" data-modal ng-model="showPaidCal">
+		<div ui-date ng-model="po.paid_date"></div>
+		<div class="bottom_bar">
+			<button ng-click="pay()">Select</button>
+		</div>
+	</div>
+	<!--
         Sidebar
     -->
-		<!--
+	<!--
     <div class="sidebar">
         <header>
             <h1><span>Purchase Order</span></h1>
@@ -63,128 +54,122 @@
         </nav>
     </div>
 			-->
-
-    <form name="form" class="workspace">
+	<form name="form" class="workspace">
 		<div class="map-container">
 			<div id="po-map"></div>
 		</div>
 		<div class="submenu">
-			
 			<md-button class="md-accent md-raised" ng-click="save()">Save</md-button>
 			<md-button class="md-accent md-raised" ng-click="viewPDF()">PDF</md-button>
 		</div>
-        <div class="details">
+		<div class="details">
 			<h2 class="title">Purchase Order</h2>
-            <table class="order-details">
-                <tr class="row">
-                    <td class="cell">Purchase Order#:</td>
-                    <td class="cell">{{po.id}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="cell">Supplier</td>
-                    <td class="cell">
-                    	<md-button class="md-accent" ng-href="#/contact/supplier/{{po.supplier.id}}">
-						{{po.supplier.name}}
-						</md-button>
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td class="cell">Order Date</td>
-                    <td class="cell">{{po.order_date | date:"MMMM d, yyyy"}}</td>
-                </tr>
-                <tr class="row">
-                    <td class="cell">Receive Date</td>
-                    <td class="cell" ng-click="showCal=true">
-						<md-button class="md-accent">
-						{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}
+			<table class="order-details">
+				<tr class="row">
+					<td class="cell">Purchase Order#:</td>
+					<td class="cell">{{po.id}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Supplier</td>
+					<td class="cell">
+						<md-button class="md-accent" ng-href="#/contact/supplier/{{po.supplier.id}}">
+							{{po.supplier.name}}
 						</md-button>
 					</td>
-                </tr>
-                <tr class="row" ng-show="po.status.toLowerCase() == 'paid'">
-                    <td class="cell">Paid Date</td>
-                    <td class="cell" ng-click="showPaidCal=true">
+				</tr>
+				<tr class="row">
+					<td class="cell">Order Date</td>
+					<td class="cell">{{po.order_date | date:"MMMM d, yyyy"}}</td>
+				</tr>
+				<tr class="row">
+					<td class="cell">Receive Date</td>
+					<td class="cell" ng-click="showCal=true">
 						<md-button class="md-accent">
-						{{po.paid_date || 'Select Paid Date' | date:"MMMM d, yyyy"}}
+							{{po.receive_date || 'Awaiting Delivery' | date:"MMMM d, yyyy"}}
 						</md-button>
 					</td>
-                </tr>
-                <tr>
-                    <td>Status</td>
-                    <td ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">			<select ng-model="po.status">
+				</tr>
+				<tr class="row" ng-show="po.status.toLowerCase() == 'paid'">
+					<td class="cell">Paid Date</td>
+					<td class="cell" ng-click="showPaidCal=true">
+						<md-button class="md-accent">
+							{{po.paid_date || 'Select Paid Date' | date:"MMMM d, yyyy"}}
+						</md-button>
+					</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td ng-class="{acknowledged:po.status == 'ACKNOWLEDGED', shipped:po.status == 'SHIPPED'}">
+						<select ng-model="po.status">
 							<option value='Processed'>Processed</option>
 							<option value='PAID'>Paid</option>
 							<option value='CANCELLED'>Cancelled</option>
 						</select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Currency</td>
-                    <td>
-                       	<select ng-model="po.currency">
+					</td>
+				</tr>
+				<tr>
+					<td>Currency</td>
+					<td>
+						<select ng-model="po.currency">
 							<option value="THB">Thai Baht</option>
 							<option value="USD">US Dollar</option>
 							<option value="EUR">Euro</option>
 							<option value="RMB">Renminbi</option>
 						</select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Discount</td>
-                    <td>
-                    	<input class="discount" type="number" min="0" ng-model="po.discount" />%
-                    </td>
-                </tr>
-                <tr>
-                    <td>Vat</td>
-                    <td>
-                    	<input class="vat" type="number" required min="0" max="50" ng-model="po.vat" />%
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td>Deposit</td>
-                    <td>
-                    	<input class="deposit" type="number" min="0" ng-model="po.deposit" />%
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td>Project</td>
-                    <td>
+					</td>
+				</tr>
+				<tr>
+					<td>Discount</td>
+					<td>
+						<input class="discount" type="number" min="0" ng-model="po.discount" />%
+					</td>
+				</tr>
+				<tr>
+					<td>Vat</td>
+					<td>
+						<input class="vat" type="number" required min="0" max="50" ng-model="po.vat" />%
+					</td>
+				</tr>
+				<tr class="row">
+					<td>Deposit</td>
+					<td>
+						<input class="deposit" type="number" min="0" ng-model="po.deposit" />%
+					</td>
+				</tr>
+				<tr class="row">
+					<td>Project</td>
+					<td>
 						<select ng-options="project.codename for project in projects" ng-model="po.project">
 						</select>
 						<md-button class="md-accent md-raised" ng-click="showAddProject()">Add a Project</md-button>
-						
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td>Room</td>
-                    <td>
+					</td>
+				</tr>
+				<tr class="row">
+					<td>Room</td>
+					<td>
 						<select ng-options="room.description for room in po.project.rooms" ng-model="po.room"></select>
 						<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
-							
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td>Project Phase</td>
-                    <td>
+					</td>
+				</tr>
+				<tr class="row">
+					<td>Project Phase</td>
+					<td>
 						<select ng-options="phase.description for phase in po.project.phases" ng-model="po.phase"></select>
 						<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td>Comments</td>
-                    <td>
-                    	<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-
-        
+					</td>
+				</tr>
+				<tr class="row">
+					<td>Comments</td>
+					<td>
+						<textarea rows="4" cols="20" ng-model="po.comments"></textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div class="order-details">
 			<h2 class="title">Items</h2>
 			<div class="items-submenu">
-				<md-button class="md-accent md-raised" ng-click="showAddItem=true"> + Add Item</md-button>
+				<md-button class="md-accent md-raised" ng-click="showAddItem=true">+ Add Item</md-button>
 				<md-button class="md-accent md-raised" ng-click="showCreateItem=true">Create New Item</md-button>
 			</div>
 			<table>
@@ -202,13 +187,17 @@
 				</thead>
 				<tbody>
 					<tr class="items" ng-repeat="item in po.items">
-						<td class='description'><textarea ng-model="item.description" row="4"></textarea></td>
-						<td><textarea ng-model="item.comments" row="4"></textarea></td>
+						<td class='description'>
+							<textarea ng-model="item.description" row="4"></textarea>
+						</td>
+						<td>
+							<textarea ng-model="item.comments" row="4"></textarea>
+						</td>
 						<td class='discount'>
-							<input type="text" ng-model="item.discount"/> 
+							<input type="text" ng-model="item.discount" />
 						</td>
 						<td class='unit-cost'>
-							<input type="number" min="0" step="0.001" ng-model="item.unit_cost"/>
+							<input type="number" min="0" step="0.001" ng-model="item.unit_cost" />
 						</td>
 						<td class='quantity'>
 							<input type="number" min="0" step="0.01" ng-model="item.quantity" />
@@ -234,10 +223,12 @@
 								<option value="ft^2">ft&#0178;</option>
 								<option value="ft^3">in&#179;</option>
 							</select>-->
-								{{item.status}}
+							{{item.status}}
 						</td>
 						<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity | number:2}}</td>
-							<td><md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove</md-button></td>
+						<td>
+							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove</md-button>
+						</td>
 					</tr>
 					<tr class="summary subtotal">
 						<td></td>
@@ -266,7 +257,7 @@
 						<td></td>
 						<td></td>
 						<td class="title">Total</td>
-						<td class="value"> {{total() | number:2}}</td>
+						<td class="value">{{total() | number:2}}</td>
 						<td></td>
 					</tr>
 					<tr class="summary vat" ng-show="po.vat">
@@ -291,14 +282,6 @@
 					</tr>
 				</tbody>
 			</table>
-			
 		</div>
-
-        
-	
 	</form>
-    
-    
-    
 </div>
-

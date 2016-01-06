@@ -1,18 +1,15 @@
 <div class="supplier-details-page">
-    
-    
-    
-    <!--Supplier Information Section -->
-        
-    <div class="workspace">
-       <div class="supplier-details">
-		   <div class="input-containers">
-			   <md-input-container class='name'>
+
+	<!--Supplier Information Section -->
+	<div class="workspace">
+		<div class="supplier-details">
+			<div class="input-containers">
+				<md-input-container class='name'>
 					<label>Company Name</label>
 					<input type="text" size="60" ng-model="supplier.name" ec-blur="update()" />
-		   	   </md-input-container>
-		   </div>
-		   <!--
+				</md-input-container>
+			</div>
+			<!--
 		   <div class="input-containers">
 			   <md-input-container class='name'>
 					<label>Company Name (Thai)</label>
@@ -20,71 +17,70 @@
 		   	   </md-input-container>
 		   </div>
 			   -->
-		   <div class="input-containers">
-			   <md-input-container class="telephone">
+			<div class="input-containers">
+				<md-input-container class="telephone">
 					<label>Telephone</label>
 					<input type="text" size="60" ng-model="supplier.telephone" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class="fax">
+				</md-input-container>
+				<md-input-container class="fax">
 					<label>Fax</label>
 					<input type="text" size="60" ng-model="supplier.fax" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class="email">
+				</md-input-container>
+				<md-input-container class="email">
 					<label>email</label>
 					<input type="text" size="60" ng-model="supplier.email" ec-blur="update()" />
-		   	   </md-input-container>
-		   </div>
-		   <div class="input-containers">
-			   <md-input-container class="address">
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="address">
 					<label>Address</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].address1" ec-blur="update()" />
-		   	   </md-input-container>
-			   
-		   </div>
-		   <div class="input-containers">
-			   <md-input-container class="address">
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="address">
 					<label>Address</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].address2" ec-blur="update()" />
-		   	   </md-input-container>
-		   </div>
-		   <div class="input-containers">
-			   <md-input-container class="city">
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="city">
 					<label>City</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].city" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class='territory'>
+				</md-input-container>
+				<md-input-container class='territory'>
 					<label>Territory/Chaeng Wat</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].territory" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class="country">
+				</md-input-container>
+				<md-input-container class="country">
 					<label>Country</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].country" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class="zipcode">
+				</md-input-container>
+				<md-input-container class="zipcode">
 					<label>Zipcode</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].zipcode" ec-blur="update()" />
-		   	   </md-input-container>
-		   </div>
-		   <div class="input-containers">
-			   <md-input-container class="terms">
+				</md-input-container>
+			</div>
+			<div class="input-containers">
+				<md-input-container class="terms">
 					<label>Terms</label>
 					<input type="number" min="0" ng-model="supplier.terms" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class='discount'>
+				</md-input-container>
+				<md-input-container class='discount'>
 					<label>Discount</label>
 					<input type="text" min="0" ng-model="supplier.discount" ec-blur="update()" />
-		   	   </md-input-container>
-			   <md-input-container class="currency">
+				</md-input-container>
+				<md-input-container class="currency">
 					<label>Currency</label>
-                    <select ng-model="supplier.currency" ng-change="update()">
-                        <option value="THB">Thai Baht</option>
-                        <option value="USD">US Dollar</option>
-                        <option value="EUR">Euro</option>
-                    </select>
-		   	   </md-input-container>
-		   </div>
-	   </div>
-	   <!--
+					<select ng-model="supplier.currency" ng-change="update()">
+						<option value="THB">Thai Baht</option>
+						<option value="USD">US Dollar</option>
+						<option value="EUR">Euro</option>
+					</select>
+				</md-input-container>
+			</div>
+		</div>
+		<!--
         <table class="details">
             <tr>
                 <td><label>Company Name</label></td>
@@ -156,33 +152,28 @@
        
 	   -->
 		<md-button class="md-accent md-raised" ng-click="showAddContact()">Add Contact</md-button>
-        <table class="supplierContacts">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th></th>
-                </tr>
-            </thead>
-            
-            <tbody ng-repeat="contact in supplier.contacts">
-                <tr>
-                
-                    <td>{{contact.name}}</td>
-                    <td>{{contact.email}}</td>
-                    <td>{{contact.telephone}}</td>
-                    <td><md-button class="md-warn md-raised" ng-click="deleteContact($index)">Delete</md-button></td>
-                </tr>
-                
-            </tbody>
-            
-        </table>
-		  
-        <div class="map-container">
-            <div id="supplier-map" style="height:100%; width:100%"></div>
-        </div>
-    </div>
-        
-    
+		<table class="supplierContacts">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Telephone</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="contact in supplier.contacts">
+				<tr>
+					<td>{{contact.name}}</td>
+					<td>{{contact.email}}</td>
+					<td>{{contact.telephone}}</td>
+					<td>
+						<md-button class="md-warn md-raised" ng-click="deleteContact($index)">Delete</md-button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="map-container">
+			<div id="supplier-map" style="height:100%; width:100%"></div>
+		</div>
+	</div>
 </div>
