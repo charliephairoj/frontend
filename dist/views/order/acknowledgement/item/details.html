@@ -1,145 +1,161 @@
-<div class="ack-item-details-page">
-	<form data-modal ng-model="showStatus" class="status">
-		<div class="title">
-			Status
-		</div>
-		<div class="container">
-			<table>
-				<tr>
-					<td>Status:</td>
-					<td>
-						<select data-ng-model="item.status">
-							<option value="ACKNOWLEDGED">Acknowledged</option>
-							<option value="SHIPPED">Shipped</option>
-							<option value="CANCELLED">Cancelled</option>
-							<option vlaue="REJECTED">Rejected</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Comments:</td>
-					<td>
-						<textarea data-ng-model="item.status_message"></textarea>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div class="bottom-bar">
-			<button ng-click="showStatus=false">Select</button>
-		</div>
-	</form>
-	<div data-modal ng-model="showFabric" class="fabric_modal">
-		<div class="title">
-			Fabric
-		</div>
-		<div class="container">
-			<div class="product_container">
-				<div class="product" data-drop-on="item.fabric">
-					<div>{{item.description}}</div>
-					<div class="fabric" ui-if="item.fabric">
-						Fabric: {{item.fabric.description}}
-						<img ng-src="{{item.fabric.image_url}}" />
-					</div>
-				</div>
-				<div class="pillow" ng-repeat="pillow in item.pillows" data-drop-on="pillow.fabric">
-					<div>{{pillow.type | beautify}} Pillow</div>
-					<div class="fabric">
-						Fabric: {{pillow.fabric.description}}
-						<img ng-src="{{pillow.fabric.image_url}}" />
-					</div>
-				</div>
-			</div>
-			<div class="fabric_container">
-				<div data-search-bar></div>
-				<ul class="list">
-					<li class="item" ng-repeat="fabric in fabricList | filter:query " data-drag-on="fabric">
-						<img ng-src="{{fabric.image_url}}" />
-						<div class="details">
-							Pattern: {{fabric.pattern}}
-							<br />Color: {{fabric.color}}
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="bottom_bar">
-			<button ng-click="showFabric = false">Submit</button>
-		</div>
-	</div>
-	<!--
+
+
+<div class="ack-item-details-page" >
+    
+    
+    <form data-modal ng-model="showStatus" class="status">
+        <div class="title">
+            Status
+        </div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td>Status: </td>
+                    <td>
+                        <select data-ng-model="item.status">
+                            <option value="ACKNOWLEDGED">Acknowledged</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="CANCELLED">Cancelled</option>
+                            <option vlaue="REJECTED">Rejected</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Comments:</td>
+                    <td>
+                        <textarea data-ng-model="item.status_message"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="bottom-bar">
+            <button ng-click="showStatus=false">Select</button>
+        </div>
+    </form>
+    
+    <div data-modal ng-model="showFabric" class="fabric_modal">
+        <div class="title">
+            Fabric
+        </div>
+        
+        <div class="container">
+            <div class="product_container">
+                <div class="product" data-drop-on="item.fabric">
+                    <div>{{item.description}}</div>
+                    
+                    <div class="fabric" ui-if="item.fabric">
+                        Fabric:  {{item.fabric.description}}
+                        <img ng-src="{{item.fabric.image_url}}" />
+                    </div>
+                    
+                </div>
+                <div class="pillow" ng-repeat="pillow in item.pillows" data-drop-on="pillow.fabric">
+                    <div>{{pillow.type | beautify}} Pillow</div>
+                    <div class="fabric">
+                        Fabric: {{pillow.fabric.description}}
+                        <img ng-src="{{pillow.fabric.image_url}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="fabric_container">
+                <div data-search-bar></div>
+                <ul class="list">
+                    <li class="item" ng-repeat="fabric in fabricList | filter:query " data-drag-on="fabric">
+                        <img ng-src="{{fabric.image_url}}" />
+                        <div class="details">
+                            Pattern: {{fabric.pattern}}
+                            <br />
+                            Color: {{fabric.color}}
+                        </div>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottom_bar">
+            <button ng-click="showFabric = false">Submit</button>
+        </div>
+    </div>
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1><span>Acknowledgement Item</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<div ng-click="save()">Save</div>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<div ng-click="showStatus=true">Change Status</div>
-				</li>
-				<li ng-show="currentUser.hasPermission('change_acknowledgement')">
-					<div ng-click="showFabric=true">Add Fabric</div>
-				</li>
-				<li ng-show="currentUser.hasPermission('delete_acknowledgement_item')">
-					<div ng-click="remove()">Delete Item</div>
-				</li>
-				<!--
+    <div class="sidebar">
+        <header>
+            <h1><span>Acknowledgement Item</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
+                    <div ng-click="save()">Save</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
+                    <div ng-click="showStatus=true">Change Status</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('change_acknowledgement')">
+                    <div ng-click="showFabric=true">Add Fabric</div>
+                </li>
+                <li ng-show="currentUser.hasPermission('delete_acknowledgement_item')">
+                    <div ng-click="remove()">Delete Item</div>
+                </li>
+                <!--
                 <li ui-if="currentUser.hasPermission('delete_acknowledgement')">
                     <div ng-click="remove()">Delete</div>
                 </li>
                 -->
-			</ul>
-		</nav>
-	</div>
-	<div class="workspace">
-		<div class="details">
-			<div class="table">
-				<div class="row">
-					<div class="cell product-img">
-						<img ng-show="item.image.url" ng-src="{{item.image.url}}" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="cell">Acknowledgement Item#:</div>
-					<div class="cell">{{item.id}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Acknowledgement#:</div>
-					<a ng-href="#/order/acknowledgement/{{item.acknowledgement.id}}" class="cell">{{item.acknowledgement.id}}</a>
-				</div>
-				<div class="row">
-					<div class="cell">Description</div>
-					<div class="cell">{{item.description}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Status</div>
-					<div class="cell" ng-class="{acknowledged:item.status == 'ACKNOWLEDGED', shipped:item.status == 'SHIPPED'}">{{item.status}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Width</div>
-					<div class="cell">{{item.width}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Depth</div>
-					<div class="cell">{{item.depth}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Height</div>
-					<div class="cell">{{item.height}}</div>
-				</div>
-				<div class="row">
-					<div class="cell">Fabric</div>
-					<div class="cell">{{item.fabric.description}}</div>
-				</div>
-				<div class="row" data-ng-repeat="pillow in item.pillows">
-					<div class="cell">{{pillow.type | beautify}} Pillow</div>
-					<div class="cell">{{pillow.fabric.description}}</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="workspace">
+        <div class="details">
+            <div class="table">
+                <div class="row">
+                     <div class="cell product-img">
+                        <img ng-show="item.image.url" ng-src="{{item.image.url}}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">Acknowledgement Item#:</div>
+                    <div class="cell">{{item.id}}</div>
+                </div>
+               <div class="row">
+                    <div class="cell">Acknowledgement#:</div>
+                    <a ng-href="#/order/acknowledgement/{{item.acknowledgement.id}}" class="cell">{{item.acknowledgement.id}}</a>
+                </div>
+                <div class="row">
+                    <div class="cell">Description</div>
+                    <div class="cell">{{item.description}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Status</div>
+                    <div class="cell" ng-class="{acknowledged:item.status == 'ACKNOWLEDGED', shipped:item.status == 'SHIPPED'}">{{item.status}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Width</div>
+                    <div class="cell">{{item.width}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Depth</div>
+                    <div class="cell">{{item.depth}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Height</div>
+                    <div class="cell">{{item.height}}</div>
+                </div>
+                <div class="row">
+                    <div class="cell">Fabric</div>
+                    <div class="cell">{{item.fabric.description}}</div>
+                </div>
+                <div class="row" data-ng-repeat="pillow in item.pillows">
+                    <div class="cell">{{pillow.type | beautify}} Pillow</div>
+                    <div class="cell">{{pillow.fabric.description}}</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    
 </div>
+

@@ -6,6 +6,7 @@
 			<h2>Employee</h2>
 		</div>
 		<div ng-show="employee" class="employee">
+			
 			<div class="img-container">
 				<img ng-src="{{employee.image.url}}" />
 			</div>
@@ -31,11 +32,11 @@
 						    </md-radio-group>
 								-->
 							Quantity: {{item.quantity | number:2}}{{item.units}}
-							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove
-								<md-button>
+							<md-button class="md-warn md-raised" ng-click="removeItem($index)">Remove<md-button>
 						</div>
 					</md-item-content>
 					<md-divider></md-divider>
+
 				</md-item>
 				<md-item class="equipment" ng-repeat="equipment in equipmentList">
 					<md-item-content class="content-container">
@@ -43,15 +44,17 @@
 							<h3>
 								{{equipment.brand}} {{equipment.description}} 
 							</h3>
+						
+							
 							<div class="item-ctrl">
 								<md-radio-group ng-model="equipment.status">
-									<md-radio-button value="Checked In" aria-label="Checked In">
+							      	<md-radio-button value="Checked In" aria-label="Checked In">
 										Checked In
 									</md-radio-button>
-									<md-radio-button value="Checked Out" aria-label="Add">
+							      	<md-radio-button value="Checked Out" aria-label="Add">
 										Checked Out
 									</md-radio-button>
-								</md-radio-group>
+							    </md-radio-group>
 							</div>
 						</div>
 						<div class="details container">
@@ -71,14 +74,14 @@
 							<img ng-src="{{supply.image.url}}" />
 						</div>
 						<h3>{{supply.description}} <br/>  Qty:{{supply.quantity | number:2}}</h3>
+						
 						<div class="item-ctrl">
 							<md-radio-group ng-model="supply.$$action">
-								<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
-								<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
-							</md-radio-group>
+						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+						      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+						    </md-radio-group>
 							<md-text-float type="number" label="Quantity" required ng-model="supply.$$quantity"></md-text-float>
-							<md-button class="md-warn" ng-click="remove($index, supply)">Remove
-								<md-button>
+							<md-button class="md-warn" ng-click="remove($index, supply)">Remove<md-button>
 						</div>
 					</md-item-content>
 				</md-item>
@@ -89,7 +92,9 @@
 	</md-divider>
 	<md-action>
 		<select ng-options="po.id for po in poList" ng-model="po"></select>
-		<md-button class="md-primary md-raised" ng-show="po" ng-click="checkout()">Check In</md-button>
-		<md-button class="md-primary md-raised" ng-hide="po" ng-click="checkout()">Checkout</md-button>
+	 	<md-button class="md-primary md-raised" ng-show="po" ng-click="checkout()">Check In</md-button>
+	
+		<md-button class="md-primary md-raised" ng-hide="po"  ng-click="checkout()">Checkout</md-button>
+
 	</md-action>
 </md-dialog>

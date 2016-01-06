@@ -1,14 +1,16 @@
-<div class="product-selector" modal="visible" title="Select a Product" data-ng-switch on="selection" data-ng-init="selection='upholstery'">
-	<div class="selector">
-		<ul>
-			<li data-ng-click="selection='upholstery'" data-ng-class="{'active':selection=='upholstery'}">Upholstery</li>
-			<li data-ng-click="selection='table'" data-ng-class="{'active':selection=='table'}">Table</li>
-			<li data-ng-click="selection='custom'" data-ng-class="{'active':selection=='custom'}">Custom</li>
-		</ul>
-	</div>
-	<div class="details upholstery" data-ng-switch-default>
-		<div upholstery-list on-select="addUpholstery($upholstery)" visible="visible"></div>
-		<!--
+<div class="product-selector" modal="visible" title="Select a Product"
+data-ng-switch on="selection" data-ng-init="selection='upholstery'"> 
+    <div class="selector">
+        <ul>
+            <li data-ng-click="selection='upholstery'" data-ng-class="{'active':selection=='upholstery'}">Upholstery</li>
+            <li data-ng-click="selection='table'" data-ng-class="{'active':selection=='table'}">Table</li>
+            <li data-ng-click="selection='custom'" data-ng-class="{'active':selection=='custom'}">Custom</li>
+        </ul>
+    </div>
+    
+    <div class="details upholstery" data-ng-switch-default>
+    	<div upholstery-list on-select="addUpholstery($upholstery)" visible="visible"></div>
+    	<!--
         <div data-search-bar data-ng-model="upholsteryQuery"></div>
         <div class="container" on-scroll-end="loadMoreUpholstery()">
             <div class="list">
@@ -23,10 +25,11 @@
             </div>  
         </div>
        -->
-	</div>
-	<div class="details upholstery" data-ng-switch-when="table">
-		<div table-list on-select="addTable($table)" visible="visible"></div>
-		<!--
+    </div>
+    
+    <div class="details upholstery" data-ng-switch-when="table">
+    	<div table-list on-select="addTable($table)" visible="visible"></div>
+    	<!--
         <div data-search-bar data-ng-model="tableQuery"></div>
         <div class="container"  on-scroll-end="loadMoreTable()">
             <div class="list">
@@ -40,46 +43,46 @@
                 </div>
             </div>  
         </div>-->
-	</div>
-	<form class="details custom" name="form" novalidate ng-switch-when="custom">
-		<table class="custom-item">
-			<tr class="description">
-				<td>Description</td>
-				<td>
-					<input type="text" ng-model="item.description" required />
-				</td>
-			</tr>
-			<tr class="preview">
-				<td>Preview</td>
-				<td class="image-container">
-					<img ng-src="{{product.image.url}}" />
-				</td>
-			</tr>
-		</table>
-		<div image-uploader url="api/v1/acknowledgement/item/image" on-upload="addImage(data)">
-		</div>
-		<div class="bottom_bar">
-			<button ng-disabled="form.$invalid" ng-click="addCustomItem(item)">Add Item</button>
-		</div>
-	</form>
-	<form name="quantityForm" class="details quantity" data-ng-switch-when="quantity">
-		<table>
-			<tr>
-				<td>
-					Quantity:
-				</td>
-				<td>
-					<input ng-model="quantity" required ng-pattern="/^\d+$/" autofocus />
-				</td>
-			</tr>
-		</table>
-		<div class="bottom-bar">
-			<button ng-disabled="quantityForm.$invalid" ng-click="setQuantity(quantity)">Set Quantity</button>
-		</div>
-	</form>
-	<form class="details fabric" data-ng-switch-when="fabric">
-		<div fabric-selector product="product" on-complete="setFabric()"></div>
-		<!--
+                      
+    </div>
+    <form class="details custom" name="form" novalidate ng-switch-when="custom">
+            <table class="custom-item">
+                <tr class="description">
+                    <td>Description</td>
+                    <td><input type="text" ng-model="item.description" required /></td>
+                </tr>
+                <tr class="preview">
+                    <td>Preview</td>
+                    <td class="image-container"><img ng-src="{{product.image.url}}" /></td>
+                </tr>
+            </table>
+            
+            <div image-uploader url="api/v1/acknowledgement/item/image" on-upload="addImage(data)">
+            </div>
+            
+            <div class="bottom_bar">
+                <button ng-disabled="form.$invalid" ng-click="addCustomItem(item)">Add Item</button>
+            </div>
+    </form>
+    <form name="quantityForm" class="details quantity" data-ng-switch-when="quantity">
+        <table>
+            <tr>
+                <td>
+                    Quantity: 
+                </td>
+                <td>
+                    <input ng-model="quantity" required ng-pattern="/^\d+$/" autofocus />
+                </td>
+            </tr>
+        </table>
+        <div class="bottom-bar">
+            <button ng-disabled="quantityForm.$invalid" ng-click="setQuantity(quantity)">Set Quantity</button>
+            
+        </div>
+    </form>
+    <form class="details fabric" data-ng-switch-when="fabric">
+    	<div fabric-selector product="product" on-complete="setFabric()"></div>
+    	<!--
         <search-bar data-ng-model="fabricQuery"></search-bar>
         <div class="product_container">
             <div class="product" data-drop-on="product.fabric">
@@ -115,5 +118,10 @@
         <div class="bottom-bar">
             <button ng-click="setFabric()">Set Fabrics</button>
         </div>-->
-	</form>
+        
+        
+    </form>
 </div>
+    
+
+

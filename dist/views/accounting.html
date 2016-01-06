@@ -1,16 +1,17 @@
 <div>
-	<div class="sidebar">
-		<header>
-			<h1>
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Accounting</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ng-show="currentUser.hasPermission('can_view_transactions')">
-					<a ng-href="#/accounting/transaction">Transactions</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ng-show="currentUser.hasPermission('can_view_transactions')">
+                    <a ng-href="#/accounting/transaction">Transactions</a>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
 </div>

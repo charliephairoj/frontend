@@ -1,80 +1,87 @@
 <div class="user-view-page" ng-init="showAddEmployee=false">
-	<!--
+    
+    <!--
         Forms
     -->
-	<form name="addForm" novalidate class="add-employee" data-modal="showAddEmployee" data-ng-model="showAddEmployee">
-		<div class="title"></div>
-		<div class="container">
-			<table>
-				<tr>
-					<td>First Name</td>
-					<td>
-						<input type="text" required data-ng-model="employee.first_name" />
-					</td>
-				</tr>
-				<tr>
-					<td>Last Name</td>
-					<td>
-						<input type="text" required data-ng-model="employee.last_name" />
-					</td>
-				</tr>
-				<tr>
-					<td>Pay Type</td>
-					<td>
-						<input type="radio" value="hourly" name="pay" data-ng-model="employee.pay_type" /><span>Hourly</span>
-						<input type="radio" value="salary" name="pay" data-ng-model="employee.pay_type" /><span>Salary</span>
-					</td>
-				</tr>
-				<tr>
-					<td>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div class="bottom-bar">
-			<button data-ng-disabled="addForm.$invalid">Add</button>
-		</div>
-	</form>
-	<!--
+    
+    <form name="addForm" novalidate class="add-employee" data-modal="showAddEmployee" data-ng-model="showAddEmployee">
+        <div class="title"></div>
+        <div class="container">
+            <table>
+                <tr>
+                    <td>First Name</td>
+                    <td><input type="text" required data-ng-model="employee.first_name"/></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><input type="text" required data-ng-model="employee.last_name" /></td>
+                </tr>
+                <tr>
+                    <td>Pay Type</td>
+                    <td>
+                        <input type="radio" value="hourly" name="pay" data-ng-model="employee.pay_type"/><span>Hourly</span>
+                        <input type="radio" value="salary" name="pay" data-ng-model="employee.pay_type"/><span>Salary</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="bottom-bar">
+            <button data-ng-disabled="addForm.$invalid">Add</button>
+        </div>
+    </form>
+    
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1><span>Employees</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li ng-show="currentUser.hasPermission('add_user')">
-					<div data-ng-click="showAddEmployee=true">
-						Add Employee
-					</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div data-search-bar></div>
-	<div class="workspace grid">
-		<div class="header">
-			<div class="row">
-				<div class="cell id">ID</div>
-				<div class="cell name">Name</div>
-				<div class="cell email">Email</div>
-				<div class="cell last-login">Last Login</div>
-			</div>
-		</div>
-		<div class="listContainer">
-			<div class="grid">
-				<div class="body">
-					<a ng-repeat="employee in employeeList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
-						<div class="cell id">{{employee.id}}</div>
-						<div class="cell name">{{employee.first_name+' '+employee.last_name}}</div>
-						<div class="cell email">{{employee.email}}</div>
-						<div class="cell last-login">{{employee.last_login | date:"MMM d, y h:mm:ss a"}}</div>
-					</a>
-				</div>
-			</div>
-		</div>
-		<!--
+    <div class="sidebar">
+        <header>
+            <h1><span>Employees</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li ng-show="currentUser.hasPermission('add_user')">
+                    <div data-ng-click="showAddEmployee=true">
+                        Add Employee
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>  
+    
+    <div data-search-bar></div>
+    
+    <div class="workspace grid">
+        <div class="header">
+            <div class="row">
+                <div class="cell id">ID</div>
+                <div class="cell name">Name</div>
+                <div class="cell email">Email</div>
+                <div class="cell last-login">Last Login</div>
+            </div>
+        </div>
+        <div class="listContainer">
+            <div class="grid">
+                <div class="body">
+                    <a ng-repeat="employee in employeeList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
+                        
+                       
+                        
+                        <div class="cell id">{{employee.id}}</div>
+                        <div class="cell name">{{employee.first_name+' '+employee.last_name}}</div>
+                        <div class="cell email">{{employee.email}}</div>
+                        <div class="cell last-login">{{employee.last_login | date:"MMM d, y h:mm:ss a"}}</div>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!--
         <div class="listContainer">
             <div class="list">
                     <a ng-repeat="user in userList | filter:query | orderBy:'first_name'" class="row" ng-href="#/administrator/user/{{user.id}}">
@@ -101,5 +108,6 @@
                     </a>
             </div>
         </div>-->
-	</div>
+    </div>
+    
 </div>

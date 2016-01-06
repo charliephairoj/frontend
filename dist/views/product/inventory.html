@@ -1,48 +1,60 @@
+
 <div class="inventory-page">
-	<!--
+    
+    <!--
         Forms
     -->
-	<div product-selector="showAddInventory" product-selector-add="addInventory(product)" product-selector-upload-url="acknowledgement/item/image"></div>
-	<!--
+    
+    <div product-selector="showAddInventory" product-selector-add="addInventory(product)" product-selector-upload-url="acknowledgement/item/image"></div>
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1><span>Inventory</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li>
-					<button ng-click="addInventory=!addInventory">Add Inventory</button>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div data-search-bar></div>
-	<div class="workspace grid">
-		<div class="header">
-			<div class="row">
-				<div class="cell preview">Preview</div>
-				<div class="cell id">ID</div>
-				<div class="cell description">Description</div>
-				<div class="cell status">Status</div>
-			</div>
-		</div>
-		<div class="listContainer">
-			<div class="grid">
-				<div class="body">
-					<a ng-repeat="item in itemList | exclude:'status':'SHIPPED' | exclude:'status':'ACKNOWLEDGED' | filter:query | orderBy: 'description' | limitTo:50" class="row" ng-href="#/order/acknowledgement/item/{{item.id}}">
-						<div class="cell preview">
-							<img ng-src="{{item.image.url}}" />
-						</div>
-						<div class="cell id">{{item.id}}</div>
-						<div class="cell description">{{item.description}}</div>
-						<div class="cell status">{{item.status}}</div>
-					</a>
-				</div>
-			</div>
-		</div>
-		<!--
+    <div class="sidebar">
+        <header>
+            <h1><span>Inventory</span></h1>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <button ng-click="addInventory=!addInventory">Add Inventory</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+
+    <div data-search-bar></div>
+    
+    
+    <div class="workspace grid">
+        <div class="header">
+            <div class="row">
+                <div class="cell preview">Preview</div>
+                <div class="cell id">ID</div>
+                <div class="cell description">Description</div>
+                <div class="cell status">Status</div>
+                
+            </div>
+        </div>
+        <div class="listContainer">
+            <div class="grid">
+                <div class="body">
+                    <a ng-repeat="item in itemList | exclude:'status':'SHIPPED' | exclude:'status':'ACKNOWLEDGED' | filter:query | orderBy: 'description' | limitTo:50" class="row" ng-href="#/order/acknowledgement/item/{{item.id}}">
+                        
+                        <div class="cell preview">
+                            <img ng-src="{{item.image.url}}" />
+                        </div>
+                        
+                        <div class="cell id">{{item.id}}</div>
+                        <div class="cell description">{{item.description}}</div>
+                        <div class="cell status">{{item.status}}</div>
+                        
+                    
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--
         <div class="listContainer">
             <div class="list">              
                 <a ng-repeat="item in itemList | exclude:'status':'SHIPPED' | exclude:'status':'ACKNOWLEDGED' | filter:query | orderBy: 'description' | limitTo:50" class="row" ng-href="#/order/acknowledgement/item/{{item.id}}">
@@ -73,5 +85,6 @@
                 </a>
             </div>
         </div>-->
-	</div>
+        
+    </div>
 </div>

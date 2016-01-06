@@ -1,51 +1,58 @@
 <div class="room-details-page">
-	<!--
+    
+    <!--
         Modals
     -->
 	<div supply-list="showSupplyToggle" on-select="addSupply($supply)"></div>
-	<div add-supply="showSupplyCreateToggle" on-add="addItem($supply)"></div>
-	<!--
+    
+    <div add-supply="showSupplyCreateToggle" on-add="addItem($supply)"></div>
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1>
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Room: {{room.description}}</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li>
-					<button ng-click="showAddItem()">Add a Item</button>
-				</li>
-				<li>
-					<button ng-click="showAddPart()">Add a Part</button>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<!--
+        </header>
+        <nav>
+            <ul class="list">
+                <li>
+                    <button ng-click="showAddItem()">Add a Item</button>
+                </li>
+                <li>
+                    <button ng-click="showAddPart()">Add a Part</button>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <!--
         Workspace
     -->
-	<div class="workspace">
-		<div class="details">
-			<table>
-				<tr>
-					<td>Room:</td>
-					<td>{{room.description}}</td>
-				</tr>
-				<tr>
-					<td>Reference:</td>
-					<td>{{room.reference}}</td>
-				</tr>
-				<tr>
-					<td>Delivery Date:</td>
-					<td>{{room.delivery | date:"MMMM d, yyyy"}}</td>
-				</tr>
-			</table>
-		</div>
+    <div class="workspace">
+    	
+        <div class="details">
+            <table>
+                <tr>
+                    <td>Room: </td>
+                    <td>{{room.description}}</td>
+                </tr>
+                <tr>
+                    <td>Reference: </td>
+                    <td>{{room.reference}}</td>
+                </tr>
+                <tr>
+                    <td>Delivery Date: </td>
+                    <td>{{room.delivery | date:"MMMM d, yyyy"}}</td>
+                </tr>
+            </table>
+        </div>
+       
 		<md-tabs md-selected="selectedIndex">
 			<md-tab label="Items">
+			
 			</md-tab>
 		</md-tabs>
 		<div class="panel-container">
@@ -103,6 +110,7 @@
 									DROP FILES HERE
 								</div>
 								<div class="item">
+									
 									<div class="description">{{item.description}}</div>
 									<div class="reference">{{item.reference}}</div>
 									<div class="quantity">{{item.quantity}}</div>
@@ -115,19 +123,20 @@
 										<div class="supplies-table-container">
 											<table class="supplies-table">
 												<tr ng-repeat="supply in item.supplies">
-													<td>
-														<div class="supply-container">
-															<div class="description">{{supply.description}}</div>
-															<div class='qty-container'>
-																<md-input-container>
-																	<label>Quantity</label>
-																	<input type="number" min="0" required ng-model="supply.quantity" required>
-																</md-input-container>
-																<span>{{supply.units}}</span>
+														<td>
+															<div class="supply-container">
+																<div class="description">{{supply.description}}</div>
+																<div class='qty-container'>
+																	<md-input-container>
+																		<label>Quantity</label>
+																		<input type="number" min="0" required ng-model="supply.quantity" required>
+																	</md-input-container>
+																	<span>{{supply.units}}</span>
+																</div>
+																<md-button class="md-warn md-raised">Remove</md-button>
 															</div>
-															<md-button class="md-warn md-raised">Remove</md-button>
-														</div>
-													</td>
+															
+														</td>
 												</tr>
 											</table>
 										</div>
@@ -135,17 +144,17 @@
 									<div class="files">
 										<table class="files-table">
 											<tr ng-repeat="part in item.parts">
-												<td>
-													<span class="description">
+													<td>
+														<span class="description">
 															{{part.description}}
 														</span>
-													<span class="quantity">
+														<span class="quantity">
 															{{part.quantity}}pc
 														</span>
-													<!--
+														<!--
 														<a ng-href="{{file.url}}" target="_blank">{{file.filename}}</a>
 															-->
-												</td>
+													</td>
 											</tr>
 										</table>
 									</div>
@@ -156,5 +165,6 @@
 				</div>
 			</ng-switch>
 		</div>
-	</div>
+            
+    </div>
 </div>
