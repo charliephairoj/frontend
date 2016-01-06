@@ -44,7 +44,7 @@
 						<div class="customer">
 							<div class='info'>
 								<md-autocomplete flex="onshrink" required name='customer' md-items="customer in searchCustomers(customerSearchText)" md-selected-item="selectedCustomer" md-selected-item-change="addCustomer(selectedCustomer)" md-search-text="customerSearchText" md-search-text-change="updateCustomerName(customerSearchText)"
-								md-item-text="customer.name" md-floating-label="Customer Name" md-min-length="0">
+								md-item-text="customer.name" md-floating-label="Customer Name" md-no-cache="true" md-min-length="0">
 									<md-item-template>
 										<span md-highlight-text="customerSearchText">{{customer.name}}</span>
 									</md-item-template>
@@ -195,7 +195,7 @@
 						</md-button>
 					</md-card-actions>
 					<md-card-content layout="row" layout-align="start center">
-						<md-autocomplete flex required md-items="product in searchProducts(productSearchText)" md-search-text-change="retrieveUpholsteries(productSearchText)" md-selected-item="tempProduct" md-search-text="productSearchText" md-item-text="product.description"
+						<md-autocomplete flex required md-items="product in searchProducts(productSearchText)" md-search-text-change="retrieveUpholsteries(productSearchText)" md-selected-item="tempProduct" md-no-cache="true" md-search-text="productSearchText" md-item-text="product.description"
 						md-floating-label="Product Description" md-min-length="0">
 							<md-item-template>
 								<span md-highlight-text="productSearchText">{{product.description}}</span>
@@ -271,7 +271,7 @@
 							<tr class="fabric">
 								<td colspan="2">
 									<md-autocomplete flex md-items="fabric in searchFabrics(fabricSearchText)" md-search-text-change="retrieveFabrics(fabricSearchText)" md-selected-item="item.fabric" md-search-text="fabricSearchText" md-item-text="fabric.description" md-floating-label="Fabric"
-									md-min-length="0">
+									md-no-cache="true" md-min-length="0">
 										<md-item-template>
 											<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
 										</md-item-template>
@@ -295,6 +295,7 @@
 								</td>
 							</tr>
 						</table>
+						<div flex></div>
 						<md-card-title-media>
 							<div class="md-media-sm card-media">
 								<img ng-src="{{item.image.url}}">

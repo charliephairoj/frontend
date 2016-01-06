@@ -15,7 +15,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * google maps instance
 	 */
 	
-	$scope.marker;
+	$scope.marker = null;
 	
 	var map,
 		home = new google.maps.LatLng(13.935441, 100.6864353),
@@ -96,7 +96,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			travelMode: google.maps.TravelMode.DRIVING,
   		  	unitSystem: google.maps.UnitSystem.METRIC
 			
-		}
+		};
 		
 		directionsService.route(request, function(result, status) {
 			if (status == google.maps.DirectionsStatus.OK) {
@@ -131,13 +131,15 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 */
 	
 	function createMarker(configs) {
-		
+		var lat = null,
+			lng = null;
+			
 		if (configs.address) {
-			var lat = configs.address.latitude || configs.latitude,
-				lng = configs.address.longitude || configs.longitude;
+			lat = configs.address.latitude || configs.latitude;
+			lng = configs.address.longitude || configs.longitude;
 		} else {
-			var lat = configs.latitude,
-				lng = configs.longitude;
+			lat = configs.latitude;
+			lng = configs.longitude;
 		}
 		
 		
@@ -191,7 +193,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		$scope.marker.setMap(map);
 		map.panTo($scope.marker.getPosition());
 		map.setZoom(17);
-	}
+	};
 	
 	$scope.editMarker = function () {
 		clearRoute();
@@ -233,7 +235,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 		
 		return suppliers;
-	}
+	};
 	
 	// Watch on supplierSearchText to get products from the server
 	$scope.retrieveSuppliers = function (query) {
@@ -372,7 +374,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	
 	$scope.addProject = function (project) {
 		$scope.po.project = project;
-	}
+	};
 	
 	/**
 	 * Update the project's name if a project is not selected yet. This is incase, the project
@@ -705,7 +707,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			}
 		}
 		(callback || angular.noop)();
-	}
+	};
 	
 	/**
 	 * Create or update the supplier
@@ -741,7 +743,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				progress.supplier = 'error';
 			});
 		}
-	}
+	};
 	
 	
 	/**
@@ -784,8 +786,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			$log.error(reason);
 		});
 		
-		// New Vewsion
-	}
+	};
 
 	/**
 	 * Update and existing supply 
@@ -897,7 +898,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			Notification.display("There was an error in creeating the purchase order. A report has been sent to Charlie");
 			
 		});
-	}
+	};
 	
 	/*
 	 * Save the purchase order to the server

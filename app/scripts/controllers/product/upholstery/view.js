@@ -52,7 +52,7 @@ function ($scope, Upholstery, Notification, $filter, $location) {
 	function update() {
 		var notification = Notification.display('Updating ' + this.description + '.', false);
 		this.$update(postUpdate);	
-	};
+	}
 	
 	//Help function to test object equality
 	function equals(newObj, oldObj) {

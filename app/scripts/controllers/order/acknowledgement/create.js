@@ -21,7 +21,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 * google maps instance
 	 */
 	
-	$scope.marker;
+	$scope.marker = null;
 	
 	var map,
 		home = new google.maps.LatLng(13.935441, 100.6864353),
@@ -102,7 +102,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			travelMode: google.maps.TravelMode.DRIVING,
   		  	unitSystem: google.maps.UnitSystem.METRIC
 			
-		}
+		};
 		
 		directionsService.route(request, function(result, status) {
 			if (status == google.maps.DirectionsStatus.OK) {
@@ -137,13 +137,15 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 	
 	function createMarker(configs) {
+		var lat = null,
+			lng = null;
 		
 		if (configs.address) {
-			var lat = configs.address.latitude || configs.latitude,
-				lng = configs.address.longitude || configs.longitude;
+			lat = configs.address.latitude || configs.latitude;
+			lng = configs.address.longitude || configs.longitude;
 		} else {
-			var lat = configs.latitude,
-				lng = configs.longitude;
+			lat = configs.latitude;
+			lng = configs.longitude;
 		}
 		
 		
@@ -197,7 +199,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		$scope.marker.setMap(map);
 		map.panTo($scope.marker.getPosition());
 		map.setZoom(17);
-	}
+	};
 	
 	$scope.editMarker = function () {
 		clearRoute();
@@ -298,7 +300,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		}
 		
 		return customers;
-	}
+	};
 	
 	
 	/**
@@ -388,7 +390,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	$scope.addProject = function (project) {
 		$scope.ack.project = project;
-	}
+	};
 	
 	/**
 	 * Update the project's name if a project is not selected yet. This is incase, the project

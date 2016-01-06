@@ -10,7 +10,7 @@
 			<md-toolbar layout="row" class="md-primary" layout-align="center center" md-scroll-shrink="true">
 				<h3><span>Open a Purchase Order</span></h3>
 				<div flex></div>
-				<md-button class="md-icon-button md-primary md-raised" ng-click="create()">
+				<md-button class="md-icon-button md-primary md-raised" id="po-create" ng-click="create()">
 					<md-tooltip>
 						Create
 					</md-tooltip>
@@ -31,7 +31,7 @@
 							<div class="supplier">
 								<div class='info'>
 									<md-autocomplete flex="noshrink" required name='supplier' md-items="supplier in searchSuppliers(supplierSearchText)" md-selected-item="selectedSupplier" md-selected-item-change="addSupplier(selectedSupplier)" md-search-text="supplierSearchText" md-search-text-change="updateSupplierName(supplierSearchText); retrieveSuppliers(supplierSearchText)"
-									md-item-text="supplier.name" md-floating-label="Supplier Name" md-min-length="0">
+									md-item-text="supplier.name" md-floating-label="Supplier Name" md-no-cache="true" md-min-length="0">
 										<md-item-template>
 											<span md-highlight-text="supplierSearchText">{{supplier.name}}</span>
 										</md-item-template>
@@ -258,6 +258,15 @@
 												<div ng-message="required">This required is required</div>
 											</div>
 											<div class="hint">How many one piece cost?</div>
+										</md-input-container>
+									</td>
+									<td>
+										<md-input-container>
+											<label>Discount</label>
+											<input name="discount" type="number" ng-model="item.discount" required />
+											<div ng-messages="poForm.discount.$error">
+												<div ng-message="required">This required is required</div>
+											</div>
 										</md-input-container>
 									</td>
 									<td>

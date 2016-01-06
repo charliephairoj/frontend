@@ -8005,20 +8005,19 @@ angular.module('employeeApp.services')
 	
 	function spawnToast(message, autoHide) {
 		
+		autoHide = autoHide === undefined ? 2000 : autoHide;
+		
 		var promise = $mdToast.show($mdToast
 							.simple()
 							.action('CLOSE')
-							.position('top right')
+							.position('bottom right')
 							.content(message)
 							.hideDelay(autoHide));
 		
-		
-
 		return {
 			hide: $mdToast.hide,
 			close: $mdToast.hide
 		};
-							
 	}
 	
 	function spawnSimpleNotification(message, autoHide) {
@@ -8060,7 +8059,7 @@ angular.module('employeeApp.services')
 		
         this.notification = angular.element(document.getElementById('notification'));
         this.promise = null;
-		this._display = spawnSimpleNotification;
+		this._display = spawnToast;
 		
 		//Determine which notification system to use
 		if (!("Notification" in window)) {
