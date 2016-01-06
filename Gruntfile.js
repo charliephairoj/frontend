@@ -502,7 +502,7 @@ module.exports = function (grunt) {
     'copy',
     //'cdnify',
     'usemin',
-    //'ngmin',
+    'serve'
     
   ]);
 
