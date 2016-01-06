@@ -1,68 +1,64 @@
 <div class="upholstery-details-page" image-drop-target="upload()">
-	<!--
+    
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<div class="profilePic" ui-if="table.image">
-				<img ng-src="{{table.image.url}}" />
-			</div>
-			<h1><span>{{table.model.model}}<br />{{table.configuration.configuration}}</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li>
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<form class="workspace">
-		<table class="details">
-			<tr>
-				<tr>
-					<td>
-						<label>Product Number</label>
-					</td>
-					<td>{{table.id}}</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Model</label>
-					</td>
-					<td>{{table.model.name+' '+table.model.model}}</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Configuration</label>
-					</td>
-					<td>{{table.configuration.configuration}}</td>
-				</tr>
-				<tr>
-					<td>Width:</td>
-					<td>
-						<input type="text" ec-blur="update()" data-ng-model="table.width" />
-					</td>
-				</tr>
-				<tr>
-					<td>Depth:</td>
-					<td>
-						<input type="text" ec-blur="update()" data-ng-model="table.depth" />
-					</td>
-				</tr>
-				<tr>
-					<td>Height:</td>
-					<td>
-						<input type="text" ec-blur="update()" data-ng-model="table.height" />
-					</td>
-				</tr>
-				<tr>
-					<td>Price:</td>
-					<td>
-						<input type="text" ec-blur="update()" data-ng-model="table.price" />
-					</td>
-				</tr>
-				<!--
+    <div class="sidebar">
+        <header>
+            <div class="profilePic" ui-if="table.image">
+                <img ng-src="{{table.image.url}}" />
+            </div>
+            
+            <h1><span>{{table.model.model}}<br />{{table.configuration.configuration}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                
+                <li>
+                    <div ng-click="remove()">Delete</div>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+    
+    
+    
+    
+    <form class="workspace">
+        
+        <table class="details">
+            <tr>
+                
+                <tr>
+                    <td><label>Product Number</label></td>
+                    <td>{{table.id}}</td>
+                </tr>
+                <tr>
+                    <td><label>Model</label></td>
+                    <td>{{table.model.name+' '+table.model.model}}</td>
+                </tr>
+                <tr>
+                    <td><label>Configuration</label></td>
+                    <td>{{table.configuration.configuration}}</td>
+                </tr>
+                <tr>
+                    <td>Width:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="table.width" /></td>
+                </tr>
+                <tr>
+                    <td>Depth:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="table.depth" /></td>
+                </tr>
+                <tr>
+                    <td>Height:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="table.height" /></td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td><input type="text" ec-blur="update()" data-ng-model="table.price" /></td>
+                </tr>
+                <!--
                 <tr>
                     <td>Retail Price:</td>
                     <td><input type="text" ec-blur="update()" data-ng-model="table.retail_price" /></td>
@@ -76,6 +72,9 @@
                     <td><input type="text" ec-blur="update()" data-ng-model="table.export_price" /></td>
                 </tr>
                 -->
-		</table>
-	</form>
+            </table>
+            
+            
+        
+    </form>
 </div>

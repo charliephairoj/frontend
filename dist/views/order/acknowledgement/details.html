@@ -1,57 +1,71 @@
+
+
 <div class="acknowledgement-details-page" file-drop="addFiles($files)">
+    
 	<div class="file-drag-drop-modal">
 		<div class="container">
 			<h2>Drop Files for Order #{{acknowledgement.id}} Here</h2>
 		</div>
 	</div>
-	<div class="calendar-modal" data-modal ng-model="showCal">
-		<div ui-date ng-model="acknowledgement.delivery_date"></div>
-		<div class="bottom_bar">
-			<button ng-click="showCal=false">Select</button>
-		</div>
-	</div>
-	<div data-modal ng-model="showFabric" class="fabric_modal">
-		<div class="title">
-			Fabric
-		</div>
-		<div class="container">
-			<div class="product_container">
-				<div class="product" data-drop-on="item.fabric">
-					<div>{{item.description}}</div>
-					<div class="fabric" ui-if="item.fabric">
-						Fabric: {{item.fabric.description}}
-						<img ng-src="{{item.fabric.image_url}}" />
-					</div>
-				</div>
-				<div class="pillow" ng-repeat="pillow in item.pillows" data-drop-on="pillow.fabric">
-					<div>{{pillow.type | beautify}} Pillow</div>
-					<div class="fabric">
-						Fabric: {{pillow.fabric.description}}
-						<img ng-src="{{pillow.fabric.image_url}}" />
-					</div>
-				</div>
-			</div>
-			<div class="fabric_container">
-				<div data-search-bar></div>
-				<ul class="list">
-					<li class="item" ng-repeat="fabric in fabricList | filter:query " data-drag-on="fabric">
-						<img ng-src="{{fabric.image_url}}" />
-						<div class="details">
-							Pattern: {{fabric.pattern}}
-							<br />Color: {{fabric.color}}
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="bottom_bar">
-			<button ng-click="showFabric = false">Submit</button>
-		</div>
-	</div>
-	<!--
+    
+    <div class="calendar-modal" data-modal  ng-model="showCal">
+        <div ui-date ng-model="acknowledgement.delivery_date"></div>
+        <div class="bottom_bar">
+            <button ng-click="showCal=false">Select</button>
+        </div>
+            
+    </div>
+	
+    <div data-modal ng-model="showFabric" class="fabric_modal">
+        <div class="title">
+            Fabric
+        </div>
+        
+        <div class="container">
+            <div class="product_container">
+                <div class="product" data-drop-on="item.fabric">
+                    <div>{{item.description}}</div>
+                    
+                    <div class="fabric" ui-if="item.fabric">
+                        Fabric:  {{item.fabric.description}}
+                        <img ng-src="{{item.fabric.image_url}}" />
+                    </div>
+                    
+                </div>
+                <div class="pillow" ng-repeat="pillow in item.pillows" data-drop-on="pillow.fabric">
+                    <div>{{pillow.type | beautify}} Pillow</div>
+                    <div class="fabric">
+                        Fabric: {{pillow.fabric.description}}
+                        <img ng-src="{{pillow.fabric.image_url}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="fabric_container">
+                <div data-search-bar></div>
+                <ul class="list">
+                    <li class="item" ng-repeat="fabric in fabricList | filter:query " data-drag-on="fabric">
+                        <img ng-src="{{fabric.image_url}}" />
+                        <div class="details">
+                            Pattern: {{fabric.pattern}}
+                            <br />
+                            Color: {{fabric.color}}
+                        </div>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottom_bar">
+            <button ng-click="showFabric = false">Submit</button>
+        </div>
+    </div>
+    
+    <!--
         Sidebar
     -->
-	<div class="workspace">
+
+    <div class="workspace">
+		
 		<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
 			<h3><span>Acknowledgement {{acknowledgement.id}}</span></h3>
 			<div flex></div>
@@ -64,19 +78,21 @@
 				<i class="material-icons">clear</i>
 			</md-button>
 		</md-toolbar>
+		
 		<md-content layout="column">
-			<section>
-				<md-subheader class="md-primary md-no-sticky">Customer</md-subheader>
+		  	<section>
+				<md-subheader class="md-primary md-no-sticky">Customer</md-subheader>											
 				<div layout="row" layout-align="start center">
 					<span>{{ack.customer.name}}</span>
 				</div>
 			</section>
-			<section>
-				<md-subheader class="md-primary md-no-sticky">Order</md-subheader>
+		
+		  	<section>
+				<md-subheader class="md-primary md-no-sticky">Order</md-subheader>	
 				<div layout="row" layout-align="start start" style="align-items:baseline;">
 					<md-input-container>
-						<label>Status</label>
-						<md-select ng-model="ack.status">
+			        	<label>Status</label>
+				        <md-select ng-model="ack.status">
 							<md-option value="deposit received">Deposit Received</md-option>
 							<md-option value="acknowledged">Acknowledged</md-option>
 							<md-option value="in production">In Production</md-option>
@@ -85,47 +101,52 @@
 							<md-option value="invoiced">Invoiced</md-option>
 							<md-option value="paid">Paid</md-option>
 							<md-option value="cancelled">Cancelled</md-option>
-						</md-select>
-					</md-input-container>
+				        </md-select>
+				    </md-input-container>
 					<md-datepicker ng-model="ack.delivery_date"></md-datepicker>
-				</div>
+	
+				</div>		
 				<div layout="row" layout-align="start start">
+				
 					<md-input-container>
-						<label>Purchase Order #</label>
-						<input name="po" type="text" ng-model="ack.po_id" required>
+					  	<label>Purchase Order #</label>
+					  	<input name="po" type="text" ng-model="ack.po_id" required>
 						<div ng-messages="ackForm.po.$error">
 							<div ng-message-exp="'required'">This is required</div>
 						</div>
 					</md-input-container>
 					<md-input-container>
-						<label>Vat</label>
-						<input name="vat" type="number" ng-model="ack.vat" required max="10">
+					  	<label>Vat</label>
+					  	<input name="vat" type="number" ng-model="ack.vat" required max="10">								  
 						<div ng-messages="ackForm.vat.$error" multiple>
 							<div ng-message-exp="'required'">This is required</div>
 							<div ng-message-exp="'max'">That's too much vat!</div>
 						</div>
 					</md-input-container>
 					<md-input-container>
-						<label>Remarks</label>
-						<md-icon md-font-icon="material-icons">comment</md-icon>
+					  	<label>Remarks</label>
+					  	<md-icon md-font-icon="material-icons">comment</md-icon>
+	
 						<textarea ng-model="ack.remarks"></textarea>
+	
 					</md-input-container>
-				</div>
+				</div>								
 				<div layout="row" layout-align="start center">
 					<md-input-container>
-						<label>Project</label>
-						<input name="project" type="text" ng-model="ack.project.codename" ng-disabled="true">
+					  	<label>Project</label>
+					  	<input name="project" type="text" ng-model="ack.project.codename" ng-disabled="true">								  
 					</md-input-container>
 					<md-input-container ng-show="ack.room" ng-disabled="true">
-						<label>Room</label>
-						<input name="room" type="text" ng-model="ack.room.description" ng-disabled="true">
+					  	<label>Room</label>
+					  	<input name="room" type="text" ng-model="ack.room.description" ng-disabled="true">								  
 					</md-input-container>
 					<md-input-container ng-show="ack.phase" ng-disabled="true">
-						<label>Phase</label>
-						<input name="phase" type="text" ng-model="ack.phase.description" ng-disabled="true">
+					  	<label>Phase</label>
+					  	<input name="phase" type="text" ng-model="ack.phase.description" ng-disabled="true">								  
 					</md-input-container>
 				</div>
 			</section>
+		
 			<div class="status-bar">
 				<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
 					<span>Acknowledged</span>
@@ -161,40 +182,44 @@
 					<span>Paid</span>
 					<div class="arrow"></div>
 					<div class="arrow2"></div>
-				</div>
+				</div>	
 			</div>
+		
 			<section>
 				<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
 				<div class="files">
 					<md-card class="file" ng-repeat="file in ack.files">
-						<md-card-title>
-							<md-card-title-media>
-								<div class="md-media-sm card-media">
-									<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png" ng-show="file.type == 'pdf'">
-								</div>
-							</md-card-title-media>
-							<md-card-title-text>
-								<span class="md-headline">{{file.filename}}</span>
-							</md-card-title-text>
-						</md-card-title>
-						<md-card-actions layout="row" layout-align="end center">
-							<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
+			        	<md-card-title>
+			          		<md-card-title-media>
+			            		<div class="md-media-sm card-media">
+			            			<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png"
+										ng-show="file.type == 'pdf'">
+			            		</div>
+			          		</md-card-title-media>
+			          		<md-card-title-text>
+			            		<span class="md-headline">{{file.filename}}</span>
+			          	  	</md-card-title-text>
+		          		
+			        	</md-card-title>
+			        	<md-card-actions layout="row" layout-align="end center">
+			          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
 								<md-tooltip>Open in a New Window</md-tooltip>
 								<i class="material-icons">open_in_browser</i>
 							</md-button>
-						</md-card-actions>
-					</md-card>
+			        	</md-card-actions>
+			      	</md-card>
 				</div>
 			</section>
+		
 			<section>
 				<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
 				<div class="items">
 					<md-card class="item" ng-repeat="item in ack.items">
 						<md-card-title>
-							<md-card-title-text>
-								<span class="md-headline">{{item.description}}</span>
-							</md-card-title-text>
-						</md-card-title>
+				          	<md-card-title-text>
+				            	<span class="md-headline">{{item.description}}</span>
+				          	</md-card-title-text>
+				        </md-card-title>
 						<md-card-content layout="row">
 							<table class="product-details">
 								<tr>
@@ -206,7 +231,7 @@
 												<div ng-message="required">This required is required</div>
 												<div ng-message="min">Quantity should be greater than 0</div>
 											</div>
-											<div class="hint">How many pieces did they order?</div>
+								            <div class="hint">How many pieces did they order?</div>
 										</md-input-container>
 									</td>
 									<td layout="row" colspan="2">
@@ -216,7 +241,8 @@
 											<div ng-messages="ackForm.price.$error">
 												<div ng-message="required">This required is required</div>
 											</div>
-											<div class="hint">How many one piece cost?</div>
+								            <div class="hint">How many one piece cost?</div>
+	
 										</md-input-container>
 									</td>
 								</tr>
@@ -242,15 +268,21 @@
 								</tr>
 								<tr class="fabric">
 									<td colspan="2">
-										<md-autocomplete flex md-items="fabric in searchFabrics(fabricSearchText)" md-search-text-change="retrieveFabrics(fabricSearchText)" md-selected-item="item.fabric" md-search-text="fabricSearchText" md-item-text="fabric.description" md-floating-label="Fabric"
-										md-min-length="0">
-											<md-item-template>
-												<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
-											</md-item-template>
-											<div ng-messages="true">
-												<div class="hint" ng-message="true">What's the number on their purchase order?</div>
-											</div>
-										</md-autocomplete>
+										<md-autocomplete flex 
+											md-items="fabric in searchFabrics(fabricSearchText)" 
+											md-search-text-change="retrieveFabrics(fabricSearchText)"
+											md-selected-item="item.fabric"
+											md-search-text="fabricSearchText"
+											md-item-text="fabric.description"
+											md-floating-label="Fabric"
+											md-min-length="0">
+									    <md-item-template>
+									    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
+									    </md-item-template>
+										<div ng-messages="true">
+											<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+										</div>
+									</md-autocomplete>
 									</td>
 									<td>
 										<img ng-src="{{item.fabric.image.url}}" />
@@ -258,15 +290,21 @@
 								</tr>
 								<tr class="fabric" ng-repeat="pillow in item.pillows">
 									<td colspan="2">
-										<md-autocomplete flex md-items="fabric in searchFabrics(fabricSearchText)" md-search-text-change="retrieveFabrics(fabricSearchText)" md-selected-item="pillow.fabric" md-search-text="fabricSearchText" md-item-text="fabric.description" md-floating-label="{{pillow.type}} pillow fabric"
-										md-min-length="0">
-											<md-item-template>
-												<span md-highlight-text="fabricSearchText">{{pillow.type}} pillow {{pillow.fabric.description}}</span>
-											</md-item-template>
-											<div ng-messages="true">
-												<div class="hint" ng-message="true">What's the number on their purchase order?</div>
-											</div>
-										</md-autocomplete>
+										<md-autocomplete flex 
+											md-items="fabric in searchFabrics(fabricSearchText)" 
+											md-search-text-change="retrieveFabrics(fabricSearchText)"
+											md-selected-item="pillow.fabric"
+											md-search-text="fabricSearchText"
+											md-item-text="fabric.description"
+											md-floating-label="{{pillow.type}} pillow fabric"
+											md-min-length="0">
+									    <md-item-template>
+									    	<span md-highlight-text="fabricSearchText">{{pillow.type}} pillow {{pillow.fabric.description}}</span>
+									    </md-item-template>
+										<div ng-messages="true">
+											<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+										</div>
+									</md-autocomplete>
 									</td>
 									<td>
 										<img ng-src="{{pillow.fabric.image.url}}" />
@@ -275,10 +313,12 @@
 								<tr>
 									<td>
 										<md-input-container>
-											<label>Remarks</label>
-											<md-icon md-font-icon="material-icons">comment</md-icon>
+										  	<label>Remarks</label>
+		  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
+	
 											<textarea ng-model="item.comments"></textarea>
-											<div class="hint">Any other details?</div>
+								            <div class="hint">Any other details?</div>
+	
 										</md-input-container>
 									</td>
 								</tr>
@@ -292,6 +332,9 @@
 					</md-card>
 				</div>
 			</section>
+			
 		</md-content>
 	</div>
+	
 </div>
+

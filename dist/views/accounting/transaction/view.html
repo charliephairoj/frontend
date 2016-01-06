@@ -1,51 +1,57 @@
 <div class="viewTransactionsPage">
-	<!--
+    
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<h1>
+    
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Transactions</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ui-if="currentUser.hasPermission('add_transaction')"><a ng-href="#/accounting/transaction/add">Create</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<!--
+        </header>
+        <nav>
+            <ul class="list">
+                <li ui-if="currentUser.hasPermission('add_transaction')"><a ng-href="#/accounting/transaction/add">Create</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <!--
         Search Bar
     -->
-	<div data-search-bar></div>
-	<!--
+    <div data-search-bar></div>
+    
+    <!--
         Workspace
     -->
-	<div class="workspace grid">
-		<div class="container">
-			<div class="grid">
-				<div class="header" ui-scrollfix="0">
-					<div class="row">
-						<div class="cell">Name</div>
-						<div class="cell">Amount</div>
-						<div class="cell">Currency</div>
-						<div class="cell">Type</div>
-						<div class="cell">Employee</div>
-						<div class="cell">Date</div>
-					</div>
-				</div>
-				<div class="body">
-					<a ng-repeat="transaction in transactionList | filter:query" class="row">
-						<div class="cell">{{transaction.name}}</div>
-						<div class="cell">{{transaction.amount}}</div>
-						<div class="cell">{{transaction.currency}}</div>
-						<div class="cell">{{transaction.type}}</div>
-						<div class="cell">{{transaction.employee}}</div>
-						<div class="cell">{{transaction.transaction_date | date:"MMMM d, yyyy"}}</div>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    
+    <div class="workspace grid">
+        <div class="container">
+            <div class="grid">
+                <div class="header" ui-scrollfix="0">
+                    <div class="row">
+                        <div class="cell">Name</div>
+                        <div class="cell">Amount</div>
+                        <div class="cell">Currency</div>
+                        <div class="cell">Type</div>
+                        <div class="cell">Employee</div>
+                        <div class="cell">Date</div>
+                    </div>
+                </div>
+                <div class="body">
+                    <a ng-repeat="transaction in transactionList | filter:query" class="row">
+                        <div class="cell">{{transaction.name}}</div>
+                        <div class="cell">{{transaction.amount}}</div>
+                        <div class="cell">{{transaction.currency}}</div>
+                        <div class="cell">{{transaction.type}}</div>
+                        <div class="cell">{{transaction.employee}}</div>
+                        <div class="cell">{{transaction.transaction_date | date:"MMMM d, yyyy"}}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>

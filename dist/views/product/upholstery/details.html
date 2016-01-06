@@ -1,75 +1,71 @@
 <div class="upholstery-details-page" image-drop-target="upload()">
-	<!--
+    
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<div class="profilePic" ui-if="uphol.image">
-				<img ng-src="{{uphol.image.url}}" />
-			</div>
-			<h1><span>{{uphol.model.model}}<br />{{uphol.configuration.configuration}}</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li>
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<form class="workspace">
-		<table class="details">
-			<tr>
-				<tr>
-					<td>
-						<label>Product Number</label>
-					</td>
-					<td>{{uphol.id}}</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Model</label>
-					</td>
-					<td>{{uphol.model.name+' '+uphol.model.model}}</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Configuration</label>
-					</td>
-					<td>{{uphol.configuration.configuration}}</td>
-				</tr>
-				<tr>
-					<td>Width:</td>
-					<td>
-						<input type="text" data-ng-model="uphol.width" />
-					</td>
-				</tr>
-				<tr>
-					<td>Depth:</td>
-					<td>
-						<input type="text" data-ng-model="uphol.depth" />
-					</td>
-				</tr>
-				<tr>
-					<td>Height:</td>
-					<td>
-						<input type="text" data-ng-model="uphol.height" />
-					</td>
-				</tr>
+    <div class="sidebar">
+        <header>
+            <div class="profilePic" ui-if="uphol.image">
+                <img ng-src="{{uphol.image.url}}" />
+            </div>
+            
+            <h1><span>{{uphol.model.model}}<br />{{uphol.configuration.configuration}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                
+                <li>
+                    <div ng-click="remove()">Delete</div>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+    
+    
+    
+    
+    <form class="workspace">
+        
+        <table class="details">
+            <tr>
+                
+                <tr>
+                    <td><label>Product Number</label></td>
+                    <td>{{uphol.id}}</td>
+                </tr>
+                <tr>
+                    <td><label>Model</label></td>
+                    <td>{{uphol.model.name+' '+uphol.model.model}}</td>
+                </tr>
+                <tr>
+                    <td><label>Configuration</label></td>
+                    <td>{{uphol.configuration.configuration}}</td>
+                </tr>
+                <tr>
+                    <td>Width:</td>
+                    <td><input type="text" data-ng-model="uphol.width" /></td>
+                </tr>
+                <tr>
+                    <td>Depth:</td>
+                    <td><input type="text" data-ng-model="uphol.depth" /></td>
+                </tr>
+                <tr>
+                    <td>Height:</td>
+                    <td><input type="text" data-ng-model="uphol.height" /></td>
+                </tr>
 				<tr ng-repeat="pillow in uphol.pillows">
 					<td>{{pillow.type}} Pillow</td>
-					<td>
-						<input type="text" ng-model="pillow.quantity">
-					</td>
+					<td><input type="text" ng-model="pillow.quantity"></td> 
 				</tr>
-				<tr>
+                <tr>
 					<td colspan="2">Prices</td>
 				</tr>
-				<tr ng-repeat="price in uphol.prices">
-					<td>{{price.grade}}</td>
-					<td>{{price.price}}</td>
-				</tr>
-				<!--
+                <tr ng-repeat="price in uphol.prices">
+                    <td>{{price.grade}}</td>
+                    <td>{{price.price}}</td>
+                </tr>
+                <!--
                 <tr>
                     <td>Retail Price:</td>
                     <td><input type="text" ec-blur="update()" data-ng-model="uphol.retail_price" /></td>
@@ -83,81 +79,90 @@
                     <td><input type="text" ec-blur="update()" data-ng-model="uphol.export_price" /></td>
                 </tr>
                 -->
-		</table>
-		<div class="supplies-container">
-			<md-button class="add-btn md-raised md-accent" ng-click="showAddProductSupply()">Add Supply</md-button>
-			<div class="supplies">
-				<div class="title-bar">
-					<div class="description">DESCRIPTION</div>
-					<div class="quantity">QUANTITY</div>
-					<div class="cost">COST</div>
-				</div>
-				<div class="outer-container" on-scroll-end="loadNext()">
-					<ul class="inner-container">
-						<li class="item-container" data-ng-repeat="supply in supplies | filter:supply.description | filter:supply.supply.description">
-							<div class="item">
-								<div class="description">{{supply.description || supply.supply.description}} {{supply.supply ? '' : '(Generic)'}}</div>
-								<div class="quantity">
-									<input type="number" ng-model="supply.quantity" />
-								</div>
-								<div class="cost">
-									<input type="number" ng-model="supply.cost" />
-								</div>
-							</div>
-						</li>
-						<!--
+            </table>
+			<div class="supplies-container">
+				<md-button class="add-btn md-raised md-accent" ng-click="showAddProductSupply()">Add Supply</md-button>
+				<div class="supplies">
+					<div class="title-bar">
+						<div class="description">DESCRIPTION</div>
+						<div class="quantity">QUANTITY</div>
+						<div class="cost">COST</div>
+					</div>
+		
+			    	<div class="outer-container" on-scroll-end="loadNext()"> 
+			
+				    	<ul class="inner-container" >
+				    		<li class="item-container" data-ng-repeat="supply in supplies | filter:supply.description | filter:supply.supply.description">	
+				    			<div class="item">
+									<div class="description">{{supply.description || supply.supply.description}} {{supply.supply ? '' : '(Generic)'}}</div>
+									<div class="quantity">
+										<input type="number" ng-model="supply.quantity" />
+									</div>
+									<div class="cost">
+										<input type="number" ng-model="supply.cost" />
+									</div>
+				    			</div>
+	    				
+				    		</li>
+							
+							<!--
 								Manufacture Total
 								-->
-						<li class="item-container summary">
-							<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="description"></div>
-								<div class="quantity">Direct Labor + Material</div>
-								<div class="cost">{{supplyTotal() | number:2}}</div>
-							</div>
-						</li>
-						<!--
+				    		<li class="item-container summary">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="description"></div>
+									<div class="quantity">Direct Labor + Material</div>
+									<div class="cost">{{supplyTotal() | number:2}}</div>
+				    			</div>
+				    		</li>
+							
+							<!--
 								Overhead
 								-->
-						<li class="item-container summary">
-							<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="description"></div>
-								<div class="quantity">Overhead</div>
-								<div class="cost">{{supplyTotal() * 0.3 | number:2}}</div>
-							</div>
-						</li>
-						<!--
+				    		<li class="item-container summary">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="description"></div>
+									<div class="quantity">Overhead</div>
+									<div class="cost">{{supplyTotal() * 0.3 | number:2}}</div>
+				    			</div>
+				    		</li>
+							
+							<!--
 								Total Manufacture Cost
 								-->
-						<li class="item-container summary">
-							<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="description"></div>
-								<div class="quantity">Total Manufacturing Cost</div>
-								<div class="cost">{{(supplyTotal() * 1.3) | number:2}}</div>
-							</div>
-						</li>
-						<!--
+				    		<li class="item-container summary">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="description"></div>
+									<div class="quantity">Total Manufacturing Cost</div>
+									<div class="cost">{{(supplyTotal() * 1.3) | number:2}}</div>
+				    			</div>
+				    		</li>
+							
+							<!--
 								50% Profit
 								-->
-						<li class="item-container summary">
-							<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="description"></div>
-								<div class="quantity">50% Profit</div>
-								<div class="cost">{{(supplyTotal() * 1.3) * 2 | number:2}}</div>
-							</div>
-						</li>
-						<!--
+				    		<li class="item-container summary">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="description"></div>
+									<div class="quantity">50% Profit</div>
+									<div class="cost">{{(supplyTotal() * 1.3) * 2 | number:2}}</div>
+				    			</div>
+				    		</li>
+							
+							<!--
 								30% Profit
 								-->
-						<li class="item-container summary">
-							<div class="item" ng-class="{'selected':ack.$selected}">
-								<div class="description"></div>
-								<div class="quantity">30% Profit</div>
-								<div class="cost">{{(supplyTotal() * 1.3) * 1.5 | number:2}}</div>
-							</div>
-						</li>
-					</ul>
+				    		<li class="item-container summary">	
+				    			<div class="item" ng-class="{'selected':ack.$selected}">
+									<div class="description"></div>
+									<div class="quantity">30% Profit</div>
+									<div class="cost">{{(supplyTotal() * 1.3) * 1.5 | number:2}}</div>
+				    			</div>
+				    		</li>
+							
+				    	</ul>
+			    	</div>
 				</div>
 			</div>
-		</div>
-	</form>
+    </form>
 </div>

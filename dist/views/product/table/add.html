@@ -1,69 +1,63 @@
-<div class="addPage">
-	<form name="form" novalidate image-drop-target="upload()">
-		<div class="sidebar">
-			<header>
-				<div class="profilePic" ui-if="imagePreviews">
-					<img ng-src="{{table.image.url}}" />
-				</div>
-				<h1><span>New table</span></h1>
-			</header>
-			<nav>
-				<ul>
-					<li>
-						<div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
-					</li>
-				</ul>
-			</nav>
-		</div>
-		<div class="workspace">
-			<table class="inputTable">
-				<tr>
-					<td>
-						<label>Model</label>
-					</td>
-					<td>
-						<select ng-model="table.model" required tooltip="modelText" ng-options="model.model for model in modelList | orderBy:'model'">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Configuration</label>
-					</td>
-					<td>
-						<select ng-model="table.configuration" required tooltip="configurationText" ng-options="config.configuration for config in configurationList | orderBy:'configuration'">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Width</label>
-					</td>
-					<td>
-						<input type="text" beautify ng-model="table.width" required tooltip="widthText" />mm</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Depth</label>
-					</td>
-					<td>
-						<input type="text" beautify ng-model="table.depth" required tooltip="depthText" />mm</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Height</label>
-					</td>
-					<td>
-						<input type="text" ng-model="table.height" required tooltip="heightText" />mm</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Price</label>
-					</td>
-					<td>
-						<input type="text" ng-model="table.price" ng-pattern="/^\d+(\.\d{2})?$/" tooltip="price" />THB</td>
-				</tr>
-			</table>
-		</div>
-	</form>
+<div class="addPage">   
+    
+    
+    <form name="form" novalidate image-drop-target="upload()">
+        
+        <div class="sidebar">
+            <header>
+                <div class="profilePic" ui-if="imagePreviews"><img ng-src="{{table.image.url}}" /></div>
+                <h1><span>New table</span></h1>
+            </header>
+            <nav>
+                <ul>
+                    <li>
+                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+        
+        
+        
+        <div class="workspace">
+            <table class="inputTable">
+                <tr>
+                    <td><label>Model</label></td>
+                    <td>
+                        <select ng-model="table.model" required tooltip="modelText" ng-options="model.model for model in modelList | orderBy:'model'">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Configuration</label></td>
+                    <td>
+                        <select ng-model="table.configuration" required tooltip="configurationText" ng-options="config.configuration for config in configurationList | orderBy:'configuration'">
+                            
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Width</label></td>
+                    <td><input type="text" beautify ng-model="table.width" required tooltip="widthText"/> mm</td>
+                </tr>
+                <tr>
+                    <td><label>Depth</label></td>
+                    <td><input type="text" beautify ng-model="table.depth" required tooltip="depthText"/> mm</td>
+                </tr>
+                <tr>
+                    <td><label>Height</label></td>
+                    <td><input type="text" ng-model="table.height" required tooltip="heightText"/> mm</td>
+                </tr>      
+                <tr>
+                    <td><label>Price</label></td>
+                    <td><input type="text" ng-model="table.price" ng-pattern="/^\d+(\.\d{2})?$/" tooltip="price"/> THB</td>
+                </tr>
+            </table> 
+        </div>
+        
+        
+        
+    </form>
+    
 </div>

@@ -6,11 +6,11 @@
 				<table>
 					<tr>
 						<td>
-							<md-input-container>
-								<select ng-model="item" ng-options="v.description for v in ctrl.parent.room.items" required>
-								</select>
-							</md-input-container>
-							<md-input-container>
+								<md-input-container>
+									<select ng-model="item" ng-options="v.description for v in ctrl.parent.room.items" required>
+									</select>
+								</md-input-container>
+								<md-input-container>
 								<label>Part Description/Reference</label>
 								<input type="text" ng-model="ctrl.parent.part.description" required>
 							</md-input-container>

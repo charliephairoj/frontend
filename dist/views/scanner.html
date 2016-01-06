@@ -1,13 +1,13 @@
-<div class="scanner-page">
+<div class="scanner-page">	
 	<md-action>
 		<md-input-container>
-			<label>Purchase Order</label>
-			<md-select class="md-accent" ng-model="po" ng-model-options="{trackBy: '$value.id'}">
-				<md-option ng-repeat="po in poList" ng-value="po">
-					{{po.id}}
-				</md-option>
-			</md-select>
-		</md-input-container>
+	        <label>Purchase Order</label>
+	        <md-select class="md-accent" ng-model="po" ng-model-options="{trackBy: '$value.id'}">
+	          	<md-option ng-repeat="po in poList" ng-value="po">
+	            	{{po.id}}
+	         	 </md-option>
+	        </md-select>
+	    </md-input-container>
 		<div class="btn-container">
 			<md-button class="md-icon-button md-accent md-raised" ng-click="addNewEquipment()">
 				<md-tooltip>
@@ -15,13 +15,14 @@
 				</md-tooltip>
 				<i class="material-icons">add</i>
 			</md-button>
-			<md-button class="md-icon-button md-accent md-raised" ng-show="po" ng-click="checkout()">
+		 	<md-button class="md-icon-button md-accent md-raised" ng-show="po" ng-click="checkout()">
 				<md-tooltip>
 					เช็คอิน/Check In
 				</md-tooltip>
 				<i class="material-icons">shopping_cart</i>
 			</md-button>
-			<md-button class="md-icon-button md-accent md-raised" ng-hide="po" ng-click="checkout()">
+	
+			<md-button class="md-icon-button md-accent md-raised" ng-hide="po"  ng-click="checkout()">
 				<md-tooltip>
 					เช็คเอาท์/Checkout
 				</md-tooltip>
@@ -29,25 +30,30 @@
 			</md-button>
 		</div>
 	</md-action>
+	
+	
 	<!--
 		Primary container for scanner page
 	-->
 	<div class="main-container">
 		<div class="employee-container">
+			
 			<div class="employee-drop-down-selector">
 				<md-input-container>
-					<label>Employee</label>
-					<md-select class="md-accent" ng-model="employee" ng-model-options="{trackBy: '$value.id'}">
-						<md-option ng-repeat="employee in employees" ng-value="employee">
-							{{employee.name}}
-						</md-option>
-					</md-select>
-				</md-input-container>
+			        <label>Employee</label>
+			        <md-select class="md-accent" ng-model="employee" ng-model-options="{trackBy: '$value.id'}">
+			          	<md-option ng-repeat="employee in employees" ng-value="employee">
+			            	{{employee.name}}
+			         	 </md-option>
+			        </md-select>
+			    </md-input-container>
 			</div>
+			
 			<div ng-hide="employee" class="employee-placeholder">
 				<h2>Employee</h2>
 			</div>
 			<div ng-show="employee" class="employee">
+			
 				<div class="img-container">
 					<img ng-src="{{employee.image.url || tempUrl}}" />
 				</div>
@@ -55,130 +61,151 @@
 				<h2>{{employee.department}}</h2>
 			</div>
 		</div>
+
+
 		<!--
 			Container with list of supplies, equipment, or items to checkout
 		-->
-		<div class="checkout-container">
-			<!--
+		<div class="checkout-container">		
+			
+				
+				<!--
 					List of items in the Purchase Order
 				-->
-			<md-content class="card-container" layout-padding>
-				<!--
+				<md-content class="card-container" layout-padding>
+					
+					<!--
 						List Style
 						-->
-				<md-list>
-					<md-subheader class="md-no-sticky" ng-show="po">Purchase Order {{po.id}}</md-subheader>
-					<md-list-item ng-repeat="item in po.items">
-						<img class="md-avatar" ng-src="{{item.image.url}}" />
-						<div class="md-list-item-text" layout="column">
-							<h3>{{ item.description }}</h3>
-							<h4>{{ item.supply.id }}</h4>
-							<p>{{ item.quantity }}</p>
-						</div>
-						<div class="md-secondary">
-							<md-button class="md-icon-button md-accent md-raised" ng-click="printSupplySticker(item)">
-								<md-tooltip>
-									พิมพ์สติ๊กเกอร์/Print Sticker
-								</md-tooltip>
-								<i class="material-icons">print</i>
-							</md-button>
-							<md-button class="md-icon-button md-warn md-raised" ng-click="removeItem($index)">
-								<md-tooltip>
-									เอาออก/Remove
-								</md-tooltip>
-								<i class="material-icons">remove</i>
-							</md-button>
-						</div>
-					</md-list-item>
-					<md-subheader class="md-no-sticky" ng-show="equipmentList.length">Equipment</md-subheader>
-					<md-list-item ng-repeat="equipment in equipmentList" ng-hide="equipment.$new">
-						<img class="md-avatar" ng-src="{{equipment.image.url}}">
-						<div class="md-list-item-text" layout="column">
-							<h3>{{ equipment.description }}</h3>
-							<h4>{{ equipment.brand }}</h4>
-							<p>{{ equipment.status }}</p>
-						</div>
-						<div class="md-secondary">
-							<md-button class="md-icon-button md-accent md-raised" ng-click="printEquipmentSticker(equipment)">
-								<md-tooltip>
-									พิมพ์สติ๊กเกอร์/Print Sticker
-								</md-tooltip>
-								<i class="material-icons">print</i>
-							</md-button>
-							<md-button class="md-icon-button md-warn md-raised" ng-click="removeEquipment(equipment, $index)">
-								<md-tooltip>
-									เอาออก/Remove
-								</md-tooltip>
-								<i class="material-icons">remove</i>
-							</md-button>
-						</div>
-					</md-list-item>
-					<md-list-item ng-repeat="equipment in equipmentList" ng-show="equipment.$new">
-						<img class="md-avatar" ng-src="{{equipment.image.url}}">
-						<div class="md-list-item-text" layout="column">
-							<h3>
+					<md-list>
+					
+					 	<md-subheader class="md-no-sticky" ng-show="po">Purchase Order {{po.id}}</md-subheader>
+						
+						
+						<md-list-item  ng-repeat="item in po.items">
+							<img class="md-avatar" ng-src="{{item.image.url}}" />
+							<div class="md-list-item-text" layout="column">
+					      		<h3>{{ item.description }}</h3>
+					          	<h4>{{ item.supply.id }}</h4>
+					          	<p>{{ item.quantity }}</p>
+							</div>
+							<div class="md-secondary">
+								<md-button class="md-icon-button md-accent md-raised" ng-click="printSupplySticker(item)">
+									<md-tooltip>
+										พิมพ์สติ๊กเกอร์/Print Sticker
+									</md-tooltip>
+									<i class="material-icons">print</i>
+								</md-button>
+								<md-button class="md-icon-button md-warn md-raised" ng-click="removeItem($index)">
+									<md-tooltip>
+										เอาออก/Remove
+									</md-tooltip>
+									<i class="material-icons">remove</i>
+								</md-button>
+							</div>
+						</md-list-item>
+						
+					 	<md-subheader class="md-no-sticky" ng-show="equipmentList.length">Equipment</md-subheader>
+						
+						
+						
+						<md-list-item  ng-repeat="equipment in equipmentList"  ng-hide="equipment.$new">
+							<img class="md-avatar" ng-src="{{equipment.image.url}}">
+							<div class="md-list-item-text" layout="column">
+					      		<h3>{{ equipment.description }}</h3>
+					          	<h4>{{ equipment.brand }}</h4>
+					          	<p>{{ equipment.status }}</p>
+							</div>
+							<div class="md-secondary">
+								<md-button class="md-icon-button md-accent md-raised" ng-click="printEquipmentSticker(equipment)">
+									<md-tooltip>
+										พิมพ์สติ๊กเกอร์/Print Sticker
+									</md-tooltip>
+									<i class="material-icons">print</i>
+								</md-button>
+								<md-button class="md-icon-button md-warn md-raised" ng-click="removeEquipment(equipment, $index)">
+									<md-tooltip>
+										เอาออก/Remove
+									</md-tooltip>
+									<i class="material-icons">remove</i>
+								</md-button>
+							</div>
+						</md-list-item>
+						
+						  
+						<md-list-item  ng-repeat="equipment in equipmentList"  ng-show="equipment.$new">
+							<img class="md-avatar" ng-src="{{equipment.image.url}}">
+							<div class="md-list-item-text" layout="column">
+					      		<h3>
 									<md-input-container>
 										<label>ID</label>
 										<input type="text" ng-model="equipment.id">
 									</md-input-container>
 					      		</h3>
-							<h4>
+					          	<h4>
 									<md-input-container>
 										<label>คำอธิบาย/Description</label>
 										<input type="text" ng-model="equipment.description">
 									</md-input-container>
 					          	</h4>
-							<p>
-								<md-input-container>
-									<label>ยี่ห้อ/Brand</label>
-									<input type="text" ng-model="equipment.brand">
-								</md-input-container>
-							</p>
-						</div>
-						<div class="md-secondary">
-							<md-button class="md-icon-button md-accent md-raised" ng-click="printEquipmentSticker(equipment)">
-								<md-tooltip>
-									พิมพ์สติ๊กเกอร์/Print Sticker
-								</md-tooltip>
-								<i class="material-icons">print</i>
-							</md-button>
-							<md-button class="md-icon-button md-warn md-raised" ng-click="removeEquipment(equipment, $index)">
-								<md-tooltip>
-									เอาออก/Remove
-								</md-tooltip>
-								<i class="material-icons">remove</i>
-							</md-button>
-						</div>
-					</md-list-item>
-					<md-subheader class="md-no-sticky" ng-show="supplies.length">Supplies</md-subheader>
-					<md-list-item ng-repeat="supply in supplies">
-						<img class="md-avatar" ng-src="{{supply.image.url}}">
-						<div class="md-list-item-text" layout="column">
-							<h3>{{ supply.description }}</h3>
-							<h4>{{ supply.id }}</h4>
-							<p>{{ supply.quantity }}</p>
-						</div>
-						<div class="md-secondary">
-							<md-button class="md-icon-button md-accent md-raised" ng-click="printSupplySticker(supply)">
-								<md-tooltip>
-									พิมพ์สติ๊กเกอร์/Print Sticker
-								</md-tooltip>
-								<i class="material-icons">print</i>
-							</md-button>
-							<md-button class="md-icon-button md-warn md-raised" ng-click="remove($index, supply)">
-								<md-tooltip>
-									เอาออก/Remove
-								</md-tooltip>
-								<i class="material-icons">remove</i>
-							</md-button>
-						</div>
-					</md-list-item>
-					<!--
+					          	<p>
+									<md-input-container>
+										<label>ยี่ห้อ/Brand</label>
+										<input type="text" ng-model="equipment.brand">
+									</md-input-container>
+					          	</p>
+							</div>
+							<div class="md-secondary">
+								<md-button class="md-icon-button md-accent md-raised" ng-click="printEquipmentSticker(equipment)">
+									<md-tooltip>
+										พิมพ์สติ๊กเกอร์/Print Sticker
+									</md-tooltip>
+									<i class="material-icons">print</i>
+								</md-button>
+								<md-button class="md-icon-button md-warn md-raised" ng-click="removeEquipment(equipment, $index)">
+									<md-tooltip>
+										เอาออก/Remove
+									</md-tooltip>
+									<i class="material-icons">remove</i>
+								</md-button>
+							</div>
+						</md-list-item>
+						
+
+						<md-subheader class="md-no-sticky" ng-show="supplies.length">Supplies</md-subheader>
+						
+						
+						<md-list-item  ng-repeat="supply in supplies">
+							<img class="md-avatar" ng-src="{{supply.image.url}}">
+							<div class="md-list-item-text" layout="column">
+					      		<h3>{{ supply.description }}</h3>
+					          	<h4>{{ supply.id }}</h4>
+					          	<p>{{ supply.quantity }}</p>
+							</div>
+							<div class="md-secondary">
+								<md-button class="md-icon-button md-accent md-raised" ng-click="printSupplySticker(supply)">
+									<md-tooltip>
+										พิมพ์สติ๊กเกอร์/Print Sticker
+									</md-tooltip>
+									<i class="material-icons">print</i>
+								</md-button>
+								<md-button class="md-icon-button md-warn md-raised" ng-click="remove($index, supply)">
+									<md-tooltip>
+										เอาออก/Remove
+									</md-tooltip>
+									<i class="material-icons">remove</i>
+								</md-button>
+							</div>
+						</md-list-item>
+							
+							
+					
+						<!--
 						Card Style
 							-->
-
-					<!--		
-					<md-card ng-repeat="item in po.items">
+							
+						<!--		
+						<md-card ng-repeat="item in po.items">
 							<md-card-header class="md-primary">
 								<md-card-avatar>
 									<img class="md-user-avatar" ng-src="{{item.image.url}}">
@@ -307,8 +334,9 @@
 							</md-card-actions>
 						</md-card>
 								-->
-				</md-list>
-			</md-content>
-		</div>
+					
+					</md-list>
+				</md-content>
+		  </div>
 	</div>
 </div>

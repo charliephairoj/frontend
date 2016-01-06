@@ -1,35 +1,26 @@
 <div>
-	<div class="sidebar">
-		<header>
-			<h1>
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Supplies</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_foam')"><a ng-href="#/supply/foam">Foam</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/glue">Glue</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/lumber">Lumber</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/prop">Prop</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_screw')"><a ng-href="#/supply/screws">Screws</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_staple')"><a ng-href="#/supply/staple">Staple</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_sewingthread')"><a ng-href="#/supply/thread">Thread</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_webbing')"><a ng-href="#/supply/webbing">Webbing</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_wool')"><a ng-href="#/supply/wool">Wool</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/zipper">Zipper</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
+        </header>
+        <nav>
+            <ul class="list">
+                <li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a></li>
+                <li ng-show="currentUser.hasPermission('add_foam')"><a ng-href="#/supply/foam">Foam</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/glue">Glue</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/lumber">Lumber</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/prop">Prop</a></li>
+                <li ng-show="currentUser.hasPermission('add_screw')"><a ng-href="#/supply/screws">Screws</a></li>
+                <li ng-show="currentUser.hasPermission('add_staple')"><a ng-href="#/supply/staple">Staple</a></li>
+                <li ng-show="currentUser.hasPermission('add_sewingthread')"><a ng-href="#/supply/thread">Thread</a></li>
+                <li ng-show="currentUser.hasPermission('add_webbing')"><a ng-href="#/supply/webbing">Webbing</a></li>
+                <li ng-show="currentUser.hasPermission('add_wool')"><a ng-href="#/supply/wool">Wool</a></li>
+                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/zipper">Zipper</a></li>
+                
+            </ul>
+        </nav>
+         
+    </div>
 </div>

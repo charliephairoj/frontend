@@ -1,31 +1,37 @@
 <div class="project-details-page">
-	<!--
+    
+    <!--
         Modals
     -->
+		
 	<div supply-list="showAddSupply" on-select="addSupply($supply)"></div>
-	<div customer-list="showCustomers" on-select="addCustomer(customer);"></div>
-	<div class="calendar-modal" data-modal ng-model="showCal">
-		<div ui-date ng-model="project.due_date"></div>
-		<div class="bottom_bar">
-			<button ng-click="showCal=false">Select</button>
-		</div>
-	</div>
-	<div class="sidebar">
-		<header>
-			<h1>
+	
+    <div customer-list="showCustomers" on-select="addCustomer(customer);"></div>
+	
+    <div class="calendar-modal" data-modal  ng-model="showCal">
+        <div ui-date ng-model="project.due_date"></div>
+        <div class="bottom_bar">
+            <button ng-click="showCal=false">Select</button>
+        </div>
+            
+    </div>
+     
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Project: {{project.codename}}</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li>
+        </header>
+        <nav>
+            <ul class="list">
+                <li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
 					<div ng-click="showAddSupply=true">
 						<span>Add a Supply</span>
 					</div>
-				</li>
+                </li>
 				<li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
@@ -34,8 +40,8 @@
 						<span>Add a Room</span>
 						<img src="img/icons/ikons/square_add.png" />
 					</div>
-				</li>
-				<li>
+                </li>
+                <li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
@@ -43,82 +49,92 @@
 						<span>Add a Phase</span>
 						<img src="img/icons/ikons/slideshow.png" />
 					</div>
-				</li>
-				<li>
+                </li>
+                <li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
 					<a ng-href="/api/v1/project/{{project.id}}/report/" target="_blank">
 						View Report <img src="img/icons/ikons/bar_chart_2.png" />
 					</a>
-				</li>
-				<li>
+                </li>
+                <li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
 					<div ng-click="showCreatePacking()" target="_blank">
-						Create Packing List
-						<img src="img/icons/ikons/bar_chart_2.png" />
+						Create Packing List<img src="img/icons/ikons/bar_chart_2.png" />
 					</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div class="workspace">
-		<div class="details">
-			<table>
-				<tr>
-					<td>Project:</td>
-					<td>{{project.codename}}</td>
-				</tr>
-				<tr class="customer">
-					<td ng-click="showCustomers=true">Customer:</td>
-					<td ng-click="showCustomers=true">{{project.customer.name}}</td>
-				</tr>
-				<tr class="due-date">
-					<td ng-click="showCal=true">Due Date:</td>
-					<td ng-click="showCal=true">{{project.due_date | date:"MMMM d, yyyy"}}</td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<td>Quantity:</td>
-					<td>{{project.quantity}}</td>
-				</tr>
-				<tr>
-					<td>Status:</td>
-					<td>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
+    
+    <div class="workspace">
+        <div class="details">
+            <table>
+                <tr>
+                    <td>Project: </td>
+                    <td>{{project.codename}}</td>
+                </tr>
+                <tr class="customer">
+                    <td ng-click="showCustomers=true">Customer: </td>
+                    <td ng-click="showCustomers=true">{{project.customer.name}}</td>
+                </tr>
+                <tr class="due-date">
+                    <td ng-click="showCal=true">Due Date: </td>
+                    <td ng-click="showCal=true">{{project.due_date | date:"MMMM d, yyyy"}}</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Quantity: </td>
+                    <td>{{project.quantity}}</td>
+                </tr>
+                <tr>
+                    <td>Status: </td>
+                    <td>
 						<select ng-model="project.status">
 							<option value="planning">Planning</option>
 							<option value="in production">In Production</option>
 							<option value="completed">Completed</option>
 						</select>
 					</td>
-				</tr>
-			</table>
-		</div>
+                </tr>
+            </table>
+        </div>
+		
 		<md-tabs md-selected="selectedIndex">
 			<md-tab label="Phases">
+			
 			</md-tab>
 			<md-tab label="Rooms">
+			
 			</md-tab>
 			<md-tab label="Items">
+				
 			</md-tab>
 			<md-tab label="Purchase Orders">
+				
 			</md-tab>
 			<md-tab label="Acknowledgements">
+				
 			</md-tab>
 			<md-tab label="Supplies">
+				
 			</md-tab>
 		</md-tabs>
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
 				<div ng-switch-when="0" class="phase-panel">
+				
 					<div class="title-bar">
 						<div class="description">DESCRIPTION</div>
 						<div class="quantity">QTY</div>
 						<div class="due-date">SHIP DATE</div>
 						<div class="status">Status</div>
+						
 					</div>
 					<div class="outer-container">
 						<div class="inner-container">
@@ -130,10 +146,12 @@
 									<div class="status" ng-class="item.status.toLowerCase()">
 										{{phase.status}}
 										<md-button class="md-accent md-raised phase-report" ng-href="/api/v1/phase/{{phase.id}}/report/" target="_blank">
-											Report
-											<img src="img/icons/ikons/bar_chart_2.png" />
+										Report
+										<img src="img/icons/ikons/bar_chart_2.png" />
 										</md-button>
 									</div>
+									
+									
 								</div>
 							</div>
 							<div class="item-container empty" ng-show="!project.phases || project.phases.length == 0">
@@ -144,12 +162,15 @@
 											Add a Phase
 										</md-button>
 									</div>
+									
+									
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div ng-switch-when="1" class="items-panel">
+				
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -162,9 +183,7 @@
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="room in project.rooms">
-								<a class="item" ng-href="#/project/room/{{room.id}}">
-
-									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+								<a class="item" ng-href="#/project/room/{{room.id}}"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -178,6 +197,7 @@
 									<div class="status" ng-class="item.status.toLowerCase()">{{item.status}}</div>
 								</a>
 							</div>
+							
 							<div class="item-container" ng-show="!project.rooms || project.rooms.length == 0">
 								<div class="item">
 									<div class="empty">
@@ -186,12 +206,16 @@
 											Add a Room
 										</md-button>
 									</div>
+									
+									
 								</div>
 							</div>
+							
 						</div>
 					</div>
 				</div>
 				<div ng-switch-when="2" class="items-panel">
+					
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -204,9 +228,7 @@
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="item in project.items">
-								<a class="item">
-
-									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+								<a class="item"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{item.image.url}}" />
@@ -278,6 +300,7 @@
 					</div>
 				</div>
 				<div ng-switch-when="5" class="supplies-panel">
+				
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
 						<div class="description">DESCRIPTION</div>
@@ -286,9 +309,7 @@
 					<div class="outer-container">
 						<div class="inner-container">
 							<div class="item-container" ng-repeat="supply in project.supplies">
-								<div class="item">
-
-									<!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
+								<div class="item"> <!-- ng-href="#/order/acknowledgement/item/{{item.id}}">-->
 									<div class="preview">
 										<div class="img-container">
 											<img ng-src="{{supply.image.url}}" />
@@ -301,6 +322,7 @@
 									</div>
 								</div>
 							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -353,5 +375,7 @@
 			</div>
 		</div>
 			-->
-	</div>
+			
+    </div>
+    
 </div>

@@ -1,17 +1,20 @@
 <div class="po-view-page view-page">
-	<!--
+   
+    <!--
         Workspace
     -->
-	<div class="workspace">
+    
+    <div class="workspace">
+				
 		<md-toolbar layout="column" md-scroll-shrink="true">
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Purchase Orders</span></h3>
 				<div flex></div>
-				<md-button class="md-icon-button md-primary md-raised" ng-href="#/order/purchase_order/create">
+	        	<md-button class="md-icon-button md-primary md-raised" ng-href="#/order/purchase_order/create">
 					<md-tooltip>
 						Create New Purchase Order
 					</md-tooltip>
-					<i class="material-icons">create</i>	
+					<i class="material-icons">create</i>				
 				</md-button>
 				<input type="text" ng-model="query.$.$" class="search" />
 			</div>
@@ -27,246 +30,269 @@
 				<div class="status">STATUS</div>
 			</div>
 		</md-toolbar>
-		<md-content on-scroll-end="loadNext()">
-			<md-card ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
-				<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
-					<md-card-title-text ng-click="active=false">
-						<span>Purchase Order {{po.id}}</span>
-					</md-card-title-text>
-					<div class="filler" flex ng-click="active=false"></div>
-					<md-button class="md-icon-button md-raised md-primary" ng-click="update(po)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
-						<md-tooltip>Save</md-tooltip>
-						<i class="material-icons">save</i>
-					</md-button>
-					<md-button class="md-icon-button" ng-click="active=false">
-						<md-tooltip>Minimize</md-tooltip>
-						<i class="material-icons">expand_less</i>
-					</md-button>
-				</md-card-title>
-				<md-card-content>
-					<div class="background-switch" ng-click="active=false"></div>
-					<div class="item-preview-container" ng-hide="active">
-						<div class="item" ng-class="{'selected':po.$selected}" ng-click="active=true">
-							<div class="id">{{po.id}}</div>
-							<div class="order-date">{{po.order_date | date: "MMM d, yyyy"}}</div>
-							<div class="customer">{{po.supplier.name}}</div>
-							<div class="project-id">{{po.project.id}}</div>
-							<div class="project">{{po.project.codename}}</div>
-							<div class="delivery-date">{{po.receive_date | date: "MMM d, yyyy"}}</div>
-							<div class="paid-date">{{po.paid_date | date: "MMM d, yyyy"}}</div>
-							<div class="total">{{po.grand_total | number:2}}</div>
-							<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
-						</div>
-					</div>
-					<div class="item-container" ng-if="active">
-						<section>
-							<md-subheader class="md-primary md-no-sticky">Supplier</md-subheader>
-							<div layout="row" layout-align="start center">
-								<span>{{po.supplier.name}}</span>
-							</div>
-						</section>
-						<section>
-							<md-subheader class="md-primary md-no-sticky">Order</md-subheader>
-							<div layout="row" layout-align="start start" style="align-items:baseline;">
-								<md-input-container>
-									<label>Status</label>
-									<md-select ng-model="po.status">
-										<md-option value='Processed'>Processed</md-option>
-										<md-option value='deposited'>Deposited</md-option>
-										<md-option value='received'>Received</md-option>
-										<md-option value='received'>invoice</md-option>
-										<md-option value='paid'>Paid</md-option>
-										<md-option value='cancelled'>Cancelled</md-option>
-									</md-select>
-								</md-input-container>
-								<md-datepicker ng-model="po.receive_date"></md-datepicker>
-							</div>
-							<div layout="row" layout-align="start start">
-								<md-input-container>
-									<label>Terms</label>
-									<input name="terms" type="number" ng-model="po.terms" required max="10">
-									<div ng-messages="ackForm.terms.$error" multiple>
-									</div>
-								</md-input-container>
-								<md-input-container>
-									<label>Discount</label>
-									<input name="discount" type="number" ng-model="po.discount" required max="10">
-									<div ng-messages="ackForm.discount.$error" multiple>
-									</div>
-								</md-input-container>
-								<md-input-container>
-									<label>Vat</label>
-									<input name="vat" type="number" ng-model="po.vat" required max="10">
-									<div ng-messages="ackForm.vat.$error" multiple>
-										<div ng-message-exp="'required'">This is required</div>
-										<div ng-message-exp="'max'">That's too much vat!</div>
-									</div>
-								</md-input-container>
-								<md-input-container>
-									<label>Remarks</label>
-									<md-icon md-font-icon="material-icons">comment</md-icon>
-									<textarea ng-model="po.comments"></textarea>
-								</md-input-container>
-							</div>
-							<div layout="row" layout-align="start center">
-								<md-input-container>
-									<label>Project</label>
-									<input name="project" type="text" ng-model="po.project.codename" ng-disabled="true">
-								</md-input-container>
-								<md-input-container ng-show="po.room" ng-disabled="true">
-									<label>Room</label>
-									<input name="room" type="text" ng-model="po.room.description" ng-disabled="true">
-								</md-input-container>
-								<md-input-container ng-show="po.phase" ng-disabled="true">
-									<label>Phase</label>
-									<input name="phase" type="text" ng-model="po.phase.description" ng-disabled="true">
-								</md-input-container>
-							</div>
-						</section>
-						<div class="status-bar">
-							<div class="event processed" ng-class="{'active': hasEvent(po, 'processed') || hasEvent(po, 'acknowledged')}">
-								<span>Processed</span>
-								<div class="arrow"></div>
-								<div class="arrow2"></div>
-							</div>
-							<div class="event deposited" ng-class="{'active': hasEvent(po, 'deposited')}">
-								<span>Deposited</span>
-								<div class="arrow"></div>
-								<div class="arrow2"></div>
-							</div>
-							<div class="event received" ng-class="{'active': hasEvent(po, 'received')}">
-								<span>Received</span>
-								<div class="arrow"></div>
-								<div class="arrow2"></div>
-							</div>
-							<div class="event invoiced" ng-class="{'active': hasEvent(po, 'invoice')}">
-								<span>Invoiced</span>
-								<div class="arrow"></div>
-								<div class="arrow2"></div>
-							</div>
-							<div class="event paid" ng-class="{'active': hasEvent(po, 'paid')}">
-								<span>Paid</span>
-								<div class="arrow"></div>
-								<div class="arrow2"></div>
+		
+		
+		<md-content  on-scroll-end="loadNext()">
+							
+				<md-card ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
+					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
+						<md-card-title-text ng-click="active=false">
+							<span>Purchase Order {{po.id}}</span>
+						</md-card-title-text>
+						<div class="filler" flex ng-click="active=false"></div>
+						<md-button class="md-icon-button md-raised md-primary" ng-click="update(po)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+							<md-tooltip>Save</md-tooltip>
+							<i class="material-icons">save</i>
+						</md-button>
+						<md-button class="md-icon-button" ng-click="active=false">
+							<md-tooltip>Minimize</md-tooltip>
+							<i class="material-icons">expand_less</i>
+						</md-button>
+					</md-card-title>
+					<md-card-content>
+						<div class="background-switch" ng-click="active=false"></div>
+			    		<div class="item-preview-container" ng-hide="active">
+		    				<div class="item" ng-class="{'selected':po.$selected}" ng-click="active=true">
+								<div class="id">{{po.id}}</div>
+								<div class="order-date">{{po.order_date | date: "MMM d, yyyy"}}</div>
+								<div class="customer">{{po.supplier.name}}</div>
+								<div class="project-id">{{po.project.id}}</div>
+								<div class="project">{{po.project.codename}}</div>
+								<div class="delivery-date">{{po.receive_date | date: "MMM d, yyyy"}}</div>
+								<div class="paid-date">{{po.paid_date | date: "MMM d, yyyy"}}</div>
+								<div class="total">{{po.grand_total | number:2}}</div>
+								<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
+							
 							</div>
 						</div>
-						<section>
-							<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
-							<div class="files">
-								<md-card class="file" ng-repeat="file in [po.pdf]">
-									<md-card-title>
-										<md-card-title-media>
-											<div class="md-media-sm card-media">
-												<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png" ng-show="file.type == 'pdf'">
-											</div>
-										</md-card-title-media>
-										<md-card-title-text>
-											<span class="md-headline">{{file.filename}}</span>
-										</md-card-title-text>
-									</md-card-title>
-									<md-card-actions layout="row" layout-align="end center">
-										<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
-											<md-tooltip>Open in a New Window</md-tooltip>
-											<i class="material-icons">open_in_browser</i>
-										</md-button>
-									</md-card-actions>
-								</md-card>
+						<div class="item-container" ng-if="active">
+						      
+						  	<section>
+								<md-subheader class="md-primary md-no-sticky">Supplier</md-subheader>											
+								<div layout="row" layout-align="start center">
+									<span>{{po.supplier.name}}</span>
+								</div>
+							</section>
+							
+						  	<section>
+								<md-subheader class="md-primary md-no-sticky">Order</md-subheader>	
+								<div layout="row" layout-align="start start" style="align-items:baseline;">
+									<md-input-container>
+							        	<label>Status</label>
+								        <md-select ng-model="po.status">
+											<md-option value='Processed'>Processed</md-option>
+											<md-option value='deposited'>Deposited</md-option>
+											<md-option value='received'>Received</md-option>
+											<md-option value='received'>invoice</md-option>
+											<md-option value='paid'>Paid</md-option>
+											<md-option value='cancelled'>Cancelled</md-option>
+								        </md-select>
+								    </md-input-container>
+									<md-datepicker ng-model="po.receive_date"></md-datepicker>
+						
+								</div>		
+								<div layout="row" layout-align="start start">
+									<md-input-container>
+									  	<label>Terms</label>
+									  	<input name="terms" type="number" ng-model="po.terms" required max="10">								  
+										<div ng-messages="ackForm.terms.$error" multiple>
+										</div>
+									</md-input-container>
+									<md-input-container>
+									  	<label>Discount</label>
+									  	<input name="discount" type="number" ng-model="po.discount" required max="10">								  
+										<div ng-messages="ackForm.discount.$error" multiple>
+										</div>
+									</md-input-container>
+									<md-input-container>
+									  	<label>Vat</label>
+									  	<input name="vat" type="number" ng-model="po.vat" required max="10">								  
+										<div ng-messages="ackForm.vat.$error" multiple>
+											<div ng-message-exp="'required'">This is required</div>
+											<div ng-message-exp="'max'">That's too much vat!</div>
+										</div>
+									</md-input-container>
+									<md-input-container>
+									  	<label>Remarks</label>
+	  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
+										<textarea ng-model="po.comments"></textarea>
+									</md-input-container>
+								</div>								
+								<div layout="row" layout-align="start center">
+									<md-input-container>
+									  	<label>Project</label>
+									  	<input name="project" type="text" ng-model="po.project.codename" ng-disabled="true">								  
+									</md-input-container>
+									<md-input-container ng-show="po.room" ng-disabled="true">
+									  	<label>Room</label>
+									  	<input name="room" type="text" ng-model="po.room.description" ng-disabled="true">								  
+									</md-input-container>
+									<md-input-container ng-show="po.phase" ng-disabled="true">
+									  	<label>Phase</label>
+									  	<input name="phase" type="text" ng-model="po.phase.description" ng-disabled="true">								  
+									</md-input-container>
+								</div>
+							</section>
+							
+							<div class="status-bar">
+								<div class="event processed" ng-class="{'active': hasEvent(po, 'processed') || hasEvent(po, 'acknowledged')}">
+									<span>Processed</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
+								<div class="event deposited" ng-class="{'active': hasEvent(po, 'deposited')}">
+									<span>Deposited</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
+								<div class="event received" ng-class="{'active': hasEvent(po, 'received')}">
+									<span>Received</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
+								
+								<div class="event invoiced" ng-class="{'active': hasEvent(po, 'invoice')}">
+									<span>Invoiced</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
+								<div class="event paid" ng-class="{'active': hasEvent(po, 'paid')}">
+									<span>Paid</span>
+									<div class="arrow"></div>
+									<div class="arrow2"></div>
+								</div>
 							</div>
-						</section>
-						<section>
-							<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
-							<div class="items">
-								<md-card class="item" ng-repeat="item in po.items">
-									<md-card-title>
-										<md-card-title-text>
-											<span class="md-headline">{{item.description}}</span>
-										</md-card-title-text>
-									</md-card-title>
-									<md-card-content layout="row">
-										<table class="product-details">
-											<tr>
-												<td>
-													<md-input-container>
-														<label>Quantity</label>
-														<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
-														<div ng-messages="ackForm.quantity.$error">
-															<div ng-message="required">This required is required</div>
-															<div ng-message="min">Quantity should be greater than 0</div>
-														</div>
-													</md-input-container>
-												</td>
-												<td>
-													<md-input-container>
-														<label>Price Per Piece</label>
-														<input name="price" type="number" ng-model="item.unit_cost" required />
-														<div ng-messages="ackForm.price.$error">
-															<div ng-message="required">This required is required</div>
-														</div>
-													</md-input-container>
-												</td>
-												<td>
-													<md-input-container>
-														<label>Discount</label>
-														<input name="price" type="number" ng-model="item.discount" required />
-														<div ng-messages="ackForm.discount.$error">
-															<div ng-message="required">This required is required</div>
-														</div>
-													</md-input-container>
-												</td>
-												<td>
-													<md-input-container>
-														<label>Total</label>
-														<input name="price" type="number" ng-model="item.total" required ng-disabled="true" />
-														<div ng-messages="ackForm.total.$error">
-															<div ng-message="required">This required is required</div>
-														</div>
-													</md-input-container>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<md-input-container>
-														<label>Width (mm)</label>
-														<input type="number" ng-model="item.width" min="0" required />
-													</md-input-container>
-												</td>
-												<td>
-													<md-input-container>
-														<label>Depth (mm)</label>
-														<input type="number" ng-model="item.depth" min="0" required />
-													</md-input-container>
-												</td>
-												<td>
-													<md-input-container>
-														<label>Height (mm)</label>
-														<input type="number" ng-model="item.height" min="0" required />
-													</md-input-container>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<md-input-container>
-														<label>Remarks</label>
-														<md-icon md-font-icon="material-icons">comment</md-icon>
-														<textarea ng-model="item.comments"></textarea>
-														<div class="hint">Any other details?</div>
-													</md-input-container>
-												</td>
-											</tr>
-										</table>
-										<md-card-title-media>
-											<div class="md-media-sm card-media">
-												<img ng-src="{{item.image.url}}">
-											</div>
-										</md-card-title-media>
-									</md-card-content>
-								</md-card>
-							</div>
-						</section>
+							
+							<section>
+								<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
+								<div class="files">
+	  								<md-card class="file" ng-repeat="file in [po.pdf]">
+	  						        	<md-card-title>
+	  						          		<md-card-title-media>
+	  						            		<div class="md-media-sm card-media">
+	  						            			<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png"
+														ng-show="file.type == 'pdf'">
+	  						            		</div>
+	  						          		</md-card-title-media>
+	  						          		<md-card-title-text>
+	  						            		<span class="md-headline">{{file.filename}}</span>
+	  						          	  	</md-card-title-text>
+	  						          		
+	  						        	</md-card-title>
+	  						        	<md-card-actions layout="row" layout-align="end center">
+	  						          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
+												<md-tooltip>Open in a New Window</md-tooltip>
+												<i class="material-icons">open_in_browser</i>
+											</md-button>
+	  						        	</md-card-actions>
+	  						      	</md-card>
+								</div>
+							</section>
+							
+							<section>
+								<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
+								<div class="items">
+									<md-card class="item" ng-repeat="item in po.items">
+										<md-card-title>
+								          	<md-card-title-text>
+								            	<span class="md-headline">{{item.description}}</span>
+								          	</md-card-title-text>
+								        </md-card-title>
+										<md-card-content layout="row">
+											<table class="product-details">
+												<tr>
+													<td>
+														<md-input-container>
+															<label>Quantity</label>
+															<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
+															<div ng-messages="ackForm.quantity.$error">
+																<div ng-message="required">This required is required</div>
+																<div ng-message="min">Quantity should be greater than 0</div>
+															</div>
+														</md-input-container>
+													</td>
+													<td>
+														<md-input-container>
+															<label>Price Per Piece</label>
+															<input name="price" type="number" ng-model="item.unit_cost" required />
+															<div ng-messages="ackForm.price.$error">
+																<div ng-message="required">This required is required</div>
+															</div>
+						
+														</md-input-container>
+													</td>
+													<td>
+														<md-input-container>
+															<label>Discount</label>
+															<input name="price" type="number" ng-model="item.discount" required />
+															<div ng-messages="ackForm.discount.$error">
+																<div ng-message="required">This required is required</div>
+															</div>
+						
+														</md-input-container>
+													</td>
+													<td>
+														<md-input-container>
+															<label>Total</label>
+															<input name="price" type="number" ng-model="item.total" required ng-disabled="true" />
+															<div ng-messages="ackForm.total.$error">
+																<div ng-message="required">This required is required</div>
+															</div>
+						
+														</md-input-container>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<md-input-container>
+															<label>Width (mm)</label>
+															<input type="number" ng-model="item.width" min="0" required />
+														</md-input-container>
+													</td>
+													<td>
+														<md-input-container>
+															<label>Depth (mm)</label>
+															<input type="number" ng-model="item.depth" min="0" required />
+														</md-input-container>
+													</td>
+													<td>
+														<md-input-container>
+															<label>Height (mm)</label>
+															<input type="number" ng-model="item.height" min="0" required />
+														</md-input-container>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<md-input-container>
+														  	<label>Remarks</label>
+						  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
+						
+															<textarea ng-model="item.comments"></textarea>
+												            <div class="hint">Any other details?</div>
+						
+														</md-input-container>
+													</td>
+												</tr>
+											</table>
+											<md-card-title-media>
+												<div class="md-media-sm card-media">
+													<img ng-src="{{item.image.url}}">
+												</div>
+											</md-card-title-media>
+										</md-card-content>
+									</md-card>
+								</div>
+							</section>
+								
+						</div>
 					</div>
-	</div>
-	</md-card-content>
-	</md-card>
-	</md-content>
-</div>
+				</md-card-content>
+
+			</md-card>
+	    	
+		</md-content>
+		
+    </div>
+    
 </div>

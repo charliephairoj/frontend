@@ -1,17 +1,18 @@
 <div>
-	<div class="sidebar">
-		<header>
-			<h1>
+    <div class="sidebar">
+        <header>
+            <h1>
                 <span>Contacts</span>
             </h1>
-		</header>
-		<nav>
-			<ul class="list">
-				<li ng-show="currentUser.hasPermission('add_supplier')"><a ng-href="#/contact/supplier">Suppliers</a>
-				</li>
-				<li ng-show="currentUser.hasPermission('add_customer')"><a ng-href="#/contact/customer">Customers</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
+        </header>
+        <nav>
+            <ul class="list">
+                
+                <li ng-show="currentUser.hasPermission('add_supplier')"><a ng-href="#/contact/supplier">Suppliers</a></li>
+                <li ng-show="currentUser.hasPermission('add_customer')"><a ng-href="#/contact/customer">Customers</a></li>
+               
+            </ul>
+        </nav>
+        
+    </div>
 </div>

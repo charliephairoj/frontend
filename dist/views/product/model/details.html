@@ -1,55 +1,64 @@
 <div class="model-details-page" image-drop-target="upload()">
-	<!--
+    
+    <!--
         Sidebar
     -->
-	<div class="sidebar">
-		<header>
-			<div class="profilePic" ui-if="model.images.length">
-				<img ng-src="{{model.images[0].url}}" />
-			</div>
-			<h1><span>{{model.name}}<br />{{model.model}}</span></h1>
-		</header>
-		<nav>
-			<ul>
-				<li>
-					<div ng-click="remove()">Delete</div>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<form class="workspace">
-		<table class="details">
-			<tr>
-				<td>
-					<label>Model</label>
+    <div class="sidebar">
+        <header>
+            <div class="profilePic" ui-if="model.images.length">
+                <img ng-src="{{model.images[0].url}}" />
+            </div>
+            
+            <h1><span>{{model.name}}<br />{{model.model}}</span></h1>
+        </header>
+        <nav>
+            <ul>
+                
+                <li>
+                    <div ng-click="remove()">Delete</div>
+                </li>
+                    
+            </ul>
+        </nav>
+    </div>
+    
+    
+    
+    
+    <form class="workspace">
+        
+        <table class="details">
+                
+            <tr>
+                <td><label>Model</label></td>
+                <td>{{model.model}}</td>
+            </tr>
+            <tr>
+                <td><label>Name</label></td>
+                <td>{{model.name}}</td>
+            </tr>
+            <tr>
+                <td><label>Collection</label></td>
+                <td>{{model.collection}}</td>
+            </tr>
+            <tr>
+                <td><label>Has Back Pillows</label></td>
+                <td>
+					<input type="checkbox" ng-change="update()" ng-model="model.has_back_pillows"/>
 				</td>
-				<td>{{model.model}}</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Name</label>
-				</td>
-				<td>{{model.name}}</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Collection</label>
-				</td>
-				<td>{{model.collection}}</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Has Back Pillows</label>
-				</td>
-				<td>
-					<input type="checkbox" ng-change="update()" ng-model="model.has_back_pillows" />
-				</td>
-			</tr>
-		</table>
+            </tr>
+           
+        </table>
+		
 		<div class="gallery">
 			<div class="img-container" ng-class="{primary: image.primary}" ng-repeat="image in model.images" ng-click="makePrimaryImage(image)">
 				<img ng-src="{{image.url}}">
 			</div>
 		</div>
-	</form>
+			
+			
+            
+            
+        
+    </form>
 </div>

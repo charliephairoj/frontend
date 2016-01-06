@@ -1,16 +1,21 @@
 <div class="viewSuppliersPage">
-	<!--
+   
+    <!--
         Search Bar
     -->
-	<div data-search-bar ng-model="query"></div>
-	<!--
+    <div data-search-bar ng-model="query"></div>
+    
+    <!--
         Workspace
     -->
-	<div class="workspace">
+    
+    <div class="workspace">
+		
 		<nav>
 			<h2>Suppliers</h2>
 			<md-button class="add-btn md-primary md-raised" ng-href="#/contact/supplier/add">New Supplier</md-button>
 		</nav>
+		
 		<div class="title-bar">
 			<div class="id">ID</div>
 			<div class="name">NAME</div>
@@ -21,10 +26,11 @@
 			<div class="fax">FAX</div>
 			<div class="email">EMAIL</div>
 		</div>
-		<div class="outer-container" on-scroll-end="loadNext()">
-			<ul class="inner-container">
-				<li class="item-container" ng-repeat="supplier in suppliers | filter:query">
-					<a class="item" ng-href="#/contact/supplier/{{supplier.id}}">
+		
+    	<div class="outer-container" on-scroll-end="loadNext()">
+    		<ul class="inner-container">
+    			<li class="item-container" ng-repeat="supplier in suppliers | filter:query">
+    				<a class="item" ng-href="#/contact/supplier/{{supplier.id}}">
 						<div class="id">{{supplier.id}}</div>
 						<div class="name">{{supplier.name}}</div>
 						<!--
@@ -33,9 +39,12 @@
 						<div class="telephone">{{supplier.telephone}}</div>
 						<div class="fax">{{supplier.fax}}</div>
 						<div class="email">{{supplier.email}}</div>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
+					
+    				</a>
+    			</li>
+    		</ul>
+    	</div>
+    </div>
+    
+    
 </div>

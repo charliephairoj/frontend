@@ -1,12 +1,19 @@
 <div class="model-view-page">
-	<div data-search-bar data-ng-model="query"></div>
-	<div class="workspace">
+            
+    <div data-search-bar data-ng-model="query"></div>
+    
+    <div class="workspace">
+		
 		<nav>
 			<h2>Models</h2>
+			
 			<div class="right-menu">
+				
 				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('add_model')" ng-href="#/product/model/add">New Model</md-button>
 			</div>
+			
 		</nav>
+		
 		<div class="models-container">
 			<div class="acknowledgements">
 				<div class="title-bar">
@@ -20,10 +27,12 @@
 					<div class="properties">BACK DEPTH</div>
 					<div class="back-pillow">BACK PILLOWs</div>
 				</div>
-				<div class="outer-container" on-scroll-end="loadNext()">
-					<ul class="inner-container">
-						<li class="item-container" data-ng-repeat="model in models | filter:query">
-							<div class="item" ng-class="{'selected':ack.$selected}">
+		
+		    	<div class="outer-container" on-scroll-end="loadNext()"> 
+			
+			    	<ul class="inner-container" >
+			    		<li class="item-container" data-ng-repeat="model in models | filter:query">	
+			    			<div class="item" ng-class="{'selected':ack.$selected}">
 								<a class="preview col" ng-href="#/product/model/{{model.id}}">
 									<img ng-src="{{model.images[0].url}}" />
 								</a>
@@ -32,26 +41,18 @@
 								<div class='properties col'>
 									<md-switch ng-model="model.has_arms"></md-switch>
 								</div>
-								<div class='properties col'>
-									<input type="text" ng-model="model.arm_width" />
-								</div>
-								<div class='properties col'>
-									<input type="text" ng-model="model.arm_height" />
-								</div>
-								<div class='properties col'>
-									<input type="text" ng-model="model.base_height" />
-								</div>
-								<div class='properties col'>
-									<input type="text" ng-model="model.back_depth" />
-								</div>
+								<div class='properties col'><input type="text" ng-model="model.arm_width" /></div>
+								<div class='properties col'><input type="text" ng-model="model.arm_height" /></div>
+								<div class='properties col'><input type="text" ng-model="model.base_height" /></div>
+								<div class='properties col'><input type="text" ng-model="model.back_depth" /></div>
 								<div class='back-pillow col'>
 									<md-switch ng-model=model.has_back_pillows></md-switch>
 								</div>
 							</div>
-						</li>
-					</ul>
-				</div>
+			    		</li>
+			    	</ul>
+		    	</div>
 			</div>
 		</div>
-	</div>
+    </div>
 </div>

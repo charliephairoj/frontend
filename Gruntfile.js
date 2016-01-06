@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 //grunt.loadNpmTasks('grunt-proxy');
 
   	grunt.loadNpmTasks('grunt-recess');
-  	grunt.loadNpmTasks('grunt-prettify');
+  	grunt.loadNpmTasks('grunt-usemin');
   	grunt.loadNpmTasks('grunt-contrib-less');
   	grunt.loadNpmTasks('grunt-contrib-cssmin');
   	grunt.loadNpmTasks('grunt-contrib-connect');
@@ -431,7 +431,8 @@ module.exports = function (grunt) {
             'fonts/**/*',
             'styles/main.css',
 			'm_styles/main.css',
-			'iphone4_style/main.css'
+			'iphone4_style/main.css',
+			'**/*.html'
           ]
         }]
       }
@@ -488,20 +489,21 @@ module.exports = function (grunt) {
     'clean:dist',
     //'jshint',
     //'test',
+    'useminPrepare',
+	  
     'less',
     //'recess',
-    //'useminPrepare',
     //'imagemin',
     //'cssmin',
-    'prettify',
     //'htmlmin',
     'concat',
+    'uglify',
+	  
     'copy',
     //'cdnify',
-    //'usemin',
+    'usemin',
     //'ngmin',
     
-    //'uglify'
   ]);
 
   grunt.registerTask('default', ['build']);
