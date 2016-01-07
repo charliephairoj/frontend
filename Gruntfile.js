@@ -79,7 +79,10 @@ module.exports = function (grunt) {
 	  	  	 	files: [
 	  		  		'<%= yeoman.app %>/{,*/}*.html',
 	  		  		'{.tmp,<%= yeoman.app %>}/views/**/*.html',
-	  	  	 	]
+	  	  	 	],
+	  	  		options: {
+	  	  			livereload: true
+	  	  		}
 	  	  	},
 	    },
 

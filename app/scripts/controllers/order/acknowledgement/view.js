@@ -225,7 +225,9 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		acknowledgement.files = acknowledgement.files || []; 
 	
 		/* jshint ignore:start */
-	
+		
+		Notification.display('Uploading files', 2000);
+		
 		for (var i = 0; i < files.length; i++) {
 			acknowledgement.files.push({filename: files[i].name});
 		
@@ -237,8 +239,14 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 						angular.extend(acknowledgement.files[h], data);
 					}
 				}
+				
+				Notification.display('File Uploaded', 2000);
+				
+				
 			}, function (e) {
 				$log.error(JSON.stringify(e));
+				Notification.display(e.message, 0);
+				
 			});
 		}
 	
@@ -254,13 +262,21 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	$scope.addImage = function (files, item) {
 		
 		if (files.length > 0) {
-			/* jshint ignore:start */		
+			/* jshint ignore:start */	
+			
+			Notification.display('Uploading image...');
+				
 			var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
 			promise.then(function (result) {
 				var data = result.data || result;
 				item.image = data
+				Notification.display('Image uploaded.');
+				
 			}, function (e) {
 				$log.error(JSON.stringify(e));
+				
+				Notification.display(e.message, 0);
+				
 			});
 			/* jshint ignore:end */
 		}
