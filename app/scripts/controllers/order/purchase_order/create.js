@@ -502,7 +502,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		$scope.supplies = $scope.supplies || [];
 		
 		for (var i = 0; i < $scope.supplies.length; i++) {
-			console.log($scope.supplies[i]);
 			
 			if (lowercaseQuery) {
 				if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {

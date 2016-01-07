@@ -55,10 +55,10 @@
 							
 							<md-card ng-class="{'active': active}" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)">
 								<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
-									<md-card-title-text>
+									<md-card-title-text ng-click="active=false">
 										<span>Acknowledgement {{ack.id}}</span>
 									</md-card-title-text>
-									<div flex></div>
+									<div class="filler" flex ng-click="active=false"></div>
 									<md-button class="md-icon-button md-raised md-primary" ng-click="update(ack)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
 										<md-tooltip>Save</md-tooltip>
 										<i class="material-icons">save</i>
@@ -318,6 +318,7 @@
 																		md-search-text="fabricSearchText"
 																		md-item-text="fabric.description"
 																		md-floating-label="Fabric"
+																		md-no-cache="true"
 																		md-min-length="0">
 																    <md-item-template>
 																    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
@@ -340,6 +341,7 @@
 																		md-search-text="fabricSearchText"
 																		md-item-text="fabric.description"
 																		md-floating-label="{{pillow.type}} pillow fabric"
+																		md-no-cache="true"
 																		md-min-length="0">
 																    <md-item-template>
 																    	<span md-highlight-text="fabricSearchText">{{pillow.type}} pillow {{pillow.fabric.description}}</span>

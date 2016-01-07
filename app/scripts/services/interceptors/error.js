@@ -1,6 +1,6 @@
 
 angular.module('employeeApp.services')
-.factory('requestError', ['$q', function ($q) {
+.factory('requestError', ['$q', '$window', function ($q, $window) {
 	return {
 		'response': function (response) {
 			return response || $q.when(response);
@@ -15,6 +15,11 @@ angular.module('employeeApp.services')
 					processData: true
 				});
 			}
+			
+			if (rejection.status === 403) {
+				$window.location.href = '/login';
+			}
+			
 			return $q.reject(rejection);
 		}
 	};

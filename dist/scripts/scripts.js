@@ -5114,7 +5114,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		$scope.supplies = $scope.supplies || [];
 		
 		for (var i = 0; i < $scope.supplies.length; i++) {
-			console.log($scope.supplies[i]);
 			
 			if (lowercaseQuery) {
 				if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {
@@ -15988,7 +15987,7 @@ angular.module('employeeApp.services')
 
 
 angular.module('employeeApp.services')
-.factory('requestError', ['$q', function ($q) {
+.factory('requestError', ['$q', '$window', function ($q, $window) {
 	return {
 		'response': function (response) {
 			return response || $q.when(response);
@@ -16003,6 +16002,11 @@ angular.module('employeeApp.services')
 					processData: true
 				});
 			}
+			
+			if (rejection.status === 403) {
+				$window.location.href = '/login';
+			}
+			
 			return $q.reject(rejection);
 		}
 	};
