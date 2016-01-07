@@ -18,6 +18,8 @@ module.exports = function (grunt) {
   	grunt.loadNpmTasks('grunt-contrib-connect');
   	grunt.loadNpmTasks('grunt-protractor-runner');
     grunt.loadNpmTasks('grunt-connect-proxy');
+	grunt.loadNpmTasks('grunt-ng-annotate');
+	
 		
   	// load all grunt tasks
   	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -89,7 +91,7 @@ module.exports = function (grunt) {
 		        livereload: 35729,
 		        // Change this to '0.0.0.0' to access the server from outside
 		        hostname: '0.0.0.0',
-				base: ['app'],
+				base: ['app', 'dist'],
 	      	},
 			proxies: [
 				{
@@ -124,6 +126,17 @@ module.exports = function (grunt) {
 						
 						return [
               			  	serveStatic(options.base[0]),
+		                    proxySnippet
+		                ];
+					}
+	        	},
+	      	},
+	      	build: {
+	      	  	options: {
+					middleware: function (connect, options, middlewares) {
+						
+						return [
+              			  	serveStatic(options.base[1]),
 		                    proxySnippet
 		                ];
 					}
@@ -282,7 +295,7 @@ module.exports = function (grunt) {
         files: {
           '<%= yeoman.dist %>/scripts/scripts.js': [
             '.tmp/scripts/{,*/}*.js',
-            '<%= yeoman.app %>/scripts/{,*/}*.js'
+            '<%= yeoman.app %>/scripts/**/*.js'
           ]
         }
       }
@@ -295,7 +308,6 @@ module.exports = function (grunt) {
     },
     usemin: {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
         dirs: ['<%= yeoman.dist %>']
       }
@@ -436,7 +448,20 @@ module.exports = function (grunt) {
           ]
         }]
       }
-    }
+    },
+	ngAnnotate: {
+		options: {
+            singleQuotes: true,
+        },
+        dist: {
+            files: [
+                {
+                    expand: true,
+                    src: ['<%= yeoman.dist %>/**/*.js'],
+                },
+            ],
+        },
+    },
     
   });
 
@@ -489,6 +514,7 @@ module.exports = function (grunt) {
     'clean:dist',
     //'jshint',
     //'test',
+	  
     'useminPrepare',
 	  
     'less',
@@ -497,13 +523,20 @@ module.exports = function (grunt) {
     //'cssmin',
     //'htmlmin',
     'concat',
-    'uglify',
+	'ngAnnotate',
+    //'uglify',
 	  
     'copy',
     //'cdnify',
     'usemin',
-    'serve'
-    
+      'configureProxies',
+      'clean:server',
+      //'wiredep',
+      //'concurrent:server',
+	  //'less', 
+      //'autoprefixer',
+      'connect:build',
+      'watch'
   ]);
 
   grunt.registerTask('default', ['build']);

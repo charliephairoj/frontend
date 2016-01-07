@@ -94,7 +94,8 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 /*
  * Run top level application code
  */
-angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
+angular.module('employeeApp').run(['$rootScope', 'CurrentUser', 'scanner', '$http', 'Geocoder', '$q', '$cookies', '$interval', 'PurchaseOrder', '$mdDialog', '$location',
+function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $interval, PurchaseOrder, $mdDialog, $location) {
 	
 	/*
 	 * Set the token 
@@ -320,4 +321,4 @@ angular.module('employeeApp').run(function ($rootScope, CurrentUser, scanner, $h
 		}
 	}, 5000);	
 	*/
-});
+}]);

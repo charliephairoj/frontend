@@ -17,7 +17,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-google-cdn": "^0.1.0",
     "grunt-karma": "^0.10.1",
-    "grunt-ng-annotate": "",
+    "grunt-ng-annotate": "^1.0.1",
     "grunt-open": "^0.1.0",
     "grunt-prettify": "^0.3.4",
     "grunt-protractor-runner": "^1.0.0",
