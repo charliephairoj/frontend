@@ -531,15 +531,7 @@ module.exports = function (grunt) {
 	  
     'copy',
     //'cdnify',
-    'usemin',
-      'configureProxies',
-      'clean:server',
-      //'wiredep',
-      //'concurrent:server',
-	  //'less', 
-      //'autoprefixer',
-      'connect:build',
-      'watch'
+    'usemin'
   ]);
 
   grunt.registerTask('default', ['build']);
