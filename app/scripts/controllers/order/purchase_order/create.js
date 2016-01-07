@@ -7,7 +7,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
-
+	$scope.listView = true;
 	/**
 	 *	MAPS SECTION
 	 *  

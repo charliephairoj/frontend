@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric', 'FileUploader',
-function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric, FileUploader) {
+.controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric', 'FileUploader', '$mdDialog',
+function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric, FileUploader, $mdDialog) {
 	
 	
 	/*
@@ -39,6 +39,30 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		fetching = false;
 		changeSelection(index);
 	});
+	
+	/**
+	 * Show the Download dialog
+	 *
+	 * @public
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.download = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/download-acknowledgements.html',
+      	  	clickOutsideToClose:true,
+			controller: function ($scope, $mdDialog) {
+				$scope.download = function (start, end) {
+					$mdDialog.hide();
+					url = '/api/v1/acknowledgement/download/?start=';
+					url += start.toISOString();
+					url += '&end=' + end.toISOString();
+					window.open(url);
+				};					
+			}
+		});
+	};
 
 	$scope.setCategory = function ($category) {
 		$scope.safeApply(function () {

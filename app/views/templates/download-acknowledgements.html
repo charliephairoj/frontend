@@ -1,0 +1,18 @@
+<md-dialog class="download-acknowledgements">
+	<md-subheader>Download Acknowledgements</md-subheader>
+	<form name="form">
+		<md-content>
+				<div layout="row">
+					<md-datepicker ng-model="start_date" md-placeholder="Start Date"></md-datepicker>
+					<md-datepicker ng-model="end_date" md-placeholder="End Date"></md-datepicker>
+				</div>
+		</md-content>
+		<md-action layout="row" layout-align="end start">
+			<md-button class="md-primary md-raised md-icon-button" ng-click="download(start_date, end_date)">
+				<md-tooltip>Download</md-tooltip>
+				<i class="material-icons">file_download</i>
+			</md-button>
+		</md-action>
+	</form>
+	
+</md-dialog>
