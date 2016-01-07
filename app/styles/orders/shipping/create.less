@@ -6,43 +6,9 @@
     
     
     .addPage;
-    left:200px;
+    left:0;
 	
-    /*Sidebar*/
-   .sidebar{
-      ul{
-          li{
-              
-              .customer{
-                  background-color:#BBFF9E;
-                  color:grey;
-                  //State
-                  &.dirty{
-                      background-color:#EFE28D;
-                      //border-bottom: 1px solid #EDD855;
-                      //border-top: 1px solid #EAD975;
-                      color:grey;
-                      &:hover{
-                          background-color:#E5CC50;
-                      }
-                  }
-                  &:hover{
-                      background-color:#A7FF82;
-                  }
-              }
-              .delivery_date{
-                  .customer;
-              }
-                  
-              .upholstery{
-                  .customer;
-              }
-              .vat{
-                  .customer;
-              }
-          }
-      }
-   }
+
     
     /*Modals*/
     //Customer Modal
@@ -87,8 +53,6 @@
   
 
     .shipping{
-        overflow-y:scroll;
-        overflow-x:hidden;
         position:absolute;
         top:0px;
         bottom:0px;
@@ -100,9 +64,15 @@
             position:absolute;
             height:auto;
             width:100%;
+			left:0px;
             padding-bottom:50px;
             z-index:1; 
             bottom:auto;
+			
+			md-toolbar{
+				padding:1em;
+			}
+			
             .acknowledgement{
                 position:relative;
                 margin-top:20px;
@@ -238,6 +208,7 @@
                     }
                     &>img{
                         height:150px;
+						width:50%;
                         position:absolute;
                         right:0px;
                         top:0px;
