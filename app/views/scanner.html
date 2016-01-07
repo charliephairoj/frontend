@@ -57,8 +57,14 @@
 						    </md-radio-group>
 								-->
 							จำนวน/Quantity: {{item.quantity | number:2}}{{item.units}}
-							<md-button class="md-accent md-raised" ng-click="printSupplySticker(item)">พิมพ์สติ๊กเกอร์/Print Sticker</md-button>
-							<md-button class="md-warn md-raised" ng-click="removeItem($index)">เอาออก/Remove<md-button>
+							<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(item)">
+								<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+								<i class="material-icons">printer</i>
+							</md-button>
+							<md-button class="md-warn md-raised md-icon-button" ng-click="removeItem($index)">
+								<md-tooltip>เอาออก/Remove</md-tooltip>
+								<i class="material-icons">clear</i>
+							</md-button>
 						</div>
 					</div>
 				</div>
@@ -91,8 +97,14 @@
 								<input type="text" ng-model="equipment.brand">
 							</md-input-container>
 							
-							<md-button class="md-primary md-raised" ng-click="createEquipment(equipment)">เก็บ/Save</md-button>
-							<md-button class="md-warn md-raised" ng-click="removeEquipment(equipment, $index)">เอาออก/Remove</md-button>
+							<md-button class="md-primary md-raised md-icon-button" ng-click="createEquipment(equipment)">
+								<md-tooltip>เก็บ/Save</md-tooltip>
+								<i class="material-icons">save</i>
+							</md-button>
+							<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
+								<md-tooltip>เอาออก/Remove</md-tooltip>
+								<i class="material-icons">clear</i>
+							</md-button>
 						</div>
 						
 						<div class="overview container" ng-hide="equipment.$new">
@@ -120,8 +132,14 @@
 								</div>
 								<div>{{equipment.employee.first_name}} {{equipment.employee.last_name}}</div>
 							</div>
-							<md-button class="md-warn md-raised" ng-click="removeEquipment(equipment, $index)">เอาออก/Remove</md-button>
-							<md-button class="md-accent md-raised" ng-click="printEquipmentSticker(equipment)">พิมพ์สติ๊กเกอร์/Print Sticker</md-button>
+							<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
+								<md-tooltip>เอาออก/Remove</md-tooltip>
+								<i class="material-icons">clear</i>
+							</md-button>
+							<md-button class="md-accent md-raised md-icon-button" ng-click="printEquipmentSticker(equipment)">
+								<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+								<i class="material-icons">printer</i>
+							</md-button>
 						</div>
 							
 					</div>
@@ -148,8 +166,14 @@
 								<input type="number" ng-model="supply.$$quantity"/>
 							</md-input-container>
 							<div class="btn-panel">
-								<md-button class="md-accent md-raised" ng-click="printSupplySticker(supply)">พิมพ์สติ๊กเกอร์/Print Sticker</md-button>
-								<md-button class="md-warn md-raised" ng-click="remove($index, supply)">เอาออก/Remove<md-button>
+								<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(supply)">
+									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+									<i class="material-icons">printer</i>
+								</md-button>
+								<md-button class="md-warn md-raised md-icon-button" ng-click="remove($index, supply)">
+									<md-tooltip>เอาออก/Remove</md-tooltip>
+									<i class="material-icons">clear</i>
+								</md-button>
 							</div >
 						</div>
 					</div>
