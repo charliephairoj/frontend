@@ -12,6 +12,17 @@
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Acknowledgements</span></h3>
 				<div flex></div>
+				
+				<md-button class="md-icon-button md-primary md-raised" ng-show="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
+					<md-tooltip>
+						Create New Acknowledgement
+					</md-tooltip>
+					<i class="material-icons">create</i>
+				</md-button>
+				<md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="!currentUser.hasPermission('view_acknowledgement')">
+					<md-tooltip>Download</md-tooltip>
+					<i class="material-icons">file_download</i>
+				</md-button>
 				<md-button class="md-icon-button md-accent" ng-hide="map" ng-click="viewMap()">
 					<md-tooltip>
 						Show Map
@@ -23,12 +34,6 @@
 						Hide Map
 					</md-tooltip>
 					<i class="material-icons">map</i>
-				</md-button>
-				<md-button class="md-icon-button md-primary md-raised" ng-show="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
-					<md-tooltip>
-						Create New Acknowledgement
-					</md-tooltip>
-					<i class="material-icons">create</i>
 				</md-button>
 				<input class="search" type="text" ng-model="query.$.$" />
 			</div>

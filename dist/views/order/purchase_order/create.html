@@ -22,7 +22,7 @@
 			<md-toolbar layout="row" class="md-primary" layout-align="center center" md-scroll-shrink="true">
 				<h3><span>Open a Purchase Order</span></h3>
 				<div flex></div>
-            	<md-button class="md-icon-button md-primary md-raised" id="po-create" ng-click="create()">
+            	<md-button class="md-icon-button md-accent md-raised" id="po-create" ng-click="create()" ng-disabled="po.id">
 					<md-tooltip>
 						Create
 					</md-tooltip>
@@ -243,14 +243,51 @@
 					</md-card>
 				</section>
 				
+				<section ng-show="po.pdf">
+					<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
+					<div class="files">
+						<md-card class="file" ng-repeat="file in [po.pdf]">
+				        	<md-card-title>
+								<md-card-title-text>
+									<h4><span>PurchaseOrder-{{po.id}}.pdf</span></h4>
+								</md-card-title-text>
+				          		<md-card-title-media>
+				            		<div class="md-media-sm card-media">
+				            			<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png"
+											ng-show="file.type == 'pdf'">
+				            		</div>
+				          		</md-card-title-media>
+				          		<md-card-title-text>
+				            		<span class="md-headline">{{file.filename}}</span>
+				          	  	</md-card-title-text>
+				          		
+				        	</md-card-title>
+				        	<md-card-actions layout="row" layout-align="end center">
+				          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank">
+									<md-tooltip>Open in a New Window</md-tooltip>
+									<i class="material-icons">open_in_browser</i>
+								</md-button>
+				        	</md-card-actions>
+				      	</md-card>
+					</div>
+				</section>
+				
 				<section>
 					<md-subheader class="md-primary">Supplies</md-subheader>
 			
 					<md-card class="add-product" layout="row" layout-align="start center">
-						<md-card-actions layout="row" layout-align="center center">
+						<md-card-actions layout="column" layout-align="center center">
 							<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(selectedSupply || {description: supplySearchText});supplySearchText=''">
 								<md-tooltip>Add Product</md-tooltip>
 								<i class="material-icons">add_shopping_cart</i>
+							</md-button>
+							<md-button class="add md-accent md-raised md-icon-button" ng-click="listView=true">
+								<md-tooltip>View as List</md-tooltip>
+								<i class="material-icons"><i class="material-icons">list</i></i>
+							</md-button>
+							<md-button class="add md-accent md-raised md-icon-button" ng-click="listView=false">
+								<md-tooltip>View as Cards</md-tooltip>
+								<i class="material-icons"><i class="material-icons">view_module</i></i>
 							</md-button>
 				        </md-card-actions>
 						<md-card-content layout="row" layout-align="start center" flex="auto">
@@ -276,7 +313,7 @@
 						</md-card-title-media>
 					</md-card>
             
-		            <md-card class="item" ng-repeat="item in po.items track by $index" layout="column">
+		            <md-card class="item" ng-repeat="item in po.items track by $index" layout="column" ng-show="!listView">
 						<md-card-title layout="column" layout-align="start start">
 				          	<md-card-title-text>
 				            	<span class="md-headline">{{item.description}}</span>
@@ -375,7 +412,7 @@
 				
 					</md-card>
 			
-					<md-card class="order-details" >
+					<md-card class="order-details" ng-show="listView && po.items">
 		            	<md-card-content>
 							<table ng-show="po.items">
 								<thead>
