@@ -4,6 +4,21 @@
     .addPage;
     left:0;
 	
+	&.drag-active{
+		.ack{
+			.workspace{
+				md-content{
+					.item{
+						.drag-placeholder{
+							display:flex;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	
     .ack{
 	    position:absolute;
 	    top:0;
@@ -202,29 +217,29 @@
 					width:90%;
 					margin:2em 0;
 				
-				md-card-content{
-					width:100%;
-					height:auto;
-					display:flex;
-					flex-direction:column;
-					
-					.map-container{
-						height:30em;
-						width:100%;
-					
-						#create-ack-map{
-							height:100%;
-							width:100%;
-						}
-					}
-					
-					#directions{
+					md-card-content{
 						width:100%;
 						height:auto;
+						display:flex;
+						flex-direction:column;
+					
+						.map-container{
+							height:30em;
+							width:100%;
+					
+							#create-ack-map{
+								height:100%;
+								width:100%;
+							}
+						}
+					
+						#directions{
+							width:100%;
+							height:auto;
+						}
 					}
-				}
 				
-	   	 	}
+		   	 	}
 
 			
 				.add-product{
@@ -242,7 +257,35 @@
             
 	            .item{
 	            	width:90%;
-				
+					position:relative;
+					
+					&.drag-active{
+						.drag-placeholder{
+							display:flex;
+						}
+					}
+					
+					.drag-placeholder{
+						display:none;
+						position:absolute;
+						top:1em;
+						left:1em;
+						right:1em;
+						bottom:1em;
+						display:none;
+						z-index:2;
+						background:white;
+						border:2px dashed rgba(0, 0, 0, 0.35);
+						align-items:center;
+						justify-content:center;
+						
+						h3{
+							font-size:2em;
+							color:rgba(0, 0, 0, 0.35);
+						}
+						
+					}
+					
 					md-card-content{
 					
 						.product-details{

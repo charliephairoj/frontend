@@ -42,7 +42,7 @@ angular.module('employeeApp')
                 evt.preventDefault();
                 evt.stopPropagation();
 				
-                element.addClass('drag-activeactive');
+                element.addClass('drag-active');
             });
             
             //Drag Leave
@@ -50,7 +50,7 @@ angular.module('employeeApp')
 				evt.preventDefault(); 
                 evt.stopPropagation();
 				
-				element.removeClass('drag-activeactive');
+				element.removeClass('drag-active');
             });
             
             //Drag over
@@ -58,7 +58,7 @@ angular.module('employeeApp')
                 evt.preventDefault();
                 evt.stopPropagation();
 				
-                element.addClass('drag-activeactive');
+                //element.addClass('drag-activeactive');
             });
             
             /*

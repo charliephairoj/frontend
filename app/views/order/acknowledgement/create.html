@@ -263,6 +263,9 @@
 				</md-card>
 			
 	            <md-card class="item" ng-repeat="item in ack.items track by $index" layout="column"  file-drop="addImage($files, item)">
+					<div class="drag-placeholder">
+						<h2>Drop Image Here</h2>
+					</div>
 					<md-card-title>
 			          	<md-card-title-text>
 			            	<span class="md-headline">{{item.description}}</span>

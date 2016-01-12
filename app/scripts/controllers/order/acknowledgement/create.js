@@ -12,7 +12,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
     
     var uploadTargets = [];
     var storage = window.localStorage;
-		
+	var tempSaveTimer = null;
 	
 	/**
 	 *	MAPS SECTION
@@ -231,6 +231,10 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		//Set marker for customer
 		try {
 			if($scope.ack.customer) {
+				// Restore the name of the customer to the autocomplete field
+				$scope.customerSearchText = $scope.ack.customer.name;
+				$scope.selectedCustomer = $scope.ack.customer;
+				
 				var address = $scope.ack.customer.addresses[0];
 				if (address.latitude && address.longitude) {
 					 $scope.marker = createMarker({address: address, title: $scope.ack.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
@@ -247,6 +251,11 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			$log.error(e);
 		}
 		
+		if ($scope.ack.project) {
+			$scope.projectSearchText = $scope.ack.project.codename;
+			$scope.selectedProject = $scope.ack.project;
+		}
+		
     }
 	
 	//Set items and employee
@@ -257,6 +266,19 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.tempSave = function () {
         storage.setItem('acknowledgement-create', JSON.stringify($scope.ack));
     };
+	
+	$scope.$watch('ack', function (newVal, oldVal) {
+	
+		if (newVal && oldVal) {
+			if (!tempSaveTimer) {
+				tempSaveTimer = setTimeout(function () {
+					Notification.display('Temporarily saving acknowledgement....', 2000);
+					tempSaveTimer = null;
+					$scope.tempSave();
+				}, 1000);
+			}
+		}
+	});
     
 	/*
  	 * CUSTOMER SECTION
@@ -390,6 +412,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	$scope.addProject = function (project) {
 		$scope.ack.project = project;
+		$scope.tempSave();
 	};
 	
 	/**
@@ -535,6 +558,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				}
 				
 				Notification.display('File uploaded');
+				$scope.tempSave();
 				
 			}, function (e) {
 				$log.error(JSON.stringify(e));
@@ -565,6 +589,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			item.image = data
 			
 			Notification.display('Image uploaded');
+			$scope.tempSave();
 			
 		}, function (e) {
 			$log.error(JSON.stringify(e));
