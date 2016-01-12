@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog', '$log', 'Upholstery', 'Fabric', '$location',
-function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log, Upholstery, Fabric, $location) {
+.controller('OrderAcknowledgementCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$window', 'Project', 'Notification', 'FileUploader', 'Room', 'Phase', '$mdDialog', '$log', 'Upholstery', 'Fabric', '$location', '$rootScope',
+function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notification, FileUploader, Room, Phase, $mdDialog, $log, Upholstery, Fabric, $location, $rootScope) {
    
     //Vars
     $scope.uploading = false;
@@ -231,6 +231,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		//Set marker for customer
 		try {
 			if($scope.ack.customer) {
+				$scope.ack.customer = new Customer($scope.ack.customer);
 				// Restore the name of the customer to the autocomplete field
 				$scope.customerSearchText = $scope.ack.customer.name;
 				$scope.selectedCustomer = $scope.ack.customer;
@@ -252,6 +253,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		}
 		
 		if ($scope.ack.project) {
+			$scope.ack.project = new Project($scope.ack.project);
 			$scope.projectSearchText = $scope.ack.project.codename;
 			$scope.selectedProject = $scope.ack.project;
 		}
@@ -807,7 +809,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	function prepareAcknowledgement (acknowledgement, callback) {
 		//Object used to track progress of sub-resource creations
-		var progress = {};
+		var progress = {fullRun: false};
 		
 		//Check the progress of customer, project creation
 		function checkProgress (callback) {
@@ -818,8 +820,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 					throw new Error();
 				}
 			}
-			console.log(progress);
-			console.log(callback);
 			(callback || angular.noop)();
 		}
 		
@@ -837,15 +837,19 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				progress.customer = 'error';
 			});
 		} else if (acknowledgement.customer.id) {
-			progress.customer = false;
-
-			acknowledgement.customer.$update(function (resp) {
-				angular.extend(acknowledgement.customer, resp);
-				progress.customer = true;
-				checkProgress(callback);
-			}, function () {
-				progress.customer = 'error';
-			});
+			//progress.customer = false;
+			/*
+			if (acknowledgement.customer.$update) {
+				acknowledgement.customer.$update(function (resp) {
+					angular.extend(acknowledgement.customer, resp);
+					progress.customer = true;
+					checkProgress(callback);
+				}, function () {
+					progress.customer = 'error';
+				});
+			}
+			*/
+			
 		}
 		
 		//Checks if the project exists and create if not
@@ -871,6 +875,12 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				acknowledgement.items[i].is_custom = true;
 			}
 		}
+		
+		progress.fullRun = true;
+		console.log(progress)
+		
+		checkProgress(callback);
+		
 	}
 	
 	/**
@@ -895,18 +905,12 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 					
 						Notification.display("Acknowledgement created with ID: " + $scope.ack.id, 2000);
 						
-	                    if (response.pdf.acknowledgement) {
-							$window.open(response.pdf.acknowledgement);
-	                    }
-	                    if (response.pdf.confirmation) {
-							$window.open(response.pdf.confirmation);
-	                    }
-	                    if (response.pdf.production) {
-							$window.open(response.pdf.production);
-	                    }
+						for (var h = 0; h < response.files.length; h++) {
+							$window.open(response.files[h].url);
+						}
 						
-	                    $scope.reset();
-						$location.path("order/acknowledgement/" + response.id);
+	                    //$scope.reset();
+						//$location.path("order/acknowledgement/" + response.id);
 						
 					
 	                }, function (e) {
