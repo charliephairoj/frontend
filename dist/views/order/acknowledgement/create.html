@@ -1,4 +1,4 @@
-<div class="createAcknowledgementPage" fade-in file-drop="addFiles($files)">
+<div class="createAcknowledgementPage" fade-in file-drop="addFiles($files)" file-drop-class="page-drag-active">
     
     <!--
         Forms
@@ -221,13 +221,26 @@
 
                 
 				
-				<div class="files" ng-show="ack.files">
-					<h2 class="title">Attachments</h2>
-					<a class="file" ng-repeat="file in ack.files" ng-class="{'uploading': !file.url}" checkmark="file.id" ng-href="{{file.url}}" target="_blank">
-						{{file.filename}}
-						<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
-					</a>
-				</div>
+				<md-card class="files" file-drop="addFiles($files)" file-drop-class="file-drag-active">
+					<div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
+						<h2>Drop Files Here</h2>
+					</div>
+					<md-card-content ng-show="ack.files && ack.files.length > 0">
+						<md-card ng-repeat="file in ack.files">
+							<md-card-title>
+					          	<md-card-title-text>
+					            	<span class="md-headline">{{file.filename}}</span>
+					          	</md-card-title-text>
+					        </md-card-title>
+				        	<md-card-actions layout="row" layout-align="end center">
+				          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank" ng-disabled="!file.id">
+									<md-tooltip>Open in a New Window</md-tooltip>
+									<i class="material-icons">open_in_browser</i>
+								</md-button>
+				        	</md-card-actions>
+						</md-card>
+					</md-card-content>
+				</md-card>
             
 
 				<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (tempProduct || {description: productSearchText}))">
@@ -262,7 +275,7 @@
 					</md-card-title-media>
 				</md-card>
 			
-	            <md-card class="item" ng-repeat="item in ack.items track by $index" layout="column"  file-drop="addImage($files, item)">
+	            <md-card class="item" ng-repeat="item in ack.items track by $index" layout="column"  file-drop="addImage($files, item)" file-drop-class="item-drag-active">
 					<div class="drag-placeholder">
 						<h2>Drop Image Here</h2>
 					</div>

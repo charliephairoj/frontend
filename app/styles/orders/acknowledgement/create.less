@@ -4,10 +4,33 @@
     .addPage;
     left:0;
 	
-	&.drag-active{
+	&.page-drag-active{
 		.ack{
 			.workspace{
 				md-content{
+					
+					.files{
+						.drag-placeholder{
+							display:flex;
+						}
+						
+						md-card-content{
+							pointer-events: none;
+							display:none;
+							
+							table{
+								pointer-events:none;
+							}
+							div{
+								pointer-events: none;
+							}
+							
+							md-card{
+								pointer-events: none;
+							}
+						}
+					}
+					
 					.item{
 						.drag-placeholder{
 							display:flex;
@@ -64,54 +87,7 @@
 				}
 			
 
-				.files{
-					position:absolute;
-					width:40em;
-					height:auto;
-					right:1em;
-					top:22em;
-					padding:1em;
-					z-index:2;
-					display:none;
 				
-	                .title{
-						margin-bottom:1em;  
-						color:rgb(0, 0, 0);
-		           		font-family:proxima;
-	                }
-				
-					.file{
-						margin:0.5em 0;
-						padding-left:0.5em;
-						background:#575757;
-						height:2em;
-						display:flex;
-						color:rgb(255, 255, 255);
-						font-family:proxima;
-						flex-direction:row;
-						align-items:center;
-						justify-content:space-between;
-						text-decoration:none;
-					
-						.progress{
-							display:none;
-							color:rgb(255, 255, 255);
-						
-						}
-					
-						.checkmark{
-							margin-right:0.75em;
-							color:rgb(255, 255, 255);
-						
-						}
-						&.uploading{
-						
-							.progress{
-								display:block;
-							}
-						}
-					}				
-				}
 			
 	            .customer{
 	                position:relative;
@@ -240,7 +216,65 @@
 					}
 				
 		   	 	}
-
+				
+				.files{
+					position:relative;
+					width:90%;
+					
+					&.file-drag-active{
+						
+						.drag-placeholder{
+							display:flex;
+							pointer-events: none;
+						}
+						
+						md-card-content{
+							pointer-events: none;
+							display:none;
+							
+							md-card{
+								pointer-events: none;
+							}
+						}
+					}
+					
+					.drag-placeholder{
+						display:none;
+						position:static;
+						pointer-events:none;
+						margin:1em;
+						min-height:10em;
+						display:none;
+						z-index:2;
+						background:white;
+						border:2px dashed rgba(0, 0, 0, 0.35);
+						align-items:center;
+						justify-content:center;
+						
+						&.no-files{
+							display:flex;
+						}
+						
+						h3{
+							font-size:2em;
+							color:rgba(0, 0, 0, 0.35);
+						}
+						
+					}
+					
+					md-card-content{
+						display:flex;
+						flex-direction:row;
+												
+						md-card{
+							width:20%;
+							
+							md-card-title{
+								overflow:hidden;
+							}
+						}
+					}			
+				}
 			
 				.add-product{
 					width:90%;
@@ -259,15 +293,37 @@
 	            	width:90%;
 					position:relative;
 					
-					&.drag-active{
+					&.item-drag-active{
 						.drag-placeholder{
 							display:flex;
+							pointer-events: none;
+						}
+						
+						md-card-content{
+							pointer-events: none;
+							
+							table{
+								pointer-events:none;
+							}
+							div{
+								pointer-events: none;
+							}
+							
+							md-card-title-media{
+								pointer-events: none;
+							
+								.card-media{
+									pointer-events: none;
+									
+								}
+							}
 						}
 					}
 					
 					.drag-placeholder{
 						display:none;
 						position:absolute;
+						pointer-events:none;
 						top:1em;
 						left:1em;
 						right:1em;
@@ -287,7 +343,7 @@
 					}
 					
 					md-card-content{
-					
+												
 						.product-details{
 							max-width:40%;
 							
@@ -314,9 +370,11 @@
 						}
 					
 						md-card-title-media{
+							pointer-events: none;
 							max-width:40%;
 							
 							.card-media{
+								pointer-events: none;
 								max-width:100%;
 					
 								img{

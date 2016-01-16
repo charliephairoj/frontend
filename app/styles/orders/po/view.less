@@ -211,6 +211,8 @@
 				.transition(max-height, 750ms);
 				.transition(width, 150ms);				
 				width:100%;
+				transition: margin 4000ms, width 400ms, max-height 1s;
+				-webkit-transition: margin 400ms, width 400ms, max-height 1s;
 				
 				md-card-title{
 					padding:0;
@@ -368,7 +370,7 @@
 				
 				&.active{
 					@maxHeight:300em;
-					margin:1em;
+					margin:3em;
 					max-height:@maxHeight;
 					width:90%;
 					

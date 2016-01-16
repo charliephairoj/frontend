@@ -11186,7 +11186,8 @@ angular.module('employeeApp')
     return {
       	restrict: 'EA',
 		scope: {
-			onDrop: '&fileDrop'
+			onDrop: '&fileDrop',
+			activeClass: '@fileDropClass'
 		},
       	link: function postLink(scope, element, attrs) {
         	/*
@@ -11205,20 +11206,24 @@ angular.module('employeeApp')
              * over actions of the user
              */
 			
-            //Drag Enter
-            element.bind('drag', function (evt) {
+			var elementCheck = null;
+           
+		   	element.bind('dragover', function (evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
-				
-                element.addClass('drag-active');
-            });
+		   	});
+			
+		   	element.bind('drag', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+		   	});
             
-            //Drag Enter
+			//Drag Enter
             element.bind('dragenter', function (evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
-				
-                element.addClass('drag-active');
+				console.log('enter' + scope.activeClass)
+                element.addClass(scope.activeClass);
             });
             
             //Drag Leave
@@ -11226,15 +11231,12 @@ angular.module('employeeApp')
 				evt.preventDefault(); 
                 evt.stopPropagation();
 				
-				element.removeClass('drag-active');
-            });
-            
-            //Drag over
-            element.bind('dragover', function (evt) {
-                evt.preventDefault();
-                evt.stopPropagation();
-				
-                //element.addClass('drag-activeactive');
+				console.log('leave ' + scope.activeClass, evt.target);
+				if (element.hasClass(scope.activeClass)) {
+					console.log('classoff ' + scope.activeClass, evt.target);
+					element.removeClass(scope.activeClass);
+				}
+					
             });
             
             /*
@@ -11248,7 +11250,8 @@ angular.module('employeeApp')
                 //prevent default
                 evt.preventDefault();
                 evt.stopPropagation();
-                element.removeClass('drag-activeactive');
+                
+				element.removeClass(scope.activeClass);
                 
                 //Get original evt within jquery evt
                 var e = evt.originalEvent;
