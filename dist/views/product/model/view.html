@@ -1,33 +1,31 @@
 <div class="model-view-page">
-            
-    <div data-search-bar data-ng-model="query"></div>
-    
+                
     <div class="workspace">
 		
-		<nav>
-			<h2>Models</h2>
-			
-			<div class="right-menu">
-				
-				<md-button class="add-btn md-primary md-raised" ng-show="currentUser.hasPermission('add_model')" ng-href="#/product/model/add">New Model</md-button>
+		<md-toolbar layout="column">
+			<div class="menu-container" layout="row">
+				<h3><span>Models</span></h3>
+				<div flex></div>
+				<md-button class="md-icon-button md-accent md-raised" ng-show="currentUser.hasPermission('add_model')" ng-href="#/product/model/add">
+					<i class="material-icons">add</i>
+				</md-button>
+				<input class="search" type="text" ng-model="query" />
 			</div>
-			
-		</nav>
+			<div class="title-bar" layout="row">
+				<div class="preview">PREVIEW</div>
+				<div class="model">MODEL</div>
+				<div class="name">NAME</div>
+				<div class="properties">HAS ARMS</div>
+				<div class="properties">ARM WIDTH</div>
+				<div class="properties">ARM HEIGHT</div>
+				<div class="properties">BASE HEIGHT</div>
+				<div class="properties">BACK DEPTH</div>
+				<div class="back-pillow">BACK PILLOWs</div>
+			</div>
+		</md-toolbar>
 		
-		<div class="models-container">
+		<md-content>
 			<div class="acknowledgements">
-				<div class="title-bar">
-					<div class="preview">PREVIEW</div>
-					<div class="model">MODEL</div>
-					<div class="name">NAME</div>
-					<div class="properties">HAS ARMS</div>
-					<div class="properties">ARM WIDTH</div>
-					<div class="properties">ARM HEIGHT</div>
-					<div class="properties">BASE HEIGHT</div>
-					<div class="properties">BACK DEPTH</div>
-					<div class="back-pillow">BACK PILLOWs</div>
-				</div>
-		
 		    	<div class="outer-container" on-scroll-end="loadNext()"> 
 			
 			    	<ul class="inner-container" >
@@ -53,6 +51,7 @@
 			    	</ul>
 		    	</div>
 			</div>
-		</div>
+			
+		</md-content>
     </div>
 </div>
