@@ -2,57 +2,40 @@
 
 @font:proxima;
 .groupDetailsPage{
-  .detailsPage;
-  background-color:#313131;
-  .details{
-      position:relative;
-      height:auto;
-      width:100%;
-      border-bottom:1px solid #282828;
-      .table{
-          margin:10px;
-          display:table;
-          .cell{
-              display:table-cell;
-              padding:1em;
-              font-size:1em;
-              color:#CCC;
-              font-family:@font;
-              letter-spacing:0.08em;
-          }
-      }
-  }
-  .permissions{
-    position:relative;
-    height:100%;
-    width:100%;
-    overflow-y:scroll;
+  	.detailsPage;
+  
+	left:0;
+	  
+	.workspace{
+		
+		md-toolbar{
+			.search{
+				color:rgb(0, 0, 0);
+				font-family:proxima;
+				outline:none;
+				margin:0 1em;
+				padding:0 1em;
+			}
+		}
+		
+		md-content{
+			
+			height:100%;
+			
+			md-list{
+				
+				md-list-item{
+					display:flex;
+					justify-content:space-between;
+					
+					.md-list-item-inner{
+						justify-content:space-between;
+					}
+				}
+			}
+		}
+	}
+	
     
-    .table{
-        display:table;
-        width:100%;
-        margin-bottom:100px;
-        .row{
-            display:table-row;
-            width:100%;
-            
-            &.header{
-                position:absolute;
-                top:0px;
-            }
-            
-            .cell{
-                color:#CCC;
-                font-family:@font;
-                display:table-cell;
-                font-size:0.8em;
-                padding:1em;
-                border-top: 1px solid #3c3c3c;
-                border-bottom: 1px solid #282828;
-                letter-spacing:0.08em;
-            }
-        }
-    }
-    
-  }
+ 
 }

@@ -1,61 +1,37 @@
 <div class="groupDetailsPage">
     
-    <!--SideBar Section-->
-    
-    <div class="sidebar">
-        <header>
-            <h1><span>{{group.name}}</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li>
-                    <div ng-click="remove()">Delete</div>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    
-    <!--
-        Search Bar
-    -->
-    <div class="searchBar" >
-        <input size="40" placeholder="Search" ng-model="query" />
-    </div>
-    
-    
     <div class="workspace">
-        
-        <div class="details">
-            <div class="table">
-                <div class="cell">Name:</div>
-                <div class="cell">{{group.name}}</div>
-            </div>
-            
-        </div>
-        <div class="permissions">
-            <div class="table">
-                <!--
-                <div class="row header">
-                    <div class="cell">Has Permission</div>
-                    <div class="cell">Application</div>
-                    <div class="cell">Permission</div>
-                </div>-->
-                <div class="row" ng-repeat='perm in permissionList | filter:query'>
-                    <div class="cell">
-                        <input type="checkbox" ng-model="perm.$checked" ng-change="updatePermission(perm)">                    
-                    </div>
-                    <div class="cell">  
+		
+		<md-toolbar class="md-primary" layout="row" layout-align="center center">
+			<h3><span>{{group.name}}</span></h3>
+			<div flex></div>
+			<md-button class="md-accent md-icon-button" ng-click="remove()">
+				<md-tooltip>Delete {{group.name}}</md-tooltip>
+				<i class="material-icons">delete</i>
+			</md-button>
+			<input class="search" type="text" ng-model="query" />
+		</md-toolbar>
+		
+		<md-content>
+			<md-list>
+				<md-list-item layout="row" layout-align="space-between center" ng-repeat="perm in permissions | filter:query">
+                    <h5>  
                         {{perm.app}}
-                    </div>
-                    <div class="cell">
+                    </h5>
+                    <h5>
                         {{perm.name}}
-                    </div>
-                    <div class="cell">
+                    </h5>
+                    <h5>
                         {{perm.content_type}}
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </h5>
+					
+					<md-switch ng-model="perm.$checked" ng-change="updatePermission(perm)">
+					</md-switch>
+				</md-list-item>
+			</md-list>
+		</md-content>
+			
+			
     </div>
     
     

@@ -785,8 +785,8 @@ function ($scope, Group, Permission, $routeParams, $location) {
     /*
      * Calls for updated verions of the resources
      */
-    $scope.permissionList = Permission.query({limit: 0, page_size:10000}, function () {
-        merge($scope.permissionList, $scope.group.permissions);
+    $scope.permissions = Permission.query({limit: 0, page_size:10000}, function () {
+        merge($scope.permissions, $scope.group.permissions);
     });
 	
     $scope.group = Group.get({'id': $routeParams.id}, function () {
