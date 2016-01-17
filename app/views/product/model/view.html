@@ -15,6 +15,8 @@
 				<div class="preview">PREVIEW</div>
 				<div class="model">MODEL</div>
 				<div class="name">NAME</div>
+				<div class="web-active">WEBSITE</div>
+				
 				<div class="properties">HAS ARMS</div>
 				<div class="properties">ARM WIDTH</div>
 				<div class="properties">ARM HEIGHT</div>
@@ -36,6 +38,9 @@
 								</a>
 								<a class="model col" ng-href="#/product/model/{{model.id}}">{{model.model}}</a>
 								<a class="name col" ng-href="#/product/model/{{model.id}}">{{model.name}}</a>
+								<div class='web-active col'>
+									<md-switch ng-model="model.web_active"></md-switch>
+								</div>
 								<div class='properties col'>
 									<md-switch ng-model="model.has_arms"></md-switch>
 								</div>
