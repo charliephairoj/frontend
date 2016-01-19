@@ -1,54 +1,7 @@
 <div class="employee-view-page">
     
-    <!--
-        Sidebar
-    -->
-	<!--
-    <div class="sidebar">
-        <header>
-            <h1><span>Employees</span></h1>
-        </header>
-        <nav>
-            <ul>
-                <li ng-show="currentUser.hasPermission('add_user')">
-                    <div data-ng-click="showAddEmployee()">
-                        Add Employee
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </div>  
-    -->
-    <!--
-        Search Bar
-    -->
     
     <div class="workspace">
-		
-		<!--
-
-		<nav>
-			<h2>Employees</h2>
-			<md-button class="add-btn md-accent" ng-show="currentUser.hasPermission('add_user')" ng-click="showAddEmployee()">New Employee</md-button>
-		</nav>
-		
-		<div class="title-bar">
-			<div class="preview">PROFILE</div>
-			<div class="id">ID</div>
-			<div class="name">NAME</div>
-			<div class="first-name">FIRST NAME</div>
-			<div class="last-name">LAST NAME</div>
-			<div class="nickname">NICKNAME</div>
-		</div>
-		
-    	<div class="outer-container scroll-enabled" on-scroll-end="loadNext()">
-    		<ul class="inner-container">
-    			<li class="item-container" ng-repeat="employee in employees | filter:search:strict | filter:query">
-    				<div employee="employee" on-select="focus($element)"></div>
-    			</li>
-    		</ul>
-    	</div>
-			-->
 			
 		<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
 			<h3><span>Employees</span></h3>
@@ -65,8 +18,8 @@
 		</md-toolbar>
 			
 		<md-content>
-			<md-card ng-class="{'active': employee.$active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id">
-				<md-card-title ng-click="employee.$active=!employee.$active" layout="row" layout-align="start start" flex="nogrow">
+			<md-card ng-class="{'active': active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id">
+				<md-card-title ng-click="active=!active" layout="row" layout-align="center center" flex="nogrow">
 					<md-card-title-media flex="nogrow">
 						<div class="md-media-sm card-media">
 							<i class="material-icons" ng-hide="employee.image.url">account_box</i>
@@ -78,61 +31,63 @@
 						<h4>{{employee.department}}</h4>
 					</md-card-title-text>
 					<div flex></div>
+					<md-button class="md-accent md-icon-button md-raised" ng-show="active">
+						<md-tooltip>บันทึกข้อมูล/Save {{employee.name}}</md-tooltip>
+						<i class="material-icons">save</i>
+					</md-button>
+					<md-button class="md-warn md-icon-button md-raised">
+						<md-tooltip>ลบพนักงาน/Delete {{employee.name}}</md-tooltip>
+						<i class="material-icons">remove</i>
+					</md-button>
+					<md-button class="md-icon-button expand" ng-show="!active">
+						<md-tooltip>Expand</md-tooltip>
+						<i class="material-icons">expand_more</i>
+					</md-button>
+					<md-button class="md-icon-button minimize" ng-show="active">
+						<md-tooltip>Minimize</md-tooltip>
+						<i class="material-icons">expand_less</i>
+					</md-button>
 				</md-card-title>
 				
-				<md-card-content ng-show="!employee.$active">
-					<table>
-						<tr>
-							<td>Nationality:</td>
-							<td>{{employee.nationality}}</td>
-						</tr>
-						<tr>
-							<td>Paid:</td>
-							<td>{{employee.pay_period}}</td>
-						</tr>
-						<tr>
-							<td>Wage:</td>
-							<td>{{employee.wage}}</td>
-						</tr>
-					</table>
-					
-				</md-card-content>
-				
-				<md-card-content flex="grow" ng-show="employee.$active">
+				<md-card-content flex="grow" ng-show="active">
 					<div layout="row" layout-align="start start">
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
-							<label>Name</label>
+							<label>ชื่อ/Name</label>
 							<input type="text" ng-model="employee.name" />
 						</md-input-container>
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
-							<label>Department</label>
+							<label>แผนก/Department</label>
 							<md-select ng-model="employee.department">
 								<md-option value='migrant'>Migrant</md-option>
-								<md-option value='woodworking'>Woodworking</md-option>
-								<md-option value='painting'>Painting</md-option>
-								<md-option value='polishing'>Polishing</md-option>
+								<md-option value='woodworking'>ไม้/Woodworking</md-option>
+								<md-option value='painting'>สี/Painting</md-option>
+								<md-option value='polishing'>ปัดเงา/Polishing</md-option>
 								<md-option value='packing'>Packing</md-option>
-								<md-option value='upholstery'>Upholstery</md-option>
-								<md-option value='sewing'>Sewing</md-option>
-								<md-option value='cutting fabric'>Cutting Fabric</md-option>
-								<md-option value='foam'>Foam</md-option>
-								<md-option value='housekeeping'>Housekeeping</md-option>
+								<md-option value='upholstery'>หุ้ม/Upholstery</md-option>
+								<md-option value='sewing'>เย็บ/Sewing</md-option>
+								<md-option value='cutting fabric'>ตัดผ้า/Cutting Fabric</md-option>
+								<md-option value='foam'>ฟองน้ำ/Foam</md-option>
+								<md-option value='housekeeping'>แม่บ้าน/Housekeeping</md-option>
+								<md-option value='accounting'>บัญชี/Accounting</md-option>
 							</md-select>
 						</md-input-container>
 					</div>
 					<div>
 						<md-input-container>
-							<label>Nationality</label>
+							<label>สัญชาติ/Nationality</label>
 							<md-select ng-model="employee.nationality">
-								<md-option value='thai'>Thai</md-option>
-								<md-option value='cambodian'>Cambodian</md-option>
+								<md-option value='thai'>ไทย/Thai</md-option>
+								<md-option value='cambodian'>กัมพูชา/Cambodian</md-option>
+								<md-option value='burmese'>พม่า/Burmese</md-option>
+								<md-option value='laos'>ลาว/Laos</md-option>
+								<md-option value='vietnam'>เวียตนาม/Vietnam</md-option>
 							</md-select>
 						</md-input-container>
 						<md-input-container>
-							<label>Paid Period</label>
+							<label>ระยะเวลาการจ่ายเงิน/Paid Period</label>
 							<md-select ng-model="employee.pay_period">
-								<md-option value='daily'>Daily</md-option>
-								<md-option value='monthly'>Monthly</md-option>
+								<md-option value='daily'>รายวัน/Daily</md-option>
+								<md-option value='monthly'>รายเดือน/Monthly</md-option>
 							</md-select>
 						</md-input-container>
 					</div>
