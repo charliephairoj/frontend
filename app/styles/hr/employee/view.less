@@ -36,13 +36,19 @@
 			justify-content:space-between;
 			
 			md-card{
-				width:23%;
-				height:15em;
-				.transition(all, 350ms);
+				width:100%;
+				margin:0;
+				padding:0;
+				height:auto;
+				border-bottom:1px dotted rgba(0, 0, 0, 0.15);
+				.transition(all, 100ms);
 				
 				&.active{
-					width:48%;
+					width:90%;
 					height:31em;
+					margin:3em;
+					padding:1em;
+					border:none;
 				}
 				
 				md-card-title{
@@ -50,8 +56,8 @@
 					cursor:pointer;
 					
 					md-card-title-media{
-						width:50%;
-					
+						margin-right:2em;
+						
 						.card-media{
 							
 							i{
