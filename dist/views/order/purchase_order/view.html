@@ -34,7 +34,7 @@
 		
 		<md-content  on-scroll-end="loadNext()">
 							
-				<md-card ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
+				<md-card class="po" ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
 					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
 						<md-card-title-text ng-click="active=false">
 							<span>Purchase Order {{po.id}}</span>
@@ -192,11 +192,52 @@
 							<section>
 								<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
 								<div class="items">
-									<md-card class="item" ng-repeat="item in po.items">
-										<md-card-title>
+									<md-card class="add-product" layout="row" layout-align="start center">
+										<md-card-actions layout="column" layout-align="center center">
+											<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(po, selectedSupply || {description: supplySearchText});supplySearchText=''">
+												<md-tooltip>Add Product</md-tooltip>
+												<i class="material-icons">add_shopping_cart</i>
+											</md-button>
+											<md-button class="add md-accent md-raised md-icon-button" ng-click="listView=true">
+												<md-tooltip>View as List</md-tooltip>
+												<i class="material-icons"><i class="material-icons">list</i></i>
+											</md-button>
+											<md-button class="add md-accent md-raised md-icon-button" ng-click="listView=false">
+												<md-tooltip>View as Cards</md-tooltip>
+												<i class="material-icons"><i class="material-icons">view_module</i></i>
+											</md-button>
+								        </md-card-actions>
+										<md-card-content layout="row" layout-align="start center" flex="auto">
+											<md-autocomplete flex required 
+												md-items="supply in searchSupplies(supplySearchText)" 
+												md-search-text-change="retrieveSupplies(supplySearchText)"
+												md-selected-item="selectedSupply"
+												md-search-text="supplySearchText"
+												md-item-text="supply.description"
+												md-no-cache="true"
+												md-floating-label="Supply Description"
+												md-min-length="0">
+											    <md-item-template>
+											    	<span md-highlight-text="supplySearchText">{{supply.description}}</span>
+											    </md-item-template>
+													<div class="hint">Starting typing to search or just type the description and add...</div>
+											</md-autocomplete>
+										</md-card-content>
+										<md-card-title-media>
+											<div class="md-media-md card-media">
+												<img ng-src="{{tempProduct.image.url}}">
+											</div>
+										</md-card-title-media>
+									</md-card>
+									
+									<md-card class="item" ng-repeat="item in po.items" ng-show="!listView">
+										<md-card-title layout="row" layout-align="center center">
 								          	<md-card-title-text>
 								            	<span class="md-headline">{{item.description}}</span>
 								          	</md-card-title-text>
+											<md-button class="md-icon-button md-warn md-raised" ng-click="removeItem(po, $index)">
+												<i class="material-icons">remove</i>
+											</md-button>
 								        </md-card-title>
 										<md-card-content layout="row">
 											<table class="product-details">
@@ -282,6 +323,87 @@
 											</md-card-title-media>
 										</md-card-content>
 									</md-card>
+									
+									<md-card class="order-details" ng-show="listView && po.items">
+						            	<md-card-content>
+											<table ng-show="po.items">
+												<thead>
+													<tr class='heading'>
+														<td>Description</td>
+														<td>Comments</td>
+														<td>Discount</td>
+														<td>Unit Cost</td>
+														<td>Quantity</td>
+														<td colspan="2">Total</td>
+													</tr>
+												</thead>
+												<tbody>
+													<tr class="items" ng-repeat="item in po.items">
+														<td class='description'>{{item.description}}</td>
+														<td><textarea ng-model=item.comments row="4"></textarea></td>
+														<td class='discount'>
+															<input required type="number" min="0" ng-model="item.discount"/> 
+														</td>
+														<td class='unit-cost'><input required min="0" type="number" ng-model="item.cost" /></td>
+														<td class='quantity'>
+															<input required type="number" min="0" ng-model="item.quantity" />
+														</td>
+														<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
+														<td>
+															<md-button class="md-icon-button md-warn md-raised" ng-click="removeItem(po, $index)">
+																<i class="material-icons">remove</i>
+															</md-button>
+														</td>
+													</tr>
+													<tr class="summary subtotal">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td class="title">Subtotal</td>
+														<td class="value">{{subtotal() || 0 | number:2}}</td>
+														<td></td>
+													</tr>
+													<tr class="summary discount" ng-show="po.discount">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td class="title">Discount {{po.discount}}%</td>
+														<td class="value">-{{discount() || 0 | number:2}}</td>
+														<td></td>
+													</tr>
+													<tr class="summary total" ng-show="po.discount">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td class="title">Total</td>
+														<td class="value"> {{total() || 0 | number:2}}</td>
+														<td></td>
+													</tr>
+													<tr class="summary vat" ng-show="po.vat">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td class="title">Vat {{po.vat}}%</td>
+														<td class="value">{{total() * (po.vat / 100) || 0 | number:2}}</td>
+														<td></td>
+													</tr>
+													<tr class="summary grand-total" ng-show="po.vat">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td class="title">Grand Total</td>
+														<td class="value">{{grandTotal() || 0 | number:2}}</td>
+														<td></td>
+													</tr>
+												</tbody>
+											</table>
+										</md-card-content>
+						            </md-card>
 								</div>
 							</section>
 								

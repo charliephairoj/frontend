@@ -894,7 +894,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		
 		}, function (e) {
 			$log.error(JSON.stringify(e));
-			Notification.display("There was an error in creeating the purchase order. A report has been sent to Charlie");
+			Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
 			
 		});
 	};

@@ -204,7 +204,7 @@
 			flex-direction:column;
 			align-items:center;
         	
-			md-card{
+			md-card.po{
 				margin:0;
 				max-height:3.5em;
 				.transition(margin, 150ms);
@@ -620,6 +620,12 @@
 							
 								.items{
 									width:100%;
+									
+									.add-product{
+										md-card-content{
+											background: rgb(255, 255, 255);
+										}
+									}
 									
 									md-card.item{
 										margin:1em 0;
