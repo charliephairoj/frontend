@@ -11,6 +11,10 @@
 				<md-tooltip>Create Employee</md-tooltip>
 				<i class="material-icons">add</i>
 			</md-button>
+			<md-button class="md-icon-button md-primary" ng-click="upload()" ng-disabled="!currentUser.hasPermission('view_acknowledgement')">
+				<md-tooltip>Upload Clockin Times</md-tooltip>
+				<i class="material-icons">file_upload</i>
+			</md-button>  
 			<div layout="row" layout-align="end center">
 				<input class="search" type="text" ng-model="query" />
 			</div>
@@ -18,20 +22,22 @@
 		</md-toolbar>
 			
 		<md-content>
-			<md-card ng-class="{'active': active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id">
-				<md-card-title ng-click="active=!active" layout="row" layout-align="center center" flex="nogrow">
-					<md-card-title-media flex="nogrow">
-						<div class="md-media-sm card-media">
-							<i class="material-icons" ng-hide="employee.image.url">account_box</i>
-							<img ng-src="{{employee.image.url}}" ng-show="employee.image.url">
-						</div>
-					</md-card-title-media>
-					<md-card-title-text flex="nogrow">
-						<h3>{{employee.name}}</h3>
-						<h4>{{employee.department}}</h4>
-					</md-card-title-text>
-					<div flex></div>
-					<md-button class="md-accent md-icon-button md-raised" ng-show="active">
+			<md-card class="employee" ng-class="{'active': active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false">
+				<md-card-title layout="row" layout-align="center center" flex="nogrow">
+					<div class="click-container" ng-click="active=!active" flex layout="row">
+						<md-card-title-media flex="nogrow">
+							<div class="md-media-sm card-media">
+								<i class="material-icons" ng-hide="employee.image.url">account_box</i>
+								<img ng-src="{{employee.image.url}}" ng-show="employee.image.url">
+							</div>
+						</md-card-title-media>
+						<md-card-title-text flex="nogrow">
+							<h3>{{employee.name}}</h3>
+							<h4>{{employee.department}}</h4>
+						</md-card-title-text>
+						<div flex></div>
+					</div>
+					<md-button class="md-accent md-icon-button md-raised" ng-if="active" ng-click="employee.$update()">
 						<md-tooltip>บันทึกข้อมูล/Save {{employee.name}}</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
@@ -39,17 +45,17 @@
 						<md-tooltip>ลบพนักงาน/Delete {{employee.name}}</md-tooltip>
 						<i class="material-icons">remove</i>
 					</md-button>
-					<md-button class="md-icon-button expand" ng-show="!active">
+					<md-button class="md-icon-button expand" ng-if="!active" ng-click="active=true">
 						<md-tooltip>Expand</md-tooltip>
 						<i class="material-icons">expand_more</i>
 					</md-button>
-					<md-button class="md-icon-button minimize" ng-show="active">
+					<md-button class="md-icon-button minimize" ng-if="active" ng-click="active=false">
 						<md-tooltip>Minimize</md-tooltip>
 						<i class="material-icons">expand_less</i>
 					</md-button>
 				</md-card-title>
 				
-				<md-card-content flex="grow" ng-show="active">
+				<md-card-content flex="grow" ng-if="active">
 					<div layout="row" layout-align="start start">
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
 							<label>ชื่อ/Name</label>
@@ -72,7 +78,27 @@
 							</md-select>
 						</md-input-container>
 					</div>
-					<div>
+					<div layout="row">
+						<md-input-container>
+							<label>Card Number</label>
+							<input type="text" ng-model="employee.card_id" />
+						</md-input-container>
+						<md-input-container>
+							<label>Bank</label>
+							<md-select ng-model="employee.bank">
+								<md-option value="kasikorn">Kasikorn</md-option>
+								<md-option value="bangkok bank">Bangkok Bank</md-option>
+								<md-option value="SCB">SCB</md-option>
+								<md-option value="krungsri">Krungsri</md-option>
+								<md-option value="khrung thai bank">Khrung Thai Bank</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container>
+							<label>Bank Account Number</label>
+							<input type="number" ng-model="employee.account_nummber">
+						
+					</div>
+					<div layout="row">
 						<md-input-container>
 							<label>สัญชาติ/Nationality</label>
 							<md-select ng-model="employee.nationality">
@@ -90,7 +116,54 @@
 								<md-option value='monthly'>รายเดือน/Monthly</md-option>
 							</md-select>
 						</md-input-container>
+						<md-input-container>
+							<label>Pay Rate</label>
+							<input type="number" ng-model="employee.wage" />
+						</md-input-container>
+						<md-input-container>
+					    	<label>Shift Schedule</label>
+							<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}">
+								<md-option ng-value="shift" ng-repeat="shift in shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
+							</md-select>
+						</md-input-container>
 					</div>
+					
+					<section class="attendances">
+						<subheader class="md-primary"><span>Attendances</span></subheader>
+						<div>
+							<md-datepicker ng-model="start_date" md-placeholder="FROM" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
+							<md-datepicker ng-model="end_date" md-placeholder="TO" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
+						</div>
+						<md-card class="attendance-container" layout="column" ng-if="active">
+						
+							<md-card-title class="title">
+								<h4 class="date">Date</h4>
+								<h4 class="clockin">Clockin</h4>
+								<h4 class="clockout">Clockout</h4>
+								<h4 class="regular-time">Regular Time</h4>
+								<h4 class="overtime">Overtime</h4>
+								<h4 class="enable-overtime">Overtime</h4>
+								<h4 class="pay">Pay</h4>
+								<h4 class="social-security">Social Security</h4>
+								
+							
+							</md-card-title>
+							<md-card-content>
+								<div class="attendance" ng-class="{'sunday': isSunday(a)}" ng-repeat="a in employee.attendances | orderBy:'date'">
+									<h4 class="date">{{::a.date | date:'dd/MM/yyyy'}}</h4>
+									<h4 class="clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
+									<h4 class="clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
+									<h4 class="regular-time">{{a.regular_time}}</h4>
+									<h4 class="overtime">{{a.overtime}}</h4>
+									<div class="enable-overtime">
+										<md-switch ng-model="a.enable_overtime" ng-change="updateAttendance(a)">
+									</div>
+									<h4 class="pay">{{calculateWage(a, employee) | number:2}}</h4>
+									<h4 class="social-security">{{calculateSocialSecurity(a, employee) | number:2}}</h4>
+								</div>
+							</md-card-content>
+						</md-card>
+					</section>
 				</md-card-content>
 				<md-card-actions ng-show="employee.$active" layout="row" layout-align="end center">
 					<md-button class="md-icon-button md-accent" ng-show="currentUser.hasPermission('change_employee')" ng-click="save(employee)">

@@ -28,7 +28,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
                 now     = new Date().toUTCString();
 			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 
-			record('info', args[0]);
+			//record('info', args[0]);
 			_info(msg);
 		};
 		
@@ -37,7 +37,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 	            now     = new Date().toUTCString();
 			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 		
-			record('warn', args[0]);
+			//record('warn', args[0]);
 			_warn(msg);
 		};
 		
@@ -47,7 +47,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 			var msg = args[0].hasOwnProperty('stack') ? args[0].stack : now + '-' + args[0];
 
 			record('error', args[0]);
-			//_error(msg);
+			_error(msg);
 		};
 		
 		return $delegate;
