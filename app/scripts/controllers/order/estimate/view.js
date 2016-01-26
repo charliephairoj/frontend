@@ -120,7 +120,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast) {
 	
 	keyboardNav.onenter = function () {
 		$scope.safeApply(function () {
-			$location.path('/order/acknowledgement/' + currentSelection.id);
+			$location.path('/order/estimate/' + currentSelection.id);
 		});
 	};
 	

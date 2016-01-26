@@ -31,12 +31,15 @@
     <div class="workspace">
 		
 		<nav>
-			<h2>Estimates</h2>
-			<md-button class="add-btn md-accent" ui-if="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/estimate/create">New Estimate</md-button>
+			<h2>Quotations</h2>
+			<md-button class="md-raised md-accent md-icon-button" ui-if="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/estimate/create">
+				<md-tooltip>Open New Quotation</md-tooltip>
+				<i class="material-icons">create</i>
+			</md-button>
 		</nav>
 		
 		<div class="title-bar">
-			<div class="id">ESTIMATE ID</div>
+			<div class="id">ID</div>
 			<div class="order-date">DATE</div>
 			<div class="customer">CUSTOMER</div>
 			<div class="project">PROJECT</div>
