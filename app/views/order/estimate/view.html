@@ -72,7 +72,7 @@
 											<div class="status" ng-class="ack.status.toLowerCase()">
 												<h4 class="md-warn" ng-if="ack.status === 'cancelled'">Cancelled</h4>
 												<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('add_acknowledgement')"
-													ng-if="ack.status != 'cancelled'">Order</md-button>
+													ng-if="ack.status != 'cancelled'" ng-click="createAcknowledgement(ack)">Order</md-button>
 												<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('change_estimate')" 
 													ng-click="ack.status='cancelled'; update(ack)" ng-if="ack.status != 'cancelled'">Cancel</md-button>
 											</div>

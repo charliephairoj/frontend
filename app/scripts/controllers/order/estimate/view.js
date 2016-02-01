@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderEstimateViewCtrl', ['$scope', 'Estimate', '$location', '$filter', 'KeyboardNavigation', '$mdToast', 'Fabric', 'FileUploader', 'Notification', 'Upholstery',
-function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fabric, FileUploader, Notification, Upholstery) {
+.controller('OrderEstimateViewCtrl', ['$scope', 'Estimate', '$location', '$filter', 'KeyboardNavigation', '$mdToast', 'Fabric', 'FileUploader', 'Notification', 'Upholstery', 'Acknowledgement',
+function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fabric, FileUploader, Notification, Upholstery, Acknowledgement) {
 	
 	
 	/*
@@ -286,7 +286,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	};
 
 	/**
-	 * Save the acknowledgement
+	 * Save the quotation
 	 * 
 	 * @public
 	 * @param {Object} acknowledgement - The acknowledgement to be saved
@@ -300,6 +300,72 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		});
 	};
 
+	/**
+	 * Create a new Acknowledgement 
+	 *
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	$scope.createAcknowledgement = function (quotation) {
+		
+		Notification.display('Creating acknowledgement from quotation #' + quotation.id, 0);
+		
+		var acknowledgement = new Acknowledgement();
+		
+		// Assign order details
+		acknowledgement.customer = quotation.customer;
+		acknowledgement.delivery_date = quotation.delivery_date || 0;
+		acknowledgement.vat = quotation.vat || 0;
+		acknowledgement.terms = quotation.terms || 0;
+		acknowledgement.po_id = quotation.po_id || 'NA';
+		
+		// Assign project
+		if (quotation.project) {
+			acknowledgement.project = quotation.project;
+		}
+		
+		// Assign the room if it exists
+		if (quotation.room) {
+			acknowledgement.room = quotation.room;
+		}
+		
+		// Assign the phase if it exists
+		if (quotation.phase) {
+			acknowledgement.phase = quotation.phase;
+		}
+		
+		// Assign items
+		acknowledgement.items = quotation.items;
+		
+		// Prepare items for new creation
+		for (var i = 0; i < acknowledgement.items.length; i++) {
+			if (!acknowledgement.hasOwnProperty('model') || acknowledgement.hasOwnProperty('configuration')) {
+				delete acknowledgement.items[i].id;
+			}
+			
+			acknowledgement.items[i].price = acknowledgement.items[i].unit_price || acknowledgement.items[i].price || 0;
+			delete acknowledgement.items[i].unit_price;
+		}
+		
+		acknowledgement.$create(function (resp) {
+			Notification.display('Acknowledgement #' + resp.id + ' created from quotation #' + quotation.id, 2000);
+			quotation.status = 'ordered';
+			quotation.$update();
+			
+			$scope.safeApply(function () {
+				$location.path('/order/acknowledgement/' + resp.id);
+			});
+			
+		}, function (e) {
+			Notification.display('Error creating new acknowledgement from quotation #' + quotation.id, 0);
+			console.error(e);
+		});
+		
+	}
+	
 	
 	$scope.$on('$destroy', function () {
 		keyboardNav.disable();
