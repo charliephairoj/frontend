@@ -35,42 +35,187 @@
 			flex-wrap:wrap;
 			justify-content:space-between;
 			
-			md-card{
-				width:23%;
-				height:15em;
-				.transition(all, 350ms);
+			md-card.employee{
+				width:100%;
+				max-height:10em;
+				margin:0;
+				padding:0;
+				height:auto;
+				border-bottom:1px dotted rgba(0, 0, 0, 0.15);
+				.transition(all, 150ms);
 				
 				&.active{
-					width:48%;
-					height:31em;
+					width:90%;
+					max-height:200em;
+					margin:3em;
+					padding:1em;
+					border:none;
 				}
 				
 				md-card-title{
 					outline:none;
-					cursor:pointer;
 					
-					md-card-title-media{
-						width:50%;
-					
-						.card-media{
+					.click-container{
+						height:100%;
+						cursor:pointer;
+						outline:none;
+						
+						md-card-title-media{
+							margin-right:2em;
+							height:100%;
+							.card-media{
 							
-							i{
-								font-size:4.5em;
-								color:rgba(0, 0, 0, 0.35);
-							}
+								i{
+									font-size:4.5em;
+									color:rgba(0, 0, 0, 0.35);
+								}
 							
-							img{
-								max-width:100%;
-								max-height:5em;
+								img{
+									max-width:100%;
+									max-height:5em;
+								}
 							}
 						}
+					
+						
 					}
+					
 				}
 				
 				
 				md-card-content{
 					
+					div{
+						md-input-container{
+							margin-right:1em;
+							min-width:15%;
+							
+							&:last-child{
+								margin-right:0;
+							}
+						}
+					}
 					
+					section.attendances{
+						
+						md-card.attendance-container{
+							display:flex;
+							flex-direction:column;
+							font-family:proxima, Helvetica, Arial;
+						
+							md-card-title.title{
+								display:flex;
+								flex-direction:row;
+								padding:0;
+							
+								h4{
+									padding:0.5em 0;
+									background:rgb(96,125,139);
+									color:rgb(255, 255, 255);
+									display:flex;
+									justify-content:center;
+									align-items:center;
+									text-align:center;
+									
+									&.date{
+										width:15%;
+									}
+								
+									&.clockin{
+										width:15%
+									}
+								
+									&.clockout{
+										width:15%;
+									}
+								
+									&.regular-time{
+										width:10%;
+									}
+								
+									&.overtime{
+										width:10%;
+									}
+								
+									&.enable-overtime{
+										width:15%;
+									}
+								
+									&.pay{
+										width:10%;
+									}
+									
+									&.social-security{
+										width:10%;
+									}
+								}
+							}
+						
+							md-card-content{
+								padding:0;
+							
+								.attendance{
+									display:flex;
+									flex-direction:row;
+									
+									&.sunday{
+										h4{
+											color:red;
+										}
+									}
+									
+									h4{
+										display:flex;
+										justify-content:center;
+										align-items:center;
+								
+										padding:0.25em 0;
+								
+										&.date{
+											width:15%;
+										}
+								
+										&.clockin{
+											width:15%
+										}
+								
+										&.clockout{
+											width:15%;
+										}
+							
+										&.regular-time{
+											width:10%;
+										}
+								
+										&.overtime{
+											width:10%;
+										}
+								
+										&.enable-overtime{
+											width:15%;
+										}
+									
+										&.pay{
+											width:10%;
+										}
+										
+										&.social-security{
+											width:10%;
+										}
+									}
+								
+									div{
+										&.enable-overtime{
+											display:flex;
+											justify-content:center;
+											align-items:center;
+											width:15%;
+										}
+									}						
+								}
+							}
+						}
+					}
 				}
 			}
 		}
