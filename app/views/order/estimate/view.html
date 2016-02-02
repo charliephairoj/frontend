@@ -13,16 +13,18 @@
 				<h3><span>Quotations</span></h3>
 				<div flex></div>
 				
-				<md-button class="md-icon-button md-primary md-raised" ng-if="currentUser.hasPermission('add_estimate')" ng-href="#/order/estimate/create">
+				<md-button class="md-icon-button md-accent md-raised" ng-if="currentUser.hasPermission('add_estimate')" ng-href="#/order/estimate/create">
 					<md-tooltip>
 						Create New Acknowledgement
 					</md-tooltip>
 					<i class="material-icons">create</i>
 				</md-button>
+				<!--
 				<md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="!currentUser.hasPermission('view_estimate')">
 					<md-tooltip>Download</md-tooltip>
 					<i class="material-icons">file_download</i>
 				</md-button>
+					-->
 				<input class="search" type="text" ng-model="query.$.$" />
 			</div>			
 			
@@ -72,9 +74,12 @@
 											<div class="status" ng-class="ack.status.toLowerCase()">
 												<h4 class="md-warn" ng-if="ack.status === 'cancelled'">Cancelled</h4>
 												<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('add_acknowledgement')"
-													ng-if="ack.status != 'cancelled'" ng-click="createAcknowledgement(ack)">Order</md-button>
+													ng-if="ack.status != 'cancelled' && ack.status != 'ordered'" ng-click="createAcknowledgement(ack)">Order</md-button>
 												<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('change_estimate')" 
-													ng-click="ack.status='cancelled'; update(ack)" ng-if="ack.status != 'cancelled'">Cancel</md-button>
+													ng-click="ack.status='cancelled'; update(ack)" ng-if="ack.status != 'cancelled' && ack.status != 'ordered'">Cancel</md-button>
+												<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('view_acknowledgement')" 
+													ng-href="#/order/acknowledgement/{{ack.acknowledgement.id}}" ng-if="ack.status == 'ordered'">View Acknowledgement</md-button>	
+												
 											</div>
 											<div class="remarks" ng-click="active=true">
 												{{ack.remarks}}
