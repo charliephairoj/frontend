@@ -57,14 +57,14 @@
 				
 				
 				&.title-bar{
-					display:flex;
+					.flex;
 					flex-direction:row;
 					border-bottom: 1px solid #4F6874;
 					border-top: 1px solid #4F6874;
 					width:100%;
 			
 					div{
-						display:flex;
+						.flex;
 						flex-direction:row;
 						align-items:center;
 						justify-content:space-around;
@@ -120,7 +120,7 @@
 			.acknowledgement-summary{
 				width:100%;
 				height:auto;
-				display:flex;
+				.flex;
 				flex-direction:row;
 				align-items:center;
 				overflow:visible;
@@ -137,7 +137,7 @@
 					overflow:hidden;
 					z-index:1;
 					cursor:pointer;
-					display:flex;
+					.flex;
 					flex-direction:column;
 					align-items:flex-start;
 					justify-content:space-between;
@@ -214,7 +214,7 @@
 			height:100%;
 			width:100%;
 			overflow-x:hidden;
-			display:flex;
+			.flex;
 			flex-direction:column;
 			align-items:center;
 			
@@ -222,6 +222,7 @@
 				margin:0;
 				max-height:3.5em;
 				min-height:3.5em;
+				min-width:1em;
 				
 				.transition(margin, 150ms);
 				.transition(max-height, 750ms);
@@ -248,7 +249,7 @@
 								pointer-events: none;
 								
 								.drag-placeholder{
-									display:flex;
+									.flex;
 									pointer-events: none;
 									z-index:20;
 								}
@@ -276,7 +277,7 @@
 										}
 										
 										.drag-placeholder{
-											display:flex;
+											.flex;
 										}
 									}
 								}
@@ -330,7 +331,7 @@
 	                    width:100%;
 	                    position:relative;
 	                    height:3.5em;
-						display:flex;
+						.flex;
 						flex-direction:column;
 						overflow-x:hidden;
 						z-index:0;
@@ -439,7 +440,7 @@
 	            		}
 					
 	                    .item{
-							display:flex;
+							.flex;
 							flex-direction:row;
 	                        width:100%;
 	                        background-color:#FFF;
@@ -464,7 +465,7 @@
 				
                 
 							div{
-								display:flex;
+								.flex;
 								flex-direction:row;
 								align-items:center;
 								padding-left:1em;
@@ -534,7 +535,7 @@
 							height:.5em;
 							width:100%;
 							background:pink;
-							display:flex;
+							.flex;
 							flex-direction:row;
 							position:relative;
 							@zIndex:0;
@@ -599,6 +600,8 @@
 					max-height:@maxHeight;
 					width:90%;
 					background-color:rgba(0,0,0, 0.1);
+					min-height:initial;
+					display:block;
 					
 					md-card-content{
 						margin:2em;
@@ -612,7 +615,7 @@
 						.item-container{
 							height:auto;
 							width:100%;
-							display:flex;
+							.flex;
 							background-color:rgb(255, 255, 255);
 							flex-direction:column;
 							align-items:center;
@@ -623,7 +626,7 @@
 								padding:0;
 								width:100%;
 								height:auto;
-								display:flex;
+								.flex;
 								align-items:center;
 								flex-direction:column;
 								
@@ -652,12 +655,12 @@
 								padding:1em 1em 0 1em;
 								margin-bottom:0.25em;
 					            color:rgba(0, 0, 0, 1);
-								display:flex;
+								.flex;
 								flex-direction:column;
 								justify-content:space-between;
 			
 								.info{
-									display:flex;
+									.flex;
 									align-items:flex-start;
 									justify-content:space-between;
 									flex-wrap:wrap;
@@ -721,7 +724,7 @@
 								@borderRadius:@statusBarHeight/2;
 								height:@statusBarHeight;
 								width:90%;
-								display:flex;
+								.flex;
 								flex-direction:row;
 								font-size:16px;
 								border-radius:3px;
@@ -735,7 +738,7 @@
 									padding:0;
 									position:relative;
 									font-size:16px;
-									display:flex;
+									.flex;
 									align-items:center;
 									flex-direction:row;
 									flex-wrap:nowrap;
@@ -748,7 +751,7 @@
 										font-size:1em;
 										padding:0.5em 0;
 										margin:0;
-										display:flex;
+										.flex;
 										flex-direction:row;
 										align-items:center;
 									}
@@ -859,7 +862,7 @@
 								
 								.files{
 									width:100%;
-									display:flex;
+									.flex;
 									flex-direction:row;
 									justify-content:flex-start;
 									
@@ -907,7 +910,7 @@
 										
 										&.item-drag-active{
 											.drag-placeholder{
-												display:flex;
+												.flex;
 												pointer-events: none;
 											}
 											
@@ -962,7 +965,7 @@
 											padding:1em;
 											background:rgb(255, 255, 255);
 											max-height:none;
-											display:flex;
+											.flex;
 											flex-direction:row;
 											justify-content:space-between;
 											

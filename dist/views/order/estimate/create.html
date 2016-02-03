@@ -1,241 +1,389 @@
-<div class="estimate-create-page" ng-init="showCustomers=false; show_upholstery=false;showCustom_item=false;" fade-in file-drop="addFiles($files)">
-    
+<div class="estimate-create-page" fade-in file-drop="addFiles($files)" file-drop-class="page-drag-active">
     
     <!--
         Forms
-    -->
-    <div product-selector="showProducts" product-selector-add="addItem(product)" product-selector-upload-url="api/v1/estimatenowledgement/item/image"></div>
+    -->   
     
-    
-    <form name="remarksForm" novalidate class="remarks_modal" data-modal ng-model="showRemarks">
-        <div class="title">Remarks</div>
-        <textarea ng-model="estimate.remarks" ></textarea>
-        <div class="bottom_bar">
-            <button ng-click="showRemarks=false">Submit</button>
-        </div>
-    </form>
-    
-    
-    <form name="vatForm" class="vat_modal" novalidate data-modal ng-model="showVat">
-        <div class="title">Vat</div>
-        <input ng-model="estimate.vat" required ng-pattern="/^\d{1,2}$/" autofocus /><span>%</span>
-        <div class="bottom_bar">
-            <button ng-disabled="vatForm.$invalid" ng-click="showVat=false">Submit</button>
-        </div>
-    </form>
-    
-    <form name="poForm" class="po_modal" novalidate data-modal ng-model="showPO">
-        <div class="title">PO Number</div>
-        <input ng-model="estimate.po_id"  size="40"/>
-        <div class="bottom_bar">
-            <button ng-click="showPO=false">Submit</button>
-        </div>
-    </form>
-    
-    
-    
-    <form class="estimate" name="form" ec-droppable="add()" novalidate>
-        <!--
-            Sidebar
-        -->
-        
-        <div class="sidebar">
-            <header>
-                <h1>
-                    <span>Create Estimate</span>
-                </h1>
-            </header>
-            <nav>
-                <ul class="list">
-                    <li><div ng-click="create()" >Create</div></li>
-                    <li><div class="customer" checkmark="estimate.customer" x="!estimate.customer" ng-click="showCustomers=!showCustomers">Add Customer</div></li>
-                    <li><div class="upholstery" checkmark="estimate.items.length>0" x="estimate.items.length==0" ng-click="showProducts=true">Add Product</div></li>
-                   
-                    <li><div class="delivery_date" checkmark="estimate.delivery_date" x="!estimate.delivery_date" ng-click="show_calendar=true">Delivery Date</div></li>
-                    <li><div class="vat" checkmark="estimate.vat" x="!estimate.vat" ng-click="showVat=true">Set Vat</div></li>
-                    <li><div ng-click="showRemarks=true">Add Remarks</div></li>
-                    <li><div ng-click="reset()" >Reset</div></li>
-                </ul>
-            </nav>
-            
-        </div>
-        
-        <!--
-            Panels
-        -->
-        
-        <div customer-list="showCustomers" on-select="addCustomer(customer);"></div>
-        
-        
-        
-        
-        
-        <div class="calendar_modal" data-modal  ng-model="show_calendar">
-            <div ui-date ng-model="estimate.delivery_date">
-            </div>
-            <div class="bottom_bar">
-                <button ng-disabled="!estimate.delivery_date" ng-click="show_calendar=!show_calendar">Select</button>
-            </div>
-            
-        </div>
+    <form class="ack" name="ackForm" novalidate>
         
         <!--
             Workspace
         -->
         <div class="workspace">
 			
-			<!--
-				<div class="files">
-					<span class="title">Attachments</span>
-					<a class="file" ng-repeat="file in estimate.files" ng-class="{'uploading': !file.url}" checkmark="file.id" ng-href="{{file.url}}" target="_blank">
-						{{file.filename}}
-						<md-progress-circular class="progress md-hue-2" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
-					</a>
-				</div>
-				-->
+			<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
+				<h3><span>Open an Quotation</span></h3>
+				<div flex></div>
+            	<md-button class="md-icon-button md-primary md-raised" ng-click="create()">
+					<md-tooltip>
+						Create
+					</md-tooltip>
+					<i class="material-icons">create</i>				
+				</md-button>
+            	<md-button class="md-icon-button md-warn md-raised" href="#/order/acknowledgement">
+					<md-tooltip>
+					    Cancel
+					</md-tooltip>
+					<i class="material-icons">close</i>
+				</md-button>
+            	<md-button class="md-icon-button md-warn md-raised" ng-click="reset()">
+					<md-tooltip>
+					    Clear All
+					</md-tooltip>
+					<i class="material-icons">clear_all</i>
+				</md-button>
+			</md-toolbar>
+			
+
+			<md-content layout="column">
+				<md-card style="width:90%;">
+					<md-card-content>
+		           	 	<div class="company">
+							<md-input-container>
+					        	<label>Company</label>
+						        <md-select ng-model="estimate.company">
+									<md-option value="Dellarobbia Thailand">Dellarobbia Thailand</md-option>
+									<md-option value="Pacific Carpet">Pacific Carpet</md-option>
+							    </md-select>
+							</md-input-container>
+							</div>
+				            <div class="customer">				
+								<div class='info'>
+									<md-autocomplete flex="onshrink" required 
+										name='customer'
+										md-items="customer in searchCustomers(customerSearchText)" 
+										md-selected-item="selectedCustomer"
+										md-selected-item-change="addCustomer(selectedCustomer)"
+										md-search-text="customerSearchText"
+										md-search-text-change="updateCustomerName(customerSearchText)"
+										md-item-text="customer.name"
+										md-floating-label="Customer Name"
+										md-no-cache="true"
+										md-min-length="0">
+									    <md-item-template>
+									    	<span md-highlight-text="customerSearchText">{{customer.name}}</span>
+									    </md-item-template>
+										<div ng-messages="ackForm.customer.$error">
+											<div class="hint" ng-message="true">Starting typing to search or just type the name...</div>
+										</div>
+									</md-autocomplete>
+									<md-input-container>
+									  <label>Telephone</label>
+									  <md-icon md-font-icon="material-icons">phone</md-icon>
+									  <input type="text" ng-model="estimate.customer.telephone">
+							          <div class="hint">How do we contact them?</div>
+								  
+									</md-input-container>
+									<md-input-container>
+									  <label>Fax</label>
+									  <md-icon md-font-icon="material-icons">receipt</md-icon>
+									  <input type="text" ng-model="estimate.customer.fax">
+							          <div class="hint">How do we send them an invoice?</div>
+								  
+									</md-input-container>
+									<md-input-container>
+									  <label>Email</label>
+									  <md-icon md-font-icon="material-icons">email</md-icon>
+									  <input type="text" ng-model="estimate.customer.email">
+							          <div class="hint">How do we send them messages?</div>
+								  
+									</md-input-container>
+								</div>
 				
-                <div class="company">
-					<span class="title">Company</span>
-					<table class="details">
-						<tr>
-							<td>Company:</td>
-							<td>
-								<select ng-model="estimate.company" required>
-									<option value="Dellarobbia Thailand" default>Dellarobbia Thailand</option>
-									<option value="Pacific Carpet">Pacific Carpet</option>
-								</select>
-							</td>
-						</tr>
-					</table>
-				</div>
-                <div class="customer">
-                    <span class="title">Customer</span>
-                    <table class="details">
-                        <tr>
-                            <td>Name:</td>
-                            <td>{{estimate.customer.name}}</td>
-                        <tr>
-                            <td>Address:</td>
-                            <td>
-                                {{estimate.customer.addresses[0].address1}}
-                                <br />
-                                {{estimate.customer.addresses[0].city}}, {{estimate.customer.addresses[0].territory}}
-                                <br />
-                                {{estimate.customer.addresses[0].territory}}, {{estimate.customer.addresses[0].country}} {{estimate.customer.addresses[0].zipcode}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Telephone:</td>
-                            <td>{{estimate.customer.telephone}}</td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td>{{estimate.customer.email}}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div class="order">
-                    <table class="details">
-                        <tr>
-                            <td>Delivery Date:</td>
-                            <td>{{estimate.delivery_date | date:"EEEE, MMMM d, yyyy"}}</td>
-                        </tr>
-                        <tr ui-if="estimate.po_id">
-                            <td>PO#:</td>
-                            <td>{{estimate.po_id}}</td>
-                        </tr>
-        
-                        <tr>
-                            <td>Vat:</td>
-                            <td>{{estimate.vat}}%</td>
-                        </tr>
-						<tr>
-							<td>Discount</td>
-							<td><input type="number" maxlength=2 size=4 ng-model="estimate.discount" />%</td>
-						</tr>
-                        <tr>
-                            <td>Currency:</td>
-                            <td>
-                                {{estimate.customer.currency}}
-                            </td>
-                        </tr>
-                        <tr class="project">
-                            <td>Project:</td>
-                            <td>
-								<select ng-options="project.codename for project in projects" ng-model="estimate.project" ng-disabled="estimate.newProject">
-								<input class="new-project-checkbox" type="checkbox" ng-model="estimate.newProject" />New Project
-								<input class="new-project-name" type="text" ng-model="estimate.newProjectName" ng-show="estimate.newProject">
-                            </td>
-                        </tr>
-                    </table>
-					
-                </div>
-                
+								<div class="address">
+									<md-input-container>
+									  <label>Address</label>
+									  <input type="text" ng-model="estimate.customer.addresses[0].address1">
+									</md-input-container>
+									<md-input-container>
+									  <label>City</label>
+									  <input type="text" ng-model="estimate.customer.addresses[0].city">
+									</md-input-container>
+									<md-input-container>
+									  <label>Territory</label>
+									  <input type="text" ng-model="estimate.customer.addresses[0].territory">
+									</md-input-container>
+									<md-input-container>
+									  <label>Country</label>
+									  <input type="text" ng-model="estimate.customer.addresses[0].country">
+									</md-input-container>
+									<md-input-container>
+									  <label>Zipcode</label>
+									  <input type="text" ng-model="estimate.customer.addresses[0].zipcode">
+									</md-input-container>
+								</div>
+
+				            </div>
             
-            <div class="products" ng-show="estimate.items.length>0">
-                <div class="title">Products</div>
-                <div class="product" ng-repeat="product in estimate.items track by $index">
-                    {{product.description}}
-                    <table class="details">
-                        <tr>
-                            <td>Qty:</td>
-                            <td>{{product.quantity}}</td>
-                        </tr>
-                        <tr>
-                            <td>Custom Price</td>
-                            <td><input type="number" min="0" data-ng-model="product.custom_price" /></td>
-                        </tr>
-                        <tr>
-                            <td>Custom Size:</td>
-                            <td><input type="checkbox" ng-model="product.is_custom_size" /></td>
-                        </tr>
-                        <tr>
-                            <td>Width:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.width" />mm</td>
-                        </tr>
-                        <tr>
-                            <td>Depth:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.depth" />mm</td>
-                        </tr>
-                        <tr>
-                            <td>Height:</td>
-                            <td><input type="text" ng-class="{'active':product.is_custom_size}" ng-disabled="!product.is_custom_size" ng-model="product.height" />mm</td>
-                        </tr>
-                        <tr ui-if="product.fabric">
-                            <td>Fabric: </td>
-                            <td>
-                                {{product.fabric.description}}
-                                <img ng-src="{{product.fabric.image.url}}" />
-                            </td>
-                            <td>
-                                
-                            </td>
-                            
-                        </tr>
-						<tr ui-if="product.fabric">
-							<td>
-								Fabric Quantity: 
-							</td>
-							<td>
-								<input type="number" min="0" data-ng-model="product.fabric_quantity" />
-							</td>
-						</tr>
-                        <tr ng-repeat="pillow in product.pillows">
-                            <td>{{pillow.type | beautify}} Pillow</td>
-                            <td>{{pillow.fabric.description}}<img ng-src="{{pillow.fabric.image.url}}" /></td>
-                        </tr>
-                        <tr>
-                            <td>Comments:</td>
-                            <td><textarea cols="40" rows="4" ng-model="product.comments" ec-blur="tempSave()"></textarea></td>
-                        </tr>
-                    </table>
-                    <img ng-src="{{product.image.url}}" />
-                    <div class="remove_btn" ng-click="removeItem($index)">Remove</div>
-                </div>
+				            <div class="order">
+								<div class='details'>
+									<div class="date-container" layout="column">
+										<md-datepicker name="dateField" ng-model="estimate.delivery_date" md-placeholder="Delivery Date" required>
+										</md-datepicker>
+							            <div class="hint">When do we deliver?</div>
+									</div>
+								
+									<md-input-container>
+									  	<label>Purchase Order #</label>
+									  	<input name="po" type="text" ng-model="estimate.po_id" required>
+										<div ng-messages="ackForm.po.$error">
+											<div ng-message-exp="'required'">This is required</div>
+										</div>
+							            <div class="hint">What's the number on their purchase order?</div>
+									</md-input-container>
+									<md-input-container>
+									  	<label>Vat</label>
+									  	<input name="vat" type="number" ng-model="estimate.vat" required max="10">								  
+										<div ng-messages="ackForm.vat.$error" multiple>
+											<div ng-message-exp="'required'">This is required</div>
+											<div ng-message-exp="'max'">That's too much vat!</div>
+										</div>
+						            	<div class="hint">How much is the government taking?</div>
+									</md-input-container>
+									<md-input-container>
+									  	<label>Remarks</label>
+	  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
+									
+										<textarea ng-model="estimate.remarks"></textarea>
+							            <div class="hint">Any other details?</div>
+									
+									</md-input-container>
+								</div>
+			
+
+								<div class="project">
+										<md-autocomplete flex required 
+											md-items="project in searchProjects(projectSearchText)" 
+											md-selected-item="selectedProject"
+											md-selected-item-change="addProject(selectedProject)"
+											md-search-text="projectSearchText"
+											md-search-text-change="updateProjectName(projectSearchText)"
+											md-item-text="project.codename"
+											md-floating-label="Project"
+											md-no-cache="true"
+											md-min-length="0">
+										    <md-item-template>
+										    	<span md-highlight-text="projectSearchText">{{project.codename}}</span>
+										    </md-item-template>
+										</md-autocomplete>
+
+										<md-input-container>
+									        <label>Room</label>
+									        <md-select ng-model="estimate.room"  ng-model-options="{trackBy: '$value.id'}">
+									          	<md-option ng-repeat="room in estimate.project.rooms" ng-value="room">
+									            	{{room.description}}
+									         	 </md-option>
+									        </md-select>
+									    </md-input-container>
+										<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
+								
+										<md-input-container>
+									        <label>Phase</label>
+									        <md-select ng-model="estimate.phase"  ng-model-options="{trackBy: '$value.id'}">
+									          	<md-option ng-repeat="phase in estimate.project.phases" ng-value="phase">
+									            	{{phase.description}}
+									         	 </md-option>
+									        </md-select>
+									    </md-input-container>
+										<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
+								</div>
+				            </div>
+						</md-card-content>
+					</md-card>
+			
+			
+			<!-- 
+				Map
+			-->
+			<md-card class="map" layout="row">
+				<md-card-actions layout="column" layout-align="start center">
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!estimate.customer.name || marker" ng-click="addMarker()">
+						<md-tooltip>Add a Location</md-tooltip>
+						<i class="material-icons">add_location</i>				
+					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!marker" ng-click="editMarker()">
+						<md-tooltip>Edit Location</md-tooltip>
+						<i class="material-icons">edit_location</i>
+					</md-button>
+		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="directionsActive || !marker" ng-click="viewDirections()">
+						<md-tooltip>View Directions</md-tooltip>
+						<i class="material-icons">directions</i>				
+					</md-button>
+		        </md-card-actions>
+				<md-card-content>
+					<div class="map-container">
+						<div id="create-ack-map"></div>
+						
+					</div>
+					<div id="directions"></div>
+				</md-card-content>
+			</md-card>
+
                 
-                
-            </div>
+				
+				<md-card class="files" file-drop="addFiles($files)" file-drop-class="file-drag-active">
+					<div class="drag-placeholder" ng-class="{'no-files': estimate.files.length===0 || !estimate.files}">
+						<h2>Drop Files Here</h2>
+					</div>
+					<md-card-content ng-show="estimate.files && estimate.files.length > 0">
+						<md-card ng-repeat="file in estimate.files">
+							<md-card-title>
+					          	<md-card-title-text>
+					            	<span class="md-headline">{{file.filename}}</span>
+					          	</md-card-title-text>
+					        </md-card-title>
+				        	<md-card-actions layout="row" layout-align="end center">
+				          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank" ng-disabled="!file.id">
+									<md-tooltip>Open in a New Window</md-tooltip>
+									<i class="material-icons">open_in_browser</i>
+								</md-button>
+				        	</md-card-actions>
+						</md-card>
+					</md-card-content>
+				</md-card>
+            
+
+				<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (tempProduct || {description: productSearchText}))">
+					<md-card-actions layout="row" layout-align="center center">
+						<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(tempProduct || {description: productSearchText})">
+							<md-tooltip>Add Product</md-tooltip>
+							<i class="material-icons">add_shopping_cart</i>
+						</md-button>
+			        </md-card-actions>
+					<md-card-content layout="row" layout-align="start center">
+						<md-autocomplete flex required 
+							md-items="product in searchProducts(productSearchText)" 
+							md-search-text-change="retrieveUpholsteries(productSearchText)"
+							md-selected-item="tempProduct"
+							md-no-cache="true"
+							md-search-text="productSearchText"
+							md-item-text="product.description"
+							md-floating-label="Product Description"
+							md-min-length="0">
+						    <md-item-template>
+						    	<span md-highlight-text="productSearchText">{{product.description}}</span>
+						    </md-item-template>
+							<div ng-messages="true">
+								<div class="hint" ng-message="true">Starting typing to search or just type the description and add...</div>
+							</div>
+						</md-autocomplete>
+					</md-card-content>
+					<md-card-title-media>
+						<div class="md-media-md card-media">
+							<img ng-src="{{tempProduct.image.url}}">
+						</div>
+					</md-card-title-media>
+				</md-card>
+			
+	            <md-card class="item" ng-repeat="item in estimate.items track by $index" layout="column"  file-drop="addImage($files, item)" file-drop-class="item-drag-active">
+					<div class="drag-placeholder">
+						<h2>Drop Image Here</h2>
+					</div>
+					<md-card-title>
+			          	<md-card-title-text>
+			            	<span class="md-headline">{{item.description}}</span>
+			          	</md-card-title-text>
+			        </md-card-title>
+					<md-card-content layout="row">
+						<md-card-actions layout="row" layout-align="end center">
+							<md-button class="add md-warn md-raised md-icon-button" ng-click="removeItem($index)">
+								<md-tooltip>Remove {{item.description}} from the order</md-tooltip>
+								<i class="material-icons">remove</i>
+							</md-button>
+				        </md-card-actions>
+						<table class="product-details">
+							<tr>
+								<td>
+									<md-input-container>
+										<label>Quantity</label>
+										<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
+										<div ng-messages="ackForm.quantity.$error">
+											<div ng-message="required">This required is required</div>
+											<div ng-message="min">Quantity should be greater than 0</div>
+										</div>
+							            <div class="hint">How many pieces did they order?</div>
+									</md-input-container>
+								</td>
+								<td layout="row" colspan="2">
+									<md-input-container>
+										<label>Price Per Piece</label>
+										<input name="price" type="number" ng-model="item.price" required />
+										<div ng-messages="ackForm.price.$error">
+											<div ng-message="required">This required is required</div>
+										</div>
+							            <div class="hint">How many one piece cost?</div>
+									
+									</md-input-container>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<md-input-container>
+										<label>Width (mm)</label>
+										<input type="number" ng-model="item.width" min="0" required />
+									</md-input-container>
+								</td>
+								<td>
+									<md-input-container>
+										<label>Depth (mm)</label>
+										<input type="number" ng-model="item.depth" min="0" required />
+									</md-input-container>
+								</td>
+								<td>
+									<md-input-container>
+										<label>Height (mm)</label>
+										<input type="number" ng-model="item.height" min="0" required />
+									</md-input-container>
+								</td>
+							</tr>
+							<tr class="fabric">
+								<td colspan="2">
+									<md-autocomplete flex 
+										md-items="fabric in searchFabrics(fabricSearchText)" 
+										md-search-text-change="retrieveFabrics(fabricSearchText)"
+										md-selected-item="item.fabric"
+										md-search-text="fabricSearchText"
+										md-item-text="fabric.description"
+										md-floating-label="Fabric"
+										md-no-cache="true"
+										md-min-length="0">
+								    <md-item-template>
+								    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
+								    </md-item-template>
+									<div ng-messages="true">
+										<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+									</div>
+								</md-autocomplete>
+								</td>
+								<td>
+									<img ng-src="{{item.fabric.image.url}}" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<md-input-container>
+									  	<label>Remarks</label>
+	  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
+									
+										<textarea ng-model="item.comments"></textarea>
+							            <div class="hint">Any other details?</div>
+									
+									</md-input-container>
+								</td>
+							</tr>
+						</table>
+						<div flex></div>
+						<md-card-title-media>
+							<div class="md-media-sm card-media">
+								<img ng-src="{{item.image.url}}">
+							</div>
+						</md-card-title-media>
+					</md-card-content>	
+				
+				</md-card>
+			
+			</md-content>
+              
         </div>
     </form>
     

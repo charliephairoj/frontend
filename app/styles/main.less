@@ -87,7 +87,14 @@ select{
 
 .opacity(@opacity: 0){
     opacity: @opacity;
-    
+}
+
+.flex{
+	display:flex;
+	display:-webkit-flex;
+	
+	min-height:0;
+	min-width:0;
 }
 
 /*Menu
@@ -332,5 +339,29 @@ and (orientation : portrait) {
 			background:red;
 		}
 	}
+}
+
+/* Bug Fixes */
+
+[layout="row"] > [flex="0"],
+[layout="row"] > [flex=""] {
+	min-width: 0;
+	min-height:0;
+}
+[layout="column"] > [flex="0"],
+[layout="column"] > [flex=""] {
+	min-height: 0;
+}
+
+md-card{
+	min-height:0;
+}
+
+md-card-content{
+	min-height:0;
+}
+
+md-card-title{
+	min-height:0;
 }
 

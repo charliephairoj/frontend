@@ -10,7 +10,7 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 	$scope.showCal = false;
 	
 	//GET request server for Acknowledgements
-	$scope.ack = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
+	$scope.acknowledgement = Acknowledgement.get({'id': $routeParams.id, 'pdf': true}, function  () {
 		notification.hide();
 		
 		//Reconcile the project so that it is shown to the user
@@ -19,6 +19,8 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 			$scope.acknowledgement.project = $scope.projects[index];
 		}
 	});
+	
+	$scope.ack = $scope.acknowledgement;
 	
 	$scope.projects = Project.query({limit:0, page_size:1000}, function () {
 		
@@ -34,13 +36,16 @@ function ($scope, Acknowledgement, $routeParams, $http, $window, Notification, F
 	
 	//Help determine if an event occured for the given acknowledgement
 	$scope.hasEvent = function (ack, e) {
-		for (var i in ack.logs) {
-			if (ack.logs[i].hasOwnProperty('message')) {
-				if (ack.logs[i].message.indexOf(e) > -1) {
-					return true;
+		
+		if (ack.logs) {
+			for (var i in ack.logs) {
+				if (ack.logs[i].hasOwnProperty('message')) {
+					if (ack.logs[i].message.indexOf(e) > -1) {
+						return true;
+					}
 				}
-			}
 			
+			}
 		}
 		
 		return false;

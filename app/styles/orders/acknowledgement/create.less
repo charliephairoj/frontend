@@ -11,7 +11,7 @@
 					
 					.files{
 						.drag-placeholder{
-							display:flex;
+							.flex;
 						}
 						
 						md-card-content{
@@ -33,7 +33,7 @@
 					
 					.item{
 						.drag-placeholder{
-							display:flex;
+							.flex;
 						}
 						
 					}
@@ -64,7 +64,7 @@
 			
 			md-content{
 				height:100%;
-				display:flex;
+				.flex;
 				flex-direction:column;
 				align-items:center;
 				
@@ -86,307 +86,329 @@
 					}
 				}
 			
-
-				
-			
-	            .customer{
-	                position:relative;
-					width:100%;
-	                margin-top:2em;
-	                color:rgba(0, 0, 0, 1);
-                
-		          	.info{
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
+				md-card{
+					display:block;
 					
-						md-autocomplete{
-							.hint{
-								color: rgba(0, 0, 0, 0.35);
-							}
-						
-							input{
-								color:rgb(0,0,0);
-							}
-						}
-		          	}
-				
-					.address{
-						.info;
-					}
-				
-					md-input-container{
-						margin-right:1em;
-					}
-		  	  
-				}
-			
-				.company{
-					.customer;
-				
-					.details{
-					  	opacity:1;
-					}
-				}
-			
-	            .order{
-	                .customer;
-            	
-					.details{
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
-					
-						.date-container{
-							md-datepicker{
-								margin-right:1em;							
-							}
-						
-							.hint{
-								/* Position the hint */
-							    //position: absolute;
-							    //left: 2px;
-							    //right: auto;
-							    //bottom: 7px;
-							    /* Copy styles from ng-messages */
-								margin-left:64px;
-							    font-size: 12px;
-							    line-height: 14px;
-							    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-							    /* Set our own color */
-							    color: rgba(0, 0, 0, 0.35);
-							}
-						}
-					
-					
-						md-input-container{
-							margin:3px 1em 18px 0;
-						}
-					}
-				
-					.project{
-						.details;
-		          		display:flex;
-						justify-content:flex-start;
-						align-items:flex-start;
-						margin-top:2em;
-						md-autocomplete{
-						
-							input{
-								color:rgb(0,0,0);
-							}
-						}
-					
-						md-input-container{
-							margin:0;
-							margin-left:2em;
-						}
-					
-						.md-button{
-							margin-right:3em;
-						}
-					}
-					
-	            }
-       
-		   	 	md-card.map{
-					width:90%;
-					margin:2em 0;
-				
 					md-card-content{
-						width:100%;
-						height:auto;
-						display:flex;
-						flex-direction:column;
+
+					}
 					
-						.map-container{
-							height:30em;
+					&.order-details{
+						width:90%;
+						
+			            .customer{
+			                position:relative;
 							width:100%;
-					
-							#create-ack-map{
-								height:100%;
-								width:100%;
+			                margin-top:2em;
+			                color:rgba(0, 0, 0, 1);
+                
+				          	.info{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+								/* Bug workaround for http://crbug.com/546034 - flex issues on Chrome 48 */
+								min-width: 0;
+								min-height: 0;
+						
+								md-autocomplete{
+									.hint{
+										color: rgba(0, 0, 0, 0.35);
+									}
+						
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+				          	}
+				
+							.address{
+								.info;
+							}
+				
+							md-input-container{
+								margin-right:1em;
+							}
+		  	  
+						}
+			
+						.company{
+							.customer;
+				
+							.details{
+							  	opacity:1;
 							}
 						}
+			
+			            .order{
+			                .customer;
+            	
+							.details{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
 					
-						#directions{
+								.date-container{
+									md-datepicker{
+										margin-right:1em;							
+									}
+						
+									.hint{
+										/* Position the hint */
+									    //position: absolute;
+									    //left: 2px;
+									    //right: auto;
+									    //bottom: 7px;
+									    /* Copy styles from ng-messages */
+										margin-left:64px;
+									    font-size: 12px;
+									    line-height: 14px;
+									    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+									    /* Set our own color */
+									    color: rgba(0, 0, 0, 0.35);
+									}
+								}
+					
+					
+								md-input-container{
+									margin:3px 1em 18px 0;
+								}
+							}
+				
+							.project{
+								.details;
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+								margin-top:2em;
+								md-autocomplete{
+						
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+					
+								md-input-container{
+									margin:0;
+									margin-left:2em;
+								}
+					
+								.md-button{
+									margin-right:3em;
+								}
+							}
+					
+			            }
+					}
+					
+					&.map{
+						width:90%;
+						margin:2em 0;
+				
+						md-card-content{
 							width:100%;
 							height:auto;
-						}
-					}
-				
-		   	 	}
-				
-				.files{
-					position:relative;
-					width:90%;
+							.flex;
+							flex-direction:column;
 					
-					&.file-drag-active{
-						
-						.drag-placeholder{
-							display:flex;
-							pointer-events: none;
+							.map-container{
+								height:30em;
+								width:100%;
+					
+								#create-ack-map{
+									height:100%;
+									width:100%;
+								}
+							}
+					
+							#directions{
+								width:100%;
+								height:auto;
+							}
 						}
+				
+			   	 	}
+					
+					&.files{
+						position:relative;
+						width:90%;
+						min-height:20em;
 						
-						md-card-content{
-							pointer-events: none;
-							display:none;
-							
-							md-card{
+						&.file-drag-active{
+						
+							.drag-placeholder{
+								.flex;
 								pointer-events: none;
 							}
-						}
-					}
-					
-					.drag-placeholder{
-						display:none;
-						position:static;
-						pointer-events:none;
-						margin:1em;
-						min-height:10em;
-						display:none;
-						z-index:2;
-						background:white;
-						border:2px dashed rgba(0, 0, 0, 0.35);
-						align-items:center;
-						justify-content:center;
 						
-						&.no-files{
-							display:flex;
-						}
-						
-						h3{
-							font-size:2em;
-							color:rgba(0, 0, 0, 0.35);
-						}
-						
-					}
-					
-					md-card-content{
-						display:flex;
-						flex-direction:row;
-												
-						md-card{
-							width:20%;
-							
-							md-card-title{
-								overflow:hidden;
-							}
-						}
-					}			
-				}
-			
-				.add-product{
-					width:90%;
-				
-					md-card-content{
-						width:60%;
-					
-						.hint{
-							color:rgba(0, 0, 0, 0.35);
-						}
-					}
-				}
-			
-            
-	            .item{
-	            	width:90%;
-					position:relative;
-					
-					&.item-drag-active{
-						.drag-placeholder{
-							display:flex;
-							pointer-events: none;
-						}
-						
-						md-card-content{
-							pointer-events: none;
-							
-							table{
-								pointer-events:none;
-							}
-							div{
+							md-card-content{
 								pointer-events: none;
-							}
+								display:none;
 							
-							md-card-title-media{
-								pointer-events: none;
-							
-								.card-media{
+								md-card{
 									pointer-events: none;
-									
+								}
+							}
+						}
+					
+						.drag-placeholder{
+							display:none;
+							position:static;
+							pointer-events:none;
+							margin:1em;
+							min-height:10em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							&.no-files{
+								.flex;
+							}
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
+					
+						md-card-content{
+							.flex;
+							flex-direction:row;
+												
+							md-card{
+								width:20%;
+							
+								md-card-title{
+									overflow:hidden;
+								}
+							}
+						}			
+					}
+					
+					&.add-product{
+						width:90%;
+						.flex;
+						min-height:10em;
+						
+						md-card-content{
+							width:60%;
+					
+							.hint{
+								color:rgba(0, 0, 0, 0.35);
+							}
+							
+							md-autocomplete{
+								width:20em;
+								
+								md-autocomplete-wrap{
+									width:20em;
 								}
 							}
 						}
 					}
 					
-					.drag-placeholder{
-						display:none;
-						position:absolute;
-						pointer-events:none;
-						top:1em;
-						left:1em;
-						right:1em;
-						bottom:1em;
-						display:none;
-						z-index:2;
-						background:white;
-						border:2px dashed rgba(0, 0, 0, 0.35);
-						align-items:center;
-						justify-content:center;
-						
-						h3{
-							font-size:2em;
-							color:rgba(0, 0, 0, 0.35);
-						}
-						
-					}
+					&.item{
+		            	width:90%;
+						position:relative;
 					
-					md-card-content{
-												
-						.product-details{
-							max-width:40%;
+						&.item-drag-active{
+							.drag-placeholder{
+								.flex;
+								pointer-events: none;
+							}
+						
+							md-card-content{
+								pointer-events: none;
 							
-							tr{
+								table{
+									pointer-events:none;
+								}
+								div{
+									pointer-events: none;
+								}
 							
-								&.fabric{
-								
-									td{
+								md-card-title-media{
+									pointer-events: none;
+							
+									.card-media{
+										pointer-events: none;
 									
-										&:last-child{
-											padding-left:1em;
-										
-											img{
-												max-height:5em;
-											}
-										}
-									
-										.hint{
-											margin-top:4px;
-										}
 									}
 								}
 							}
 						}
 					
-						md-card-title-media{
-							pointer-events: none;
-							max-width:40%;
-							
-							.card-media{
-								pointer-events: none;
-								max-width:100%;
+						.drag-placeholder{
+							display:none;
+							position:absolute;
+							pointer-events:none;
+							top:1em;
+							left:1em;
+							right:1em;
+							bottom:1em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
 					
-								img{
-									max-height:20em;
-									max-width:100%;
+						md-card-content{
+												
+							.product-details{
+								max-width:40%;
+							
+								tr{
+							
+									&.fabric{
+								
+										td{
+									
+											&:last-child{
+												padding-left:1em;
+										
+												img{
+													max-height:5em;
+												}
+											}
+									
+											.hint{
+												margin-top:4px;
+											}
+										}
+									}
 								}
 							}
-						}
-											
-					}
 					
-	            }
+							md-card-title-media{
+								pointer-events: none;
+								max-width:40%;
+							
+								.card-media{
+									pointer-events: none;
+									max-width:100%;
+					
+									img{
+										max-height:20em;
+										max-width:100%;
+									}
+								}
+							}
+											
+						}
+					
+		            }
+				}
 				
 			}
 			

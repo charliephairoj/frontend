@@ -61,7 +61,7 @@
 		
 		.container{
 			border: 0.35em dashed rgba(0, 0, 0, 0.30);
-			display:flex;
+			.flex;
 			align-items:center;
 			justify-content:center;
 			height:100%;
@@ -206,7 +206,7 @@
 		md-content{
 			height:100%;
 			width:100%;
-			display:flex;
+			.flex;
 			background-color:rgb(255, 255, 255);
 			flex-direction:column;
 			align-items:center;
@@ -216,12 +216,12 @@
 				padding:1em 1em 0 1em;
 				margin-bottom:0.25em;
 	            color:rgba(0, 0, 0, 1);
-				display:flex;
+				.flex;
 				flex-direction:column;
 				justify-content:space-between;
 
 				.info{
-					display:flex;
+					.flex;
 					align-items:flex-start;
 					justify-content:space-between;
 					flex-wrap:wrap;
@@ -283,9 +283,10 @@
 				
 				@statusBarHeight:2em;
 				@borderRadius:@statusBarHeight/2;
+				.flex;
 				height:@statusBarHeight;
+				min-height:@statusBarHeight;
 				width:90%;
-				display:flex;
 				flex-direction:row;
 				font-size:16px;
 				border-radius:3px;
@@ -299,7 +300,8 @@
 					padding:0;
 					position:relative;
 					font-size:16px;
-					display:flex;
+					height:2em;
+					.flex;
 					align-items:center;
 					flex-direction:row;
 					flex-wrap:nowrap;
@@ -312,7 +314,7 @@
 						font-size:1em;
 						padding:0.5em 0;
 						margin:0;
-						display:flex;
+						.flex;
 						flex-direction:row;
 						align-items:center;
 					}
@@ -423,7 +425,7 @@
 				
 				.files{
 					width:100%;
-					display:flex;
+					.flex;
 					flex-direction:row;
 					justify-content:flex-start;
 					
@@ -472,7 +474,7 @@
 							padding:1em;
 							background:rgb(255, 255, 255);
 							max-height:none;
-							display:flex;
+							.flex;
 							flex-direction:row;
 							justify-content:space-between;
 							
