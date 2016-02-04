@@ -1,0 +1,48 @@
+<div class="payroll">
+	<md-toolbar class="md-primary" layout="row">
+		<h2>Run Payroll</h2>
+		<div flex></div>
+		<md-datepicker ng-model="start_date"></md-datepicker>
+		<md-datepicker ng-model="end_date"></md-datepicker>
+	</md-toolbar>
+	<md-content>
+		<md-list>
+			<md-list-item ng-repeat="employee in employees" ng-class="{'even': $even}" layout="column">
+				<div class="row-1" layout="row">
+					<div class="col-1">{{::employee.name}}</div>
+					<div class="col-2">
+						<md-input-container>
+							<label>Regular Hours</label>
+							<input type="number" ng-model="employee.regular_hours_total" />
+						</md-input-container>
+					</div>
+					<div class="col-3">
+						<md-input-container>
+							<label>Overtime Hours</label>
+							<input type="number" ng-model="employee.overtime_hours_total" />
+						</md-input-container>
+					</div>
+					<div class="col-4">
+						{{employee.gross_pay | currency: '฿': 2}}
+					</div>
+					
+				</div>
+				<div class="row-2" layout="row">
+					<div class="col-1">{{::employee.pay_period}} @ ฿{{::employee.wage}}/{{::employee.pay_period == 'daily' ? 'day' : 'month'}}</div>
+					<div class="col-2"></div>
+					<div class="col-3">
+						<md-input-container>
+							<label>Doubletime Hours</label>
+							<input type="number" ng-model="employee.doubletime_hours_total" />
+						</md-input-container>
+					</div>
+					<div class="col-4">
+						{{employee.social_security | currency: '฿': 2}}
+					</div>
+					
+				</div>
+				
+			</md-list-item>
+		</md-list>
+	</md-content>
+</div>
