@@ -10400,12 +10400,15 @@ function ($scope, Supplier, Fabric, $location, Notification, FileUploader, $log)
         //Checks the form is valid
         if ($scope.form.$valid) {
             //save to database
+			$scope.$saving = true;
+			
             $scope.fabric.$create(function () {
                 Notification.display('Fabric Saved');
                 $location.path('supply/fabric');
             }, function (e) {
 				Notifiation.display('There was an error in creating this fabric', 0);
             	$log.error(JSON.stringify(e));
+				$scope.$saving = false;
             });
         }
        

@@ -4,8 +4,9 @@
 			<md-toolbar ng-click="save()" ng-disabled="form.$invalid" layout="row" layout-align="center center">
 				<h3>Create New Fabric</h3>
 				<div flex></div>
-				<md-button class="md-accent md-raised md-icon-button">
-					<i class="material-icons">create</i>
+				<md-button class="md-accent md-raised md-icon-button" ng-disabled="form.$invalid || $saving">
+					
+					<i class="material-icons">add</i>
 				</md-button>
 			</md-toolbar>
 			<md-content>
@@ -36,15 +37,15 @@
 	                </tr>
 	                <tr>
 	                    <td><label>Reference Number</label></td>
-	                    <td><input type="text" tooltip="referenceText" ng-model="fabric.reference"/></td>
+	                    <td><input class="normal" type="text" ng-model="fabric.reference"/></td>
 	                </tr>
 	                <tr>
 	                    <td><label>Pattern</label></td>
-	                    <td><input type="text" beautify tooltip="patternText" ng-model="fabric.pattern" required/></td>
+	                    <td><input class="normal" type="text" beautify ng-model="fabric.pattern" required/></td>
 	                </tr>
 	                <tr>
 	                    <td><label>Color</label></td>
-	                    <td><input type="text" beautify tooltip="colorText" ng-model="fabric.color" required/></td>
+	                    <td><input class="normal" type="text" beautify ng-model="fabric.color" required/></td>
 	                </tr>
 					<tr>
 						<td>
@@ -59,16 +60,16 @@
 					</tr>
 	                <tr>
 	                    <td><label>Width</label></td>
-	                    <td><input name="width" type="number" type="0" tooltip="widthText" ng-model="fabric.width" required/></td>
+	                    <td><input class="normal" name="width" type="number" type="0" ng-model="fabric.width" required/></td>
 	                </tr>
                 
 	                <tr>
 	                    <td><label>Cost per Yard</label></td>
-	                    <td><input type="number" min="0" ng-model="fabric.cost" tooltip="costText" required/>{{fabric.supplier.currency}}</td>
+	                    <td><input class="normal" type="number" min="0" ng-model="fabric.cost" required/>{{fabric.supplier.currency}}</td>
 	                </tr>
 	                <tr>
 	                    <td><label>Current Length</label></td>
-	                    <td><input type="number" min="0" ng-model="fabric.quantity" tooltip="lengthText" required /></td>
+	                    <td><input class="normal" type="number" min="0" ng-model="fabric.quantity" required /></td>
 	                </tr>
 	            </table> 
 				
