@@ -332,6 +332,14 @@
 								<tr>
 									<td>
 										<md-input-container>
+											<label>Purchasing Units</label>
+											<input name="units" type="text" ng-model="item.purchasing_units" />
+										</md-input-container>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<md-input-container>
 											<label>Quantity</label>
 											<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
 											<div ng-messages="poForm.quantity.$error">

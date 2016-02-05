@@ -1,12 +1,45 @@
 
 .addFabricPage{
   
-  //Make this a child of Add Page
-  .addPage;
+  	//Make this a child of Add Page
+  	.addPage;
   
-  left:200px;
-  
-  
-  
+  	left:0;
+	
+	.workspace{
+		
+		md-toolbar{
+			padding:0.5em 0;
+		}
+		
+		md-content{
+			height:100%;
+			.flex;
+			flex-direction:row;
+			
+			.fabric-details{
+				position:relative;
+				margin:1em;
+				
+				tr{
+					td{
+						padding:0.25em 0.5em;
+					}
+				}
+			}
+			
+			.fabric-img{
+				width:40%;
+				overflow:hidden;
+				height:auto;
+				
+				img{
+					width:100%;
+					height:auto;
+				}
+			}
+			
+		}
+	}
   
 }

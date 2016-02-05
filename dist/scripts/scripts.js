@@ -6568,6 +6568,13 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				}
 			}
 		
+			// Update the specific supplier information for this item
+			for (var h = 0; h < purchasedItem.suppliers.length; h++) {
+				if (purchasedItem.suppliers[h].supplier.id === $scope.po.supplier.id) {
+					purchasedItem.suppliers[h].purchasing_units = purchasedItem.purchasing_units;
+				}
+			}
+			
 			//Add new supply to the list of items for the purchase order
 			$scope.po.items.push(purchasedItem);
 		}
@@ -6816,6 +6823,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	
 	$scope._updateSupply = function (supply, supplier, progress, callback) {
 		
+		
+		
 		// Update supply with new supplier
 		if ($scope.isNewSupply(supply, supplier)) {
 			var supplierData = angular.copy(supplier);
@@ -6832,6 +6841,28 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			progress[supply.id] = false;
 			
 			var resource = new Supply(supply);
+			
+			resource.$update(function (response) {
+				angular.extend(supply, response);
+				
+				// Move supply id location to avoid item update 
+				// instead of item creation
+		  		supply.supply = {id: supply.id};
+				delete supply.id;
+				
+				// Check the progress
+				progress[supply.supply.id] = true;
+				$scope._checkProgress(progress, callback);
+				
+			}, function (reason) {
+				$log.error(reason);
+			});
+			
+		} else {
+			// Update the specific supplier information for this item
+			if (supply.suppliers[h].supplier.id === supplier.id) {
+				supply.suppliers[h].purchasing_units = supply.purchasing_units;
+			}
 			
 			resource.$update(function (response) {
 				angular.extend(supply, response);
