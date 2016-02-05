@@ -13,7 +13,26 @@
 	            <table class="fabric-details">
 	                <tr>
 	                    <td><label>Supplier</label></td>
-	                    <td><select required tooltip="{{supplierText}}", ng-options="supplier.name for supplier in suppliers | orderBy:'name'" ng-model="fabric.supplier"></select></td>
+	                    <td>
+							<md-autocomplete flex="noshrink" required 
+								name='supplier'
+								md-items="supplier in searchSuppliers(supplierSearchText)" 
+								md-selected-item="selectedSupplier"
+								md-selected-item-change="addSupplier(selectedSupplier)"
+								md-search-text="supplierSearchText"
+								md-search-text-change="updateSupplierName(supplierSearchText); retrieveSuppliers(supplierSearchText)"
+								md-item-text="supplier.name"
+								md-floating-label="Supplier Name"
+								md-no-cache="true"
+								md-min-length="0">
+							    <md-item-template>
+							    	<span md-highlight-text="supplierSearchText">{{supplier.name}}</span>
+							    </md-item-template>
+								<div ng-messages="poForm.supplier.$error">
+									<div class="hint" ng-message="true">Starting typing to search or just type the name...</div>
+								</div>
+							</md-autocomplete>
+	                    </td>
 	                </tr>
 	                <tr>
 	                    <td><label>Reference Number</label></td>
