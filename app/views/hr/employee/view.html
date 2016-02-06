@@ -11,7 +11,7 @@
 				<md-tooltip>Create Employee</md-tooltip>
 				<i class="material-icons">add</i>
 			</md-button>
-			<md-button class="md-icon-button" ng-click="upload()" ng-disabled="!currentUser.hasPermission('view_acknowledgement')">
+		<md-button class="md-icon-button" ng-click="upload()" ng-disabled="!currentUser.hasModule('hr')">
 				<md-tooltip>Upload Clockin Times</md-tooltip>
 				<i class="material-icons">file_upload</i>
 			</md-button>  
@@ -78,6 +78,16 @@
 							</md-select>
 						</md-input-container>
 					</div>
+					<div layout="row" layout-align="start start">
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
+							<label>National ID/Passport ID</label>
+							<input type="text" ng-model="employee.government_id" />
+						</md-input-container>
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
+							<label>Social Security ID</label>
+							<input type="text" ng-model="employee.social_security_id" />
+						</md-input-container>
+					</div>
 					<div layout="row">
 						<md-input-container>
 							<label>Card Number</label>
@@ -116,7 +126,7 @@
 								<md-option value='monthly'>รายเดือน/Monthly</md-option>
 							</md-select>
 						</md-input-container>
-						<md-input-container>
+						<md-input-container ng-if="currentUser.hasPermission('can_view_pay_rate')">
 							<label>Pay Rate</label>
 							<input type="number" ng-model="employee.wage" />
 						</md-input-container>
@@ -158,8 +168,8 @@
 									<div class="enable-overtime">
 										<md-switch ng-model="a.enable_overtime" ng-change="updateAttendance(a)">
 									</div>
-									<h4 class="pay">{{calculateWage(a, employee) | number:2}}</h4>
-									<h4 class="social-security">{{calculateSocialSecurity(a, employee) | number:2}}</h4>
+									<h4 class="pay" ng-if="currentUser.hasPermission('can_view_pay_rate')">{{calculateWage(a, employee) | number:2}}</h4>
+									<h4 class="social-security" ng-if="currentUser.hasPermission('can_view_pay_rate')">{{calculateSocialSecurity(a, employee) | number:2}}</h4>
 								</div>
 							</md-card-content>
 						</md-card>
