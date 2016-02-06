@@ -552,11 +552,17 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			}
 		
 			// Update the specific supplier information for this item
-			for (var h = 0; h < purchasedItem.suppliers.length; h++) {
-				if (purchasedItem.suppliers[h].supplier.id === $scope.po.supplier.id) {
-					purchasedItem.suppliers[h].purchasing_units = purchasedItem.purchasing_units;
+			if (purchasedItem.suppliers) {
+				for (var h = 0; h < purchasedItem.suppliers.length; h++) {
+					if ($scope.po.supplier && purchasedItem.suppliers[h].supplier) {
+						if (purchasedItem.suppliers[h].supplier.id === $scope.po.supplier.id) {
+							purchasedItem.suppliers[h].purchasing_units = purchasedItem.purchasing_units;
+						}
+					}
+					
 				}
 			}
+			
 			
 			//Add new supply to the list of items for the purchase order
 			$scope.po.items.push(purchasedItem);
