@@ -7,10 +7,43 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	$scope.employees = Employee.query();
 	$scope.shifts = Shift.query();
     
-	$scope.save = function (employee) {
+	$scope.update = function (employee) {
 		Notification.display('Updating employee: ' + employee.name + '...', false);
 		employee.$update(function () {
 			Notification.display('Employee: ' + employee.name + ' updated.');
+		});
+	};
+	
+	/**
+	 * Show add employee dialog 
+	
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	
+	$scope.showAddEmployee = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-employee.html',
+      	  	clickOutsideToClose:true,
+			controller: function ($scope, $mdDialog) {
+				
+				$scope.employee = new Employee();
+				$scope.shifts = Shift.query();
+				
+				$scope.create = function () {
+					Notification.display("Creating new employee " + $scope.employee.name + "...");
+					$scope.saving = true;
+					$scope.employee.$create(function (resp) {
+						$scope.saving = false;
+						Notification.display('Employee: ' + $scope.employee.name + ' created.');
+					}, function (resp) {
+						$log.error(resp);
+						Notification.display('There was an error in creating employee: ' + $scope.employee.name + '.', 0);
+					})
+				};			
+			}
 		});
 	};
 	

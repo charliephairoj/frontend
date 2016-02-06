@@ -2,66 +2,111 @@
 	<md-subheader>
 		Create A New Employee
 	</md-subheader>
+		<form name="form">
+		
+			<md-content>
+					<div layout="row" layout-align="start start">
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
+							<label>ชื่อ/Name</label>
+							<input type="text" ng-model="employee.name" required />
+						</md-input-container>
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
+							<label>แผนก/Department</label>
+							<md-select ng-model="employee.department" required>
+								<md-option value='woodworking'>ไม้/Woodworking</md-option>
+								<md-option value='painting'>สี/Painting</md-option>
+								<md-option value='polishing'>ปัดเงา/Polishing</md-option>
+								<md-option value='packing'>Packing</md-option>
+								<md-option value='upholstery'>หุ้ม/Upholstery</md-option>
+								<md-option value='sewing'>เย็บ/Sewing</md-option>
+								<md-option value='cutting fabric'>ตัดผ้า/Cutting Fabric</md-option>
+								<md-option value='foam'>ฟองน้ำ/Foam</md-option>
+								<md-option value='housekeeping'>แม่บ้าน/Housekeeping</md-option>
+								<md-option value='accounting'>บัญชี/Accounting</md-option>
+								<md-option value='office'>Office</md-option>
+								<md-option value='management'>Management</md-option>
+								<md-option value='tufting'>Tufting</md-option>
+								<md-option value='carving'>Carving</md-option>
+								<md-option value='stock'>Stock</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="start start">
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')">
+							<label>National ID/Passport ID</label>
+							<input type="text" ng-model="employee.government_id" />
+						</md-input-container>
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')">
+							<label>Social Security ID</label>
+							<input type="text" ng-model="employee.social_security_id" />
+						</md-input-container>
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex>
+							<label>Company</label>
+							<md-select ng-model="employee.company" required>
+								<md-option value='dellarobbia'>Dellarobbia</md-option>
+								<md-option value='pci'>Pacific Carpet</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div layout="row">
+						<md-input-container>
+							<label>Card Number</label>
+							<input type="text" ng-model="employee.card_id" />
+						</md-input-container>
+						<md-input-container>
+							<label>Bank</label>
+							<md-select ng-model="employee.bank">
+								<md-option value="thanachart">Thanachart</md-option>
+								<md-option value="kasikorn">Kasikorn</md-option>
+								<md-option value="bangkok bank">Bangkok Bank</md-option>
+								<md-option value="SCB">SCB</md-option>
+								<md-option value="krungsri">Krungsri</md-option>
+								<md-option value="khrung thai bank">Khrung Thai Bank</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container>
+							<label>Bank Account Number</label>
+							<input type="text" ng-model="employee.account_nummber">
+		
+					</div>
+					<div layout="row">
+						<md-input-container>
+							<label>สัญชาติ/Nationality</label>
+							<md-select ng-model="employee.nationality">
+								<md-option value='thai'>ไทย/Thai</md-option>
+								<md-option value='cambodian'>กัมพูชา/Cambodian</md-option>
+								<md-option value='burmese'>พม่า/Burmese</md-option>
+								<md-option value='laos'>ลาว/Laos</md-option>
+								<md-option value='vietnam'>เวียตนาม/Vietnam</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container>
+							<label>ประเภทการจ่ายเงิน/Payment Type</label>
+							<md-select ng-model="employee.pay_period">
+								<md-option value='daily'>รายวัน/Daily</md-option>
+								<md-option value='monthly'>รายเดือน/Monthly</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container ng-if="currentUser.hasPermission('can_view_pay_rate')">
+							<label>Pay Rate</label>
+							<input type="number" ng-model="employee.wage" />
+						</md-input-container>
+						<md-input-container>
+					    	<label>Shift Schedule</label>
+							<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}" required>
+								<md-option ng-value="shift" ng-repeat="shift in shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+				<!--
+				<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)" square="true"></div>
+					-->
+					
+					
+			</md-content>
+					<md-action>
+						<md-button class="md-actions md-accent" ng-disabled="form.$invalid" ng-click="create()">Create</md-button>
+					</md-action>
+					</form>
 	
-	<div class="container">
-		<md-content>
-			<table>
-				<tr>
-					<td>
-						<md-text-float type="text" label="First Name" required ng-model="employee.first_name"></md-text-float>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<md-text-float type="text" label="Last Name" required ng-model="employee.last_name"></md-text-float>
-					</td>
-				</tr>
-				<tr class="department">
-					<td>
-						<label>Nationality: </label>
-						<select ng-model="employee.nationality">
-							<option value="thai">Thai</option>
-							<option value="cambodian">Cambodian</option>
-							<option value="loas">Loas</option>
-							<option value="burmese">Burmese</option>
-						</select>
-						<br />
-					</td>
-				</tr>
-				<tr class="department">
-					<td>
-						<label>Department: </label>
-        				<select ng-model="employee.department" ng-options="t | beautify for t in departments">
-							<!--
-        					<option value="fabric">Fabric</option>
-							<option value="metal">Metal</option>
-        					<option value="wood">Wood</option>
-        					<option value="foam">Foam</option>
-							<option value="polishing">Polishing</option>
-							<option value="canvas">Canvas</option>
-							<option value="glue">Glue</option>
-							<option value="fiber">Fiber</option>
-							<option value="packaging">Packaging</option>
-							<option value="nail">Nail</option>
-							<option value="screw">Screw</option>
-							<option value="staple">Staple</option>
-								-->
-        				</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Profile Image: </label>
-						<div class="img-container">
-							<img ng-src="{{employee.image.url}}">
-						</div>
-					</td>
-				</tr>
-			</table>
-			<div image-uploader url="api/v1/employee/image/" on-upload="addImage(data)" square="true"></div>
-		</md-content>
-	</div>
-	<md-action>
-		<md-button class="md-actions md-accent" ng-click="create()">Create</md-button>
-	</md-action>
 </md-dialog>
