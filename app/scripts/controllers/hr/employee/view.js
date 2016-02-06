@@ -76,17 +76,27 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	*/
 	$scope.loadNext = function () {
 		if (!fetching) {
+			//Disable new requests
+			fetching = true;
+			
 			Notification.display('Loading more employees...', false);
 			Employee.query({
 				offset: $scope.employees.length,
 				limit: 50,
 			}, function (resources) {
 				Notification.hide();
+				
+				// Allow new requests
+				fetching = false;
+				
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.employees.indexOfById(resources[i].id) == -1) {
 						$scope.employees.push(resources[i]);
 					}
 				}
+			}, function (e) {
+				// Allow new requests
+				fetching = false;
 			});
 		}
 	};

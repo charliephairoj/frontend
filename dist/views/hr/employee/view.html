@@ -21,7 +21,7 @@
 			
 		</md-toolbar>
 			
-		<md-content>
+		<md-content on-scroll-end="loadNext()">
 			<md-card class="employee" ng-class="{'active': active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false">
 				<md-card-title layout="row" layout-align="center center" flex="nogrow">
 					<div class="click-container" ng-click="active=!active" flex layout="row">

@@ -10,7 +10,7 @@
 angular.module('employeeApp')
 .controller('HrPayrollCtrl', ['$scope', 'Employee', function ($scope, Employee) {
     
-	$scope.employees = Employee.query(function (resp) {
+	$scope.employees = Employee.query({limit:0, page_size: 99999}, function (resp) {
 		// Loop through all the employees
 		for (var i = 0; i < $scope.employees.length; i++) {
 			

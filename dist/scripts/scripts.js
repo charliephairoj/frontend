@@ -2562,17 +2562,27 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	*/
 	$scope.loadNext = function () {
 		if (!fetching) {
+			//Disable new requests
+			fetching = true;
+			
 			Notification.display('Loading more employees...', false);
 			Employee.query({
 				offset: $scope.employees.length,
 				limit: 50,
 			}, function (resources) {
 				Notification.hide();
+				
+				// Allow new requests
+				fetching = false;
+				
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.employees.indexOfById(resources[i].id) == -1) {
 						$scope.employees.push(resources[i]);
 					}
 				}
+			}, function (e) {
+				// Allow new requests
+				fetching = false;
 			});
 		}
 	};
@@ -2749,7 +2759,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 angular.module('employeeApp')
 .controller('HrPayrollCtrl', ['$scope', 'Employee', function ($scope, Employee) {
     
-	$scope.employees = Employee.query(function (resp) {
+	$scope.employees = Employee.query({limit:0, page_size: 99999}, function (resp) {
 		// Loop through all the employees
 		for (var i = 0; i < $scope.employees.length; i++) {
 			
@@ -14023,14 +14033,22 @@ angular.module('employeeApp.directives')
 
 angular.module('employeeApp')
 .directive('onScrollEnd', ['$log', function ($log) {
+	
+	var scrollFactor = 0.6;
+	
     return {
 		restrict: 'A',
 		link: function postLink(scope, element, attrs) {
+			var lastScrollTop = 0;
+			
 			element.bind('scroll', function (e) {
-				var childHeight = $(element.children()[0]).height();
-				var elHeight = element.height();
-				if (childHeight >= elHeight) {
-					if ((element.scrollTop() + elHeight) >= childHeight - 10) {
+				
+				var scrollTop = element.scrollTop();
+				
+				if (scrollTop > lastScrollTop) {
+					lastScrollTop = scrollTop;
+					
+					if (scrollTop > element[0].scrollHeight * scrollFactor) {
 						try {
 							scope.$eval(attrs.onScrollEnd);
 						} catch (err) {
@@ -14038,6 +14056,7 @@ angular.module('employeeApp')
 						}
 					}
 				}
+				
 			});
 		}
 	};
