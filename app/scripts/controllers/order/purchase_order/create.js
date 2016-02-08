@@ -590,7 +590,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @returns {Boolean} - a boolean indicating if this is a new supply or not
 	 */
 	$scope.isNewSupply = function (supply, supplier) {
-		if (supply.id && supplier) {
+		if (supply.id && supplier && supply.suppliers) {
 			for (var i = 0; i < supply.suppliers.length; i++) {
 				if (supply.suppliers[i].supplier.id === supplier.id) {
 					return false;
@@ -849,9 +849,16 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			
 		} else {
 			// Update the specific supplier information for this item
-			if (supply.suppliers[h].supplier.id === supplier.id) {
-				supply.suppliers[h].purchasing_units = supply.purchasing_units;
+			for (var h = 0; h < supply.suppliers.length; h++) {
+				if (supplier && supply.suppliers[h].supplier) {
+					if (supply.suppliers[h].supplier.id === supplier.id) {
+						supply.suppliers[h].purchasing_units = supply.purchasing_units;
+					}
+				}
+				
 			}
+			
+			var resource = new Supply(supply);
 			
 			resource.$update(function (response) {
 				angular.extend(supply, response);
