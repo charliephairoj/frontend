@@ -85,9 +85,11 @@
 				
 				md-card-content{
 					
-					div{
+					div[layout="row"]{
+						min-height:6em;
+						
 						md-input-container{
-							margin-right:1em;
+							margin-right:2em;
 							min-width:15%;
 							
 							&:last-child{
@@ -102,6 +104,7 @@
 							display:flex;
 							flex-direction:column;
 							font-family:proxima, Helvetica, Arial;
+							margin-top:2em;
 						
 							md-card-title.title{
 								display:flex;
@@ -118,7 +121,7 @@
 									text-align:center;
 									
 									&.date{
-										width:15%;
+										width:10%;
 									}
 								
 									&.clockin{
@@ -138,14 +141,18 @@
 									}
 								
 									&.enable-overtime{
-										width:15%;
-									}
-								
-									&.pay{
 										width:10%;
 									}
 									
-									&.social-security{
+									&.lunch{
+										width:10%;
+									}
+									
+									&.sick{
+										width:10%;
+									}
+									
+									&.vacation{
 										width:10%;
 									}
 								}
@@ -164,7 +171,7 @@
 										}
 									}
 									
-									h4{
+									.col{
 										display:flex;
 										justify-content:center;
 										align-items:center;
@@ -172,7 +179,7 @@
 										padding:0.25em 0;
 								
 										&.date{
-											width:15%;
+											width:10%;
 										}
 								
 										&.clockin{
@@ -192,20 +199,24 @@
 										}
 								
 										&.enable-overtime{
-											width:15%;
-										}
-									
-										&.pay{
 											width:10%;
 										}
 										
-										&.social-security{
+										&.lunch{
+											width:10%;
+										}
+									
+										&.sick{
+											width:10%;
+										}
+										
+										&.vacation{
 											width:10%;
 										}
 									}
 								
 									div{
-										&.enable-overtime{
+										&.xenable-overtime{
 											display:flex;
 											justify-content:center;
 											align-items:center;

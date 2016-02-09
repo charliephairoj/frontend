@@ -37,7 +37,8 @@
 						</md-card-title-text>
 						<div flex></div>
 					</div>
-					<md-button class="md-accent md-icon-button md-raised" ng-if="active" ng-click="update(employee)">
+					<md-button class="md-accent md-icon-button md-raised" ng-if="active" ng-click="update(employee)"
+						ng-disabled="employee.$$saving">
 						<md-tooltip>บันทึกข้อมูล/Save {{employee.name}}</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
@@ -62,9 +63,23 @@
 							<input type="text" ng-model="employee.name" />
 						</md-input-container>
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')">
+							<label>Status</label>
+							<md-select ng-model="employee.status">
+								<md-option value='active'>Active</md-option>
+								<md-option value='probation'>Probation</md-option>
+								<md-option value='fired'>Fired</md-option>
+								<md-option value='quit'>Quit</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="start start">
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="30">
+							<label>National ID/Passport ID</label>
+							<input type="text" ng-model="employee.government_id" />
+						</md-input-container>
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')">
 							<label>แผนก/Department</label>
 							<md-select ng-model="employee.department">
-								<md-option value='migrant'>Migrant</md-option>
 								<md-option value='woodworking'>ไม้/Woodworking</md-option>
 								<md-option value='painting'>สี/Painting</md-option>
 								<md-option value='polishing'>ปัดเงา/Polishing</md-option>
@@ -84,18 +99,6 @@
 								<md-option value='pci'>Pacific Carpet</md-option>
 							</md-select>
 						</md-input-container>
-					</div>
-					<div layout="row" layout-align="start start">
-						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="30">
-							<label>National ID/Passport ID</label>
-							<input type="text" ng-model="employee.government_id" />
-						</md-input-container>
-						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="30">
-							<label>Social Security ID</label>
-							<input type="text" ng-model="employee.social_security_id" />
-						</md-input-container>
-						
-						
 						
 					</div>
 					<div layout="row">
@@ -130,6 +133,16 @@
 								<md-option value='vietnam'>เวียตนาม/Vietnam</md-option>
 							</md-select>
 						</md-input-container>
+						
+						
+						<md-input-container>
+					    	<label>Shift Schedule</label>
+							<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}">
+								<md-option ng-value="shift" ng-repeat="shift in shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div layout="row">
 						<md-input-container>
 							<label>ประเภทการจ่ายเงิน/Payment Type</label>
 							<md-select ng-model="employee.pay_period">
@@ -142,9 +155,10 @@
 							<input type="number" ng-model="employee.wage" />
 						</md-input-container>
 						<md-input-container>
-					    	<label>Shift Schedule</label>
-							<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}">
-								<md-option ng-value="shift" ng-repeat="shift in shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
+							<label>Payment Option</label>
+							<md-select ng-model="employee.payment_option">
+								<md-option value='cash'>เงินสด/Cash</md-option>
+								<md-option value='direct deposit'>โอนเข้าธนาคาร/Direct Deposit</md-option>
 							</md-select>
 						</md-input-container>
 					</div>
@@ -155,7 +169,7 @@
 							<md-datepicker ng-model="start_date" md-placeholder="FROM" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
 							<md-datepicker ng-model="end_date" md-placeholder="TO" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
 						</div>
-						<md-card class="attendance-container" layout="column" ng-if="active">
+						<md-card class="attendance-container" layout="column" ng-if="active && employee.attendances.length">
 						
 							<md-card-title class="title">
 								<h4 class="date">Date</h4>
@@ -164,24 +178,30 @@
 								<h4 class="regular-time">Regular Time</h4>
 								<h4 class="overtime">Overtime</h4>
 								<h4 class="enable-overtime">Overtime</h4>
-								<h4 class="pay">Pay</h4>
-								<h4 class="social-security">Social Security</h4>
-								
-							
+								<h4 class="lunch">Lunch</h4>
+								<h4 class="sick">Sick Leave</h4>
+								<h4 class="vacation">Vacation</h4>
 							</md-card-title>
 							<md-card-content>
 								<div class="attendance" ng-class="{'sunday': isSunday(a)}" ng-repeat="a in employee.attendances | orderBy:'date'">
-									<h4 class="date">{{::a.date | date:'dd/MM/yyyy'}}</h4>
-									<h4 class="clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
-									<h4 class="clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
-									<h4 class="regular-time">{{a.regular_time}}</h4>
-									<h4 class="overtime">{{a.overtime}}</h4>
-									<div class="enable-overtime">
+									<h4 class="col date">{{::a.date | date:'dd/MM/yyyy'}}</h4>
+									<h4 class="col clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
+									<h4 class="col clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
+									<h4 class="col regular-time">{{a.regular_time}}</h4>
+									<h4 class="col overtime">{{a.overtime}}</h4>
+									<div class="col enable-overtime">
 										<md-switch ng-model="a.enable_overtime" ng-change="updateAttendance(a)">
 									</div>
-									<h4 class="pay" ng-if="currentUser.hasPermission('can_view_pay_rate')">{{calculateWage(a, employee) | number:2}}</h4>
-									<h4 class="social-security" ng-if="currentUser.hasPermission('can_view_pay_rate')">{{calculateSocialSecurity(a, employee) | number:2}}</h4>
-								</div>
+									<div class="col lunch">
+										<md-switch ng-model="a.receive_lunch_overtime" ng-change="updateAttendance(a)">
+									</div>
+									<div class="col sick">
+										<md-switch ng-model="a.sick_leave" ng-change="updateAttendance(a)">
+									</div>
+									<div class="col vacation">
+										<md-switch ng-model="a.vacation" ng-change="updateAttendance(a)">
+									</div>
+									
 							</md-card-content>
 						</md-card>
 					</section>

@@ -9,9 +9,15 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
     
 	$scope.update = function (employee) {
 		Notification.display('Updating employee: ' + employee.name + '...', false);
+		employee.$$saving = true;
 		employee.$update(function () {
+			employee.$$saving = false;
 			Notification.display('Employee: ' + employee.name + ' updated.');
-		});
+		}, function (e) {
+			employee.$$saving = false;
+			Notification.display('Error updating employee: ' + employee.name + '. Please contact Charlie.', false);
+			$log.error(e);
+		})
 	};
 	
 	/**
@@ -40,6 +46,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 						Notification.display('Employee: ' + $scope.employee.name + ' created.');
 					}, function (resp) {
 						$log.error(resp);
+						$mdDialog.hide();
 						Notification.display('There was an error in creating employee: ' + $scope.employee.name + '.', 0);
 					})
 				};			
@@ -161,6 +168,8 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		a.$update(function (resp) {
 			Notification.display('Updated record for ' + resp.date, 2000);
 			angular.extend(attendance, resp);
+		}, function (e) {
+			Notification.display('Error updating record: ' + e, 0);
 		});
 	};
 	
