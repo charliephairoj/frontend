@@ -13,17 +13,17 @@
 					<div class="col-2">
 						<md-input-container>
 							<label>Regular Hours</label>
-							<input type="number" ng-model="employee.regular_hours_total" />
+							<input type="number" ng-model="employee.regular_time" />
 						</md-input-container>
 					</div>
 					<div class="col-3">
 						<md-input-container>
 							<label>Overtime Hours</label>
-							<input type="number" ng-model="employee.overtime_hours_total" />
+							<input type="number" ng-model="employee.overtime" />
 						</md-input-container>
 					</div>
 					<div class="col-4">
-						{{employee.gross_pay | currency: '฿': 2}}
+						{{employee.pay_period == 'daily' ? employee.gross_wage : employee.wage / 2  | currency: '฿': 2}}
 					</div>
 					
 				</div>
@@ -33,7 +33,7 @@
 					<div class="col-3">
 						<md-input-container>
 							<label>Doubletime Hours</label>
-							<input type="number" ng-model="employee.doubletime_hours_total" />
+							<input type="number" ng-model="employee.total_incentive_pay" />
 						</md-input-container>
 					</div>
 					<div class="col-4">

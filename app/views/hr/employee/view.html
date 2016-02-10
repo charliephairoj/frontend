@@ -22,7 +22,7 @@
 		</md-toolbar>
 			
 		<md-content on-scroll-end="loadNext()">
-			<md-card class="employee" ng-class="{'active': active}" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false">
+			<md-card class="employee" ng-class="[employee.status, {'selected': active}]" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false">
 				<md-card-title layout="row" layout-align="center center" flex="nogrow">
 					<div class="click-container" ng-click="active=!active" flex layout="row">
 						<md-card-title-media flex="nogrow">
@@ -90,6 +90,10 @@
 								<md-option value='foam'>ฟองน้ำ/Foam</md-option>
 								<md-option value='housekeeping'>แม่บ้าน/Housekeeping</md-option>
 								<md-option value='accounting'>บัญชี/Accounting</md-option>
+								<md-option value='office'>Office</md-option>
+								<md-option value='graphic'>Graphic</md-option>
+								<md-option value='management'>Management</md-option>
+								<md-option value='dyeing'>ย้อม/Dyeing</md-option>
 							</md-select>
 						</md-input-container>
 						<md-input-container>
@@ -153,6 +157,12 @@
 						<md-input-container ng-if="currentUser.hasPermission('can_view_pay_rate')">
 							<label>Pay Rate</label>
 							<input type="number" ng-model="employee.wage" />
+						</md-input-container>
+							<label>Stipend</label>
+							<input type="number" ng-model="employee.incentive_pay" />
+						</md-input-container>
+							<label>Manager's Stipend</label>
+							<input type="number" ng-model="employee.manager_stipend" />
 						</md-input-container>
 						<md-input-container>
 							<label>Payment Option</label>

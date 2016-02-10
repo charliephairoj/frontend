@@ -8,9 +8,24 @@
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('HrPayrollCtrl', ['$scope', 'Employee', function ($scope, Employee) {
+.controller('HrPayrollCtrl', ['$scope', 'Employee', 'Payroll', 'Attendance', 
+function ($scope, Employee, Payroll, Attendance) {
     
-	$scope.employees = Employee.query({limit:0, page_size: 99999}, function (resp) {
+	$scope.attendances = Attendance.query({
+		limit:0, 
+		offset:0, 
+		page_size:99999,
+		start_date: new Date('2014-2-1')
+	}, function (resp) {
+		console.log(resp);
+	});
+	
+	$scope.employees = Employee.query({
+		limit:0, 
+		page_size: 99999,
+		start_date: new Date('2014-2-1'),
+		end_date: new Date('2014-5-30')
+	}, function (resp) {
 		// Loop through all the employees
 		for (var i = 0; i < $scope.employees.length; i++) {
 			

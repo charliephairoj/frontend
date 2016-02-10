@@ -2799,9 +2799,24 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('HrPayrollCtrl', ['$scope', 'Employee', function ($scope, Employee) {
+.controller('HrPayrollCtrl', ['$scope', 'Employee', 'Payroll', 'Attendance', 
+function ($scope, Employee, Payroll, Attendance) {
     
-	$scope.employees = Employee.query({limit:0, page_size: 99999}, function (resp) {
+	$scope.attendances = Attendance.query({
+		limit:0, 
+		offset:0, 
+		page_size:99999,
+		start_date: new Date('2014-2-1')
+	}, function (resp) {
+		console.log(resp);
+	});
+	
+	$scope.employees = Employee.query({
+		limit:0, 
+		page_size: 99999,
+		start_date: new Date('2014-2-1'),
+		end_date: new Date('2014-5-30')
+	}, function (resp) {
 		// Loop through all the employees
 		for (var i = 0; i < $scope.employees.length; i++) {
 			
@@ -18389,6 +18404,26 @@ angular.module('employeeApp.services')
 	});   
 }]);
 
+
+
+/**
+ * @ngdoc service
+ * @name frontendApp.models/payroll
+ * @description
+ * # models/payroll
+ * Service in the frontendApp.
+ */
+angular.module('employeeApp.services')
+.factory('Payroll', ['$resource', '$http', function($resource, $http) {
+	return $resource('/api/v1/payroll/:id/', {id:'@id'}, {
+		update: {
+			method: 'PUT'
+		},
+		create: {
+			method: 'POST'
+		}
+	});   
+}]);
 
 angular.module('employeeApp.services')
 .factory('Permission', ['$resource', function($resource) {
