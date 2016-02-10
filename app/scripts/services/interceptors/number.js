@@ -4,7 +4,7 @@ angular.module('employeeApp.services')
 	return {
 		'response': function (response) {
 			
-			var re = /^\d+(\.\d+)?$/;
+			var re = /^(?!0+[1-9])\d+(\.\d+)?$/;
 			var count = 0;
 			
 			function refactor(obj) {
