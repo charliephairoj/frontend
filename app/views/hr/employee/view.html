@@ -160,15 +160,15 @@
 						</md-input-container>
 						<md-input-container ng-if="currentUser.hasPermission('can_view_pay_rate')">
 							<label>Pay Rate</label>
-							<input type="number" ng-model="employee.wage" />
+							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.wage" />
 						</md-input-container>
 						<md-input-container>
 							<label>เบี้ยขยัน/Stipend</label>
-							<input type="number" ng-model="employee.incentive_pay" />
+							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.incentive_pay" />
 						</md-input-container>
 						<md-input-container>
 							<label>ตำแหน่ง/Manager's Stipend</label>
-							<input type="number" ng-model="employee.manager_stipend" />
+							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.manager_stipend" />
 						</md-input-container>
 						<md-input-container>
 							<label>Payment Option</label>
