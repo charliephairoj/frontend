@@ -7,9 +7,32 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	$scope.employees = Employee.query();
 	$scope.shifts = Shift.query();
     
+	// Convert all number strings into numbers
+	var re = /^(?!0+[1-9])\d+?(\,d+)(\.\d+)?$/;
+	var count = 0;
+	function refactor(obj) {
+		count++;
+		
+		for (var key in obj) {
+			if (typeof(obj[key]) == 'object') {
+				refactor(obj[key]);
+			} else {
+				if (re.test(obj[key])) {
+					obj[key] = Number(obj[key].replace(',', ''));
+				} 
+			}					
+		}
+		
+		return obj;
+	}
+	
 	$scope.update = function (employee) {
 		Notification.display('Updating employee: ' + employee.name + '...', false);
 		employee.$$saving = true;
+		
+		
+		
+		
 		employee.$update(function () {
 			employee.$$saving = false;
 			Notification.display('Employee: ' + employee.name + ' updated.');
@@ -126,14 +149,17 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			}, function (resources) {
 				Notification.hide();
 				
-				// Allow new requests
-				fetching = false;
+				
 				
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.employees.indexOfById(resources[i].id) == -1) {
 						$scope.employees.push(resources[i]);
 					}
 				}
+				
+				// Allow new requests
+				fetching = false;
+				
 			}, function (e) {
 				// Allow new requests
 				fetching = false;

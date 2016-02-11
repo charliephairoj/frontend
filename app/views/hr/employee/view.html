@@ -58,6 +58,10 @@
 				
 				<md-card-content flex="grow" ng-if="active">
 					<div layout="row" layout-align="start start">
+						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="20">
+							<label>Title</label>
+							<input type="text" ng-model="employee.title" />
+						</md-input-container>
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="40">
 							<label>ชื่อ/Name</label>
 							<input type="text" ng-model="employee.name" />
