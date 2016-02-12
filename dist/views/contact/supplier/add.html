@@ -30,28 +30,12 @@
     <!--
         Form that adds a new Supplier
     -->
-    <form name="form" novalidate>
-        <div class="sidebar">
-            <header>
-                <h1><span>New Supplier</span></h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <div ng-class="{dirty:form.$invalid}" ng-click="save()">Save</div>
-                    </li>
-                    <li>
-                        <div ng-click="showAddContact=true">
-                            Add Contact
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        
-        
+    <form name="form" novalidate>   
         <div class="workspace">
             <table class="inputTable">
+				<tr>
+					<td><md-button class="md-raised md-accent" ng-disabled="form.$invalid" ng-click="save()">Save</md-buttom></td>
+				</tr>
                 <tr>
                     <td><input placeholder="Supplier Name" beautify type="text" size="40" required ng-model="supplier.name" /></td>
                 </tr>
@@ -90,11 +74,11 @@
                     <td><input placeholder="Discount" type="text" size="7" required ng-pattern="/\d{1,2}/" ng-model="supplier.discount" /> %</td>
                 </tr>
                 <tr>
-                    <td><input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" /> Days</td>
+                    <td><input placeholder="Terms" size="7" type="text" ng-pattern="/\d+/" ng-model="supplier.terms" required /> Days</td>
                 </tr>
                 <tr>
                     <td>
-                        <select ng-model="supplier.currency">
+                        <select ng-model="supplier.currency" required>
                             <option value="THB">Thai Baht</option>
                             <option value="USD">US Dollar</option>
                             <option value="EUR">Euro</option>
