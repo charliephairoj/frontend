@@ -87,7 +87,10 @@
 											<div class="status" ng-class="ack.status.toLowerCase()">
 												<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')" ng-change="update(ack)">
 													<option value="deposit received">Deposit Received</option>
-													<option value="acknowledged">Acknowledged</optioon>
+													<option value="acknowledged">Acknowledged</option>
+													
+													<option value="acknowledged">Acknowledged</option>
+													
 													<option value="in production">In Production</option>
 													<option value="ready to ship">Ready to Ship</option>
 													<option value="shipped">Shipped</option>
@@ -199,7 +202,7 @@
 											</section>
 										
 											<div class="status-bar">
-												<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(acknowledgement, 'acknowledged')}">
+												<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
 													<span>Acknowledged</span>
 													<div class="arrow"></div>
 													<div class="arrow2"></div>

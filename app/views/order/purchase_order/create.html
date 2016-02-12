@@ -22,7 +22,7 @@
 			<md-toolbar layout="row" class="md-primary" layout-align="center center" md-scroll-shrink="true">
 				<h3><span>Open a Purchase Order</span></h3>
 				<div flex></div>
-            	<md-button class="md-icon-button md-accent md-raised" id="po-create" ng-click="create()" ng-disabled="po.id">
+            	<md-button class="md-icon-button md-accent md-raised" id="po-create" ng-click="create()" ng-disabled="po.id || creating">
 					<md-tooltip>
 						Create
 					</md-tooltip>

@@ -8,6 +8,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 */
 	$scope.po = new PurchaseOrder();
 	$scope.listView = true;
+	$scope.creating = false;
 	/**
 	 *	MAPS SECTION
 	 *  
@@ -927,20 +928,28 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	};
 	
 	$scope._sendCreateRequest = function () {
-		purchaseOrder = this || $scope.po;
 		
-		purchaseOrder.$create(function (response) {
-			Notification.display('Purchase order created.');
+		if (!$scope.creating) {
+			$scope.creating = true;
+		
+			purchaseOrder = this || $scope.po;
+		
+			purchaseOrder.$create(function (response) {
+				$scope.creating = false;
+				Notification.display('Purchase order created.');
 								
-			angular.extend(purchaseOrder, response);
-			//Change page to newly saved purchase order page
-			//$location.path("/order/purchase_order/" + response.id);
+				angular.extend(purchaseOrder, response);
+				//Change page to newly saved purchase order page
+				//$location.path("/order/purchase_order/" + response.id);
 		
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-			Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
+			}, function (e) {
+				$scope.creating = false;
+				$log.error(JSON.stringify(e));
+				Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
 			
-		});
+			});
+		}
+		
 	};
 	
 	/*
