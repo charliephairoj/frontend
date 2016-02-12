@@ -22,7 +22,10 @@
 		</md-toolbar>
 			
 		<md-content on-scroll-end="loadNext()">
-			<md-card class="employee" ng-class="[employee.status, {'selected': active}]" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false">
+			<md-card class="employee" ng-class="[employee.status, {'selected': active}]" ng-repeat="employee in employees | filter:search:strict | filter:query track by employee.id" ng-init="active=false" file-drop="addImage($files, employee)" file-drop-class="employee-drag-active">
+				<div class="drop-container-text">
+					<h2>Drop Image Here</h2>
+				</div>
 				<md-card-title layout="row" layout-align="center center" flex="nogrow">
 					<div class="click-container" ng-click="active=!active" flex layout="row">
 						<md-card-title-media flex="nogrow">
@@ -98,6 +101,10 @@
 								<md-option value='graphic'>Graphic</md-option>
 								<md-option value='management'>Management</md-option>
 								<md-option value='dyeing'>ย้อม/Dyeing</md-option>
+								<md-option value='carpet installation'>ตกแต่งพรม/Carpet Installation</md-option>
+								<md-option value='security'>ยาม/Security</md-option>
+								<md-option value='technician'>ช่าง/Technician</md-option>
+								<md-option value='inventory'>สโตร์/Inventory</md-option>
 							</md-select>
 						</md-input-container>
 						<md-input-container>

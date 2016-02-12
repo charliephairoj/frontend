@@ -2563,6 +2563,38 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		});
 	};
 	
+	
+	/**
+	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+	 * @public
+	 * @param {Array} files - Array of files with raw data
+	 * @returns {null}
+	 */
+	$scope.addImage = function (files, employee) {
+	
+		if (files.length > 0) {
+			/* jshint ignore:start */	
+		
+			Notification.display('Uploading image...', 0);
+			
+			var promise = FileUploader.upload(files[0], "api/v1/employee/image/");
+			promise.then(function (result) {
+				var data = result.data || result;
+				employee.image = data
+				Notification.display('Image uploaded.');
+				$scope.update(employee);
+				
+			}, function (e) {
+				$log.error(JSON.stringify(e));
+			
+				Notification.display(e.message, 0);
+			
+			});
+			/* jshint ignore:end */
+		}
+	};
+	
+	
 	/**
 	 * Show the Download dialog
 	 *

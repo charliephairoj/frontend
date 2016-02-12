@@ -42,6 +42,7 @@
 				padding:0;
 				height:auto;
 				border-bottom:1px dotted rgba(0, 0, 0, 0.15);
+				position:relative;
 				.transition(all, 150ms);
 				
 				&.selected{
@@ -56,6 +57,41 @@
 					@bgColor:rgba(0, 0, 0, 0.15);
 					background:@bgColor;
 					color:rgba(0, 0, 0, 0.25);
+				}
+				
+				&.employee-drag-active{
+					
+					.drop-container-text{
+						display:flex;
+						justify-content:space-around;
+						align-items:center;
+						border: 2px dashed rgba(0, 0, 0, 0.5);
+						pointer-events:none;
+						position:absolute;
+						top:1em;
+						left:1em;
+						right:1em;
+						bottom:1em;
+						
+						z-index:100;
+					}
+					
+					md-card-title{
+						visibility:hidden;
+						pointer-events:none;
+						
+					}
+					
+					md-card-content{
+						visibility:hidden;
+						pointer-events:none;
+						
+					}
+				}
+				
+				.drop-container-text{
+					display:none;
+					z-index:-1;
 				}
 				
 				md-card-title{
