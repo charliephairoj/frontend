@@ -45,7 +45,7 @@
 						<md-tooltip>บันทึกข้อมูล/Save {{employee.name}}</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
-					<md-button class="md-warn md-icon-button md-raised">
+					<md-button class="md-warn md-icon-button md-raised" ng-if="::currentUser.hasPermission('delete_employee')">
 						<md-tooltip>ลบพนักงาน/Delete {{employee.name}}</md-tooltip>
 						<i class="material-icons">remove</i>
 					</md-button>

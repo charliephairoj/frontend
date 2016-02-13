@@ -125,13 +125,13 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 				$scope.uploadTimes = function ($files) {
 					
 					/* jshint ignore:start */
-					Notification.display('Uploading times. This may take a while...', 0);
+					Notification.display('Uploading times....', 0);
 					
 					var file = $files[0];
 					
 					var promise = FileUploader.upload(file, "/api/v1/employee/attendance/");
 					promise.then(function (result) {
-						Notification.display("New times uploaded...", 2000);
+						Notification.display(result.status, 2000);
 					}, function (e) {
 						$log.error(JSON.stringify(e));
 						Notification.display(e, 0);
