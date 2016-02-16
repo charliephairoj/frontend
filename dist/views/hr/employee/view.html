@@ -45,7 +45,7 @@
 						<md-tooltip>บันทึกข้อมูล/Save {{employee.name}}</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
-					<md-button class="md-warn md-icon-button md-raised">
+					<md-button class="md-warn md-icon-button md-raised" ng-if="::currentUser.hasPermission('delete_employee')">
 						<md-tooltip>ลบพนักงาน/Delete {{employee.name}}</md-tooltip>
 						<i class="material-icons">remove</i>
 					</md-button>
@@ -114,7 +114,13 @@
 								<md-option value='pci'>Pacific Carpet</md-option>
 							</md-select>
 						</md-input-container>
-						
+						<md-input-container>
+							<label>Location</label>
+							<md-select ng-model="employee.location">
+								<md-option value='thailand'>Thailand</md-option>
+								<md-option value='cambodia'>Cambodia</md-option>
+							</md-select>
+						</md-input-container>
 					</div>
 					<div layout="row">
 						<md-input-container>

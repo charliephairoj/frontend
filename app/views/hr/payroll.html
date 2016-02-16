@@ -2,8 +2,8 @@
 	<md-toolbar class="md-primary" layout="row">
 		<h2>Run Payroll</h2>
 		<div flex></div>
-		<md-datepicker ng-model="start_date"></md-datepicker>
-		<md-datepicker ng-model="end_date"></md-datepicker>
+		<md-datepicker ng-model="start_date" ng-change="getEmployees()"></md-datepicker>
+		<md-datepicker ng-model="end_date" ng-change="getEmployees()"></md-datepicker>
 	</md-toolbar>
 	<md-content>
 		<md-list>
