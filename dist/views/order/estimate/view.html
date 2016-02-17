@@ -229,7 +229,7 @@
 											<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
 											<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (tempProduct || {description: productSearchText}))">
 												<md-card-actions layout="row" layout-align="center center">
-													<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(tempProduct || {description: productSearchText})">
+													<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(ack, tempProduct || {description: productSearchText})">
 														<md-tooltip>Add Product</md-tooltip>
 														<i class="material-icons">add_shopping_cart</i>
 													</md-button>
@@ -271,7 +271,14 @@
 											            	<span class="md-headline">{{item.description}}</span>
 											          	</md-card-title-text>
 											        </md-card-title>
+													
 													<md-card-content layout="row">
+														<md-card-actions layout="row" layout-align="end center">
+															<md-button class="add md-warn md-raised md-icon-button" ng-click="removeItem(ack, $index)">
+																<md-tooltip>Remove {{item.description}} from the order</md-tooltip>
+																<i class="material-icons">remove</i>
+															</md-button>
+												        </md-card-actions>
 														<table class="product-details">
 															<tr>
 																<td>

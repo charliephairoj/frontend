@@ -126,6 +126,26 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	
 	keyboardNav.enable();
 	
+	
+    $scope.addItem = function (estimate, product) {
+		if (product.description) {
+			product.width = product.width || 0;
+			product.height = product.height || 0;
+			product.depth = product.depth || 0;
+	        estimate.items.push(product);
+	       
+			delete $scope.tempProduct;
+			delete $scope.productSearchText;
+		}
+    };
+    
+	
+	
+    $scope.removeItem = function (estimate, index) {
+        estimate.items.splice(index, 1);
+    };
+	
+	
 	/**
 	 * FILES SECTIONs
 	 *
