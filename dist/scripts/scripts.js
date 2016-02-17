@@ -5902,13 +5902,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		}
 	};
 	
-	keyboardNav.onenter = function () {
-		$scope.safeApply(function () {
-			//$location.path('/order/estimate/' + currentSelection.id);
-		});
-	};
-	
-	keyboardNav.enable();
+	//keyboardNav.enable();
 	
 	
     $scope.addItem = function (estimate, product) {
