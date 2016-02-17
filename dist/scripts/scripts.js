@@ -5904,7 +5904,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	
 	keyboardNav.onenter = function () {
 		$scope.safeApply(function () {
-			$location.path('/order/estimate/' + currentSelection.id);
+			//$location.path('/order/estimate/' + currentSelection.id);
 		});
 	};
 	
