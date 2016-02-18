@@ -60,7 +60,7 @@
 				</md-card-title>
 				
 				<md-card-content flex="grow" ng-if="active">
-					<div layout="row" layout-align="start start">
+					<div class="employee-info" layout="row" layout-align="start start">
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="20">
 							<label>Title</label>
 							<input type="text" ng-model="employee.title" />
@@ -79,7 +79,7 @@
 							</md-select>
 						</md-input-container>
 					</div>
-					<div layout="row" layout-align="start start">
+					<div class="employee-info" layout="row" layout-align="start start">
 						<md-input-container ng-disabled="!currentUser.hasPermission('change_employee')" flex="30">
 							<label>National ID/Passport ID</label>
 							<input type="text" ng-model="employee.government_id" />
@@ -122,7 +122,7 @@
 							</md-select>
 						</md-input-container>
 					</div>
-					<div layout="row">
+					<div class="employee-info" layout="row">
 						<md-input-container>
 							<label>Card Number</label>
 							<input type="text" ng-model="employee.card_id" />
@@ -143,7 +143,7 @@
 							<input type="text" ng-model="employee.account_number">
 						
 					</div>
-					<div layout="row">
+					<div class="employee-info" layout="row">
 						<md-input-container>
 							<label>สัญชาติ/Nationality</label>
 							<md-select ng-model="employee.nationality">
@@ -163,7 +163,7 @@
 							</md-select>
 						</md-input-container>
 					</div>
-					<div layout="row">
+					<div class="employee-info" layout="row">
 						<md-input-container>
 							<label>ประเภทการจ่ายเงิน/Payment Type</label>
 							<md-select ng-model="employee.pay_period">
@@ -194,9 +194,13 @@
 					
 					<section class="attendances">
 						<subheader class="md-primary"><span>Attendances</span></subheader>
-						<div>
+						<div layout="row">
 							<md-datepicker ng-model="start_date" md-placeholder="FROM" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
 							<md-datepicker ng-model="end_date" md-placeholder="TO" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
+							<div flex></div>
+							<md-button class="md-raised md-accent" ng-click="addAttendance(employee)">
+								Add Attendance
+							</md-button>
 						</div>
 						<md-card class="attendance-container" layout="column" ng-if="active && employee.attendances.length">
 						

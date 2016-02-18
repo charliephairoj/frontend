@@ -6,6 +6,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	var fetching = false;
 	$scope.employees = Employee.query();
 	$scope.shifts = Shift.query();
+	var shifts = $scope.shifts;
     
 	// Convert all number strings into numbers
 	var re = /^(?!0+[1-9])\d+?(\,d+)(\.\d+)?$/;
@@ -213,6 +214,47 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		return attendance.date.getDay() === 0 ? true : false;
 	}
 	
+	
+	/**
+	 * Add a new Attendance
+	 * 
+	 * @public
+	 * @param {Object} employee - employee to add an attendance for
+	 */
+	$scope.addAttendance = function (employee) {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-attendance.html',
+      	  	clickOutsideToClose:true,
+			controller: function ($scope, $mdDialog) {
+				
+				// Set up default attributes
+				$scope.shifts = shifts;
+				$scope.a = new Attendance();
+				$scope.a.employee = employee;
+				$scope.a.date = new Date();
+				$scope.a.start_time = new Date(2016, 2, 18, 8, 0);
+				$scope.a.end_time = new Date(2016, 2, 18, 17, 0);
+				$scope.a.shift = $scope.shifts[0];
+				
+				$scope.create = function () {
+					Notification.display("Creating attendance for " + employee.name + "...", 2000);
+					
+					// Prepare for POST request
+					$scope.a.shift = $scope.a.shift.id;
+					$scope.a.employee = $scope.a.employee.id;
+					
+					$scope.a.$create(function (resp) {
+						Notification.display('Attendance created for ' + resp.employee.name, 2000);
+					}, function (e) {
+						Notification.display("There was an error creating an attendance for " + employee.name, 0);
+						$log.error(e);
+					});
+					$mdDialog.hide();
+				};					
+					
+			}
+		});
+	};
 	
 	/**
 	 * Update the an attendance record
