@@ -2490,9 +2490,45 @@ angular.module('employeeApp')
 function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, Attendance) {
     
 	var fetching = false;
-	$scope.employees = Employee.query();
+	$scope.employees = Employee.query(function() {
+		for (var i = 0; i < $scope.employees.length; i++) {
+			if ($scope.employees[i].attendances) {
+				for (var h = 0; h < $scope.employees[i].attendances.length; h++) {
+					if ($scope.employees[i].attendances[h].overtime_request){
+						console.log($scope.employees[i].attendances[h]);
+						$scope.employees[i].attendances[h].overtime_request = new Date($scope.employees[i].attendances[h].overtime_request);
+					}
+				}
+				
+			}
+			
+		}
+	});
+	
 	$scope.shifts = Shift.query();
 	var shifts = $scope.shifts;
+	
+	$scope.overtimes = [];
+	var hour = 18;
+	var minute = 0;
+	
+	for (var i = 0; i < 24; i++) {
+		if (i % 2 > 0 && i > 0) {
+			hour += 1;
+			minute = 0;
+			
+		} else {
+			minute = 30;
+			
+			if (hour === 24) {
+				hour = 0;
+			}
+		}
+		
+		var time = new Date(2016, 2, 17, hour, minute, 0);
+
+		$scope.overtimes.push(time);
+	}
     
 	// Convert all number strings into numbers
 	var re = /^(?!0+[1-9])\d+?(\,d+)(\.\d+)?$/;
@@ -2754,6 +2790,16 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		a.$update(function (resp) {
 			Notification.display('Updated record for ' + resp.date, 2000);
 			angular.extend(attendance, resp);
+
+			if (typeof(attendance.date) === 'string') {
+				attendance.date = new Date(attendance.date);
+			}
+			
+			if (attendance.overtime_request){
+				attendance.overtime_request = new Date(attendance.overtime_request);
+				console.log(attendance.overtime_request.getHours(), attendance.overtime_request.getMinutes());
+			}
+			
 		}, function (e) {
 			Notification.display('Error updating record: ' + e, 0);
 		});
@@ -2781,7 +2827,14 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		options.employee_id = employee.id;
 		
 		Attendance.query(options, function (resp) {
+			for (var i = 0; i < resp.length; i++) {
+				if (resp[i].overtime_request){
+					resp[i].overtime_request = new Date(resp[i].overtime_request);
+				}
+			}
 			employee.attendances = resp;
+			
+			
 		});
 	}
 	
