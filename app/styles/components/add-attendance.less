@@ -1,0 +1,45 @@
+/*
+LESS file for dialog: download acknowledgements
+*/
+
+md-dialog.add-attendance{
+	height:50%;
+	width:50%;
+	position:relative;
+	min-width: 25em;
+	min-height: 15em;
+		
+		md-dialog-content{
+			height:100%;
+			
+			
+			form{
+				height:100%;
+				width:100%;
+				position:relative;
+				.flex;
+				justify-content:center;
+				align-items:center;
+				flex-direction:column;
+				
+				div[layout=row]{
+					.flex;
+					justify-content:flex-start;
+					align-items:flex-start;
+					width:80%;
+					
+					&:first-child{
+						margin-bottom:2em;
+					}
+				
+					div[layout=column]{
+						margin-right:2em;
+						.flex;
+						align-items:center;
+					}
+				}
+			}
+		}
+		
+		
+}

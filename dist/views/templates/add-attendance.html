@@ -1,0 +1,48 @@
+<md-dialog class="add-attendance">
+		<md-dialog-content>
+			<form name="form">
+				<div layout="row">
+					<md-datepicker ng-model="a.date" required></md-datepicker>
+				</div>
+				<div layout="row">
+					<md-input-container>
+						<label>Start Time</label>
+						<input type="time" ng-model="a.start_time" required />
+					</md-input-container>
+			
+					<md-input-container>
+						<label>End Time</label>
+						<input type="time" ng-model="a.end_time" required />
+					</md-input-container>
+					<md-input-container>
+				    	<label>Shift Schedule</label>
+						<md-select ng-model="a.shift" ng-model-options="{trackBy: '$value.id'}">
+							<md-option ng-value="shift" ng-repeat="shift in shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
+						</md-select>
+					</md-input-container>
+					
+				</div>
+				<div layout="row">
+					<div layout="column">
+						<label>Overtime</label>
+						<md-switch ng-model="a.enable_overtime"></md-switch>
+					</div>
+					<div layout="column">
+						<label>Lunch</label>
+							<md-switch ng-model="a.receive_lunch_overtime"></md-switch>
+					</div>
+					<div layout="column">
+						<label>Sick Leave</label>
+							<md-switch ng-model="a.sick_leave"></md-switch>
+					</div>
+					<div layout="column">
+						<label>Vacation</label>
+						<md-switch ng-model="a.vacation"></md-switch>
+					</div>
+				</div>
+			</form>
+		</md-dialog-content>
+		<md-dialog-actions>
+			<md-button ng-click="create()">Add</md-button>
+		</md-dialog-actions>
+</md-dialog>
