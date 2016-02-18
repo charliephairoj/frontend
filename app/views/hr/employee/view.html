@@ -102,6 +102,9 @@
 								<md-option value='management'>Management</md-option>
 								<md-option value='dyeing'>ย้อม/Dyeing</md-option>
 								<md-option value='carpet installation'>ตกแต่งพรม/Carpet Installation</md-option>
+								<md-option value='tufting'>Tufting</md-option>
+								<md-option value='tracing'>Tracing</md-option>
+								<md-option value='glue'>Glue</md-option>
 								<md-option value='security'>ยาม/Security</md-option>
 								<md-option value='technician'>ช่าง/Technician</md-option>
 								<md-option value='inventory'>สโตร์/Inventory</md-option>
@@ -208,7 +211,8 @@
 								<h4 class="date">Date</h4>
 								<h4 class="clockin">Clockin</h4>
 								<h4 class="clockout">Clockout</h4>
-								<h4 class="regular-time">Regular Time</h4>
+								<h4 class="ot-request">Request</h4>
+								<h4 class="regular-time">Regular</h4>
 								<h4 class="overtime">Overtime</h4>
 								<h4 class="enable-overtime">Overtime</h4>
 								<h4 class="lunch">Lunch</h4>
@@ -220,6 +224,12 @@
 									<h4 class="col date">{{::a.date | date:'dd/MM/yyyy'}}</h4>
 									<h4 class="col clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
 									<h4 class="col clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
+									<div class="ot-request">
+										<md-input-container>
+											<label>Overtime Request</label>
+											<input type="time" ng-model="a.overtime_request" ng-disabled="!a.enable_overtime" />
+										</md-input-container>
+									</div>
 									<h4 class="col regular-time">{{a.regular_time}}</h4>
 									<h4 class="col overtime">{{a.overtime}}</h4>
 									<div class="col enable-overtime">
