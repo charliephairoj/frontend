@@ -13,13 +13,13 @@
 				<h3><span>Acknowledgements</span></h3>
 				<div flex></div>
 				
-				<md-button class="md-icon-button md-primary md-raised" ng-show="currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
+				<md-button class="md-icon-button md-primary md-raised" ng-show="::currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
 					<md-tooltip>
 						Create New Acknowledgement
 					</md-tooltip>
 					<i class="material-icons">create</i>
 				</md-button>
-				<md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="!currentUser.hasPermission('view_acknowledgement')">
+				<md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="::!currentUser.hasPermission('view_acknowledgement')">
 					<md-tooltip>Download</md-tooltip>
 					<i class="material-icons">file_download</i>
 				</md-button>
@@ -61,10 +61,10 @@
 							<md-card ng-class="{'active': active}" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
 								<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
 									<md-card-title-text ng-click="active=false">
-										<span>Acknowledgement {{ack.id}}</span>
+										<span>Acknowledgement {{::ack.id}}</span>
 									</md-card-title-text>
 									<div class="filler" flex ng-click="active=false"></div>
-									<md-button class="md-icon-button md-raised md-primary" ng-click="update(ack)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+									<md-button class="md-icon-button md-raised md-primary" ng-click="update(ack)" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
 										<md-tooltip>Save</md-tooltip>
 										<i class="material-icons">save</i>
 									</md-button>
@@ -76,16 +76,16 @@
 								<md-card-content>
 						    		<div class="item-preview-container" ng-hide="active" flex="none">	
 						    			<div class="item" ng-class="{'selected':ack.$selected}">
-											<div class="id" ng-click="active=true">{{ack.id}}</div>
-											<div class="order-date" ng-click="active=true">{{ack.time_created | date: "MMM d, yyyy"}}</div>
-											<div class="customer" ng-click="active=true">{{ack.customer.name}}</div>
-											<div class="po" ng-click="active=true">{{ack.po_id}}</div>
-											<div class="project-id" ng-click="active=true">{{ack.project.id}}</div>
-											<div class="project" ng-click="active=true">{{ack.project.codename}}</div>
+											<div class="id" ng-click="active=true">{{::ack.id}}</div>
+											<div class="order-date" ng-click="active=true">{{::ack.time_created | date: "MMM d, yyyy"}}</div>
+											<div class="customer" ng-click="active=true">{{::ack.customer.name}}</div>
+											<div class="po" ng-click="active=true">{{::ack.po_id}}</div>
+											<div class="project-id" ng-click="active=true">{{::ack.project.id}}</div>
+											<div class="project" ng-click="active=true">{{::ack.project.codename}}</div>
 											<div class="delivery-date" ng-click="active=true">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
 											<div class="total" ng-click="active=true">{{ack.total}}</div>
 											<div class="status" ng-class="ack.status.toLowerCase()">
-												<select ng-model="ack.status" ng-disabled="!currentUser.hasPermission('change_acknowledgement')" ng-change="update(ack)">
+												<select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')" ng-change="update(ack)">
 													<option value="deposit received">Deposit Received</option>
 													<option value="acknowledged">Acknowledged</option>
 													
@@ -105,7 +105,7 @@
 									
 						    			</div>
 				    					<div class="status-bar">
-											<div class="event" ng-class="{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
+											<div class="event" ng-class="::{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
 												<div class="arrow"></div>
 											</div>
 											<div class="event" ng-class="{'deposit-received': hasEvent(ack, 'deposit')}">
@@ -137,7 +137,7 @@
 										  	<section>
 												<md-subheader class="md-primary md-no-sticky">Customer</md-subheader>											
 												<div layout="row" layout-align="start center">
-													<span>{{ack.customer.name}}</span>
+													<span>{{::ack.customer.name}}</span>
 												</div>
 											</section>
 										
@@ -188,21 +188,21 @@
 												<div layout="row" layout-align="start center">
 													<md-input-container>
 													  	<label>Project</label>
-													  	<input name="project" type="text" ng-model="ack.project.codename" ng-disabled="true">								  
+													  	<input name="project" type="text" ng-model="::ack.project.codename" ng-disabled="true">								  
 													</md-input-container>
 													<md-input-container ng-show="ack.room" ng-disabled="true">
 													  	<label>Room</label>
-													  	<input name="room" type="text" ng-model="ack.room.description" ng-disabled="true">								  
+													  	<input name="room" type="text" ng-model="::ack.room.description" ng-disabled="true">								  
 													</md-input-container>
 													<md-input-container ng-show="ack.phase" ng-disabled="true">
 													  	<label>Phase</label>
-													  	<input name="phase" type="text" ng-model="ack.phase.description" ng-disabled="true">								  
+													  	<input name="phase" type="text" ng-model="::ack.phase.description" ng-disabled="true">								  
 													</md-input-container>
 												</div>
 											</section>
 										
 											<div class="status-bar">
-												<div class="event acknowledged" ng-class="{'active': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
+												<div class="event acknowledged" ng-class="::{'active': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
 													<span>Acknowledged</span>
 													<div class="arrow"></div>
 													<div class="arrow2"></div>
@@ -274,7 +274,7 @@
 													</div>
 													<md-card-title>
 											          	<md-card-title-text>
-											            	<span class="md-headline">{{item.description}}</span>
+											            	<span class="md-headline">{{::item.description}}</span>
 											          	</md-card-title-text>
 											        </md-card-title>
 													<md-card-content layout="row">

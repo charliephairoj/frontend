@@ -37,10 +37,10 @@
 				<md-card class="po" ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
 					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
 						<md-card-title-text ng-click="active=false">
-							<span>Purchase Order {{po.id}}</span>
+							<span>Purchase Order {{::po.id}}</span>
 						</md-card-title-text>
 						<div class="filler" flex ng-click="active=false"></div>
-						<md-button class="md-icon-button md-raised md-primary" ng-click="update(po)" ng-disabled="!currentUser.hasPermission('change_acknowledgement')">
+						<md-button class="md-icon-button md-raised md-primary" ng-click="update(po)" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
 							<md-tooltip>Save</md-tooltip>
 							<i class="material-icons">save</i>
 						</md-button>
@@ -53,11 +53,11 @@
 						<div class="background-switch" ng-click="active=false"></div>
 			    		<div class="item-preview-container" ng-hide="active">
 		    				<div class="item" ng-class="{'selected':po.$selected}" ng-click="active=true">
-								<div class="id">{{po.id}}</div>
-								<div class="order-date">{{po.order_date | date: "MMM d, yyyy"}}</div>
-								<div class="customer">{{po.supplier.name}}</div>
-								<div class="project-id">{{po.project.id}}</div>
-								<div class="project">{{po.project.codename}}</div>
+								<div class="id">{{::po.id}}</div>
+								<div class="order-date">{{::po.order_date | date: "MMM d, yyyy"}}</div>
+								<div class="customer">{{::po.supplier.name}}</div>
+								<div class="project-id">{{::po.project.id}}</div>
+								<div class="project">{{::po.project.codename}}</div>
 								<div class="delivery-date">{{po.receive_date | date: "MMM d, yyyy"}}</div>
 								<div class="paid-date">{{po.paid_date | date: "MMM d, yyyy"}}</div>
 								<div class="total">{{po.grand_total | number:2}}</div>
@@ -70,7 +70,7 @@
 						  	<section>
 								<md-subheader class="md-primary md-no-sticky">Supplier</md-subheader>											
 								<div layout="row" layout-align="start center">
-									<span>{{po.supplier.name}}</span>
+									<span>{{::po.supplier.name}}</span>
 								</div>
 							</section>
 							
@@ -233,7 +233,7 @@
 									<md-card class="item" ng-repeat="item in po.items" ng-show="!listView">
 										<md-card-title layout="row" layout-align="center center">
 								          	<md-card-title-text>
-								            	<span class="md-headline">{{item.description}}</span>
+								            	<span class="md-headline">{{::item.description}}</span>
 								          	</md-card-title-text>
 											<md-button class="md-icon-button md-warn md-raised" ng-click="removeItem(po, $index)">
 												<i class="material-icons">remove</i>
@@ -339,7 +339,7 @@
 												</thead>
 												<tbody>
 													<tr class="items" ng-repeat="item in po.items">
-														<td class='description'>{{item.description}}</td>
+														<td class='description'>{{::item.description}}</td>
 														<td><textarea ng-model=item.comments row="4"></textarea></td>
 														<td class='discount'>
 															<input required type="number" min="0" ng-model="item.discount"/> 
