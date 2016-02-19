@@ -49,11 +49,11 @@
 						<md-tooltip>ลบพนักงาน/Delete {{::employee.name}}</md-tooltip>
 						<i class="material-icons">remove</i>
 					</md-button>
-					<md-button class="md-icon-button expand" ng-if="!active" ng-click="active=true">
+					<md-button class="md-icon-button expand" ng-show="!active" ng-click="active=true">
 						<md-tooltip>Expand</md-tooltip>
 						<i class="material-icons">expand_more</i>
 					</md-button>
-					<md-button class="md-icon-button minimize" ng-if="active" ng-click="active=false">
+					<md-button class="md-icon-button minimize" ng-show="active" ng-click="active=false">
 						<md-tooltip>Minimize</md-tooltip>
 						<i class="material-icons">expand_less</i>
 					</md-button>
@@ -218,6 +218,7 @@
 								<h4 class="lunch">Lunch</h4>
 								<h4 class="sick">Sick Leave</h4>
 								<h4 class="vacation">Vacation</h4>
+								<h4 class="cambodia">Cambodia</h4>
 							</md-card-title>
 							<md-card-content>
 								<div class="attendance" ng-class="::{'sunday': isSunday(a)}" ng-repeat="a in employee.attendances | orderBy:'-date'">
@@ -225,6 +226,7 @@
 									<h4 class="col clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
 									<h4 class="col clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
 									<div class="col ot-request">
+										
 										<md-select ng-model="a.overtime_request" ng-change="updateAttendance(a)" ng-model-options="{trackBy: '$value.getUTCHours() + $value.getUTCMinutes()'}" ng-disabled="!a.enable_overtime">
 											<md-option ng-value="overtime" ng-repeat="overtime in ::overtimes">{{::overtime | date:'hh:mm:ss a'}}</md-option>
 										</md-select>
@@ -243,6 +245,9 @@
 									</div>
 									<div class="col vacation">
 										<md-switch ng-model="a.vacation" ng-change="updateAttendance(a)">
+									</div>
+									<div class="col cambodia">
+										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)">
 									</div>
 									
 							</md-card-content>

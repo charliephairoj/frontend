@@ -27,6 +27,15 @@
 						<label>Overtime</label>
 						<md-switch ng-model="a.enable_overtime"></md-switch>
 					</div>
+					<md-input-container  ng-if="a.enable_overtime">
+						<label>Overtime Request</label>
+						<md-select ng-model="a.overtime_request">
+							<md-option ng-value="overtime" ng-repeat="overtime in ::overtimes">{{::overtime | date:'hh:mm:ss a'}}</md-option>
+						</md-select>
+					</md-input-container>
+				</div>
+				<div layout="row">
+					
 					<div layout="column">
 						<label>Lunch</label>
 							<md-switch ng-model="a.receive_lunch_overtime"></md-switch>
@@ -39,10 +48,14 @@
 						<label>Vacation</label>
 						<md-switch ng-model="a.vacation"></md-switch>
 					</div>
+					<div layout="column">
+						<label>Cambodia</label>
+						<md-switch ng-model="a.cambodia"></md-switch>
+					</div>
 				</div>
 			</form>
 		</md-dialog-content>
 		<md-dialog-actions>
-			<md-button ng-click="create()">Add</md-button>
+			<md-button class="md-raised md-accent" ng-click="create()">Add</md-button>
 		</md-dialog-actions>
 </md-dialog>

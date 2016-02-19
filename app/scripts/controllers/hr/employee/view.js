@@ -20,7 +20,6 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	});
 	
 	$scope.shifts = Shift.query();
-	var shifts = $scope.shifts;
 	
 	$scope.overtimes = [];
 	var hour = 18;
@@ -261,10 +260,16 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		$mdDialog.show({
 			templateUrl: 'views/templates/add-attendance.html',
       	  	clickOutsideToClose:true,
-			controller: function ($scope, $mdDialog) {
+			locals: {
+				overtimes: $scope.overtimes,
+				shifts: $scope.shifts
+			},
+			controller: function ($scope, $mdDialog, overtimes, shifts) {
+				
+				$scope.overtimes = overtimes;
+				$scope.shifts = shifts;
 				
 				// Set up default attributes
-				$scope.shifts = shifts;
 				$scope.a = new Attendance();
 				$scope.a.employee = employee;
 				$scope.a.date = new Date();
