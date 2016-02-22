@@ -22,14 +22,17 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	$scope.shifts = Shift.query();
 	
 	$scope.overtimes = [];
-	var hour = 18;
+	var hour = 17;
 	var minute = 0;
 	
-	for (var i = 0; i < 24; i++) {
+	for (var i = 1; i < 25; i++) {
+		
+		// Advance to the next hour
 		if (i % 2 > 0 && i > 0) {
 			hour += 1;
 			minute = 0;
-			
+		
+		// Advance to the next half hour
 		} else {
 			minute = 30;
 			
@@ -262,7 +265,8 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
       	  	clickOutsideToClose:true,
 			locals: {
 				overtimes: $scope.overtimes,
-				shifts: $scope.shifts
+				shifts: $scope.shifts,
+				employee: employee
 			},
 			controller: function ($scope, $mdDialog, overtimes, shifts) {
 				
@@ -286,6 +290,11 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 					
 					$scope.a.$create(function (resp) {
 						Notification.display('Attendance created for ' + resp.employee.name, 2000);
+						
+						// Add to employee attendances
+						employee.attendances = employee.attendances || [];
+						employee.attendances.push(resp);
+						
 					}, function (e) {
 						Notification.display("There was an error creating an attendance for " + employee.name, 0);
 						$log.error(e);
