@@ -272,9 +272,11 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 	};
 	
 	keyboardNav.onenter = function () {
+		/*
 		$scope.safeApply(function () {
 			$location.path('/order/purchase_order/' + currentSelection.id);
 		});
+		*/
 	};
 	
 	keyboardNav.enable();

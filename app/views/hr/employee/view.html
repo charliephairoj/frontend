@@ -221,7 +221,7 @@
 								<h4 class="cambodia">Cambodia</h4>
 							</md-card-title>
 							<md-card-content>
-								<div class="attendance" ng-class="::{'sunday': isSunday(a)}" ng-repeat="a in employee.attendances | orderBy:'-date'">
+								<div class="attendance" ng-class="{'sunday': isSunday(a), 'expanded': a.sick_leave || a.vacation}" ng-repeat="a in employee.attendances | orderBy:'-date'">
 									<h4 class="col date">{{::a.date | date:'dd/MM/yyyy'}}</h4>
 									<h4 class="col clockin">{{::a.start_time | date:'hh:mm:ss a'}}</h4>
 									<h4 class="col clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h4>
@@ -235,21 +235,29 @@
 									<h4 class="col regular-time">{{a.regular_time}}</h4>
 									<h4 class="col overtime">{{a.overtime}}</h4>
 									<div class="col enable-overtime">
-										<md-switch ng-model="a.enable_overtime" ng-change="updateAttendance(a)">
+										<md-switch ng-model="a.enable_overtime" ng-change="updateAttendance(a)"></md-switch>
 									</div>
 									<div class="col lunch">
-										<md-switch ng-model="a.receive_lunch_overtime" ng-change="updateAttendance(a)">
+										<md-switch ng-model="a.receive_lunch_overtime" ng-change="updateAttendance(a)"></md-switch>
 									</div>
-									<div class="col sick">
-										<md-switch ng-model="a.sick_leave" ng-change="updateAttendance(a)">
-									</div>
-									<div class="col vacation">
-										<md-switch ng-model="a.vacation" ng-change="updateAttendance(a)">
-									</div>
-									<div class="col cambodia">
-										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)">
+									<div class="col sick" layout="column">
+										<md-switch ng-model="a.sick_leave" ng-change="updateAttendance(a)"></md-switch>
+										<md-select ng-model="a.sick_leave_excused" ng-change="updateAttendance(a)" ng-if="a.sick_leave">
+											<md-option ng-value="true" >Excused</md-option>
+											<md-option ng-value="false" >Unexcused</md-option>
+										</md-select>
 									</div>
 									
+									<div class="col cambodia">
+										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)"></md-switch>
+									</div>
+									<div class="col vacation">
+										<md-switch ng-model="a.vacation" ng-change="updateAttendance(a)"></md-switch>
+										<md-select ng-model="a.vacation_excused" ng-change="updateAttendance(a)" ng-if="a.vacation">
+											<md-option ng-value="true" >Excused</md-option>
+											<md-option ng-value="false" >Unexcused</md-option>
+										</md-select>
+									</div>
 							</md-card-content>
 						</md-card>
 					</section>

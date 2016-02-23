@@ -4696,9 +4696,11 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	};
 	
 	keyboardNav.onenter = function () {
+		/*
 		$scope.safeApply(function () {
 			$location.path('/order/acknowledgement/' + currentSelection.id);
 		});
+		*/
 	};
 	
 	keyboardNav.enable();
@@ -8020,9 +8022,11 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 	};
 	
 	keyboardNav.onenter = function () {
+		/*
 		$scope.safeApply(function () {
 			$location.path('/order/purchase_order/' + currentSelection.id);
 		});
+		*/
 	};
 	
 	keyboardNav.enable();

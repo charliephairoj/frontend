@@ -220,9 +220,11 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	};
 	
 	keyboardNav.onenter = function () {
+		/*
 		$scope.safeApply(function () {
 			$location.path('/order/acknowledgement/' + currentSelection.id);
 		});
+		*/
 	};
 	
 	keyboardNav.enable();

@@ -222,23 +222,37 @@
 										}
 									}
 									
+									&.expanded{
+										
+										.col{
+											height:6em;
+											align-items:center;
+										}
+									}
+									
 									.col{
+										height:3em;
 										display:flex;
-										justify-content:center;
+										flex-direction:column;
+										justify-content:flex-start;
 										align-items:center;
-								
+										.transition(all, 250ms);
+										
 										padding:0.25em 0;
-								
+										
 										&.date{
 											width:10%;
+											padding-top:1.5em;
 										}
 								
 										&.clockin{
-											width:12%
+											width:12%;
+											padding-top:1.5em;
 										}
 								
 										&.clockout{
 											width:12%;
+											padding-top:1.5em;
 										}
 									
 										&.ot-request{
@@ -247,10 +261,12 @@
 								
 										&.regular-time{
 											width:8%;
+											padding-top:1.5em;
 										}
 								
 										&.overtime{
 											width:8%;
+											padding-top:1.5em;
 										}
 								
 										&.enable-overtime{
@@ -272,6 +288,16 @@
 										&.cambodia{
 											width:8%;
 										}
+										
+										md-select{
+											margin-top:0.7em;
+											margin-bottom:0;
+										}
+										
+										md-switch{
+											margin-bottom:0;
+										}
+										
 									}
 								
 									div{
