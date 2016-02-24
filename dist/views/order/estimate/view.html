@@ -282,6 +282,19 @@
 												        </md-card-actions>
 														<table class="product-details">
 															<tr>
+																<td colspan="2">
+																	<md-input-container style="width:100%;">
+																		<label>Description</label>
+																		<input name="description" type="text" ng-model="item.description" required />
+																		<div ng-messages="ackForm.quantity.$error">
+																			<div ng-message="required">This required is required</div>
+																		</div>
+															            <div class="hint">How many pieces did they order?</div>
+																	</md-input-container>
+																</td>
+																
+															</tr>
+															<tr>
 																<td>
 																	<md-input-container>
 																		<label>Quantity</label>
