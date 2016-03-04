@@ -2976,56 +2976,11 @@ function ($scope, Employee, Payroll, Attendance) {
 		if ($scope.start_date && $scope.end_date) {
 			
 			$scope.employees = Employee.query({
-				limit:0, 
+				limit:2, 
 				page_size: 99999,
-				start_date: new Date('2014-2-1'),
-				end_date: new Date('2014-5-30')
+				start_date: $scope.start_date,
+				end_date: $scope.end_date
 			}, function (resp) {
-				// Loop through all the employees
-				
-				for (var i = 0; i < $scope.employees.length; i++) {
-			
-					var grossPay = 0;
-					var regularHours = 0;
-					var overtimeHours = 0;
-					var doubleTimeHours = 0;
-					var socialSecurityPay = 0;
-					var stipend = 0;
-					
-					// Loop through all the attendances
-					if ($scope.employees[i].hasOwnProperty('attendances')) {
-				
-						for (var h = 0; h < $scope.employees[i].attendances.length; h++) {
-					
-							if ($scope.isSunday($scope.employees[i].attendances[h])) {
-								doubleTimeHours += $scope.employees[i].attendances[h].regular_time || 0;
-							} else {
-								// Calcualte the total regular hours worked
-								regularHours += $scope.employees[i].attendances[h].regular_time || 0;
-							}
-					
-							if ($scope.employees[i].attendances.regular_time === 8) {
-								stipend += $scope.employees[i].incentive_pay;
-							}
-					
-							// Calcualte the total overtime hours worked
-							overtimeHours += $scope.employees[i].attendances[h].overtime || 0;
-					
-							// Calcualate totals for gross pay
-							grossPay += $scope.calculateWage($scope.employees[i].attendances[h]);
-					
-							// Calcualate totals for social security
-							socialSecurityPay += $scope.calculateSocialSecurity($scope.employees[i].attendances[h]);
-						}
-			
-					}
-			
-					$scope.employees[i].regular_time = regularHours;
-					$scope.employees[i].overtime = overtimeHours;
-					$scope.employees[i].gross_wage = grossPay;
-					$scope.employees[i].social_security = socialSecurityPay;
-					$scope.employees[i].stipend = stipend;
-				}
 				
 			});
 		}
@@ -3034,12 +2989,12 @@ function ($scope, Employee, Payroll, Attendance) {
 	var today = new Date();
 	var date = today.getDate();
 	if (10 < date < 15) {
-		$scope.start_date = new Date(today.getFullYear(), today.getMonth() - 1, 26);
-		$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 10);
+		//$scope.start_date = new Date(today.getFullYear(), today.getMonth() - 1, 26);
+		//$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 10);
 		
 	} else if (25 < date < 30){
-		$scope.start_date = new Date(today.getFullYear(), today.getMonth(), 11);
-		$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 25);
+		//$scope.start_date = new Date(today.getFullYear(), today.getMonth(), 11);
+		//$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 25);
 	}
 	
 	$scope.getEmployees();
@@ -8293,7 +8248,7 @@ angular.module('employeeApp')
 function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
-	$scope.acknowledgements = Acknowledgement.query({limit: 20}, function () {
+	$scope.acknowledgements = Acknowledgement.query({limit: 100}, function () {
 		fetchingAck = false;
 	});
 

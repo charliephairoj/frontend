@@ -12,18 +12,55 @@
 					<div class="col-1">{{::employee.name}}</div>
 					<div class="col-2">
 						<md-input-container>
-							<label>Regular Hours</label>
+							<label>Regular Days Worked</label>
 							<input type="number" ng-model="employee.regular_time" />
+						</md-input-container>
+					</div>
+					<div class="col-2">
+						<md-input-container>
+							<label>Sundays Worked</label>
+							<input type="number" ng-model="employee.sunday_time" />
 						</md-input-container>
 					</div>
 					<div class="col-3">
 						<md-input-container>
-							<label>Overtime Hours</label>
+							<label>Overtime</label>
 							<input type="number" ng-model="employee.overtime" />
 						</md-input-container>
 					</div>
+					<div class="col-3">
+						<md-input-container>
+							<label>Sunday Overtime</label>
+							<input type="number" ng-model="employee.sunday_overtime" />
+						</md-input-container>
+					</div>
 					<div class="col-4">
-						{{employee.pay_period == 'daily' ? employee.gross_wage : employee.wage / 2  | currency: '฿': 2}}
+						<table>
+							<tr>
+								<td>Regular Day:</td>
+								<td>{{::employee.wage * employee.regular_time}}</td>
+							</tr>
+							<tr>
+								<td>Overtime:</td>
+								<td>{{::(employee.wage * 1.5) / 8 * employee.overtime}}</td>
+							</tr>
+							<tr>
+								<td>Sunday:</td>
+								<td>{{::(employee.wage * 2) * employee.sunday_time}}</td>
+							</tr>
+							<tr>
+								<td>Sunday Overtime:</td>
+								<td>{{::(employee.wage * 3) / 8 * employee.sunday_overtime}}</td>
+							</tr>
+							<tr>
+								<td>Stipend:</td>
+								<td>{{::employee.total_incentive_pay}}</td>
+							</tr>
+							<tr>
+								<td>Total:</td>
+								<td>{{::employee.pay_period == 'daily' ? employee.gross_wage : employee.wage / 2  | currency: '฿': 2}}</td>
+							</tr>
+						</table>
 					</div>
 					
 				</div>
@@ -32,12 +69,12 @@
 					<div class="col-2"></div>
 					<div class="col-3">
 						<md-input-container>
-							<label>Doubletime Hours</label>
+							<label>Stipend Pay</label>
 							<input type="number" ng-model="employee.total_incentive_pay" />
 						</md-input-container>
 					</div>
 					<div class="col-4">
-						{{employee.social_security | currency: '฿': 2}}
+						{{::employee.social_security | currency: '฿': 2}}
 					</div>
 					
 				</div>
