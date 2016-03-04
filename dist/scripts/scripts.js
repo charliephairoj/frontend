@@ -8248,7 +8248,7 @@ angular.module('employeeApp')
 function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
-	$scope.acknowledgements = Acknowledgement.query({limit: 100}, function () {
+	$scope.acknowledgements = Acknowledgement.query({limit: 100, offset:0}, function () {
 		fetchingAck = false;
 	});
 
