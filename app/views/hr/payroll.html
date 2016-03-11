@@ -37,26 +37,26 @@
 						</md-input-container>
 					</div>
 					<div class="col-6">
-						<table>
+						<table class="summary">
 							<tr>
-								<td>Regular Day:</td>
-								<td>{{::employee.gross_wage}}</td>
+								<td>Regular Wage:</td>
+								<td>{{::employee.gross_wage | number: 2}}</td>
 							</tr>
 							<tr>
 								<td>Overtime:</td>
-								<td>{{::(employee.wage * 1.5) / 8 * employee.overtime}}</td>
+								<td>{{::(employee.wage * 1.5) / 8 * employee.overtime | number: 2}}</td>
 							</tr>
 							<tr>
-								<td>Sunday:</td>
-								<td>{{::(employee.wage * 2) * employee.sunday_time}}</td>
+								<td>Sunday Wage:</td>
+								<td>{{::(employee.wage * 2) * employee.sunday_time | number: 2}}</td>
 							</tr>
 							<tr>
 								<td>Sunday Overtime:</td>
-								<td>{{::(employee.wage * 3) / 8 * employee.sunday_overtime}}</td>
+								<td>{{::(employee.wage * 3) / 8 * employee.sunday_overtime | number: 2}}</td>
 							</tr>
 							<tr>
 								<td>Stipend:</td>
-								<td>{{::employee.total_incentive_pay}}</td>
+								<td>{{::employee.total_incentive_pay | number: 2}}</td>
 							</tr>
 							<tr>
 								<td>Total:</td>

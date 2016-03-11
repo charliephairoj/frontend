@@ -30,7 +30,17 @@
 				</div>
 				<h3>{{employee.name}}</h3>
 				<h2>{{employee.department}}</h2>
+				<div class="equipment-container">
+					<md-card ng-repeat="equipment in employee.equipments">
+						<md-card-content>
+							{{equipment.description}}<br />
+							{{equipment.brand}}
+						</md-card-content>
+					</md-card>
+				</div>
 			</div>
+			
+				
 		</div>
 
 
