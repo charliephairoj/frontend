@@ -2976,8 +2976,9 @@ function ($scope, Employee, Payroll, Attendance) {
 		if ($scope.start_date && $scope.end_date) {
 			
 			$scope.employees = Employee.query({
-				limit:2, 
+				limit:0, 
 				page_size: 99999,
+				offset:0,
 				start_date: $scope.start_date,
 				end_date: $scope.end_date
 			}, function (resp) {
@@ -2989,12 +2990,12 @@ function ($scope, Employee, Payroll, Attendance) {
 	var today = new Date();
 	var date = today.getDate();
 	if (10 < date < 15) {
-		//$scope.start_date = new Date(today.getFullYear(), today.getMonth() - 1, 26);
-		//$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 10);
+		$scope.start_date = new Date(today.getFullYear(), today.getMonth() - 1, 26);
+		$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 10);
 		
 	} else if (25 < date < 30){
-		//$scope.start_date = new Date(today.getFullYear(), today.getMonth(), 11);
-		//$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 25);
+		$scope.start_date = new Date(today.getFullYear(), today.getMonth(), 11);
+		$scope.end_date = new Date(today.getFullYear(), today.getMonth(), 25);
 	}
 	
 	$scope.getEmployees();

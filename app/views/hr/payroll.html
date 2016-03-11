@@ -9,36 +9,38 @@
 		<md-list>
 			<md-list-item ng-repeat="employee in employees" ng-class="{'even': $even}" layout="column">
 				<div class="row-1" layout="row">
-					<div class="col-1">{{::employee.name}}</div>
+					<div class="col-1">
+						<span>{{::employee.name}}</span>
+						<div class="img-container">
+							<img ng-src="{{employee.image.url}}">
+						</div>
+					</div>
 					<div class="col-2">
 						<md-input-container>
 							<label>Regular Days Worked</label>
 							<input type="number" ng-model="employee.regular_time" />
 						</md-input-container>
 					</div>
-					<div class="col-2">
+					<div class="col-3">
 						<md-input-container>
 							<label>Sundays Worked</label>
 							<input type="number" ng-model="employee.sunday_time" />
 						</md-input-container>
 					</div>
-					<div class="col-3">
-						<md-input-container>
-							<label>Overtime</label>
-							<input type="number" ng-model="employee.overtime" />
-						</md-input-container>
-					</div>
-					<div class="col-3">
-						<md-input-container>
-							<label>Sunday Overtime</label>
-							<input type="number" ng-model="employee.sunday_overtime" />
-						</md-input-container>
-					</div>
 					<div class="col-4">
+						
+					</div>
+					<div class="col-5">
+						<md-input-container>
+							<label>Manager Stipend</label>
+							<input type="number" ng-model="employee.manager_stipend" />
+						</md-input-container>
+					</div>
+					<div class="col-6">
 						<table>
 							<tr>
 								<td>Regular Day:</td>
-								<td>{{::employee.wage * employee.regular_time}}</td>
+								<td>{{::employee.gross_wage}}</td>
 							</tr>
 							<tr>
 								<td>Overtime:</td>
@@ -58,22 +60,39 @@
 							</tr>
 							<tr>
 								<td>Total:</td>
-								<td>{{::employee.pay_period == 'daily' ? employee.gross_wage : employee.wage / 2  | currency: '฿': 2}}</td>
+								<td>{{::employee.net_wage | currency: '฿': 2}}</td>
 							</tr>
 						</table>
 					</div>
 					
 				</div>
 				<div class="row-2" layout="row">
-					<div class="col-1">{{::employee.pay_period}} @ ฿{{::employee.wage}}/{{::employee.pay_period == 'daily' ? 'day' : 'month'}}</div>
-					<div class="col-2"></div>
+					<div class="col-1">
+						<span ng-if="employee.pay_period == 'daily'">Daily Stipend: ฿{{::employee.incentive_pay || 0}} </span>
+						<span>฿{{::employee.wage}}/{{::employee.pay_period == 'daily' ? 'day' : 'month'}}<span>
+					</div>
+					<div class="col-2">
+						<md-input-container>
+							<label>Overtime</label>
+							<input type="number" ng-model="employee.overtime" />
+						</md-input-container>
+					</div>
 					<div class="col-3">
+						<md-input-container>
+							<label>Sunday Overtime</label>
+							<input type="number" ng-model="employee.sunday_overtime" />
+						</md-input-container>
+					</div>
+					<div class="col-4">
+						
+					</div>
+					<div class="col-5">
 						<md-input-container>
 							<label>Stipend Pay</label>
 							<input type="number" ng-model="employee.total_incentive_pay" />
 						</md-input-container>
 					</div>
-					<div class="col-4">
+					<div class="col-6">
 						{{::employee.social_security | currency: '฿': 2}}
 					</div>
 					
