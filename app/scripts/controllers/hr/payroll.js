@@ -21,7 +21,7 @@ function ($scope, Employee, Payroll, Attendance) {
 				limit:0, 
 				page_size: 99999,
 				offset:0,
-				status: 'active',
+				employee_status: 'active',
 				start_date: $scope.start_date,
 				end_date: $scope.end_date
 			}, function (resp) {
