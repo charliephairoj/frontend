@@ -7011,7 +7011,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			supplier.$create(function (resp) {
 				angular.extend(purchaseOrder.supplier, resp);
 				progress.supplier = true;
-				$scope._checkProgress(progress, callback);
+				
+				callback();
 			}, function () {
 				progress.supplier = 'error';
 			});
@@ -7024,7 +7025,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			supplier.$update(function (resp) {
 				angular.extend(purchaseOrder.supplier, resp);
 				progress.supplier = true;
-				$scope._checkProgress(progress, callback);
+				
+				callback();
+				
 			}, function () {
 				progress.supplier = 'error';
 			});
@@ -7164,41 +7167,46 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	
 	$scope._preparePurchaseOrder = function (purchaseOrder, callback) {
 		
-		//Object used to track progress of sub-resource creations
-		var progress = {supplies:false};
-		$scope._prepareSupplier(purchaseOrder, progress, callback);
+		// Prepare the supplies and projects and makes final callback to create po
+		// To be passed into prepare supplier callback
+		function prepareSuppliesAndProjects() {
+			//Checks if the project exists and create if not
+			if (purchaseOrder.project) {
+				if (!purchaseOrder.project.id && purchaseOrder.project.codename) {
+					progress.project = false;
+					var project = new Project();
+					angular.extend(project, purchaseOrder.project);
 				
-		//Checks if the project exists and create if not
-		if (purchaseOrder.project) {
-			if (!purchaseOrder.project.id && purchaseOrder.project.codename) {
-				progress.project = false;
-				var project = new Project();
-				angular.extend(project, purchaseOrder.project);
-				
-				project.$create(function (resp) {
-					angular.extend(purchaseOrder.project, resp);
-					progress.project = true;
-					$scope._checkProgress(progress, callback);
-				}, function () {
-					progress.project = 'error';
-				});
+					project.$create(function (resp) {
+						angular.extend(purchaseOrder.project, resp);
+						progress.project = true;
+						$scope._checkProgress(progress, callback);
+					}, function () {
+						progress.project = 'error';
+					});
+				}
 			}
-		}
 				
-		//Check if items are custom
-		for (var i = 0; i < purchaseOrder.items.length; i++) {
-			if (purchaseOrder.items[i].hasOwnProperty('id')) {
-		  		// Update the supply
-				$scope._updateSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
-			} else {
-				// Create a new supply
-				$scope._createSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
+			//Check if items are custom
+			for (var i = 0; i < purchaseOrder.items.length; i++) {
+				if (purchaseOrder.items[i].hasOwnProperty('id')) {
+			  		// Update the supply
+					$scope._updateSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
+				} else {
+					// Create a new supply
+					$scope._createSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
+				}
 			}
+		
+			// Signal to progress check that supplies preparation has passed
+			progress.supplies = true;
+			$scope._checkProgress(progress, callback);
 		}
 		
-		// Signal to progress check that supplies preparation has passed
-		progress.supplies = true;
-		$scope._checkProgress(progress, callback);
+		//Object used to track progress of sub-resource creations
+		var progress = {supplies:false};
+		$scope._prepareSupplier(purchaseOrder, progress, prepareSuppliesAndProjects);
+		
 	};
 	
 	$scope._sendCreateRequest = function () {
@@ -7208,7 +7216,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		
 			purchaseOrder = this || $scope.po;
 			
-			/*
+			
 			purchaseOrder.$create(function (response) {
 				$scope.creating = false;
 				Notification.display('Purchase order created.');
@@ -7223,7 +7231,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
 			
 			});
-			*/
+			
 		}
 		
 	};
