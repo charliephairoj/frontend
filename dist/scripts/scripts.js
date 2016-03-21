@@ -7004,6 +7004,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		//Checks if customer exists and creates if not
 		if (!purchaseOrder.supplier.id && purchaseOrder.supplier.name) {
 			progress.supplier = false;
+			
 			var supplier = new Supplier();
 			angular.extend(supplier, purchaseOrder.supplier);
 
@@ -7016,8 +7017,11 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			});
 		} else if (purchaseOrder.supplier.id) {
 			progress.supplier = false;
-
-			purchaseOrder.supplier.$update(function (resp) {
+			
+			var supplier = new Supplier();
+			angular.extend(supplier, purchaseOrder.supplier);
+			
+			supplier.$update(function (resp) {
 				angular.extend(purchaseOrder.supplier, resp);
 				progress.supplier = true;
 				$scope._checkProgress(progress, callback);
@@ -7043,13 +7047,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		// Add progress check
 		progress[supply.description] = false;
 		
+		console.log(supplier);
 		// Associate this supplier with the supply
 		supply.suppliers = [supplier];
 		supply.suppliers[0].supplier = {id: supplier.id};
 		supply.suppliers[0].cost = supply.cost;
 		
 		var resource = new Supply(supply);
-		
+		console.log(resource);
 		// Create a new supply
 		resource.$create(function (response) {
 			
@@ -7202,7 +7207,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			$scope.creating = true;
 		
 			purchaseOrder = this || $scope.po;
-		
+			
+			/*
 			purchaseOrder.$create(function (response) {
 				$scope.creating = false;
 				Notification.display('Purchase order created.');
@@ -7217,6 +7223,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
 			
 			});
+			*/
 		}
 		
 	};
