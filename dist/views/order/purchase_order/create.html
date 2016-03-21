@@ -118,10 +118,11 @@
 									<md-input-container>
 								        <label>Currency</label>
 								        <md-select ng-model="po.currency" required>
-											<md-option ng-value="'THB'">Thai Baht</md-option>
-											<md-option ng-value="'USD'">US Dollar</md-option>
-											<md-option ng-value="'EUR'">Euro</md-option>
-											<md-option ng-value="'RMB'">Renminbi</md-option>
+											<md-option ng-value="THB">Thai Baht</md-option>
+											<md-option ng-value="USD">US Dollar</md-option>
+											<md-option ng-value="EUR">Euro</md-option>
+											<md-option ng-value="RMB">Renminbi</md-option>
+											<md-option ng-value="SGD">Singapore Dollar</md-option>
 								        </md-select>
 										<div ng-messages="poForm.currency.$error" multiple>
 											<div ng-message-exp="'required'">This is required</div>

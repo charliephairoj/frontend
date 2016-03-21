@@ -2551,6 +2551,34 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		return obj;
 	}
 	
+	$scope.canViewPayRate = function (employee) {
+		
+		/*
+		if (employee.department.toLowerCase() == 'management') {
+			if (!$scope.currentUser.hasPermission('view_management_pay_rate')) {
+				return false;
+			}
+		}
+		
+		if (employee.department.toLowerCase() == 'office') {
+			if (!$scope.currentUser.hasPermission('view_office_pay_rate')) {
+				return false;
+			}
+		}
+		
+		if (employee.manager_stiped > 0) {
+			if (!$scope.currentUser.hasPermission('view_management_pay_rate')) {
+				return false;
+			}
+		}*/
+		
+		if (!$scope.currentUser.hasPermission('can_view_pay_rate')) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	$scope.update = function (employee) {
 		Notification.display('Updating employee: ' + employee.name + '...', false);
 		employee.$$saving = true;

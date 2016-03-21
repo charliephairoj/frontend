@@ -174,15 +174,15 @@
 								<md-option value='monthly'>รายเดือน/Monthly</md-option>
 							</md-select>
 						</md-input-container>
-						<md-input-container ng-if="::currentUser.hasPermission('can_view_pay_rate')">
+						<md-input-container ng-if="::canViewPayRate(employee)">
 							<label>Pay Rate</label>
 							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.wage" />
 						</md-input-container>
-						<md-input-container ng-if="::currentUser.hasPermission('can_view_pay_rate')">
+						<md-input-container ng-if="::canViewPayRate(employee)">
 							<label>เบี้ยขยัน/Stipend</label>
 							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.incentive_pay" />
 						</md-input-container>
-						<md-input-container ng-if="::currentUser.hasPermission('can_view_pay_rate')">
+						<md-input-container ng-if="::canViewPayRate(employee)">
 							<label>ตำแหน่ง/Manager's Stipend</label>
 							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.manager_stipend" />
 						</md-input-container>
