@@ -247,16 +247,15 @@
 											<md-option ng-value="false" >Unexcused</md-option>
 										</md-select>
 									</div>
-									
-									<div class="col cambodia">
-										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)"></md-switch>
-									</div>
 									<div class="col vacation">
 										<md-switch ng-model="a.vacation" ng-change="updateAttendance(a)"></md-switch>
 										<md-select ng-model="a.vacation_excused" ng-change="updateAttendance(a)" ng-if="a.vacation">
 											<md-option ng-value="true" >Excused</md-option>
 											<md-option ng-value="false" >Unexcused</md-option>
 										</md-select>
+									</div>
+									<div class="col cambodia">
+										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)"></md-switch>
 									</div>
 							</md-card-content>
 						</md-card>
