@@ -6,12 +6,12 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
     $scope.configuration = false;
 	
     //Uploads Profie Image
-    $scope.upload = function () {
+    $scope.addImage = function (files) {
         //display notification
         Notification.display('Uploading Model Image...', false);
-        
+        console.log(files);
         //Notify of uploading image        
-		var promise = FileUploader.upload($scope.images[0], "/api/v1/upholstery/image/");
+		var promise = FileUploader.upload(files[0], "/api/v1/upholstery/image/");
 			promise.then(function (dataObj) {
 		        Notification.display('Image uploaded.');
 				$scope.model.images.push(dataObj.data);
