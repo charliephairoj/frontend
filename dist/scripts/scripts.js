@@ -8652,7 +8652,8 @@ angular.module('employeeApp')
 .controller('ProductModelDetailsCtrl', ['$scope', 'Model', '$routeParams', '$location', 'Notification', '$http', 'FileUploader',
 function ($scope, Model, $routeParams, $location, Notification, $http, FileUploader) {
     $scope.model = Model.get({'id': $routeParams.id});
-    
+    $scope.configuration = false;
+	
     //Uploads Profie Image
     $scope.upload = function () {
         //display notification
@@ -8706,15 +8707,30 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 	*/
 	$scope.makePrimaryImage = function (image) {
 		
-		// Set all images as primary:false
-		for (var i = $scope.model.images.length; i--;) {
-			$scope.model.images[i].primary = false;
+		if (!$scope.configuration) {
+			// Set all images as primary:false
+			for (var i = $scope.model.images.length; i--;) {
+				$scope.model.images[i].primary = false;
+			}
+		
+			// Set argument image as primary:true
+			image.primary = true;
+		
+			$scope.update();
+		} else {
+			$scope.configuration = false
+			// Set all images as primary:false
+			for (var i = $scope.model.images.length; i--;) {
+				$scope.model.images[i].configuration = false;
+			}
+		
+			// Set argument image as primary:true
+			image.configuration = true;
+		
+			$scope.update();
 		}
 		
-		// Set argument image as primary:true
-		image.primary = true;
 		
-		$scope.update();
 	};
 	
     $scope.$on('$destroy', function () {

@@ -9,6 +9,14 @@
   
   	.sidebar{
   		left:-200px;
+		
+		li{
+			div{
+				&.configuration{
+					background-color:red;
+				}
+			}
+		}
   	}
 	
   	.workspace{
@@ -16,7 +24,8 @@
       	width:100%;
       	height:100%;
       	background-color:rgb(255, 255, 255);
-	 
+	 	overflow-y:scroll;
+		
 	 	.details{
 	 		margin:1em;
 			
@@ -52,6 +61,10 @@
 				
 				&.primary{
 					border:1px dotted blue;
+				}
+				
+				&.configuration{
+					border:1px dotted orange;
 				}
 				
 				img{

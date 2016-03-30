@@ -13,9 +13,14 @@
         </header>
         <nav>
             <ul>
-                
+                <li>
+                    <div ng-click="update()">Save</div>
+                </li>
                 <li>
                     <div ng-click="remove()">Delete</div>
+                </li>
+                <li>
+                    <div ng-class="{'configuration': configuration}" ng-click="configuration=!configuration">Select Configuration</div>
                 </li>
                     
             </ul>
@@ -47,11 +52,50 @@
 					<input type="checkbox" ng-change="update()" ng-model="model.has_back_pillows"/>
 				</td>
             </tr>
-           
+           <tr>
+               <td colspan="2">
+				   <md-input-container>
+				   	   <label>Frame</label>
+					   <textarea ng-model="model.frame" cols="80"></textarea>
+				   </md-input-container>
+			   </td>
+           </tr>
+           <tr>
+               <td colspan="2">
+				   <md-input-container>
+				   	   <label>suspension</label>
+					   <textarea ng-model="model.suspension" cols="80"></textarea>
+				   </md-input-container>
+			   </td>
+           </tr>
+           <tr>
+               <td colspan="2">
+				   <md-input-container>
+				   	   <label>cushions</label>
+					   <textarea ng-model="model.cushions" cols="80"></textarea>
+				   </md-input-container>
+			   </td>
+           </tr>
+           <tr>
+               <td colspan="2">
+				   <md-input-container>
+				   	   <label>upholstery</label>
+					   <textarea ng-model="model.upholstery" cols="80"></textarea>
+				   </md-input-container>
+			   </td>
+           </tr>
+           <tr>
+               <td colspan="2">
+				   <md-input-container>
+				   	   <label>legs</label>
+					   <textarea ng-model="model.legs" cols="80"></textarea>
+				   </md-input-container>
+			   </td>
+           </tr>
         </table>
 		
 		<div class="gallery">
-			<div class="img-container" ng-class="{primary: image.primary}" ng-repeat="image in model.images" ng-click="makePrimaryImage(image)">
+			<div class="img-container" ng-class="{primary: image.primary, configuration: image.configuration}" ng-repeat="image in model.images" ng-click="makePrimaryImage(image)">
 				<img ng-src="{{image.url}}">
 			</div>
 		</div>
