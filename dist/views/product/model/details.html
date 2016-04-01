@@ -95,8 +95,10 @@
         </table>
 		
 		<div class="gallery">
-			<div class="img-container" ng-class="{primary: image.primary, configuration: image.configuration}" ng-repeat="image in model.images" ng-click="makePrimaryImage(image)">
-				<img ng-src="{{image.url}}">
+			<div class="img-container" ng-class="{primary: image.primary, configuration: image.configuration}" ng-repeat="image in model.images">
+				<img ng-src="{{image.url}}" ng-click="makePrimaryImage(image)"/>
+				
+				<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()"></md-switch>
 			</div>
 		</div>
 			

@@ -31,7 +31,7 @@
 		    	<div class="outer-container" on-scroll-end="loadNext()"> 
 			
 			    	<ul class="inner-container" >
-			    		<li class="item-container" data-ng-repeat="model in models | filter:query">	
+			    		<li class="item-container" data-ng-repeat="model in models | filter:query track by model.id">	
 			    			<div class="item" ng-class="{'selected':ack.$selected}">
 								<a class="preview col" ng-href="#/product/model/{{model.id}}">
 									<img ng-src="{{model.images[0].url}}" />
