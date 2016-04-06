@@ -16,11 +16,13 @@
                 <li>
                     <div ng-click="update()">Save</div>
                 </li>
+				<!--
                 <li>
                     <div ng-click="remove()">Delete</div>
                 </li>
+					-->
                 <li>
-                    <div ng-class="{'configuration': configuration}" ng-click="configuration=!configuration">Select Configuration</div>
+                    <div ng-class="{'configuration': configuration}" ng-click="showAddUpholstery()">Add Upholstery</div>
                 </li>
                     
             </ul>
@@ -94,13 +96,75 @@
            </tr>
         </table>
 		
-		<div class="gallery">
+		<md-card class="upholsteries">
+			<md-card ng-repeat="uphol in upholsteries track by uphol.id">
+				<md-card-title>
+					<md-card-title-text>{{uphol.configuration.configuration}}</md-card-title-text>
+				</md-card-title>
+				<md-card-content>
+				
+					<md-input-container>
+						<label>Price</label>
+						<input ng-model="uphol.price" ng-change="updateUpholstery(uphol)" />
+					</md-input-container>
+					<md-input-container>
+						<label>Width</label>
+						<input ng-model="uphol.width" ng-change="updateUpholstery(uphol)" />
+					</md-input-container>
+					<md-input-container>
+						<label>Depth</label>
+						<input ng-model="uphol.depth" ng-change="updateUpholstery(uphol)" />
+					</md-input-container>
+					<md-input-container>
+						<label>Height</label>
+						<input ng-model="uphol.height" ng-change="updateUpholstery(uphol)" />
+					</md-input-container>
+				</md-card-content>
+			</md-card>
+		</md-card>
+		
+		<md-card class="gallery">
+			<md-card ng-repeat="image in model.images" ng-class="{'primary': image.primary}">
+				<md-card-title>
+					<md-card-title-media>
+						<div class="md-media-xl card-media">
+							<img ng-src="{{image.url}}" />
+						</div>
+					</md-card-title-media>
+				</md-card-title>
+				<md-card-actions layout="row" layout-align="end center">
+					<md-button class="md-icon-button" ng-click="makePrimaryImage(image)">
+						<md-tooltip>
+						    Make Primary Image
+						</md-tooltip>
+						<i class="material-icons primary-icon">star_rate</i>	
+					</md-button>
+					<md-button class="md-icon-button configuration" ng-click="image.configuration = !image.configuration; update()">
+						<md-tooltip>
+						    Set Configuration
+						</md-tooltip>
+						<i ng-if="!image.configuration" class="material-icons">check_box_outline_blank</i>
+						<i ng-if="image.configuration" class="material-icons">check_box</i>
+					</md-button>
+					<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()">
+						
+					</md-switch>		
+	            	<md-button class="md-icon-button md-warn" ng-click="removeImage($index)">
+						<md-tooltip>
+						    Delete
+						</md-tooltip>
+						<i class="material-icons">delete</i>
+					</md-button>          
+		        </md-card-actions>
+			</md-card>
+			<!--
 			<div class="img-container" ng-class="{primary: image.primary, configuration: image.configuration}" ng-repeat="image in model.images">
 				<img ng-src="{{image.url}}" ng-click="makePrimaryImage(image)"/>
 				
 				<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()"></md-switch>
 			</div>
-		</div>
+				-->
+		</md-card>
 			
 			
             
