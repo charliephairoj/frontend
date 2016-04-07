@@ -8765,7 +8765,7 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 	$scope.showAddUpholstery = function () {
 		
 		// Redeclare variables to be used in subcontroller
-		$scope.configurations = $scope.configurations || Configuration.query();
+		$scope.configurations = $scope.configurations || Configuration.query({limit:0, offset:0});
 		
 		// Create the dialog and display it
 		$mdDialog.show({
