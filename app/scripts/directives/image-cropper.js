@@ -193,7 +193,9 @@ angular.module('employeeApp.directives')
         replace: true,
 		scope: {
 			onSave: '&',
-			onLoad: '&'
+			onLoad: '&',
+			image: '=',
+			cropper: '='
 		},
         link: function postLink(scope, element, attrs) {
             var cubes = [];
@@ -257,6 +259,10 @@ angular.module('employeeApp.directives')
                 image.src = evt.target.result;
                 
             };
+			
+			if (scope.image) {
+				fileReader.readAsDataURL(scope.image);
+			}
             
             //Drag Enter
             element.bind('dragenter', function (evt) {
@@ -407,7 +413,12 @@ angular.module('employeeApp.directives')
                     get: function () {
                         return scene ? true : false;
                     }
-                }
+                },
+				size: {
+					get: function () {
+						return scene ? scope.cropper.getImage().size : 0;	
+					}
+				}
             }); 
             
             scope.cropper.crop = function () {
