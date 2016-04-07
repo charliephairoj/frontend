@@ -1,0 +1,47 @@
+<md-dialog class="add-upholstery">
+	<md-subheader>Add Upholstery</md-subheader>
+	<div class="container">
+		<md-content>
+			<form name="form">
+				<div layout="row" layout-align="flex-start center">
+					<md-input-container>
+						<label>Model</label>
+						<input ng-model="upholstery.model.model" ng-disabled="true" />
+					</md-input-container>
+					<md-input-container>
+						<label>Configuration</label>
+						<md-select ng-model="upholstery.configuration">
+							<md-option ng-repeat="config in configurations | orderBy: config.configuration track by config.id">{{config.configuration}}</md-option>
+						</md-select>
+					</md-input-container>
+				</div>
+				<div layout="row" layout-align="flex-start center">
+					<md-input-container>
+						<label>Width</label>
+						<input ng-model="upholstery.width" />
+					</md-input-container>
+					<md-input-container>
+						<label>Depth</label>
+						<input ng-model="upholstery.depth" />
+					</md-input-container>
+					<md-input-container>
+						<label>Height</label>
+						<input ng-model="upholstery.height" />
+					</md-input-container>
+				</div>
+				<div layout="row" layout-align="flex-start center">
+					<md-input-container>
+						<label>Price</label>
+						<input ng-model="upholstery.price" />
+					</md-input-container>
+					
+				</div>
+				
+			</form>
+		</md-content>
+	</div>
+	<md-action>
+		<md-button class="md-primary md-raised" ng-click="create()">Create</md-button>
+		<md-button class="md-raised md-warn" ng-click="cancel()">Cancel</md-button>
+	</md-action>
+</md-dialog>

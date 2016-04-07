@@ -1,0 +1,38 @@
+<md-dialog class="edit-image">
+	<md-subheader>Add Upholstery</md-subheader>
+	<md-dialog-content>
+		<div image-cropper image="imageToEdit" cropper="cropper"></div>
+		<div class="image-information">
+			<!--
+	  	  	<md-input-container>
+				<label>File Size</label>
+	    		<input type="number" size="10" ng-model="cropper.image.size" aria-label="scale">
+	  	  	</md-input-container>
+				-->
+			<div flex="shrink">
+				<span>Dimensions: {{cropper.image.scaled_width | number:0}}px x {{cropper.image.scaled_height | number:0}}px</span>
+				<span>File Size {{fileSize / 1000 | number:0}}kb
+			</div>
+			<md-slider-container>
+	      		<label>Scale</label>
+	      	  	<md-slider ng-model="cropper.scale" round="0" min="0" max="100" step="1" aria-label="scale" class="md-accent"></md-slider>
+	      	  	<md-input-container>
+	        		<input type="number" ng-model="cropper.scale" aria-label="scale">
+	      	  	</md-input-container>
+	    	</md-slider-container>
+	      	  	
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions>
+  	  	
+		<div layout="row">
+			
+		</div>
+		<md-button class="md-primary md-raised" ng-click="save(cropper.getImage())">Upload</md-button>
+			
+		<md-button ng-if="!cropper.cropping" class="md-raised md-accent" ng-click="cropper.crop()">Crop</md-button>
+		<md-button ng-if="cropper.cropping" class="md-raised md-accent" ng-click="cropper.save()">Finish Cropping</md-button>
+		<md-button ng-if="cropper.cropping" class="md-raised md-accent" ng-click="preview(cropper.getImageAsURL())">Preview</md-button>
+		<md-button class="md-raised md-warn" ng-click="cancel()">Cancel</md-button>
+	</md-dialog-actions>
+</md-dialog>
