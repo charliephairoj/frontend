@@ -8717,13 +8717,14 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 					}
 				
 					$scope.save = function (image) {
+						$mdDialog.hide();
 				        uploadImage(image);
 					}
 				}]
 		   	});
 			
 		} else {
-			uploadImage(image);
+			uploadImage(files[0]);
 		}
        
 		
