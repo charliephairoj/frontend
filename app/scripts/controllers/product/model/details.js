@@ -136,9 +136,10 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 				 */
 				
 				$scope.create = function () {
+					$mdDialog.hide();
 					Notification.display('Creating new upholstery: ');
 					$scope.upholstery.$create(function () {
-						Notification.display($scope.model.model + ' ' + $scope.upholstery.configuration.configuration + ' created.');
+						Notification.display($scope.upholstery.model.model + ' ' + $scope.upholstery.configuration.configuration + ' created.');
 						upholsteries.push(angular.copy($scope.upholstery));
 					}, function (e) {
 						Notification.display(e);
