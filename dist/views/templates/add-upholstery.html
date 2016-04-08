@@ -11,7 +11,7 @@
 					<md-input-container>
 						<label>Configuration</label>
 						<md-select ng-model="upholstery.configuration">
-							<md-option ng-repeat="config in configurations | orderBy: config.configuration track by config.id">{{config.configuration}}</md-option>
+							<md-option ng-repeat="config in configurations | orderBy: config.configuration track by config.id" ng-value="config">{{config.configuration}}</md-option>
 						</md-select>
 					</md-input-container>
 				</div>
