@@ -80,7 +80,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
 	/*
 	 * Configure the theme for this application
 	 */
-	
+		
 	$mdThemingProvider.theme('default')
 		.primaryPalette('blue-grey')
 		.accentPalette('blue')

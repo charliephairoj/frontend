@@ -13,10 +13,18 @@
 	md-dialog-content{
 		height:100%;
 		position:relative;
+		overflow:hidden;
 		
 		.cropper{
 			.canvas-container{
+				top:1em;
 				bottom:4em;
+				border-bottom:none;
+				border:none;
+				
+				canvas{
+					
+				}
 			}
 			
 			.cropper-controller{
@@ -26,9 +34,11 @@
 		
 		.image-information{
 			position:absolute;
-			width:100%;
+			left:0;
+			right:0;
 			height:4em;
 			bottom:0;
+			padding:0 1em;
 			display:flex;
 			flex-direction:row;
 			justify-content:space-between;

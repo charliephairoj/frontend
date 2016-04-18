@@ -153,25 +153,71 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	 */
 	$scope.addImage = function (files, employee) {
 	
-		if (files.length > 0) {
-			/* jshint ignore:start */	
+		/**
+		 * Upload image
+		 * @private
+		 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+		 * @returns Describe what it returns
+		 * @type String|Object|Array|Boolean|Number
+		 */
+		function uploadImage (image) {
+	        //display notification
+	        Notification.display('Uploading Image...', false);
+
+	        //Notify of uploading image        
+			var promise = FileUploader.upload(image, "api/v1/employee/image/");
+				promise.then(function (result) {
+			        
+					var data = result.data || result;
+					employee.image = data
+					Notification.display('Image uploaded.');
+					$scope.update(employee);
 		
-			Notification.display('Uploading image...', 0);
-			
-			var promise = FileUploader.upload(files[0], "api/v1/employee/image/");
-			promise.then(function (result) {
-				var data = result.data || result;
-				employee.image = data
-				Notification.display('Image uploaded.');
-				$scope.update(employee);
-				
-			}, function (e) {
+			}, function () {
 				$log.error(JSON.stringify(e));
 			
 				Notification.display(e.message, 0);
-			
+	
 			});
-			/* jshint ignore:end */
+		}
+		
+		if (files[0].type === 'image/jpeg' || files[0].type === 'image/png') {
+			$mdDialog.show({
+		  		templateUrl: 'views/templates/edit-image.html',
+				controller: function ($scope, $mdDialog) {
+					var sizeVar;
+					var placeholder = {size: 'Calculating size'};
+					
+					$scope.imageToEdit = files[0]
+					$scope.fileSize = 0;
+					
+					$scope.$watch('cropper.scale', function () {
+						clearTimeout(sizeVar);
+						sizeVar = setTimeout(function () {
+							$scope.fileSize = $scope.cropper.image.size;
+							$scope.$apply();
+						}, 500);
+					});
+				
+		            $scope.preview = function (url) {
+		                if (url) {
+		                    window.open(url);
+		                }
+		            };
+				
+					$scope.cancel = function () {
+						$mdDialog.hide();
+					}
+				
+					$scope.save = function (image) {
+						$mdDialog.hide();
+				        uploadImage(image);
+					}
+				}
+		   	});
+			
+		} else {
+			uploadImage(files[0]);
 		}
 	};
 	

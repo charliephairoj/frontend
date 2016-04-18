@@ -10,11 +10,11 @@
 	  	  	</md-input-container>
 				-->
 			<div flex="shrink">
-				<span>Dimensions: {{cropper.image.scaled_width | number:0}}px x {{cropper.image.scaled_height | number:0}}px</span>
-				<span>File Size {{fileSize / 1000 | number:0}}kb
+				<span>Dimensions: {{cropper.image.scaled_width | number:0}}px &#215; {{cropper.image.scaled_height | number:0}}px</span>
+				<span>File Size: {{fileSize / 1000 | number:0}}kb
 			</div>
 			<md-slider-container>
-	      		<label>Scale</label>
+	      		<label>Scale:</label>
 	      	  	<md-slider ng-model="cropper.scale" round="0" min="0" max="100" step="1" aria-label="scale" class="md-accent"></md-slider>
 	      	  	<md-input-container>
 	        		<input type="number" ng-model="cropper.scale" aria-label="scale">

@@ -437,77 +437,92 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		}
 	};
 	
-	/*
-	 * Create dialog to add room
+	/**
+	 * Returns a list of rooms whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against room.description
+	 * @returns {Array} - An array of rooms whose codename matches the search term
 	 */
-	$scope.showAddRoom = function () {
-		$scope.room = new Room();
-		$mdDialog.show({
-			templateUrl: 'views/templates/add-room.html',
-			controllerAs: 'ctrl',
-			controller: function () {this.parent = $scope;}
-		});
+	$scope.searchRooms = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var rooms = [];
+		for (var i = 0; i < $scope.ack.project.rooms.length; i++) {
+			if (angular.lowercase($scope.ack.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
+				rooms.push($scope.ack.project.rooms[i]);
+			}
+		}
+		return rooms;
 	};
 	
-	/*
-	 * Complete adding room process and close the dialog 
-	 */
-	$scope.completeAddRoom = function () {
-		$mdDialog.hide();
-		var room = angular.copy($scope.room);
-		room.project = $scope.ack.project;
-		$scope.room = new Room();
-		room.$create(function (resp) {
-			$scope.ack.project.rooms.push(resp);
-			$scope.ack.room = resp;
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-		});
+	$scope.addRoom = function (room) {
+		$scope.ack.project.room = room;
+		$scope.tempSave();
 	};
 	
-	/*
-	 * Cancel adding a room 
+	/**
+	 * Update the room's name if a room is not selected yet. This is incase, the room
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Room
+	 * @returns {null} 
 	 */
-	$scope.cancelAddRoom = function () {
-		$mdDialog.hide();
-		$scope.room = new Room();
+
+	$scope.updateRoomName = function (roomName) {
+		$scope.ack.project.room = $scope.ack.project.room || {description: ''};
+	
+		if (!$scope.ack.project.room.id) {
+			$scope.ack.project.room.description = roomName || '';
+		} else {
+			if ($scope.ack.project.room.description.indexOf(roomName) == -1) {
+				$scope.ack.project.room = {description: roomName};
+			}
+		}
 	};
 	
-	/*
-	 * Create dialog to add phase
+	/**
+	 * Returns a list of phases whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against phase.description
+	 * @returns {Array} - An array of phase whose description matches the search term
 	 */
-	$scope.showAddPhase = function () {
-		$scope.phase = new Phase();
-		$mdDialog.show({
-			templateUrl: 'views/templates/add-phase.html',
-			controllerAs: 'ctrl',
-			controller: function () {this.parent = $scope;}
-		});
+	$scope.searchPhases = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var phases = [];
+		for (var i = 0; i < $scope.ack.project.phases.length; i++) {
+			if (angular.lowercase($scope.ack.project.phases[i].description).indexOf(lowercaseQuery) !== -1) {
+				phases.push($scope.ack.project.phases[i]);
+			}
+		}
+		return phases;
 	};
 	
-	/*
-	 * Complete adding item process and close the dialog 
-	 */
-	$scope.completeAddPhase = function () {
-		$mdDialog.hide();
-		var phase = angular.copy($scope.phase);
-		phase.project = $scope.ack.project.id;
-		$scope.phase = undefined;
-		phase.$create(function (resp) {
-			$scope.ack.project.phases.push(resp);
-			$scope.ack.phase = resp;
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-		});
+	$scope.addPhase = function (phase) {
+		$scope.ack.project.phase = phase;
+		$scope.tempSave();
 	};
 	
-	/*
-	 * Cancel adding a item 
+	/**
+	 * Update the room's name if a project is not selected yet. This is incase, the project
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Project
+	 * @returns {null} 
 	 */
-	$scope.cancelAddPhase = function () {
-		$mdDialog.hide();
-		$scope.phase = undefined;
+
+	$scope.updatePhaseName = function (phaseName) {
+		$scope.ack.project.phase = $scope.ack.project.phase || {description: ''};
+	
+		if (!$scope.ack.project.phase.id) {
+			$scope.ack.project.phase.description = phaseName || '';
+		} else {
+			if ($scope.ack.project.phase.description.indexOf(phaseName) == -1) {
+				$scope.ack.project.phase = {description: phaseName};
+			}
+		}
 	};
+	
+	
+	
 		
     $scope.addItem = function (product) {
 		if (product.description) {
@@ -529,6 +544,9 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
         $scope.tempSave();
     };
 	
+	
+	
+	
 	/**
 	 * FILES SECTIONs
 	 *
@@ -541,63 +559,160 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 * @param {Array} files - Array of files with raw data
 	 * @returns {null}
 	 */
-	$scope.addFiles = function (files) {
-		$scope.ack.files = $scope.ack.files || []; 
+    $scope.addFiles = function (files) {
 		
-		/* jshint ignore:start */
-		Notification.display('Uploading files');
-		
-		for (var i = 0; i < files.length; i++) {
-			$scope.ack.files.push({filename: files[i].name});
-			
-			var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
-			promise.then(function (result) {
-				var data = result.data || result;
-				for (var h = 0; h < $scope.ack.files.length; h++) {
-					if (data.filename == $scope.ack.files[h].filename) {
-						angular.extend($scope.ack.files[h], data);
+		/**
+		 * Upload image
+		 * @private
+		 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+		 * @returns Describe what it returns
+		 * @type String|Object|Array|Boolean|Number
+		 */
+		function uploadImage (image) {
+	        //display notification
+	        Notification.display('Uploading files...', false);
+
+	        //Notify of uploading image        
+			var promise = FileUploader.upload(image, "/api/v1/acknowledgement/file/");
+				promise.then(function (result) {
+					var data = result.data || result;
+					for (var h = 0; h < $scope.ack.files.length; h++) {
+						if (data.filename == $scope.ack.files[h].filename) {
+							angular.extend($scope.ack.files[h], data);
+						}
 					}
-				}
 				
-				Notification.display('File uploaded');
-				$scope.tempSave();
-				
+					Notification.display('File uploaded');
+					$scope.tempSave();
+		
 			}, function (e) {
-				$log.error(JSON.stringify(e));
+		        Notification.display('Error uploading files', false);
+				
 			});
 		}
 		
-		/* jshint ignore:end */
+		if (files[0].type === 'image/jpeg' || files[0].type === 'image/png') {
+			$mdDialog.show({
+		  		templateUrl: 'views/templates/edit-image.html',
+				controller: function ($scope, $mdDialog) {
+					var sizeVar;
+					var placeholder = {size: 'Calculating size'};
+					
+					$scope.imageToEdit = files[0]
+					$scope.fileSize = 0;
+					
+					$scope.$watch('cropper.scale', function () {
+						clearTimeout(sizeVar);
+						sizeVar = setTimeout(function () {
+							$scope.fileSize = $scope.cropper.image.size;
+							$scope.$apply();
+						}, 500);
+					});
+				
+		            $scope.preview = function (url) {
+		                if (url) {
+		                    window.open(url);
+		                }
+		            };
+				
+					$scope.cancel = function () {
+						$mdDialog.hide();
+					}
+				
+					$scope.save = function (image) {
+						$mdDialog.hide();
+				        uploadImage(image);
+					}
+				}
+		   	});
+			
+		} else {
+			uploadImage(files[0]);
+		}
+       
+		
 	};
+	
 	
 	/**
-	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+	 * Sends an image to image edit, then saves image.
 	 * @public
 	 * @param {Array} files - Array of files with raw data
-	 * @returns {null}
 	 */
-	$scope.addImage = function (files, item) {
-		console.log(files);
-		$scope.ack.files = $scope.ack.files || []; 
 	
-		/* jshint ignore:start */
+    $scope.addImage = function (files, item) {
 		
-		Notification.display('Uploading image...');
+		/**
+		 * Upload image
+		 * @private
+		 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+		 * @returns Describe what it returns
+		 * @type String|Object|Array|Boolean|Number
+		 */
+		function uploadImage (image) {
+	        //display notification
+	        Notification.display('Uploading Image...', false);
+
+	        //Notify of uploading image        
+			var promise = FileUploader.upload(image, "/api/v1/acknowledgement/item/image");
+				promise.then(function (result) {
+			        
+					var data = result.data || result;
+					item.image = data
+			
+					Notification.display('Image uploaded');
+					$scope.tempSave();
 		
+			}, function () {
+		        Notification.display('Error uploading image', false);
+	
+			});
+		}
+		
+		if (files[0].type === 'image/jpeg' || files[0].type === 'image/png') {
+			$mdDialog.show({
+		  		templateUrl: 'views/templates/edit-image.html',
+				controller: function ($scope, $mdDialog) {
+					var sizeVar;
+					var placeholder = {size: 'Calculating size'};
+					
+					$scope.imageToEdit = files[0]
+					$scope.fileSize = 0;
+					
+					$scope.$watch('cropper.scale', function () {
+						clearTimeout(sizeVar);
+						sizeVar = setTimeout(function () {
+							$scope.fileSize = $scope.cropper.image.size;
+							$scope.$apply();
+						}, 500);
+					});
 				
-		var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
-		promise.then(function (result) {
-			var data = result.data || result;
-			item.image = data
+		            $scope.preview = function (url) {
+		                if (url) {
+		                    window.open(url);
+		                }
+		            };
+				
+					$scope.cancel = function () {
+						$mdDialog.hide();
+					}
+				
+					$scope.save = function (image) {
+						$mdDialog.hide();
+				        uploadImage(image);
+					}
+				}
+		   	});
 			
-			Notification.display('Image uploaded');
-			$scope.tempSave();
-			
-		}, function (e) {
-			$log.error(JSON.stringify(e));
-		});
-		/* jshint ignore:end */
+		} else {
+			uploadImage(files[0]);
+		}
+       
+		
 	};
+	
+	
+	
 	
 	/**
 	 * PRODUCT SECTION

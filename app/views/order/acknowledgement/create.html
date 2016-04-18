@@ -4,7 +4,7 @@
         Forms
     -->   
     
-    <form class="ack" name="ackForm" novalidate>
+    <form class="ack" name="ackForm" novalidate ng-class="{success: ack.id}">
         
         <!--
             Workspace
@@ -150,49 +150,81 @@
 									
 									</md-input-container>
 								</div>
-			
-
-								<div class="project">
-										<md-autocomplete flex required 
-											md-items="project in searchProjects(projectSearchText)" 
-											md-selected-item="selectedProject"
-											md-selected-item-change="addProject(selectedProject)"
-											md-search-text="projectSearchText"
-											md-search-text-change="updateProjectName(projectSearchText)"
-											md-item-text="project.codename"
-											md-floating-label="Project"
-											md-no-cache="true"
-											md-min-length="0">
-										    <md-item-template>
-										    	<span md-highlight-text="projectSearchText">{{project.codename}}</span>
-										    </md-item-template>
-										</md-autocomplete>
-
-										<md-input-container>
-									        <label>Room</label>
-									        <md-select ng-model="ack.room"  ng-model-options="{trackBy: '$value.id'}">
-									          	<md-option ng-repeat="room in ack.project.rooms" ng-value="room">
-									            	{{room.description}}
-									         	 </md-option>
-									        </md-select>
-									    </md-input-container>
-										<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
-								
-										<md-input-container>
-									        <label>Phase</label>
-									        <md-select ng-model="ack.phase"  ng-model-options="{trackBy: '$value.id'}">
-									          	<md-option ng-repeat="phase in ack.project.phases" ng-value="phase">
-									            	{{phase.description}}
-									         	 </md-option>
-									        </md-select>
-									    </md-input-container>
-										<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
-								</div>
 				            </div>
 						</md-card-content>
 					</md-card>
 			
-			
+			<!--
+				Project
+			-->
+			<md-section class="project">
+				<md-subheader class="md-primary">Project</md-subheader>
+				<md-card class="project">	
+					<md-card-content>
+						<div class="project">
+								<md-autocomplete flex required 
+									md-items="project in searchProjects(projectSearchText)" 
+									md-selected-item="selectedProject"
+									md-selected-item-change="addProject(selectedProject)"
+									md-search-text="projectSearchText"
+									md-search-text-change="updateProjectName(projectSearchText)"
+									md-item-text="project.codename"
+									md-floating-label="Project"
+									md-no-cache="true"
+									md-min-length="0">
+								    <md-item-template>
+								    	<span md-highlight-text="projectSearchText">{{project.codename}}</span>
+								    </md-item-template>
+								</md-autocomplete>
+
+								<md-autocomplete flex required 
+									md-items="room in searchRooms(roomSearchText)" 
+									md-selected-item="selectedRoom"
+									md-selected-item-change="addRoom(selectedRoom)"
+									md-search-text="roomSearchText"
+									md-search-text-change="updateRoomName(roomSearchText)"
+									md-item-text="room.description"
+									md-floating-label="Room"
+									md-no-cache="true"
+									md-min-length="0">
+								    <md-item-template>
+								    	<span md-highlight-text="roomSearchText">{{room.description}}</span>
+								    </md-item-template>
+								</md-autocomplete>
+							
+								<md-autocomplete flex required 
+									md-items="phase in searchPhases(phaseSearchText)" 
+									md-selected-item="selectedPhase"
+									md-selected-item-change="addPhase(selectedPhase)"
+									md-search-text="phaseSearchText"
+									md-search-text-change="updatePhaseName(phaseSearchText)"
+									md-item-text="phase.description"
+									md-floating-label="Phase"
+									md-no-cache="true"
+									md-min-length="0">
+								    <md-item-template>
+								    	<span md-highlight-text="phaseSearchText">{{phase.description}}</span>
+								    </md-item-template>
+								</md-autocomplete>
+						</div>
+						<md-section>
+							<md-subheader class="md-primary md-no-sticky">Rooms</md-subheader>
+							<md-card ng-repeat="room in ack.project.rooms" ng-class="{selected:room.id == ack.project.room.id}">
+								<md-card-title>{{room.description}}
+								</md-card-title>
+							</md-card>
+						</md-section>
+						<md-section>
+							<md-subheader class="md-primary md-no-sticky">Phases</md-subheader>
+							<md-card ng-repeat="phase in ack.project.phases" ng-class="{selected:phase.id === ack.project.phase.id}">
+								<md-card-title>{{phase.description}}
+								</md-card-title>
+							</md-card>
+						</md-section>
+					</md-card-content>
+				</md-card>
+				
+			</md-section>
 			<!-- 
 				Map
 			-->
