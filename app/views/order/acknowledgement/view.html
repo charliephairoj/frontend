@@ -58,7 +58,7 @@
 		</md-toolbar>
 		<md-content on-scroll-end="loadNext()">
 							
-							<md-card ng-class="{'active': active}" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
+							<md-card ng-class="{'active': active}" class="acknowledgement" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
 								<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
 									<md-card-title-text ng-click="active=false">
 										<span>Acknowledgement {{::ack.id}}</span>
@@ -134,72 +134,101 @@
 											<div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
 												<h2>Drop Files Here</h2>
 											</div>
-										  	<section>
-												<md-subheader class="md-primary md-no-sticky">Customer</md-subheader>											
-												<div layout="row" layout-align="start center">
-													<span>{{::ack.customer.name}}</span>
-												</div>
-											</section>
-										
-										  	<section>
-												<md-subheader class="md-primary md-no-sticky">Order</md-subheader>	
-												<div layout="row" layout-align="start start" style="align-items:baseline;">
-													<md-input-container>
-											        	<label>Status</label>
-												        <md-select ng-model="ack.status">
-															<md-option value="deposit received">Deposit Received</md-option>
-															<md-option value="acknowledged">Acknowledged</md-option>
-															<md-option value="in production">In Production</md-option>
-															<md-option value="ready to ship">Ready to Ship</md-option>
-															<md-option value="shipped">Shipped</md-option>
-															<md-option value="invoiced">Invoiced</md-option>
-															<md-option value="paid">Paid</md-option>
-															<md-option value="cancelled">Cancelled</md-option>
-												        </md-select>
-												    </md-input-container>
-													<md-datepicker ng-model="ack.delivery_date"></md-datepicker>
-									
-												</div>		
-												<div layout="row" layout-align="start start">
+										  	<section layout="row">
+												<md-card class="summary">
+													<md-card-content>
+														<table>
+															<tr>
+																<td>Customer</td>
+																<td><a ng-href="#/contact/customer/{{ack.customer.id}}">{{ack.customer.name}}</a></td>
+															</tr>
+															<tr ng-if="::ack.customer.telephone">
+																<td>Telephone</td>
+																<td>{{ack.customer.telephone}}</td>
+															</tr>
+															<tr ng-if="::ack.customer.fax">
+																<td>Fax</td>
+																<td>{{ack.customer.fax}}</td>
+															</tr>
+															<tr ng-if="::ack.customer.email">
+																<td>Email</td>
+																<td>{{ack.customer.email}}</td>
+															</tr>
+															<tr ng-if="::ack.customer.website">
+																<td>Website</td>
+																<td>{{ack.customer.website}}</td>
+															</tr>
+															<tr>
+																<td>Acknowledged By</td>
+																<td>{{ack.employee.name}}</td>
+															</tr>
+															<tr>
+																<td>Delivery Date</td>
+																<td><md-datepicker ng-model="ack.delivery_date"></md-datepicker></td>
+															</tr>
+															<tr>
+																<td>Order Status</td>
+																<td>
+																	<md-select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
+																		<md-option value="deposit received">Deposit Received</md-option>
+																		<md-option value="acknowledged">Acknowledged</md-option>
 												
-													<md-input-container>
-													  	<label>Purchase Order #</label>
-													  	<input name="po" type="text" ng-model="ack.po_id" required>
-														<div ng-messages="ackForm.po.$error">
-															<div ng-message-exp="'required'">This is required</div>
-														</div>
-													</md-input-container>
-													<md-input-container>
-													  	<label>Vat</label>
-													  	<input name="vat" type="number" ng-model="ack.vat" required max="10">								  
-														<div ng-messages="ackForm.vat.$error" multiple>
-															<div ng-message-exp="'required'">This is required</div>
-															<div ng-message-exp="'max'">That's too much vat!</div>
-														</div>
-													</md-input-container>
-													<md-input-container>
-													  	<label>Remarks</label>
-														<!--
-					  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
-															-->
-														<textarea ng-model="ack.remarks"></textarea>
-									
-													</md-input-container>
-												</div>								
-												<div layout="row" layout-align="start center">
-													<md-input-container>
-													  	<label>Project</label>
-													  	<input name="project" type="text" ng-model="::ack.project.codename" ng-disabled="true">								  
-													</md-input-container>
-													<md-input-container ng-show="ack.room" ng-disabled="true">
-													  	<label>Room</label>
-													  	<input name="room" type="text" ng-model="::ack.room.description" ng-disabled="true">								  
-													</md-input-container>
-													<md-input-container ng-show="ack.phase" ng-disabled="true">
-													  	<label>Phase</label>
-													  	<input name="phase" type="text" ng-model="::ack.phase.description" ng-disabled="true">								  
-													</md-input-container>
-												</div>
+																		<md-option value="acknowledged">Acknowledged</md-option>
+												
+																		<md-option value="in production">In Production</md-option>
+																		<md-option value="ready to ship">Ready to Ship</md-option>
+																		<md-option value="shipped">Shipped</md-option>
+																		<md-option value="invoiced">Invoiced</md-option>
+																		<md-option value="paid">Paid</md-option>
+																		<md-option value="cancelled">Cancelled</md-option>
+																	</md-select>
+																</td>
+															</tr>
+															</tr>
+															<tr>
+																<td>VAT</td>
+																<td><input type="text" ng-model="ack.vat"/></td>
+															</tr>
+															<tr>
+																<td>PO #</td>
+																<td><input type="text" ng-model="ack.po_id"/></td>
+															</tr>
+															<tr>
+																<td>Project</td>
+																<td><a ng-href="#/project/{{ack.project.id}}">{{ack.project.name}}</a></td>
+															</tr>
+															<tr>
+																<td>Room</td>
+																<td><a ng-href="#/project/{{ack.project.id}}">{{ack.room.description}}</a></td>
+															</tr>
+															<tr>
+																<td>Phase</td>
+																<td><a ng-href="#/project/{{ack.project.id}}">{{ack.phase.description}}</a></td>
+															</tr>
+															<tr>
+																<td>Remarks</td>
+																<td>
+																	<textarea ng-model="ack.customer.remarks">
+																	</textarea>
+																</td>
+															</tr>
+														</table>
+													</md-card-content>
+												</md-card>
+								
+												<section class="files" file-drop="addFiles($files, ack)" file-drop-class="files-drag-active">
+													<div class="files">
+						  								<md-card class="file" ng-repeat="file in ack.files" ng-class="{'uploaded': file.id}" ng-click="openAttachment(file.url)">
+						  						        	<md-card-title>
+						  						          		<md-card-title-text layout="row">
+																	<i class="material-icons">attachment</i>
+						  						            		<span class="md-headline">{{file.filename}}</span>
+						  						          	  	</md-card-title-text>
+						  						        	</md-card-title>
+						  						      	</md-card>
+													</div>
+												</section>
+								
 											</section>
 										
 											<div class="status-bar">
@@ -240,31 +269,6 @@
 												</div>	
 											</div>
 										
-											<section class="files" file-drop="addFiles($files, ack)" file-drop-class="files-drag-active">
-												<md-subheader class="md-primary md-no-sticky">Files</md-subheader>
-												<div class="files">
-					  								<md-card class="file" ng-repeat="file in ack.files" ng-class="{'uploaded': file.id}">
-					  						        	<md-card-title>
-					  						          		<md-card-title-media>
-					  						            		<div class="md-media-sm card-media">
-					  						            			<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png"
-																		ng-show="file.type == 'pdf'">
-					  						            		</div>
-					  						          		</md-card-title-media>
-					  						          		<md-card-title-text>
-					  						            		<span class="md-headline">{{file.filename}}</span>
-					  						          	  	</md-card-title-text>
-				  						          		
-					  						        	</md-card-title>
-					  						        	<md-card-actions layout="row" layout-align="end center">
-					  						          		<md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank" ng-disabled="!file.id">
-																<md-tooltip>Open in a New Window</md-tooltip>
-																<i class="material-icons">open_in_browser</i>
-															</md-button>
-					  						        	</md-card-actions>
-					  						      	</md-card>
-												</div>
-											</section>
 										</div>
 										<section>
 											<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
@@ -279,116 +283,122 @@
 											          	</md-card-title-text>
 											        </md-card-title>
 													<md-card-content layout="row">
-														<table class="product-details">
-															<tr>
-																<td>
-																	<md-input-container>
-																		<label>Quantity</label>
+														<div class="product-container">
+															<table class="product-details">
+																<tr>
+																	<td>
+																		<span>Description</span>
+																	</td>
+																	<td>
+																		<input name="description" type="text" size="60" ng-model="item.description" required />
+																	</td>
+												
+																</tr>
+																<tr>
+																	<td>
+																		<span>Quantity</span>										
+																	</td>
+																	<td>
 																		<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
-																		<div ng-messages="ackForm.quantity.$error">
-																			<div ng-message="required">This required is required</div>
-																			<div ng-message="min">Quantity should be greater than 0</div>
-																		</div>
-															            <div class="hint">How many pieces did they order?</div>
-																	</md-input-container>
-																</td>
-																<td layout="row" colspan="2">
-																	<md-input-container>
-																		<label>Price Per Piece</label>
+																	</td>
+																<tr>
+																	<td>
+																		<span>Unit Price<span>
+																	</td>
+																	<td>
 																		<input name="price" type="number" ng-model="item.unit_price" required />
-																		<div ng-messages="ackForm.price.$error">
-																			<div ng-message="required">This required is required</div>
-																		</div>
-															            <div class="hint">How many one piece cost?</div>
-									
-																	</md-input-container>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<md-input-container>
-																		<label>Width (mm)</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<span>Width(mm)<span>
+																	</td>
+																	<td>
 																		<input type="number" ng-model="item.width" min="0" required />
-																	</md-input-container>
-																</td>
-																<td>
-																	<md-input-container>
-																		<label>Depth (mm)</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<span>Depth(mm)<span>
+																	</td>
+																	<td>
 																		<input type="number" ng-model="item.depth" min="0" required />
-																	</md-input-container>
-																</td>
-																<td>
-																	<md-input-container>
-																		<label>Height (mm)</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<span>Height(mm)<span>
+																	</td>
+																	<td>
 																		<input type="number" ng-model="item.height" min="0" required />
-																	</md-input-container>
-																</td>
-															</tr>
-															<tr class="fabric">
-																<td colspan="2">
-																	<md-autocomplete flex 
-																		md-items="fabric in searchFabrics(fabricSearchText)" 
-																		md-search-text-change="retrieveFabrics(fabricSearchText)"
-																		md-selected-item="item.fabric"
-																		md-search-text="fabricSearchText"
-																		md-item-text="fabric.description"
-																		md-floating-label="Fabric"
-																		md-no-cache="true"
-																		md-min-length="0">
-																    <md-item-template>
-																    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
-																    </md-item-template>
-																	<div ng-messages="true">
-																		<div class="hint" ng-message="true">What's the number on their purchase order?</div>
-																	</div>
-																</md-autocomplete>
-																</td>
-																<td>
-																	<img ng-src="{{item.fabric.image.url}}" />
-																</td>
-															</tr>
-															<tr class="fabric" ng-repeat="pillow in item.pillows">
-																<td colspan="2">
-																	<md-autocomplete flex 
-																		md-items="fabric in searchFabrics(fabricSearchText)" 
-																		md-search-text-change="retrieveFabrics(fabricSearchText)"
-																		md-selected-item="pillow.fabric"
-																		md-search-text="fabricSearchText"
-																		md-item-text="fabric.description"
-																		md-floating-label="{{pillow.type}} pillow fabric"
-																		md-no-cache="true"
-																		md-min-length="0">
-																    <md-item-template>
-																    	<span md-highlight-text="fabricSearchText">{{pillow.type}} pillow {{pillow.fabric.description}}</span>
-																    </md-item-template>
-																	<div ng-messages="true">
-																		<div class="hint" ng-message="true">What's the number on their purchase order?</div>
-																	</div>
-																</md-autocomplete>
-																</td>
-																<td>
-																	<img ng-src="{{pillow.fabric.image.url}}" />
-																</td>
-															</tr>
-															<tr>
-																<td colspan="2">
-																	<md-input-container>
-																	  	<label>Remarks</label>
-																		<!--
-									  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
-																			-->
-																		<textarea ng-model="item.comments"></textarea>
-															            <div class="hint">Any other details?</div>
-									
-																	</md-input-container>
-																</td>
-															</tr>
-														</table>
-														<md-card-title-media>
-															<div class="md-media-sm card-media">
+																	</td>
+																</tr>
+																<tr class="fabric">
+																	<td><span>Fabric</span></td>
+																	<td>
+																		<md-autocomplete flex 
+																			md-items="fabric in searchFabrics(fabricSearchText)" 
+																			md-search-text-change="retrieveFabrics(fabricSearchText)"
+																			md-selected-item="item.fabric"
+																			md-search-text="fabricSearchText"
+																			md-item-text="fabric.description"
+																			md-no-cache="true"
+																			md-min-length="0">
+																	    <md-item-template>
+																	    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
+																	    </md-item-template>
+																		<div ng-messages="true">
+																			<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+																		</div>
+																	</md-autocomplete>
+																	</td>
+																<tr>
+																	<td><span>Fabric Image</span></td>
+																	</td>
+																	<td>
+																		<img ng-src="{{item.fabric.image.url}}" />
+																	</td>
+																</tr>
+																</tr>
+																<tr class="fabric" ng-repeat="pillow in item.pillows">
+																	<td><span>{{pillow.type}} pillow</span></td>
+																	<td>
+																		<md-autocomplete flex 
+																			md-items="fabric in searchFabrics(fabricSearchText)" 
+																			md-search-text-change="retrieveFabrics(fabricSearchText)"
+																			md-selected-item="pillow.fabric"
+																			md-search-text="fabricSearchText"
+																			md-item-text="fabric.description"
+																			md-no-cache="true"
+																			md-min-length="0">
+																	    <md-item-template>
+																	    	<span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
+																	    </md-item-template>
+																		<div ng-messages="true">
+																			<div class="hint" ng-message="true">What's the number on their purchase order?</div>
+																		</div>
+																	</md-autocomplete>
+																	</td>
+																</tr>
+																<!--
+																<tr>
+																	<td><span>Fabric Image</span></td>
+																	<td>
+																		<img ng-src="{{pillow.fabric.image.url}}" />
+																	</td>
+																</tr>
+																	-->
+																<tr>
+																	<td><span>Remarks</span></td>
+																	<td>
+																		<!--<textarea ng-model="item.comments"></textarea>-->
+																	</td>
+																</tr>
+															</table>
+															<div class="img-container">
 																<img ng-src="{{item.image.url}}">
 															</div>
-														</md-card-title-media>
+														</div>
 													</md-card-content>
 												</md-card>
 											</div>

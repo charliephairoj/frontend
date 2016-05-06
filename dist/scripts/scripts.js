@@ -4737,7 +4737,17 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		notification.hide();
 		fetching = false;
 		changeSelection(index);
+		
+		for (var i = 0; i < $scope.acknowledgements.length; i++) {
+			for (var h = 0; h < $scope.acknowledgements[h].length; h++) {
+				
+			}
+		}
 	});
+	
+	$scope.openAttachment = function (link) {
+		window.open(link);
+	}
 	
 	/**
 	 * Show the Download dialog
@@ -4966,7 +4976,13 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 				}
 				
 				Notification.display('File Uploaded', 2000);
-				
+
+				acknowledgement.$update(function (resp) {
+					Notification.display('Acknowledgement ' + acknowledgement.id + ' saved.', 2000);
+					angular.merge(acknowledgement, resp);
+				}, function (e){
+					Notification.display(e, 0);
+				});
 				
 			}, function (e) {
 				$log.error(JSON.stringify(e));
@@ -5016,7 +5032,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	
 	// Inital list of upholsteries
 	$scope.fabricSearchText = null;
-	$scope.fabrics = Fabric.query({page_size:9999, limit:0});
+	$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
 	
 	// Watch on productSearchText to get products from the server
 	$scope.retrieveFabrics = function (query) {		
