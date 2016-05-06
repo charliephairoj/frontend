@@ -43,9 +43,11 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
 		];
 	
 	//Create new map and set the map style
+		/*
 	map = new google.maps.Map($('#customer-map')[0], mapOptions);
 	map.setOptions({styles:styles});
-	
+	*/
+		
 	//General purpose create marker function
 	function createMarker(configs) {
 		var lat = configs.address.latitude || configs.latitude,
@@ -118,11 +120,38 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
         
     });
     
+	
+	/**
+	 * Add new contact to the customer
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.addContact = function (contact) {
+		$scope.customer.contacts = $scope.customer.contacts || [];
+		$scope.customer.contacts.push(angular.copy(contact));
+		$scope.contact = {};
+	}
+	
+	
+	/**
+	 * Remove a contact from the customer
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.removeContact = function (index) {
+		$scope.customer.contacts.splice(index, 1);
+	}
+	
    
     
     $scope.update = function () {
         Notification.display('Updating...', false);
-        $scope.customer.$update(function () {
+        $scope.customer.$update(function (resp) {
+			angular.merge($scope.customer, resp);
             Notification.display('Customer Save'); 
         }, function () {
             Notification.display('Unable to Update Customer');

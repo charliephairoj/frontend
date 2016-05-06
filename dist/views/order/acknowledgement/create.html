@@ -93,7 +93,7 @@
 								<div class="address">
 									<md-input-container>
 									  <label>Address</label>
-									  <input type="text" ng-model="ack.customer.addresses[0].address1">
+									  <input type="text" size="80" ng-model="ack.customer.addresses[0].address1">
 									</md-input-container>
 									<md-input-container>
 									  <label>City</label>
@@ -110,6 +110,32 @@
 									<md-input-container>
 									  <label>Zipcode</label>
 									  <input type="text" ng-model="ack.customer.addresses[0].zipcode">
+									</md-input-container>
+								</div>
+								<div class="contact">
+									<md-autocomplete flex="onshrink" required 
+										name='contact'
+										md-items="contact in (ack.customer.contacts || [])" 
+										md-selected-item="selectedContact"
+										md-selected-item-change="addContact(selectedContact)"
+										md-search-text="contactSearchText"
+										md-search-text-change="updateContactName(contactSearchText)"
+										md-item-text="contact.name"
+										md-floating-label="Contact Name"
+										md-no-cache="true"
+										md-min-length="0">
+									    <md-item-template>
+									    	<span md-highlight-text="contactSearchText">{{contact.name}}</span>
+									    </md-item-template>
+										
+									</md-autocomplete>
+									<md-input-container>
+									  <label>Contact Telephone</label>
+									  <input type="text" size="30" ng-model="ack.contact.telephone">
+									</md-input-container>
+									<md-input-container>
+									  <label>Contact Email</label>
+									  <input type="text" size="40" ng-model="ack.contact.email">
 									</md-input-container>
 								</div>
 

@@ -388,6 +388,47 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
     };
 	
 	
+	/*
+ 	 * CONTACT SECTION
+	 *
+	 * This section deals with the customer searching and what happens when a customer is selected
+	*/
+	
+	
+	/**
+	 * Updates the contact name, so that if the contact is a new one, 
+	 * a contact object is already in place to accept the new details
+	 * 
+	 * @public
+	 * @param {String} customerName - Name of the Customer
+	 * @returns {null} 
+	 */
+	
+	$scope.updateContactName = function (contactName) {
+		$scope.ack.contact = $scope.ack.contact || {name: ''};
+		
+		if (!$scope.ack.contact.id) {
+			$scope.ack.contact.name = contactName || '';
+		} else {
+			if ($scope.ack.contact.name.indexOf(contactName) == -1) {
+				$scope.ack.contact = {name: contactName || ''};
+			}
+		}
+	};
+	
+	/**
+	 * Adds the selected contact to the acknowledgement
+	 * @private
+	 * @param {Object} contact object with contact data to be added to acknowledgement
+	 */
+    $scope.addContact = function (contact) {
+        //Set Customer and save
+        $scope.ack.contact = contact;
+        $scope.tempSave();
+    };
+	
+	
+	
 	/**
 	 * PROJECT SECTION
 	 * 
@@ -938,12 +979,22 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			(callback || angular.noop)();
 		}
 		
+		progress.customer = false;
+		var customer = new Customer();
+		angular.extend(customer, acknowledgement.customer);
+		
+		// Add a contact if it exists
+		if (acknowledgement.contact){
+			if (customer.hasOwnProperty('contacts')){
+				if (customer.contacts.indexOfById(acknowledgement.contact.id) === -1) {
+					customer.contacts.push(angular.copy(acknowledgement.contact))
+				}
+			}
+		}
+		
 		//Checks if customer exists and creates if not
 		if (!acknowledgement.customer.id && acknowledgement.customer.name) {
-			progress.customer = false;
-			var customer = new Customer();
-			angular.extend(customer, acknowledgement.customer);
-
+		
 			customer.$create(function (resp) {
 				angular.extend(acknowledgement.customer, resp);
 				progress.customer = true;
@@ -952,18 +1003,15 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				progress.customer = 'error';
 			});
 		} else if (acknowledgement.customer.id) {
-			//progress.customer = false;
-			/*
-			if (acknowledgement.customer.$update) {
-				acknowledgement.customer.$update(function (resp) {
-					angular.extend(acknowledgement.customer, resp);
-					progress.customer = true;
-					checkProgress(callback);
-				}, function () {
-					progress.customer = 'error';
-				});
-			}
-			*/
+			
+			customer.$update(function (resp) {
+				angular.extend(acknowledgement.customer, resp);
+				progress.customer = true;
+				checkProgress(callback);
+			}, function () {
+				progress.customer = 'error';
+			});
+			
 			
 		}
 		

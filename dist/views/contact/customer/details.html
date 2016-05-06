@@ -1,6 +1,7 @@
-<div class="customer-details-page"  ng-init="showAddContact=false; viewMap=false;">
+<div class="customer-details-page">
     
     <!--Modals-->
+	<!--
     <form class="map_modal" data-modal ng-model="viewMap">
         <div class="title">Edit Email</div>
         <div class="container">
@@ -15,82 +16,133 @@
             <button ng-click="viewMap=false">Close</button>
         </div>
     </form>
-    
+    -->
     <!--Supplier Information Section -->
     
     <div class="workspace">
-        <div class="customer">
-            <table>
-                <tr>
-                    <td>Name</td>
-                    <td>{{customer.name}}</td>
-                </tr>
-                <tr>
-                    <td>Telephone</td>
-                    <td><input ng-model="customer.telephone" /></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><input ng-model="customer.email" /></td>
-                </tr>
-                <tr>
-                    <td>Customer Type</td>
-                    <td>
-                        <select required ng-model="customer.type">
-                            <option value="Dealer">Dealer</option>
-                            <option value="Retail">Retail</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Currency</td>
-                    <td>
-                        <select required ng-model="customer.currency">
-                            <option value="USD">US Dollar</option>
-                            <option value="EUR">Euro</option>
-                            <option value="THB">Thai Baht</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Discount</td>
-                    <td>
-                        <input type="number" step="1.00" min="0" max="60" ng-model="customer.discount">%
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="addresses">
-			<h2>Addresses</h2>
-			<md-button class="md-raised md-accent add" ng-click="customer.addresses.push({contact: {id: customer.id}})">Add Address</md-button>
-            <div class="address" ng-class="{'hover': address.hover}" ng-repeat="address in customer.addresses">
-                <table>
-                    <tr>
-                        <td><input type="text" class="address1" data-ng-model="address.address1" placeholder="Address 1" /></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" class="address2" data-ng-model="address.address2" placeholder="Address 2" /></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="city" data-ng-model="address.city" placeholder="City/Mueng" />
-                           <input type="text" class="territory" data-ng-model="address.territory" placeholder="Territory/Chaengwat"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>   
-                            <input type="text" class="country" data-ng-model="address.country"  placeholder="country" />
-                            <input type="text" class="zipcode" data-ng-model="address.zipcode" placeholder="zipcode" />
-                        </td>
-                    </tr>
-                </table>
-				<md-button class="md-accent md-raised" ng-hide="address.marker" ng-click="createMarker(address, $index)">Add Marker</md-button>
-				<md-button class="md-warn md-raised" ng-click="customer.addresses.splice($index, 1)">Delete</md-button>
-            </div>
-        </div>
-        <div class="map-container">
-            <div id="customer-map" style="height:100%; width:100%"></div>
-        </div>
+		<md-toolbar>
+		</md-toolbar>
+		<md-content>
+			<section class="info">
+				<md-card class="summary">
+					<md-card-title layout="column">
+						<h5>{{customer.name}}</h5>
+						<div layout="row">
+							<i class="material-icons">web</i>
+							<span>{{customer.website}}</span>
+						</div>
+						<div layout="row">
+							<i class="material-icons">email</i>
+							<span>{{customer.email}}</span>
+						</div>
+					</md-card-title>
+				</md-card>
+		        <md-card class="customer">
+					<md-card-content>
+						<table>
+							<tr>
+								<td>Name</td>
+								<td>
+									<input type="text" ng-model="customer.name">
+								</td>
+							</tr>
+							<tr>
+								<td>Telephone</td>
+								<td>
+									<input type="text" ng-model="customer.telephone">
+								</td>
+							</tr>
+							<tr>
+								<td>Fax</td>
+								<td>
+									<input type="text" ng-model="customer.fax">
+								</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>
+									<input type="text" ng-model="customer.email">
+								</td>
+							</tr>
+							<tr>
+								<td>Website</td>
+								<td>
+									<input type="text" ng-model="customer.website">
+								</td>
+							</tr>
+							<tr>
+								<td>Discount</td>
+								<td>
+									<input type="text" ng-model="customer.discount">
+								</td>
+							</tr>
+							<tr>
+								<td>Currency</td>
+								<td>
+								  	<md-select ng-model="customer.currency">
+								  		<md-option value="THB">Thai Baht</md-option>
+										<md-option value="USD">US Dollar</md-option>
+										<md-option value="EUR">Euro</md-option>
+										<md-option value="RMB">Chinese Yuan</md-option>
+										<md-option value="SGD">Singaporean Dollar</md-option>
+									</md-select>
+								</td>
+							</tr>
+						</table>
+					</md-card-content>
+				</md-card>
+				
+				<md-card class="contacts">
+					<md-card-content>
+						<md-card class="new-contact">
+							<md-card-title>
+								<md-card-title-text>New Contact</md-card-title-text>
+							</md-card-title>
+							<md-card-content>
+								<div layout="column">
+									<md-input-container>
+									  <label>Name</label>
+									  <input type="text" size="40" ng-model="contact.name">
+									</md-input-container>
+									<md-input-container>
+									  <label>Telephone</label>
+									  <input type="text" size="20" ng-model="contact.telephone">
+									</md-input-container>
+									<md-input-container>
+									  <label>Email</label>
+									  <input type="text" size="40" ng-model="contact.email">
+									</md-input-container>
+								</div>
+							</md-card-content>
+							<md-card-actions>
+								<md-button class="md-raised md-icon-button md-accent" ng-click="addContact(contact)">
+									<md-tooltip>
+										Create
+									</md-tooltip>
+									<i class="material-icons">create</i>
+								</md-button>
+							</md-card-actions>
+						</md-card>
+						<md-card class="contact" ng-repeat="contact in customer.contacts">
+							<md-card-content>
+								<div class="contact-info">
+									<h5>{{::contact.name}}</h5>
+									<div layout="row">
+										<i class="material-icons">phone</i>
+										<input type="text" ng-model="contact.telephone" />
+									</div>
+									<div layout="row">
+										<i class="material-icons">email</i>
+										<input type="text" ng-model="contact.email" />
+									</div>
+								</div>
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
+				
+			</section>
+		</md-content>
     </div>
         
     

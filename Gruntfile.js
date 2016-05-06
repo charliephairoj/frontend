@@ -10,7 +10,11 @@ var serveStatic = require('serve-static');
 
 module.exports = function (grunt) {
 //grunt.loadNpmTasks('grunt-proxy');
-
+	require('jit-grunt')(grunt, {
+		'configureProxies': 'grunt-connect-proxy',
+		'useminPrepare': 'grunt-usemin'
+	});
+	/*
   	grunt.loadNpmTasks('grunt-recess');
   	grunt.loadNpmTasks('grunt-usemin');
   	grunt.loadNpmTasks('grunt-contrib-less');
@@ -19,10 +23,10 @@ module.exports = function (grunt) {
   	grunt.loadNpmTasks('grunt-protractor-runner');
     grunt.loadNpmTasks('grunt-connect-proxy');
 	grunt.loadNpmTasks('grunt-ng-annotate');
-	
+	*/
 		
   	// load all grunt tasks
-  	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  	//require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   	// configurable paths
   	var yeomanConfig = {
@@ -120,6 +124,14 @@ module.exports = function (grunt) {
 					https: false,
                     changeOrigin: true,
                     xforward: false
+				},
+				{
+					context: '/oauth2callback',
+                    host: 'localhost',
+                    port: 8000,
+					https: false,
+                    changeOrigin: true,
+                    xforward: false
 				}
 			],
 	      	livereload: {
@@ -150,15 +162,15 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up build process
     concurrent: {
       server: [
-        'copy:styles'
+        'newer:copy:styles'
       ],
       test: [
-        'copy:styles'
+        'newer:copy:styles'
       ],
       dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
+        'newer:copy:styles',
+        'newer:imagemin',
+        'newer:svgmin'
       ]
     },
 		/*
@@ -345,9 +357,9 @@ module.exports = function (grunt) {
     		},
     		files: {
     			'<%= yeoman.app %>/styles/main.css' : '<%= yeoman.app %>/styles/main.less',
-				'<%= yeoman.app %>/m_styles/main.css' : '<%= yeoman.app %>/m_styles/main.less',
-    			'<%= yeoman.app %>/print_styles/main.css' : '<%= yeoman.app %>/print_styles/main.less',
-				'<%= yeoman.app %>/iphone4_style/main.css' : '<%= yeoman.app %>/iphone4_style/main.less',
+				//'<%= yeoman.app %>/m_styles/main.css' : '<%= yeoman.app %>/m_styles/main.less',
+    			//'<%= yeoman.app %>/print_styles/main.css' : '<%= yeoman.app %>/print_styles/main.less',
+				//'<%= yeoman.app %>/iphone4_style/main.css' : '<%= yeoman.app %>/iphone4_style/main.less',
     		}
     	}
     },
@@ -520,7 +532,7 @@ module.exports = function (grunt) {
 	  
     'useminPrepare',
 	  
-    'less',
+    'newer:less',
     //'recess',
     //'imagemin',
     //'cssmin',
@@ -529,7 +541,7 @@ module.exports = function (grunt) {
 	'ngAnnotate',
     //'uglify',
 	  
-    'copy',
+    'newer:copy',
     //'cdnify',
     'usemin'
   ]);

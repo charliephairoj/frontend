@@ -1,94 +1,174 @@
 
 .customer-details-page{
-  
-	.detailsPage;
-  
-  	left:0;
+    
 	
   	.workspace{
+		position:absolute;
 		left:0;
-	  	background-color:rgb(255, 255, 255);
-	  
-      	.customer{
-          	margin-left:1em;
-          	margin-top:1.5em;
-			width:28em;
-          	color:rgb(0, 0, 0);
-		  
-        
-          	tr{
-              	td{
-                  	font-size:1em;
-					
-                  	//States
-                
-                  	&:last-child{
-                      	padding-left:20px;   
-                  	}
-				  
-				  	input{
-				   		background-color:rgb(255, 255, 255);
-						color:rgb(0, 0, 0);
-						border:1px solid rgb(0, 0, 0);
-				  	}
-              	}
-			}
-      	}
-      
-      	.addresses{
-          	margin-left:1em;
-          	margin-top:1em;
-			width:28em;
-		  
-		  	.title{
-		  		
-		  	}
+		right:0;
+		top:0;
+		bottom:0;
+	  	background-color:#f2f4f5;
+		
+		md-content{
+			width:100%;
+			.flex;
+			flex-direction:column;
+			align-items:flex-start;
+			height:100%;
+			overflow-y:scroll;
 			
-			.md-button{
-				margin-top:0.5em;
+			section{
+				width:20%;
+				min-width:20em;
 				
-				&.add{
-					margin-bottom:1em;
-				}
-			}
-			
-		  	.address{
-		  		padding:1em;
-				border: 1px dotted rgba(0, 0, 0, 0.35);
+				md-card{
+					width:95%;
+					display:block;
+					min-height:initial;
 				
-				&.hover{
-					background-color:rgba(0, 0, 0, 0.15);
-				}
+					&.summary{
+						div{
+							color:rgba(0, 0, 0, 0.7);
+							.flex;
+							align-items:center;
+							
+							i{
+								margin-right:0.5em;
+								font-size:0.8em;
+							}
+							
+							span{
+								font-size:0.8em;
+							}
+						}
+					}
 				
-				tr{
-					td{
-						display:flex;
-						justify-content:space-between;
+					&.customer{
+						width:95%;
+						.flex;
+						justify-content:center;
 						
-						input{
-					   		background-color:rgb(255, 255, 255);
-							color:rgb(0, 0, 0);
-							border:1px solid rgb(0, 0, 0);
-							width:13.5em;
-					
-							&.address1{
-								width:28em;
+						md-card-content{
+							table{
+								width:100%;
+								margin:1;
+								tr{
+									td{
+										padding:0.5em 0;
+										font-size:0.8em;
+									
+										&:first-child{
+											text-align:right;
+											padding-right:0.75em;
+										}
+									
+										input{
+											border:none;
+											padding:0.25em 0;
+											outline:none;
+										
+											&:focus{
+												background:rgb(234, 234, 234);
+											}
+										
+											&:hover{
+												background:rgb(234, 234, 234);
+											}
+										}
+									
+										md-select{
+											margin:0;
+										}
+									}
+								}
 							}
+						}
+						
+					}
+				
+					&.contacts{
+						margin-bottom:10em;
 					
-							&.address2{
-								width:28em;
+					
+						md-card-content{
+							.flex;
+							flex-wrap:wrap;
+							flex-direction:row;
+							justify-content:flex-start;
+						
+						
+							md-card.new-contact{
+								width:100%;
+						
+								md-card-content{
+									div{
+										.flex;
+										justify-content:center;
+								
+										md-input-container{
+											margin:0.5em 0;
+											
+											&:last-child{
+												margin-bottom:0;
+											}
+										}
+									}
+							
+								}
+								
+								md-card-actions{
+									.flex;
+								}
 							}
-					
+						
+							md-card.contact{
+								width:100%;
+							
+								.contact-info{
+									.flex;
+									flex-direction:column;
+									align-items:flex-start;
+									width:100%;
+									
+									h5{
+										margin-bottom:0.5em;
+									}
+								
+									div{
+										.flex;
+										align-items:center;
+										width:100%;
+										
+										i{
+											font-size:0.8em;
+											margin-right:0.5em;
+										}
+								
+										input{
+											font-size:0.8em;
+											border:none;
+											outline:none;
+											padding:0.25em 0;
+											.flex;
+											flex-grow:2;
+											
+											&:hover{
+												background:rgb(234, 234, 234);
+											}
+											&:focus{
+												background:rgb(234, 234, 234);
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
-				
-				.md-button{
-					display:inline;
-					margin-right:0.5em;
-				}
-		  	}
-     	}
+			}
+			
+		}
       
       	.map-container{
           	position:absolute;

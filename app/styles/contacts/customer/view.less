@@ -15,63 +15,82 @@
         position:absolute;
         top:0;
         bottom:0;
-        left:200px;
+        left:0;
 		right:0;
 		background:#FFF;
-		padding-top:5em;
-		padding-bottom:1em;
-		display:flex;
-		flex-direction:column;
-		align-items:center;
+		padding:0;
 		
-		.title-bar{
-			display:flex;
-			flex-direction:row;
-			border-bottom: 1px solid #4F6874;
-			
+		md-toolbar{
 			div{
-				display:flex;
-				flex-direction:row;
-				align-items:center;
-				justify-content:space-around;
-				padding:1em 0;
-				background:#607d8b;
-				color:rgba(255, 255, 255, 1);
-				border-left:1px dotted rgba(0, 0, 0, 0.35);
-				overflow:hidden;
-				
-				&:first-child{
-					border-left:none;
+				&.container{
+					.flex;
+					justify-content:space-between;
+					width:100%;
+					padding:0 1em;
+					
+					.search{
+						color:rgb(0, 0, 0);
+						font-family:proxima;
+						outline:none;
+						margin:0 1em;
+						padding:0 1em;
+					}
 				}
 				
-				&.id{
-					width:5%;
-				}
+				&.title-bar{
+					display:flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					width:100%;
+					
+					div{
+						display:flex;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-around;
+						padding:0.25em;
+						background:#607d8b;
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+						font-size:0.8em;
+				
+						&:first-child{
+							border-left:none;
+						}
+				
+						&.id{
+							width:5%;
+						}
 	
-				&.name{
-					width:25%;
-				}
+						&.name{
+							width:25%;
+						}
 	
-				&.address{
-					width:35%;
-				}
+						&.address{
+							width:35%;
+						}
 				
-				&.telephone{
-					width:25%;
-				}
+						&.telephone{
+							width:25%;
+						}
 	
-				&.fax{
-					width:25%;
-				}
+						&.fax{
+							width:25%;
+						}
 				
-				&.email{
-					width:20%;
+						&.email{
+							width:20%;
+						}
+					}
 				}
 			}
+			
 		}
+		
         
-        .outer-container{
+        md-content{
             height:100%;
+			width:100%;
             overflow-y:scroll;
 			
             .inner-container{

@@ -8,6 +8,7 @@
     <!-- 
         Sidebar
     -->
+		<!--
     <div class="sidebar">
         <header>
             <h1><span>Customers</span></h1>
@@ -22,30 +23,38 @@
             </ul>
         </nav>
     </div>
+			-->
     
     <!--
         Search Bar
     -->
+		<!--
     <div data-search-bar ng-model="query"></div>
-    
+    -->
     <!--
         Workspace
     -->
     
     <div class="workspace">
+		<md-toolbar layout="column" layout-align="center center" md-scroll-shrink="true">
 		
-		<div class="title-bar">
-			<div class="id">ID</div>
-			<div class="name">NAME</div>
-			<!--
-			<div class="address">ADDRESS</div>
-				-->
-			<div class="telephone">TELEPHONE</div>
-			<div class="fax">FAX</div>
-			<div class="email">EMAIL</div>
-		</div>
+			<div class="container" layout="row" layout-align="center center">
+				<h3><span>Customers</span></h3>
+				<input class="search" ng-model="query" type="text" />
+			</div>
+			<div class="title-bar">
+				<div class="id">ID</div>
+				<div class="name">NAME</div>
+				<!--
+				<div class="address">ADDRESS</div>
+					-->
+				<div class="telephone">TELEPHONE</div>
+				<div class="fax">FAX</div>
+				<div class="email">EMAIL</div>
+			</div>
+		</md-toolbar>
 		
-    	<div class="outer-container" on-scroll-end="loadNext()">
+    	<md-content class="outer-container" on-scroll-end="loadNext()">
     		<ul class="inner-container">
     			<li class="item-container" ng-repeat="customer in customers | filter:query">
     				<a class="item" ng-href="#/contact/customer/{{customer.id}}">
@@ -60,7 +69,7 @@
     				</a>
     			</li>
     		</ul>
-    	</div>
+    	</md-content>
     </div>
     
     
