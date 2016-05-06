@@ -6144,6 +6144,9 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		changeSelection(index);
 	});
 
+	$scope.openAttachment = function (link) {
+		window.open(link);
+	}
 	/*
 	 * Take the query in the searchbar and then sends 
 	 * the query to the server to get more results. The
