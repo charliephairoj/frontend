@@ -1,0 +1,52 @@
+<md-dialog class="add-deal">
+	<md-toolbar>
+		<h4>Create a New Deal</h4>
+		<div flex></div>
+	</md-toolbar>
+	<md-dialog-content>
+		<table>
+			<tr>
+				<td>
+					<md-input-container>
+						<label>Customer</label>
+						<md-select ng-model="deal.customer">
+							<md-option ng-repeat="customer in customers" ng-value="customer">{{customer.name}}</md-option>
+						</md-select>
+					</md-input-container>
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<md-input-container>
+						<label>Contact</label>
+						<md-select ng-model="deal.contact">
+							<md-option ng-repeat="contact in deal.customer.contacts" ng-value="contact">{{contact.name}}</md-option>
+						</md-select>
+					</md-input-container>
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<md-input-container>
+						<label>Contact</label>
+						<md-select ng-model="deal.status">
+							<md-option value="opportunity">Opportunity</md-option>
+							<md-option value="qualified">Qualified to Buy</md-option>
+							<md-option value="meeting">Meeting</md-option>
+							<md-option value="proposal">Proposal/Quotation</md-option>
+							<md-option value="closed won">Closed Won</md-option>
+							<md-option value="closed lost">Closed Lost</md-option>
+						</md-select>
+					</md-input-container>
+					
+				</td>
+			</tr>
+		</table>
+	</md-dialog-content>
+	<md-dialog-actions>
+		<md-button class="md-accent md-raised" ng-click="create()">ADD</md-button>
+		<md-button class="md-warn md-raised" ng-click="cancel()">CANCEL</md-button>
+	</md-dialog-actions>
+</md-dialog>
