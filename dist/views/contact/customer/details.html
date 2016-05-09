@@ -20,9 +20,12 @@
     <!--Supplier Information Section -->
     
     <div class="workspace">
+		<!--
 		<md-toolbar>
 		</md-toolbar>
-		<md-content>
+			-->
+			
+		<md-content layout="row">
 			<section class="info">
 				<md-card class="summary">
 					<md-card-title layout="column">
@@ -141,6 +144,33 @@
 					</md-card-content>
 				</md-card>
 				
+			</section>
+			<section class="orders">
+				<md-card class="deals">
+					<md-card-title>
+						<h4>Deals</h4>
+						<div flex></div>
+						<md-button class="md-raised md-accent">New Deal</md-button>
+					</md-card-title>
+					<md-card-content>
+						<div>
+						</div>
+						<md-card ng-repeat="deal in deals">
+							<md-card-content>
+								<h5>{{deal.description}}</h5>
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
+				<md-card class="acknowledgements">
+					<md-card-content>
+						<md-card ng-repeat="ack in acknowledgements">
+							<md-card-content>
+								Acknowledgement {{::ack.id}}
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
 			</section>
 		</md-content>
     </div>

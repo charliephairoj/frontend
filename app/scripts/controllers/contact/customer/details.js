@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('ContactCustomerDetailsCtrl', ['$scope', 'Customer', '$routeParams', '$location', 'Notification', '$timeout',
-function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
+.controller('ContactCustomerDetailsCtrl', ['$scope', 'Customer', '$routeParams', '$location', 'Notification', '$timeout', 'Acknowledgement', 'Deal',
+function ($scope, Customer, $routeParams, $location, Notification, $timeout, Acknowledgement, Deal) {
     
     var updateLoopActive = false,
 		timeoutPromise,
@@ -119,6 +119,9 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
     
         
     });
+	
+	$scope.acknowledgements = Acknowledgement.query({customer_id:$routeParams.id});
+	$scope.deals = Deal.query({customer_id:$routeParams.id});
     
 	
 	/**

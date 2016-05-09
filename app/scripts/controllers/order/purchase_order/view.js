@@ -27,6 +27,10 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 		fetching = false;
 	});
 	
+	$scope.openAttachment = function (link) {
+		window.open(link);
+	}
+	
 	//Help determine if an event occured for the given acknowledgement
 	$scope.hasEvent = function (ack, e) {
 		for (var i in ack.logs) {

@@ -1,0 +1,79 @@
+<div class="deal-view-page">
+	<div class="workspace">
+		<md-toolbar class="md-background">
+			<md-button class="md-raised md-accent" ng-click="showCreateDeal()">
+				New Deal
+			</md-button>
+		</md-toolbar>
+		<md-content>
+			<div class="container">
+				<md-card class="stage leads"  on-drop="updateStage($file, 'opportunity')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Opportunities</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'opportunity'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+				<md-card class="stage qualification" on-drop="updateStage($file, 'qualified')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Qualified</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'qualified'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+				<md-card class="stage meeting"  on-drop="updateStage($file, 'meeting')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Meeting</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'meeting'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+				<md-card class="stage proposal" on-drop="updateStage($file, 'proposal')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Proposal/Quotation</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'proposal'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+				<md-card class="stage closed-won" on-drop="updateStage($file, 'closed won')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Closed Won</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'closed won'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+				<md-card class="stage closed-lost" on-drop="updateStage($file, 'closed lost')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Closed Lost</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals | filter:{status:'closed lost'}">
+						</deal>
+					</md-card-content>
+				</md-card>
+			</div>
+		</md-content>
+	</div>
+</div>

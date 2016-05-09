@@ -310,6 +310,11 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
         controller: 'HrPayrollCtrl',
         controllerAs: 'hr/payroll'
       })
+      .when('/deal', {
+        templateUrl: 'views/deals/view.html',
+        controller: 'DealCtrl',
+        controllerAs: 'deal'
+      })
       .otherwise({
         redirectTo: '/'
 	});
@@ -1103,8 +1108,8 @@ function ($scope, Customer, $location, Notification, Geocoder, $log) {
 
 
 angular.module('employeeApp')
-.controller('ContactCustomerDetailsCtrl', ['$scope', 'Customer', '$routeParams', '$location', 'Notification', '$timeout',
-function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
+.controller('ContactCustomerDetailsCtrl', ['$scope', 'Customer', '$routeParams', '$location', 'Notification', '$timeout', 'Acknowledgement', 'Deal',
+function ($scope, Customer, $routeParams, $location, Notification, $timeout, Acknowledgement, Deal) {
     
     var updateLoopActive = false,
 		timeoutPromise,
@@ -1222,6 +1227,9 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout) {
     
         
     });
+	
+	$scope.acknowledgements = Acknowledgement.query({customer_id:$routeParams.id});
+	$scope.deals = Deal.query({customer_id:$routeParams.id});
     
 	
 	/**
@@ -1707,6 +1715,89 @@ function ($scope, Supplier, Notification, $filter) {
 		});
 	};
 	
+}]);
+
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name frontendApp.controller:DealCtrl
+ * @description
+ * # DealCtrl
+ * Controller of the frontendApp
+ */
+angular.module('employeeApp')
+.controller('DealCtrl', ['$scope', 'Deal', '$mdDialog', 'Customer', 'Notification', function ($scope, Deal, $mdDialog, Customer, Notification) {
+	
+	$scope.deals = Deal.query();
+	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
+	/*
+	var statuses = [
+		'opportunity',
+		'qualified', 
+		'meeting',
+		'proposal',
+		'closed won',
+		'closed lost'
+	]
+	var index = 0;
+	
+	for (var i = 0; i < 120; i++) {
+		var deal = new Deal();
+		deal.status = statuses[index];
+		deal.id = i;
+		$scope.deals.push(deal);
+		index ++;
+		index = index % 6 == 0 ? 0 : index;
+	}
+	*/
+	/**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showCreateDeal = function () {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-deal.html',
+			controllerAs: 'ctrl',
+			locals: {
+				'customers': $scope.customers,
+				'deals': $scope.deals
+			},
+			controller: ['$scope', '$mdDialog', 'customers', 'deals', function ($scope, $mdDialog, customers, deals) {
+				$scope.deal = new Deal();
+				$scope.customers = customers;
+				
+				$scope.create = function () {
+					$mdDialog.hide();
+					Notification.display("Creating new deal with " + $scope.deal.customer.name, false);
+					$scope.deal.$create(function () {
+						Notification.display('Deal with ' + $scope.deal.customer.name + ' created.', 2000);
+						$scope.deals.push(angular.copy($scope.deal));
+					}, function (e) {
+						Notification.display(e, false);
+					});
+				};
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				}
+			}],
+			clickOutsideToClose: true
+		});
+	}
+	
+	
+    $scope.updateStage = function (deal, status) {
+		var index = $scope.deals.indexOfById(deal);
+		if (index > -1) {
+			$scope.deals[index].status = status;
+			$scope.deals[index].$update();
+		}
+    }
 }]);
 
 
@@ -8034,6 +8125,10 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 		fetching = false;
 	});
 	
+	$scope.openAttachment = function (link) {
+		window.open(link);
+	}
+	
 	//Help determine if an event occured for the given acknowledgement
 	$scope.hasEvent = function (ack, e) {
 		for (var i in ack.logs) {
@@ -13014,6 +13109,25 @@ function (Customer, $mdToast, KeyboardNavigation, $rootScope, $filter) {
     };
 }]);
 
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name frontendApp.directive:deal
+ * @description
+ * # deal
+ */
+angular.module('employeeApp.directives')
+.directive('deal', [function () {
+	return {
+		templateUrl: 'views/templates/deal.html',
+		restrict: 'E',
+		link: function postLink(scope, element, attrs) {
+			
+		}
+	};
+}]);
+
 
 angular.module('employeeApp')
 .directive('dragOn', [function () {
@@ -13080,7 +13194,7 @@ angular.module('employeeApp.directives')
         restrict: 'A',
         replace: false,
 		scope: {
-			'onDrop': '=',
+			'onDrop': '&',
 		},
         link: function (scope, element, attrs) {
             element.bind('drop', function (event) {
@@ -18985,6 +19099,19 @@ angular.module('employeeApp.services')
 angular.module('employeeApp.services')
 .factory('Customer', ['$resource', function($resource) {
 	return $resource('/api/v1/customer/:id/', {id:'@id'}, {
+		update: {
+			method: 'PUT'
+		},
+		create: {
+			method: 'POST'
+		}
+	});   
+}]);
+
+
+angular.module('employeeApp.services')
+.factory('Deal', ['$resource', '$http', function($resource, $http) {
+	return $resource('/api/v1/deal/:id/', {id:'@id'}, {
 		update: {
 			method: 'PUT'
 		},

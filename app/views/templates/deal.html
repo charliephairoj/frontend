@@ -1,0 +1,10 @@
+<md-card class="deal" drag-on="deal" ng-class="deal.status">
+	<md-card-title>
+		<div class="status-bar">
+		</div>
+	</md-card-title>
+	<md-card-content>
+		<a>{{deal.customer.name + ' - ' + deal.description}}</a>
+		<h5>${{deal.total || 0}}<h5>
+	</md-card-content>
+</md-card>

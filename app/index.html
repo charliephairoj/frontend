@@ -48,65 +48,106 @@
 		
         <div class="mainMenuContainer scroll-enabled">
 			
-		
-		        <md-button class="menu-item menu-btn md-icon-button" ng-click="activate=!activate">
-					<md-tooltip md-direction="right">Expand Menu</md-tooltip>
-					<i class="material-icons">menu</i>
-				</md-button>
-        		
+				<a class="menu-item-container">
+			        <md-button class="menu-item menu-btn md-icon-button" ng-click="activate=!activate">
+						<md-tooltip md-direction="right">Expand Menu</md-tooltip>
+						<i class="material-icons">menu</i>
+					</md-button>
+        		</a>
 				
-                <md-button href="#/contact" class="menu-item md-icon-button">
-					<md-tooltip md-direction="right">Contacts</md-tooltip>
-					<i class="material-icons">contacts</i>
-				</md-button>
-                <md-button href="#/product" class="menu-item md-icon-button" ng-show="currentUser.hasModule('products')">
-					<md-tooltip md-direction="right">Products</md-tooltip>
-					<i class="material-icons">weekend</i>
-				</md-button>
-                <md-button href="#/supply" class="menu-item md-icon-button" ng-show="currentUser.hasModule('supplies')">
-					<md-tooltip md-direction="right">Supplies</md-tooltip>
-					<i class="material-icons">build</i>
-				</md-button>
-				<md-button class="md-icon-button menu-item" href="#/supply/fabric">
-					<md-tooltip md-direction="right">Fabric</md-tooltip>
-					<i class="material-icons">layers</i>
-				</md-button>
+				<a class="menu-item-container" href="#/contact" >
+	                <md-button class="menu-item md-icon-button">
+						<md-tooltip md-direction="right">Contacts</md-tooltip>
+						<i class="material-icons">contacts</i>
+					</md-button>
+					<span>Contacts</span>
+				</a>
+				<a class="menu-item-container"  href="#/product">
+	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('products')">
+						<md-tooltip md-direction="right">Products</md-tooltip>
+						<i class="material-icons">weekend</i>
+					</md-button>
+					<span>Products</span>
+				</a>
+				<a class="menu-item-container" href="#/supply">
+	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('supplies')">
+						<md-tooltip md-direction="right">Supplies</md-tooltip>
+						<i class="material-icons">build</i>
+					</md-button>
+					<span>Supplies</span>
+				</a>
+				<a class="menu-item-container" href="#/supply/fabric">
+					<md-button class="md-icon-button menu-item">
+						<md-tooltip md-direction="right">Fabrics</md-tooltip>
+						<i class="material-icons">layers</i>
+					</md-button>
+					<span>Fabrics</span>
+				</a>
+				<a class="menu-item-container" href="#/deal">
+					<md-button class="md-icon-button menu-item">
+						<md-tooltip md-direction="right">Sales Deals</md-tooltip>
+						<i class="material-icons">attach_money</i>
+					</md-button>	
+					<span>Sales Deals</span>
+				</a>			
 				<md-button href="#/equipment" class="menu-item md-icon-button" ng-show="currentUser.hasModule('equipment')">Equipment</md-button>
-                <md-button href="#/order" class="menu-item md-icon-button" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
-					<md-tooltip md-direction="right">Orders</md-tooltip>
-					<i class="material-icons">shopping_cart</i>
-				</md-button>
-                <md-button href="#/order/shipping" class="menu-item md-icon-button" ng-show="currentUser.hasModule('shipping')">
-					<md-tooltip md-direction="right">Shipping</md-tooltip>
-					<i class="material-icons">local_shipping</i>
-				</md-button>
-				
-                <md-button href="#/accounting" class="menu-item md-icon-button" ng-show="currentUser.hasModule('accounting')">
-					<md-tooltip md-direction="right">Accounting</md-tooltip>
-					<i class="material-icons">account_balance_wallet</i>
-				</md-button>
-                <md-button href="#/project" class="menu-item md-icon-button">
-					<md-tooltip md-direction="right">Projects</md-tooltip>
-					<i class="material-icons">developer_board</i>
-				</md-button>
-
-				<md-button href="#/administrator" class="menu-item md-icon-button" ng-show="currentUser.hasModule('administrator')">
-					<md-tooltip md-direction="right">Administrator</md-tooltip>
-					<i class="material-icons">vpn_key</i>
-				</md-button>
-            
-                <md-button href="#/hr" class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
-					<md-tooltip md-direction="right">Human Resources</md-tooltip>
-					<i class="material-icons">supervisor_account</i>
-				</md-button>
-                <md-button href="#/hr" class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
-					<md-tooltip md-direction="right">Settings</md-tooltip>
-					<i class="material-icons">settings</i>
-				</md-button>
-                <md-button href="/logout" class="menu-item md-icon-button">
-					<md-tooltip md-direction="right">Logout</md-tooltip>
-					<i class="material-icons">exit_to_app</i>
-				</md-button>
+				<a class="menu-item-container" href="#/order">
+				    <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
+						<md-tooltip md-direction="right">Orders</md-tooltip>
+						<i class="material-icons">shopping_cart</i>
+					</md-button>
+					<span>Orders</span>
+				</a>
+				<a class="menu-item-container" href="#/order/shipping">
+	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('shipping')">
+						<md-tooltip md-direction="right">Shipping</md-tooltip>
+						<i class="material-icons">local_shipping</i>
+					</md-button>
+					<span>Shipping</span>
+				</a>
+				<a class="menu-item-container" href="#/accounting">
+	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('accounting')">
+						<md-tooltip md-direction="right">Accounting</md-tooltip>
+						<i class="material-icons">account_balance_wallet</i>
+					</md-button>
+					<span>Accounting</span>
+				</a>
+				<a class="menu-item-container" href="#/project">
+	                <md-button class="menu-item md-icon-button">
+						<md-tooltip md-direction="right">Projects</md-tooltip>
+						<i class="material-icons">developer_board</i>
+					</md-button>
+					<span>Project</span>
+				</a>
+				<a class="menu-item-container" href="#/administrator">
+					<md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('administrator')">
+						<md-tooltip md-direction="right">Administrator</md-tooltip>
+						<i class="material-icons">vpn_key</i>
+					</md-button>
+					<span>Administrator</span>
+				</a>
+				<a class="menu-item-container" href="#/hr">
+	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
+						<md-tooltip md-direction="right">Human Resources</md-tooltip>
+						<i class="material-icons">supervisor_account</i>
+					</md-button>
+					<span>Human Resources</span>
+				</a>
+				<!--
+				<div class="menu-item-container">
+	                <md-button href="#/hr" class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
+						<md-tooltip md-direction="right">Settings</md-tooltip>
+						<i class="material-icons">settings</i>
+					</md-button>
+				</div>
+					-->
+				<a class="menu-item-container" href="/logout">	
+	                <md-button class="menu-item md-icon-button">
+						<md-tooltip md-direction="right">Logout</md-tooltip>
+						<i class="material-icons">exit_to_app</i>
+					</md-button>
+					<span>Logout</span>
+				</a>
            
         </div>
 		
@@ -346,6 +387,9 @@
     <script src="scripts/controllers/hr/payroll.js"></script>
     <script src="scripts/services/models/payroll.js"></script>
     <script src="scripts/directives/number-format.js"></script>
+    <script src="scripts/services/models/deal.js"></script>
+    <script src="scripts/controllers/deals/view.js"></script>
+    <script src="scripts/directives/deal.js"></script>
     <!-- endbuild -->
     <script src="https://maps.googleapis.com/maps/api/js?language=en" type="text/javascript"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

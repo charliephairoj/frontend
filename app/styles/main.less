@@ -95,6 +95,21 @@ select{
 	min-width:0;
 }
 
+.flex-direction (@direction:row) {
+	flex-direction: @direction;
+	-webkit-flex-direction: @direction;
+}
+
+.align-items (@direction:center) {
+	align-items: @direction;
+	-webkit-align-items: @direction;
+}
+
+.justify-content (@direction:center) {
+	justify-content: @direction;
+	-webkit-justify-content: @direction;
+}
+
 .translateZ{
 	-webkit-transform: translate3d(0, 0, 0);
    	-moz-transform: translate3d(0, 0, 0);
@@ -230,6 +245,8 @@ select{
 @import "components/employee.less";
 /* Equipment directive */
 @import "components/equipment.less";
+/* Equipment directive */
+@import "components/add-deal.less";
 
 /*
  * Scanner Page 

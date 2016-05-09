@@ -310,6 +310,11 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
         controller: 'HrPayrollCtrl',
         controllerAs: 'hr/payroll'
       })
+      .when('/deal', {
+        templateUrl: 'views/deals/view.html',
+        controller: 'DealCtrl',
+        controllerAs: 'deal'
+      })
       .otherwise({
         redirectTo: '/'
 	});

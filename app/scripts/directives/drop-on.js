@@ -47,7 +47,7 @@ angular.module('employeeApp.directives')
         restrict: 'A',
         replace: false,
 		scope: {
-			'onDrop': '=',
+			'onDrop': '&',
 		},
         link: function (scope, element, attrs) {
             element.bind('drop', function (event) {

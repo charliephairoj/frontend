@@ -1,0 +1,145 @@
+.deal-view-page{
+	background:rgb(230, 230, 230);
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	
+	.workspace{
+		position:absolute;
+		height:100%;
+		width:100%;
+		top:0;
+		left:0;
+		.flex;
+		.flex-direction(column);
+		
+		md-toolbar{
+			.justify-content(flex-end);
+			.align-items(center);
+			.flex-direction(row);
+			
+			md-button{
+				flex:0;
+			}
+		}
+		
+		md-content{
+			height:100%;
+			width:100%;
+			background:rgb(230, 230, 230);
+			
+			.container{
+				height:100%;
+				width:100%;
+				top:0;
+				left:0;
+				position:absolute;
+				background:rgb(230, 230, 230);
+				.flex;
+				.flex-direction(row);
+				.justify-content(space-around);
+				
+				md-card.stage{
+					width:16%;
+					//height:initial;
+					//display:block;
+					
+					>md-card-title{
+						background:rgb(220,220,220);
+						border-bottom:1px solid darken(rgb(210, 210, 210), 10%);
+						padding:0.5em;
+						flex-grow:0;
+						flex-shrink:0;
+						pointer-events:none;
+						
+						md-card-title-text{
+							text-align:center;
+							pointer-events:none;
+							h4{
+								color:#6d787c;
+								font-family:proxima;
+								pointer-events:none;
+							}
+						}
+					}
+				
+					md-card-content{
+						height:100%;
+						overflow-y:scroll;
+						padding: 0 0.05em 1em 0.05em;
+						flex-grow:2;
+						cursor:move;
+						cursor:-webkit-grab;
+						//max-height:100%;
+						//position:relative;
+					
+						md-card.deal{
+							box-shadow:none;
+							border:1px solid rgb(210,210, 210);
+							
+							&.opportunity{
+								.status-bar{
+									width:15%;
+								}
+							}
+							
+							&.qualified{
+								.status-bar{
+									width:30%;
+								}
+							}
+							
+							&.meeting{
+								.status-bar{
+									width:45%;
+								}
+							}
+							
+							&.proposal{
+								.status-bar{
+									width:90%;
+								}
+							}
+							
+							&.closed.won{
+								.status-bar{
+									width:100%;
+								}
+							}
+							
+							&.closed.lost{
+								.status-bar{
+									width:100%;
+									border-color:rgb(190, 190, 190);
+								}
+							}
+							
+							md-card-title{
+								padding:0 0.05em 0.5em 0.05em;
+								.flex;
+								flex-shrink:0;
+								.justify-content(flex-start);
+								.status-bar{
+									height:0;
+									width:0%;
+									border-top:1px solid green;
+									.transition(all, 500ms);
+									//transition-delay:2s;
+								}
+							}
+							
+							md-card-content{
+								a{
+									font-size:0.8em;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}		
+	}
+}
