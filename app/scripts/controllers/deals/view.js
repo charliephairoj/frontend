@@ -57,7 +57,7 @@ angular.module('employeeApp')
 					Notification.display("Creating new deal with " + $scope.deal.customer.name, false);
 					$scope.deal.$create(function () {
 						Notification.display('Deal with ' + $scope.deal.customer.name + ' created.', 2000);
-						$scope.deals.push(angular.copy($scope.deal));
+						deals.push(angular.copy($scope.deal));
 					}, function (e) {
 						Notification.display(e, false);
 					});
