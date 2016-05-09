@@ -29,11 +29,28 @@
 					min-height:initial;
 				
 					&.summary{
+						input{
+							border:none;
+							padding:0.25em 0;
+							outline:none;
+							font-weight:500;
+							font-size:0.9em;
+							.transition(background, 250ms);
+							
+							&:focus{
+								background:rgb(234, 234, 234);
+							}
+						
+							&:hover{
+								background:rgb(234, 234, 234);
+							}
+						}
+						
 						div{
 							color:rgba(0, 0, 0, 0.7);
 							.flex;
 							align-items:center;
-							
+														
 							i{
 								margin-right:0.5em;
 								font-size:0.9em;

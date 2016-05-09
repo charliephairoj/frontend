@@ -6,6 +6,15 @@
 		</md-toolbar>
 		<md-dialog-content>
 			<table>
+				<tr ng-if"deal.customer.contacts">
+					<td>
+						<md-input-container>
+							<label>Deal Description</label>
+							<input type="text" ng-model="deal.description" />
+						</md-input-container>
+					
+					</td>
+				</tr>
 				<tr>
 					<td>
 						<md-autocomplete flex="onshrink" required 

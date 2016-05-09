@@ -10,7 +10,7 @@
 			<section class="info">
 				<md-card class="summary">
 					<md-card-title layout="column">
-						<h5>{{deal.description}}</h5>
+						<input type="text" ng-model="deal.description" />
 						<div layout="row">
 							<i>{{getCurrencySign(deal.currency)}}</i>
 							<span>{{deal.total | number:2}}</span>
