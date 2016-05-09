@@ -10,7 +10,11 @@
 angular.module('employeeApp')
 .controller('DealCtrl', ['$scope', 'Deal', '$mdDialog', 'Customer', 'Notification', function ($scope, Deal, $mdDialog, Customer, Notification) {
 	
-	$scope.deals = Deal.query();
+	$scope.deals = Deal.query(function () {
+		for (var i = 0; i < $scope.deals.length; i++) {
+			$scope.deals[i].last_contacted = new Date($scope.deals[i].last_contacted);
+		}
+	});
 	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
 	
 	/**

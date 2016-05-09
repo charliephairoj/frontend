@@ -19,7 +19,9 @@ angular.module('employeeApp')
 			'SGD':'S$'
 		};
 	
-	$scope.deal = Deal.get({'id': $routeParams.id});
+	$scope.deal = Deal.get({'id': $routeParams.id}, function () {
+		$scope.deal.last_contacted = new Date($scope.deal.last_contacted);
+	});
 	
 	$scope.update = function () {
 		Notification.display('Updating deal...', false);

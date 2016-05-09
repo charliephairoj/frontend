@@ -1743,7 +1743,9 @@ angular.module('employeeApp')
 			'SGD':'S$'
 		};
 	
-	$scope.deal = Deal.get({'id': $routeParams.id});
+	$scope.deal = Deal.get({'id': $routeParams.id}, function () {
+		$scope.deal.last_contacted = new Date($scope.deal.last_contacted);
+	});
 	
 	$scope.update = function () {
 		Notification.display('Updating deal...', false);
@@ -1797,7 +1799,11 @@ angular.module('employeeApp')
 angular.module('employeeApp')
 .controller('DealCtrl', ['$scope', 'Deal', '$mdDialog', 'Customer', 'Notification', function ($scope, Deal, $mdDialog, Customer, Notification) {
 	
-	$scope.deals = Deal.query();
+	$scope.deals = Deal.query(function () {
+		for (var i = 0; i < $scope.deals.length; i++) {
+			$scope.deals[i].last_contacted = new Date($scope.deals[i].last_contacted);
+		}
+	});
 	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
 	
 	/**
