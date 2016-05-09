@@ -1,0 +1,157 @@
+<div class="deal-details-page">
+    
+    <div class="workspace">
+		<!--
+		<md-toolbar>
+		</md-toolbar>
+			-->
+			
+		<md-content layout="row">
+			<section class="info">
+				<md-card class="summary">
+					<md-card-title layout="column">
+						<h5>{{deal.description}}</h5>
+						<div layout="row">
+							<i>{{getCurrencySign(deal.currency)}}</i>
+							<span>{{deal.total | number:2}}</span>
+						</div>
+					</md-card-title>
+				</md-card>
+		        <md-card class="customer">
+					<md-card-content>
+						<table>
+							<tr>
+								<td>Customer</td>
+								<td>
+									<a ng-href="#/contact/customer/{{deal.customer.id}}"><h5>{{deal.customer.name}}</h5></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Telephone</td>
+								<td>
+									{{deal.customer.telephone}}
+								</td>
+							</tr>
+							<tr>
+								<td>Fax</td>
+								<td>
+									{{deal.customer.fax}}
+								</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>
+									{{deal.customer.email}}
+								</td>
+							</tr>
+							<tr>
+								<td>Website</td>
+								<td>
+									{{deal.customer.website}}
+								</td>
+							</tr>
+							<tr>
+								<td>Amount</td>
+								<td>
+									<i>{{getCurrencySign(deal.currency)}}</i>
+									<input type="number" ng-model="deal.total">
+								</td>
+							</tr>
+							<tr>
+								<td>Currency</td>
+								<td>
+								  	<md-select ng-model="deal.currency">
+								  		<md-option value="THB">Thai Baht</md-option>
+										<md-option value="USD">US Dollar</md-option>
+										<md-option value="EUR">Euro</md-option>
+										<md-option value="RMB">Chinese Yuan</md-option>
+										<md-option value="SGD">Singaporean Dollar</md-option>
+									</md-select>
+								</td>
+							</tr>
+						</table>
+					</md-card-content>
+				</md-card>
+				
+				<md-card class="contacts">
+					<md-card-content>
+						<md-card class="new-contact">
+							<md-card-title>
+								<md-card-title-text>New Contact</md-card-title-text>
+							</md-card-title>
+							<md-card-content>
+								<div layout="column">
+									<md-input-container>
+									  <label>Name</label>
+									  <input type="text" size="40" ng-model="contact.name">
+									</md-input-container>
+									<md-input-container>
+									  <label>Telephone</label>
+									  <input type="text" size="20" ng-model="contact.telephone">
+									</md-input-container>
+									<md-input-container>
+									  <label>Email</label>
+									  <input type="text" size="40" ng-model="contact.email">
+									</md-input-container>
+								</div>
+							</md-card-content>
+							<md-card-actions>
+								<md-button class="md-raised md-icon-button md-accent" ng-click="addContact(contact)">
+									<md-tooltip>
+										Create
+									</md-tooltip>
+									<i class="material-icons">create</i>
+								</md-button>
+							</md-card-actions>
+						</md-card>
+						<md-card class="contact" ng-repeat="contact in customer.contacts">
+							<md-card-content>
+								<div class="contact-info">
+									<h5>{{::contact.name}}</h5>
+									<div layout="row">
+										<i class="material-icons">phone</i>
+										<input type="text" ng-model="contact.telephone" />
+									</div>
+									<div layout="row">
+										<i class="material-icons">email</i>
+										<input type="text" ng-model="contact.email" />
+									</div>
+								</div>
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
+				
+			</section>
+			<section class="orders">
+				<md-card class="deals">
+					<md-card-title>
+						<h4>Deals</h4>
+						<div flex></div>
+						<md-button class="md-raised md-accent">New Deal</md-button>
+					</md-card-title>
+					<md-card-content>
+						<div>
+						</div>
+						<md-card ng-repeat="deal in deals">
+							<md-card-content>
+								<h5>{{deal.description}}</h5>
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
+				<md-card class="acknowledgements">
+					<md-card-content>
+						<md-card ng-repeat="ack in acknowledgements">
+							<md-card-content>
+								Acknowledgement {{::ack.id}}
+							</md-card-content>
+						</md-card>
+					</md-card-content>
+				</md-card>
+			</section>
+		</md-content>
+    </div>
+        
+    
+</div>
