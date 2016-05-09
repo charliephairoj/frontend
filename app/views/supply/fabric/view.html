@@ -22,8 +22,8 @@
 			</div>
 		</md-toolbar>
 		
-		<md-content>
-	    	<div class="outer-container" on-scroll-end="loadNext()">
+		<md-content on-scroll-end="loadNext()">
+	    	<div class="outer-container">
 	    		<ul class="inner-container">
 	    			<li class="item-container" ng-repeat="fabric in fabrics | filter:query | orderBy:'supplier.name' track by fabric.id">
 	    				<div class="item" ng-class="[fabric.status, {'selected':fabric.$selected}]">

@@ -11622,6 +11622,8 @@ angular.module('employeeApp')
 					}
 				}
 			}, function (e) {
+				fetching = false;
+				Noification.display("Unable to load more fabrics.", false);
 				$log.error(JSON.stringify(e));
 			});
 		}

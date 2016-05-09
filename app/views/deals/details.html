@@ -51,6 +51,22 @@
 								</td>
 							</tr>
 							<tr>
+								<td>Deal Stage</td>
+								<td>
+									<md-input-container>
+										<md-select ng-model="deal.status" required> 
+											<md-option value="opportunity">Opportunity</md-option>
+											<md-option value="qualified">Qualified to Buy</md-option>
+											<md-option value="meeting">Meeting</md-option>
+											<md-option value="proposal">Proposal/Quotation</md-option>
+											<md-option value="closed won">Closed Won</md-option>
+											<md-option value="closed lost">Closed Lost</md-option>
+										</md-select>
+									</md-input-container>
+					
+								</td>
+							</tr>
+							<tr>
 								<td>Amount</td>
 								<td>
 									<i>{{getCurrencySign(deal.currency)}}</i>
