@@ -1,52 +1,87 @@
 <md-dialog class="add-deal">
-	<md-toolbar>
-		<h4>Create a New Deal</h4>
-		<div flex></div>
-	</md-toolbar>
-	<md-dialog-content>
-		<table>
-			<tr>
-				<td>
-					<md-input-container>
-						<label>Customer</label>
-						<md-select ng-model="deal.customer">
-							<md-option ng-repeat="customer in customers" ng-value="customer">{{customer.name}}</md-option>
-						</md-select>
-					</md-input-container>
+	<form name="form">
+		<md-toolbar>
+			<h4>Create a New Deal</h4>
+			<div flex></div>
+		</md-toolbar>
+		<md-dialog-content>
+			<table>
+				<tr>
+					<td>
+						<md-autocomplete flex="onshrink" required 
+							name='customer'
+							md-items="customer in searchCustomers(customerSearchText)" 
+							md-selected-item="selectedCustomer"
+							md-selected-item-change="addCustomer(selectedCustomer)"
+							md-search-text="customerSearchText"
+							md-search-text-change="updateCustomerName(customerSearchText)"
+							md-item-text="customer.name"
+							md-floating-label="Customer"
+							md-no-cache="true"
+							md-min-length="0">
+						    <md-item-template>
+						    	<span md-highlight-text="customerSearchText">{{customer.name}}</span>
+						    </md-item-template>
+						</md-autocomplete>
 					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<md-input-container>
-						<label>Contact</label>
-						<md-select ng-model="deal.contact">
-							<md-option ng-repeat="contact in deal.customer.contacts" ng-value="contact">{{contact.name}}</md-option>
-						</md-select>
-					</md-input-container>
+					</td>
+				</tr>
+				<tr ng-if"deal.customer.contacts">
+					<td>
+						<md-input-container>
+							<label>Contact</label>
+							<md-select ng-model="deal.contact">
+								<md-option ng-repeat="contact in deal.customer.contacts" ng-value="contact">{{contact.name}}</md-option>
+							</md-select>
+						</md-input-container>
 					
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<md-input-container>
-						<label>Contact</label>
-						<md-select ng-model="deal.status">
-							<md-option value="opportunity">Opportunity</md-option>
-							<md-option value="qualified">Qualified to Buy</md-option>
-							<md-option value="meeting">Meeting</md-option>
-							<md-option value="proposal">Proposal/Quotation</md-option>
-							<md-option value="closed won">Closed Won</md-option>
-							<md-option value="closed lost">Closed Lost</md-option>
-						</md-select>
-					</md-input-container>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<md-input-container>
+							<label>Deal Stage</label>
+							<md-select ng-model="deal.status" required> 
+								<md-option value="opportunity">Opportunity</md-option>
+								<md-option value="qualified">Qualified to Buy</md-option>
+								<md-option value="meeting">Meeting</md-option>
+								<md-option value="proposal">Proposal/Quotation</md-option>
+								<md-option value="closed won">Closed Won</md-option>
+								<md-option value="closed lost">Closed Lost</md-option>
+							</md-select>
+						</md-input-container>
 					
-				</td>
-			</tr>
-		</table>
-	</md-dialog-content>
-	<md-dialog-actions>
-		<md-button class="md-accent md-raised" ng-click="create()">ADD</md-button>
-		<md-button class="md-warn md-raised" ng-click="cancel()">CANCEL</md-button>
-	</md-dialog-actions>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<md-input-container>
+							<label>Amount</label>
+							<input type="number" ng-model="deal.total" required />
+						</md-input-container>
+					
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<md-input-container>
+							<label>Currency</label>
+						  	<md-select ng-model="deal.currency" required>
+						  		<md-option value="THB">Thai Baht</md-option>
+								<md-option value="USD">US Dollar</md-option>
+								<md-option value="EUR">Euro</md-option>
+								<md-option value="RMB">Chinese Yuan</md-option>
+								<md-option value="SGD">Singaporean Dollar</md-option>
+							</md-select>
+						</md-input-container>
+						
+					</td>
+				</tr>
+			</table>
+		</md-dialog-content>
+		<md-dialog-actions>
+			<md-button class="md-accent md-raised" ng-disabled="form.$invalid" ng-click="create()">ADD</md-button>
+			<md-button class="md-warn md-raised" ng-click="cancel()">CANCEL</md-button>
+		</md-dialog-actions>
+	</form>
 </md-dialog>

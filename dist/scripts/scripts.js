@@ -315,6 +315,11 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
         controller: 'DealCtrl',
         controllerAs: 'deal'
       })
+      .when('/deal/:id', {
+        templateUrl: 'views/deals/details.html',
+        controller: 'DealsDetailsCtrl',
+        controllerAs: 'deals/details'
+      })
       .otherwise({
         redirectTo: '/'
 	});
@@ -1721,6 +1726,69 @@ function ($scope, Supplier, Notification, $filter) {
 
 /**
  * @ngdoc function
+ * @name frontendApp.controller:DealsDetailsCtrl
+ * @description
+ * # DealsDetailsCtrl
+ * Controller of the frontendApp
+ */
+angular.module('employeeApp')
+.controller('DealsDetailsCtrl', ['$scope', 'Deal', '$routeParams', 'Notification', '$timeout', '$log', function ($scope, Deal, $routeParams, Notification, $timeout, $log) {
+    var updateLoopActive = false,
+		timeoutPromise,
+		currencySigns = {
+			'THB':'฿',
+			'EUR':'€',
+			'USD':'$',
+			'RMB':'¥',
+			'SGD':'S$'
+		};
+	
+	$scope.deal = Deal.get({'id': $routeParams.id});
+	
+	$scope.update = function () {
+		Notification.display('Updating deal...', false);
+		var deal = angular.copy($scope.deal);
+		
+		for (var i = 0; i < deal.customer.addresses.length; i++) {
+			delete deal.customer.addresses[i].marker;
+		}
+		
+		deal.$update(function () {
+			updateLoopActive = false;
+			Notification.display('Deal updated');
+		}, function (e) { 
+			updateLoopActive = false;
+			$log.error(e);
+			Notification.display('There was an error updating the deal');
+		});
+	}
+	
+	$scope.$watch(function () {
+		var deal = angular.copy($scope.deal);
+	
+		delete deal.last_modified;
+		delete deal.customer.last_modified;
+		return deal;
+	}, function (newVal, oldVal) {
+		if (oldVal.hasOwnProperty('id') && !updateLoopActive) {
+			updateLoopActive = true;
+			timeoutPromise = $timeout($scope.update, 5000);
+		}
+	}, true);
+	
+	$scope.getCurrencySign = function (currency) {
+		return currencySigns[currency];
+	}
+	
+	$scope.$on('$destroy', function () {
+		$scope.update();
+	})
+}]);
+
+'use strict';
+
+/**
+ * @ngdoc function
  * @name frontendApp.controller:DealCtrl
  * @description
  * # DealCtrl
@@ -1731,6 +1799,7 @@ angular.module('employeeApp')
 	
 	$scope.deals = Deal.query();
 	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
+	
 	/*
 	var statuses = [
 		'opportunity',
@@ -1770,6 +1839,75 @@ angular.module('employeeApp')
 			controller: ['$scope', '$mdDialog', 'customers', 'deals', function ($scope, $mdDialog, customers, deals) {
 				$scope.deal = new Deal();
 				$scope.customers = customers;
+				
+				
+				/*
+			 	 * CUSTOMER SECTION
+				 *
+				 * This section deals with the customer searching and what happens when a customer is selected
+				*/
+	
+				// Watch on customerSearchText to get products from the server
+				$scope.retrieveCustomers = function (query) {
+					if (query) {
+						Customer.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.customers.indexOfById(responses[i]) === -1) {
+									$scope.customers.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+	
+				/**
+				 * Returns a list of customers whose name matches the query
+				 * 
+				 * @public
+				 * @param {String} query - the string to search against the customer names
+				 * @returns {Array} - An array of customes that matches the query
+				 */
+	
+				$scope.searchCustomers = function (query) {
+					var lowercaseQuery = angular.lowercase(query);
+					var customers = [];
+					for (var i = 0; i < $scope.customers.length; i++) {
+						if (angular.lowercase($scope.customers[i].name).indexOf(lowercaseQuery) !== -1) {
+							customers.push($scope.customers[i]);
+						}
+					}
+		
+					return customers;
+				};
+	
+	
+				/**
+				 * Updates the customer name, so that if the customer is a new one, 
+				 * a customer object is already in place to accept the new details
+				 * 
+				 * @public
+				 * @param {String} customerName - Name of the Customer
+				 * @returns {null} 
+				 */
+	
+				$scope.updateCustomerName = function (customerName) {
+					$scope.deal.customer = $scope.deal.customer || {name: '', addresses: []};
+		
+					if (!$scope.deal.customer.id) {
+						$scope.deal.customer.name = customerName || '';
+					} else {
+						if ($scope.deal.customer.name.indexOf(customerName) == -1) {
+							$scope.deal.customer = {name: customerName, addresses: []};
+						}
+					}
+				};
+	
+	
+	
+				//Add customer and hide modal
+			    $scope.addCustomer = function (customer) {
+			        $scope.deal.customer = customer;
+			    };
 				
 				$scope.create = function () {
 					$mdDialog.hide();
@@ -13123,7 +13261,17 @@ angular.module('employeeApp.directives')
 		templateUrl: 'views/templates/deal.html',
 		restrict: 'E',
 		link: function postLink(scope, element, attrs) {
+			var currencySigns = {
+				'THB':'฿',
+				'EUR':'€',
+				'USD':'$',
+				'RMB':'¥',
+				'SGD':'S$'
+			};
 			
+			scope.getCurrencySign = function (currency) {
+				return currencySigns[currency];
+			}
 		}
 	};
 }]);

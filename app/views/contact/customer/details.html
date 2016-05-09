@@ -156,8 +156,9 @@
 						<div>
 						</div>
 						<md-card ng-repeat="deal in deals">
-							<md-card-content>
+							<md-card-content layout="row" layout-align="space-between center">
 								<h5>{{deal.description}}</h5>
+								<md-button class="md-accent" ng-href="#/deal/{{deal.id}}">View</md-button>
 							</md-card-content>
 						</md-card>
 					</md-card-content>

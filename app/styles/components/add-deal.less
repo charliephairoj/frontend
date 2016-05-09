@@ -4,18 +4,42 @@
 	min-width:25em;
 	overflow:hidden;
 	
-	md-toolbar{
-		.align-items(center);
-		.flex-direction(row);
-	}
-	
-	md-dialog-content{
+	form{
 		height:100%;
+		
+		md-toolbar{
+			.align-items(center);
+			.flex-direction(row);
+			font-family:proxima, Helvetica;
+			min-height:initial;
+			padding:0.5em 1em;
+		}
+	
+		md-dialog-content{
+			height:100%;
+			padding:1em;
+		
+			table{
+				width:100%;
+				tr{
+					td{
+						md-input-container{
+							padding:0;
+						}
+					
+						md-autocomplete{
+						
+						}
+					}
+				}
+			}
+		}
+	
+		md-dialog-actions{
+		
+		}
 	}
 	
-	md-dialog-actions{
-		
-	}
 	
 	
 	

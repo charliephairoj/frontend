@@ -12,7 +12,17 @@ angular.module('employeeApp.directives')
 		templateUrl: 'views/templates/deal.html',
 		restrict: 'E',
 		link: function postLink(scope, element, attrs) {
+			var currencySigns = {
+				'THB':'฿',
+				'EUR':'€',
+				'USD':'$',
+				'RMB':'¥',
+				'SGD':'S$'
+			};
 			
+			scope.getCurrencySign = function (currency) {
+				return currencySigns[currency];
+			}
 		}
 	};
 }]);

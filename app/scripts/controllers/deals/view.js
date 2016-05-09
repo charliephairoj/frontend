@@ -12,6 +12,7 @@ angular.module('employeeApp')
 	
 	$scope.deals = Deal.query();
 	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
+	
 	/*
 	var statuses = [
 		'opportunity',
@@ -51,6 +52,75 @@ angular.module('employeeApp')
 			controller: function ($scope, $mdDialog, customers, deals) {
 				$scope.deal = new Deal();
 				$scope.customers = customers;
+				
+				
+				/*
+			 	 * CUSTOMER SECTION
+				 *
+				 * This section deals with the customer searching and what happens when a customer is selected
+				*/
+	
+				// Watch on customerSearchText to get products from the server
+				$scope.retrieveCustomers = function (query) {
+					if (query) {
+						Customer.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.customers.indexOfById(responses[i]) === -1) {
+									$scope.customers.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+	
+				/**
+				 * Returns a list of customers whose name matches the query
+				 * 
+				 * @public
+				 * @param {String} query - the string to search against the customer names
+				 * @returns {Array} - An array of customes that matches the query
+				 */
+	
+				$scope.searchCustomers = function (query) {
+					var lowercaseQuery = angular.lowercase(query);
+					var customers = [];
+					for (var i = 0; i < $scope.customers.length; i++) {
+						if (angular.lowercase($scope.customers[i].name).indexOf(lowercaseQuery) !== -1) {
+							customers.push($scope.customers[i]);
+						}
+					}
+		
+					return customers;
+				};
+	
+	
+				/**
+				 * Updates the customer name, so that if the customer is a new one, 
+				 * a customer object is already in place to accept the new details
+				 * 
+				 * @public
+				 * @param {String} customerName - Name of the Customer
+				 * @returns {null} 
+				 */
+	
+				$scope.updateCustomerName = function (customerName) {
+					$scope.deal.customer = $scope.deal.customer || {name: '', addresses: []};
+		
+					if (!$scope.deal.customer.id) {
+						$scope.deal.customer.name = customerName || '';
+					} else {
+						if ($scope.deal.customer.name.indexOf(customerName) == -1) {
+							$scope.deal.customer = {name: customerName, addresses: []};
+						}
+					}
+				};
+	
+	
+	
+				//Add customer and hide modal
+			    $scope.addCustomer = function (customer) {
+			        $scope.deal.customer = customer;
+			    };
 				
 				$scope.create = function () {
 					$mdDialog.hide();

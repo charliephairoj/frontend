@@ -4,7 +4,10 @@
 		</div>
 	</md-card-title>
 	<md-card-content>
-		<a>{{deal.customer.name + ' - ' + deal.description}}</a>
-		<h5>${{deal.total || 0}}<h5>
+		<a ng-href="#/deal/{{deal.id}}">{{deal.customer.name + ' - ' + deal.description}}</a>
+		<div class="amount" layout="row">
+			<i>{{getCurrencySign(deal.currency)}}</i>
+			<h5>{{deal.total || 0 | number}}<h5>
+		</div>
 	</md-card-content>
 </md-card>
