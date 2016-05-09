@@ -122,15 +122,32 @@ angular.module('employeeApp')
 			        $scope.deal.customer = customer;
 			    };
 				
-				$scope.create = function () {
-					$mdDialog.hide();
-					Notification.display("Creating new deal with " + $scope.deal.customer.name, false);
+				$scope.createDeal = function () {
 					$scope.deal.$create(function () {
 						Notification.display('Deal with ' + $scope.deal.customer.name + ' created.', 2000);
 						deals.push(angular.copy($scope.deal));
 					}, function (e) {
 						Notification.display(e, false);
 					});
+				}
+				
+				$scope.create = function () {
+					$mdDialog.hide();
+					Notification.display("Creating new deal with " + $scope.deal.customer.name, false);
+
+					if (!$scope.deal.customer.hasOwnProperty('id')) {
+						var customer = new Customer($scope.deal.customer);
+						customer.$create(function (resp) {
+							angular.merge($scope.deal.customer, resp);
+							$scope.createDeal();
+						}, function (e) {
+							Notification.display("Unable to create new customer", false);
+						});
+					} else {
+						$scope.createDeal();
+					}
+					
+					
 				};
 				
 				$scope.cancel = function () {
