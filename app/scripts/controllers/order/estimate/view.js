@@ -295,9 +295,14 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		var lowercaseQuery = angular.lowercase(query.trim());
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
-			if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
-				fabrics.push($scope.fabrics[i]);
+			try{
+				if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+					fabrics.push($scope.fabrics[i]);
+				}
+			} catch (e) {
+				
 			}
+			
 		}
 		return fabrics;
 	};

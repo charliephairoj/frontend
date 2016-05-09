@@ -1,6 +1,13 @@
 <div class="deal-view-page">
 	<div class="workspace">
 		<md-toolbar class="md-background">
+			<div flex>
+			</div>
+			<div layout="row">
+				<input class="search" placeholder="Search" type="text" ng-model="query.$.$" />
+			</div>
+			<div flex>
+			</div>
 			<md-button class="md-raised md-accent" ng-click="showCreateDeal()">
 				New Deal
 			</md-button>
@@ -14,9 +21,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'opportunity'}">
+						<deal ng-repeat="deal in deals | filter:{status:'opportunity'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('opportunity') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 				<md-card class="stage qualification" on-drop="updateStage($file, 'qualified')">
 					<md-card-title>
@@ -25,9 +35,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'qualified'}">
+						<deal ng-repeat="deal in deals | filter:{status:'qualified'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('qualified') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 				<md-card class="stage meeting"  on-drop="updateStage($file, 'meeting')">
 					<md-card-title>
@@ -36,9 +49,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'meeting'}">
+						<deal ng-repeat="deal in deals | filter:{status:'meeting'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('meeting') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 				<md-card class="stage proposal" on-drop="updateStage($file, 'proposal')">
 					<md-card-title>
@@ -47,9 +63,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'proposal'}">
+						<deal ng-repeat="deal in deals | filter:{status:'proposal'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('proposal') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 				<md-card class="stage closed-won" on-drop="updateStage($file, 'closed won')">
 					<md-card-title>
@@ -58,9 +77,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'closed won'}">
+						<deal ng-repeat="deal in deals | filter:{status:'closed won'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('closed won') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 				<md-card class="stage closed-lost" on-drop="updateStage($file, 'closed lost')">
 					<md-card-title>
@@ -69,9 +91,12 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<deal ng-repeat="deal in deals | filter:{status:'closed lost'}">
+						<deal ng-repeat="deal in deals | filter:{status:'closed lost'} | filter:query track by deal.id">
 						</deal>
 					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('closed lost') | number}}</h5>
+					</md-card-actions>
 				</md-card>
 			</div>
 		</md-content>

@@ -1800,26 +1800,40 @@ angular.module('employeeApp')
 	$scope.deals = Deal.query();
 	$scope.customers = Customer.query({limit:0, offset:0, page_size:99999});
 	
-	/*
-	var statuses = [
-		'opportunity',
-		'qualified', 
-		'meeting',
-		'proposal',
-		'closed won',
-		'closed lost'
-	]
-	var index = 0;
+	/**
+	 * Get the total from a list of deals that has a certain status
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.getTotal = function (stage) {
+		var total = 0;
+		
+		for (var i = 0; i < $scope.deals.length; i++) {
+			if ($scope.deals[i].status === stage) {
+				var amount
+				
+				if ($scope.deals[i].currency.toLowerCase() === 'thb') {
+					amount = $scope.deals[i].total;
+				} else {
+					switch($scope.deals[i].currency.toLowerCase()) {
+						case 'eur':
+							amount = $scope.deals[i].total * 40;
+						case 'usd': 
+							amount = $scope.deals[i].total * 35;
+					}
+						
+				}
+				
+				total += amount;
+			}
+		}
+		
+		return total;
+	};
 	
-	for (var i = 0; i < 120; i++) {
-		var deal = new Deal();
-		deal.status = statuses[index];
-		deal.id = i;
-		$scope.deals.push(deal);
-		index ++;
-		index = index % 6 == 0 ? 0 : index;
-	}
-	*/
+	
 	/**
 	 * Shows the dialog to add a new deal
 	 * @private
@@ -5304,9 +5318,14 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		var lowercaseQuery = angular.lowercase(query.trim());
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
-			if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
-				fabrics.push($scope.fabrics[i]);
+			try{
+				if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+					fabrics.push($scope.fabrics[i]);
+				}
+			} catch(e) {
+				
 			}
+			
 		}
 		return fabrics;
 	};
@@ -6675,9 +6694,14 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		var lowercaseQuery = angular.lowercase(query.trim());
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
-			if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
-				fabrics.push($scope.fabrics[i]);
+			try{
+				if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+					fabrics.push($scope.fabrics[i]);
+				}
+			} catch (e) {
+				
 			}
+			
 		}
 		return fabrics;
 	};
