@@ -39,7 +39,7 @@
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
-    <md-toolbar class="mainMenu" style="background: #566C7A" ng-class="{'activate':activate}">
+    <md-toolbar class="mainMenu" style="background: #566C7A" ng-class="{'activate':activate, 'inventory': inventory}">
         <img class="logo" src="img/DellaLogo.png" />
         <!--Holds all the different menu options. Determined which are visible based
             on the permissions of the current user-->
@@ -156,7 +156,7 @@
     
     
     
-    <div ng-view class="mainContainer md-background" ng-class="{'activate': activate}">
+    <div ng-view class="mainContainer md-background" ng-class="{'activate': activate, 'inventory': inventory}">
         
     </div>
 	<div class="print">

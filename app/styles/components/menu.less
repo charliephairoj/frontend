@@ -18,6 +18,14 @@
 	.transition(width, 150ms, ease-out);
 	.translateZ;
 	
+	&.inventory{
+		width:0;
+		overflow:hidden;
+		&.activate{
+			width:0;
+		}
+	}
+	
 	&.activate{
 		width:12em;
 		

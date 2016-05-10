@@ -175,38 +175,24 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 */
 	$scope.scanner.register(/^DRS-\d+$/, function (code) {
 		try {
-			$mdToast.show($mdToast.simple()
-				.hideDelay(3000)
-				.position('top right')
-				.content('Looking up supply...'));
+			Notification.display('Looking up supply...', false);
 		} catch (e) {
 		
 		}
 				
 		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
-			$mdToast.hide();
 			if ($scope.supplies.indexOfById(response) == -1) {
 				response.$$action = 'subtract';
 				$scope.supplies.push(response);
-				$mdToast.show($mdToast.simple()
-					.hideDelay(2000)
-					.position('top right')
-					.content('Added ' + response.description + ' to checkout.'));
+				Notification.display('Added ' + response.description + ' to checkout.', 2000);
 			} else {
-				$mdToast.show($mdToast.simple()
-					.hideDelay(2000)
-					.position('top right')
-					.content(response.description + ' already in checkout'));
+				Notification.display(response.description + ' already in checkout', 2000);
 			}
 			
 		}, function (e) {
 			var msg = JSON.stringify(e);
 			$log.error(msg);
-			$mdToast.show($mdToast.simple()
-				.hideDelay(0)
-				.position('top right')
-				.action('Close')
-				.content('Unable to find supply.'));
+			Notification.display('Unable to find supply.', false);
 		});
 	});
 
@@ -215,10 +201,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 */
 	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
 		try {
-			$mdToast.show($mdToast.simple()
-				.hideDelay(3000)
-				.position('top right')
-				.content('Looking up supply...'));
+			Notification.display('Looking up supply...', false);
 		} catch (e) {
 		
 		}
@@ -226,11 +209,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
 			response[0].$$action = 'subtract';
 			$scope.supplies.push(response[0]);
-			$mdToast.hide();
-			$mdToast.show($mdToast.simple()
-				.hideDelay(2000)
-				.position('top right')
-				.content('Added ' + response.description + ' to checkout.'));
+			Notification.display('Added ' + response.description + ' to checkout.', 2000);
 			
 		}, function (e) {
 			var msg = JSON.stringify(e);
@@ -243,10 +222,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 */
 	$scope.scanner.register(/^PO-\d+$/, function (code) {
 		try {
-			$mdToast.show($mdToast.simple()
-				.hideDelay(3000)
-				.position('top right')
-				.content('Looking up Purchase Order...'));
+			Notification.display('Looking up Purchase Order...', false);
 		} catch (e) {
 		
 		}
@@ -254,8 +230,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		PurchaseOrder.get({id: code.split('-')[1]}, function (response) {
 			$scope.po = response;
 		
-			$mdToast.hide();
-		
+			Notification.display('Purchase Order ' + response.id + ' retrieved.', 2000);
 			for (var j = 0; j < $scope.po.items.length; j++) {
 				$scope.po.items[j].$$action = true;
 			}
@@ -270,25 +245,17 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 *  Regiester the equipment code
 	 */ 
 	$scope.scanner.register(/^DRE-\d+$/, function (code) {
-		$mdToast.show($mdToast.simple()
-			.hideDelay(0)
-			.position('top right')
-			.action('Close')
-			.content('Looking up Equipment...'));
+		Notification.display('Looking up Equipment...', false);
 	
 		Equipment.get({id: code.split('-')[1]}, function (response) {
-			$mdToast.hide();
+			Notification.display(response.description + ' retrieved.', false);	
 			$scope.equipmentList.push(response);
 		
 		}, function (e) {
 			var msg = JSON.stringify(e);
 			$log.error(msg);
 			
-			$mdToast.show($mdToast.simple()
-				.content('Unable to find equipment.')
-				.position('top right')
-				.action('Close')
-				.hideDelay(0));
+			Notification.display('Unable to find equipment.', false);
 		});
 	});
 
@@ -296,33 +263,23 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 *  Regiester the employee code
 	 */ 
 	$scope.scanner.register(/^DREM-\d+$/, function (code) {
-		$mdToast.hide();
 		//Notifiy the user of action
-		$mdToast.show($mdToast.simple()
-			.content("Looking up employee...")
-			.position('top right')
-			.action('close')
-			.hideDelay(0));
+		Notification.display("Looking up employee...", false);
 	
 		$scope.equipment = Employee.get({id: code.split('-')[1]}, function (response) {
 			$scope.employee = response;
-			$mdToast.hide();
+			Notification.display(response.name + ' retrieved.', 2000);
 		
 		}, function (e) {
 			
 			var msg = JSON.stringify(e);
 			$log.error(msg);
 			
-			$mdToast.show($mdToast.simple()
-				.content('Unable to find employee.')
-				.position('top right')
-				.action('close')
-				.hideDelay(0));
+			Notification.display('Unable to find employee.', false);
 		});
 	});
 
 	$scope.verify = function () {
-		$mdToast.hide();
 		for (var i = 0; i < $scope.supplies.length; i++) {
 			if ($scope.supplies[i].$$action == "subtract") {
 				if ($scope.supplies[i].$$quantity > $scope.supplies[i].quantity) {
@@ -337,10 +294,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.checkout = function () {
 	
 	
-		$mdToast.show($mdToast.simple()
-			.position('top right')
-			.hideDelay(0)
-			.content('Processing checkout...'));
+		Notification.display('Processing checkout...', false);
 	
 		if (!checkoutActive) {
 			//Turn the switch on to prevent duplicate checkouts
@@ -407,11 +361,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 			} catch (e) {
 				$log.error(e);
 				checkoutActive = false;
-				$mdToast.show($mdToast.simple()
-					.position('top right')
-					.hideDelay(0)
-					.action('close')
-					.content(e.message));
+				Notification.display(e.message, false);
 			}
 	
 			//Perform Purchase Order PUT
@@ -442,20 +392,13 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		
 			//Reset employee
 			$scope.employee = undefined;
-			$mdToast.show($mdToast.simple()
-				.position('top right')
-				.hideDelay(2000)
-				.content('Checkout complete.'));
+			Notification.display('Checkout complete.', 2000);
 		}
 	};
 
 	$scope.checkoutError = function (e) {
 		$log.error(JSON.stringify(e));
-		$mdToast.show($mdToast.simple()
-			.position('top right')
-			.hideDelay(0)
-			.action('Close')
-			.content("There was a checkout error"));
+		Notification.display("There was a checkout error", false);
 	};
 	
 	/*
