@@ -632,16 +632,42 @@
 											flex-wrap:nowarp;
 											
 											.product-container{
+												.flex;
+												flex-wrap:nowrap;
+												.flex-direction(row);
+												.justify-content(space-between);
+												
 												.product-details{
+													width:50%;
+													display:block;
+													margin-right:1em;
+													
 													tr{
 														td{
-															padding:0.1em 0;
+															padding:0.25em;
+															font-size:0.9em;
+										
+															&:first-child{
+																padding-right:0.75em;
+																text-align:right;
+																color:rgba(0, 0, 0, 0.65);
+																vertical-align:top;
+															}
+														
+															md-autocomplete{
+														
+															}
+														
+															md-input-container{
+																margin:0;
+															}
+														
 															input{
 																border:none;
-																padding:0.25em 0;
 																outline:none;
+																width:20em;
 																.transition(background, 250ms);
-										
+											
 																&:focus{
 																	background:rgb(234, 234, 234);
 																}
@@ -650,7 +676,38 @@
 																	background:rgb(234, 234, 234);
 																}
 															}
+										
+															textarea{
+																border:none;
+																outline:none;
+																width:100%;
+																min-height:10em;
+																.transition(background, 250ms);
+
+																&:focus{
+																	background:rgb(234, 234, 234);
+																}
+									
+																&:hover{
+																	background:rgb(234, 234, 234);
+																}
+															}
+														
+															img{
+																max-height:5em;
+																max-width:5em;
+															}
 														}
+													}
+												}
+												
+												.img-container{
+													width:100%;
+													text-align:right;
+													
+													img{
+														max-width:100%;
+														max-height:15em;
 													}
 												}
 											}
