@@ -1,18 +1,31 @@
 .add-equipment{
+	min-width:20em;
+	
 	md-toolbar{
 		flex-grow:0;
 		flex-shrink:0;
 		.flex;
 		.flex-direction(row);
 		.align-items(center);
+		padding:0.5em;
 	}
 	
 	md-dialog-content{
+		padding:1em;
+		
 		.container{
 			width:100%;
 			
 			.details{
 				width:100%;
+				
+				tr{
+					td{
+						md-input-container{
+							width:100%;
+						}
+					}
+				}
 			}
 		}
 	}

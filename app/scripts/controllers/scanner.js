@@ -7,8 +7,8 @@
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
-function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
+.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
+function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
     /*
 	Equipment.get({'id': 116}, function (resp) {
 		$scope.equipmentList.push(resp);
@@ -101,21 +101,24 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 				$scope.equipment = new Equipment();		
 				
 				$scope.create = function () {
+					Notification.display('Add new equipment...', false);
 					$mdDialog.hide();
 					$scope.equipment.id = $scope.equipment.id || undefined;
 					
-					var savingFn = equipment.id ? '$update' : '$create';
+					var savingFn = $scope.equipment.id ? '$update' : '$create';
 		
 					$scope.equipment[savingFn](function () {
+						Notification.display($scope.equipment.description + ' added.', 2000);
 						equipmentList.push(angular.copy($scope.equipment));
 					}, function (e) {
+						Notification.display('Count not add ' + $scope.equipment.description + '.', 2000);
 						console.log(e);
 					});
 					
 				}
 				
 				$scope.cancel = function () {
-					$mdDialog.hide();
+					$mdDialog.cancel();
 				};
 			}
 		});
