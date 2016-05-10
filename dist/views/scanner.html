@@ -1,193 +1,290 @@
 <div class="scanner-page">	
-	<md-action>
-		<select ng-options="po.id for po in poList" ng-model="po"></select>
-		<div class="btn-container">
-			<md-button class="md-primary md-raised" ng-click="addNewEquipment()">เพิ่มอุปกรณ์/Add Equipment</md-button>
-		 	<md-button class="md-primary md-raised" ng-show="po" ng-click="checkout()">เช็คอิน/Check In</md-button>
+	<form name="form">
+		<md-action>
+			<select ng-options="po.id for po in poList" ng-model="po"></select>
+			<div class="btn-container">
+				<md-button class="md-accent md-raised" ng-click="showAddEquipment()">เพิ่มอุปกรณ์/Add Equipment</md-button>
+			 	<md-button class="md-accent md-raised" ng-show="po" ng-click="checkout()">เช็คอิน/Check In</md-button>
 	
-			<md-button class="md-primary md-raised" ng-hide="po"  ng-click="checkout()">เช็คเอาท์/Checkout</md-button>
-		</div>
-	</md-action>
+				<md-button class="md-accent md-raised" ng-hide="po" ng-disabled="form.$invalid"  ng-click="checkout()">เช็คเอาท์/Checkout</md-button>
+			</div>
+		</md-action>
 	
 	
-	<!--
-		Primary container for scanner page
-	-->
-	<div class="main-container">
-		<div class="employee-container">
-			
-			<div class="employee-drop-down-selector">
-				<select ng-options="employee.name for employee in employees" ng-model="employee"></select>
-			</div>
-			
-			<div ng-hide="employee" class="employee-placeholder">
-				<h2>Employee</h2>
-			</div>
-			<div ng-show="employee" class="employee">
-			
-				<div class="img-container">
-					<img ng-src="{{employee.image.url || tempUrl}}" />
-				</div>
-				<h3>{{employee.name}}</h3>
-				<h2>{{employee.department}}</h2>
-				<div class="equipment-container">
-					<md-card ng-repeat="equipment in employee.equipments">
-						<md-card-content>
-							{{equipment.description}}<br />
-							{{equipment.brand}}
-						</md-card-content>
-					</md-card>
-				</div>
-			</div>
-			
-				
-		</div>
-
-
 		<!--
-			Container with list of supplies, equipment, or items to checkout
+			Primary container for scanner page
 		-->
-		<div class="checkout-container">		
+		<div class="main-container">
+			<div class="employee-container">
+			
+				<div class="employee-drop-down-selector">
+					<select ng-options="employee.name for employee in employees" ng-model="employee"></select>
+				</div>
+			
+				<div ng-hide="employee" class="employee-placeholder">
+					<h2>Employee</h2>
+				</div>
+				<div ng-show="employee" class="employee">
+			
+					<div class="img-container">
+						<img ng-src="{{employee.image.url || tempUrl}}" />
+					</div>
+					<h3>{{employee.name}}</h3>
+					<h2>{{employee.department}}</h2>
+					<div class="equipment-container">
+						<md-card ng-repeat="equipment in employee.equipments">
+							<md-card-content>
+								{{equipment.description}}<br />
+								{{equipment.brand}}
+							</md-card-content>
+						</md-card>
+					</div>
+				</div>
 			
 				
-				<!--
-					List of items in the Purchase Order
-				-->
-				<div class="category-container" ng-repeat="item in po.items">
-					<div>
-						<div class="img-container">
-							<img ng-src="{{item.image.url}}" />
-						</div>
-						<h3>{{item.description}}</h3>
-						<div class="item-ctrl">
-							<!--
-							<md-radio-group ng-model="item.$$action">
-						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
-						      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
-						    </md-radio-group>
-								-->
-							จำนวน/Quantity: {{item.quantity | number:2}}{{item.units}}
-							<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(item)">
-								<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
-								<i class="material-icons">printer</i>
-							</md-button>
-							<md-button class="md-warn md-raised md-icon-button" ng-click="removeItem($index)">
-								<md-tooltip>เอาออก/Remove</md-tooltip>
-								<i class="material-icons">clear</i>
-							</md-button>
-						</div>
-					</div>
-				</div>
+			</div>
+
+
+			<!--
+				Container with list of supplies, equipment, or items to checkout
+			-->
+			<md-content class="checkout-container">		
+			
 				
-				
-				<!--
-					List of Equipments
-				-->
-				<div class="equipment category-container" ng-repeat="equipment in equipmentList">
 					<!--
-					<div class="img-container">
-						<div ng-hide="equipment.image" camera on-snapshot="addEquipmentImage($image, equipment)">
-						</div>
-						<img ng-src="{{equipment.image.url}}" ng-show="equipment.image"/>
-					</div>
+						List of items in the Purchase Order
 					-->
-						
-					<div class="equipment-info-container">
-						<div class="new-equipment container" ng-show="equipment.$new">
-							<md-input-container>
-								<label>รหัส/Equipment ID</label>
-								<input type="text" ng-model="equipment.id">
-							</md-input-container>
-							<md-input-container>
-								<label>คำอธิบาย/Description</label>
-								<input type="text" ng-model="equipment.description">
-							</md-input-container>
-							<md-input-container>
-								<label>ยี่ห้อ/Brand</label>
-								<input type="text" ng-model="equipment.brand">
-							</md-input-container>
-							
-							<md-button class="md-primary md-raised md-icon-button" ng-click="createEquipment(equipment)">
-								<md-tooltip>เก็บ/Save</md-tooltip>
-								<i class="material-icons">save</i>
-							</md-button>
-							<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
-								<md-tooltip>เอาออก/Remove</md-tooltip>
-								<i class="material-icons">clear</i>
-							</md-button>
-						</div>
-						
-						<div class="overview container" ng-hide="equipment.$new">
-							<h3>
-								{{equipment.brand | uppercase}} {{equipment.description | uppercase}}              <span style="margin-left:2em;">ID:{{equipment.id}}<span>
-							</h3>
-					
-							<div class="item-ctrl">
-								<md-radio-group ng-model="equipment.status">
-							      	<md-radio-button value="Checked In" aria-label="Checked In">
-										Checked In
-									</md-radio-button>
-							      	<md-radio-button value="Checked Out" aria-label="Add">
-										Checked Out
-									</md-radio-button>
-							    </md-radio-group>
+					<md-card class="item" ng-repeat="item in po.items">
+						<md-card-content>
+							<div layout="column">
+								<h4>{{::item.description}}</h4>
+								<span>PO #: {{::po.id}}</span>
+								<span>จำนวน/Quantity: {{::item.quantity | number:2}}{{item.units}}</span>
 							</div>
-						</div>
-						
-						<div class="details container" ng-hide="equipment.$new">
-							<h4>Status: <span>{{equipment.status}}<span></h4>
-							<div class="equipment-employee-container">
-								<div class="img-container">
-									<img ng-src="{{equipment.employee.image.url}}">
-								</div>
-								<div>{{equipment.employee.first_name}} {{equipment.employee.last_name}}</div>
-							</div>
-							<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
-								<md-tooltip>เอาออก/Remove</md-tooltip>
-								<i class="material-icons">clear</i>
-							</md-button>
-							<md-button class="md-accent md-raised md-icon-button" ng-click="printEquipmentSticker(equipment)">
-								<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
-								<i class="material-icons">printer</i>
-							</md-button>
-						</div>
-							
-					</div>
-				</div>
-				
-				
-				<!--
-					List of supplies to either checkin or checkout
-				-->
-				<div class="category-container">
-					<div class="supply" ng-class="{'warn': supply.$$quantity > supply.quantity && supply.$$action == 'subtract'}" ng-repeat="supply in supplies">
-						<div class="img-container">
-							<img ng-src="{{supply.image.url}}" />
-						</div>
-						<h3>{{supply.description}} <br/>  Qty:{{supply.quantity | number:2}}</h3>
-						
-						<div class="item-ctrl">
-							<md-radio-group ng-model="supply.$$action">
-						      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">หัก/Subtract</md-radio-button>
-						      	<md-radio-button value="add" aria-label="Add">เพิ่มAdd</md-radio-button>
-						    </md-radio-group>
-							<md-input-container>
-								<label>จำนวน/Quantity</label>
-								<input type="number" ng-model="supply.$$quantity"/>
-							</md-input-container>
-							<div class="btn-panel">
-								<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(supply)">
+						</md-card-content>
+						<md-card-actions layout="row">
+							<div flex></div>
+							<div layout="row">
+								<md-button class="md-accent md-icon-button" ng-click="printSupplySticker(item)">
 									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
 									<i class="material-icons">printer</i>
 								</md-button>
-								<md-button class="md-warn md-raised md-icon-button" ng-click="remove($index, supply)">
+								<md-button class="md-warn md-icon-button" ng-click="removeItem($index))">
 									<md-tooltip>เอาออก/Remove</md-tooltip>
 									<i class="material-icons">clear</i>
 								</md-button>
 							</div >
+						</md-card-actions>
+					</md-card>
+					<!--
+					<div class="category-container" ng-repeat="item in po.items">
+						<div>
+							<div class="img-container">
+								<img ng-src="{{item.image.url}}" />
+							</div>
+							<h3>{{item.description}}</h3>
+							<div class="item-ctrl">
+						-->
+								<!--
+								<md-radio-group ng-model="item.$$action">
+							      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">Subtract</md-radio-button>
+							      	<md-radio-button value="add" aria-label="Add">Add</md-radio-button>
+							    </md-radio-group>
+									-->
+									<!--
+								จำนวน/Quantity: {{item.quantity | number:2}}{{item.units}}
+								<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(item)">
+									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+									<i class="material-icons">printer</i>
+								</md-button>
+								<md-button class="md-warn md-raised md-icon-button" ng-click="removeItem($index)">
+									<md-tooltip>เอาออก/Remove</md-tooltip>
+									<i class="material-icons">clear</i>
+								</md-button>
+							</div>
 						</div>
 					</div>
-				</div>
-		  </div>
-	</div>
+				-->
+				
+					<!--
+						List of Equipments
+					-->
+					<md-card class="equipment" ng-repeat="equipment in equipmentList">
+						<md-card-content layout="row">
+							<div layout="column">
+								<h4>{{::equipment.description}}</h4>
+								<span>รหัส/Equipment ID: {{::equipment.id}}</span>
+								<span>ยี่ห้อ/Brand: {{::equipment.brand}}</span>
+								<span>Status: {{getEquipmentStatus(equipment)}}</span>
+							</div>
+						</md-card-content>
+						<md-card-actions layout="row">
+							<div class="toggle-button md-raised">
+								<div class="button" ng-class="{'active': equipment.status.toLowerCase()=='checked in'}" ng-click="equipment.status = 'Checked In'">
+									<span>Check In</span>
+								</div>
+								<div class="button" ng-class="{'active': equipment.status.toLowerCase()=='checked out'}" ng-click="equipment.status = 'Checked Out'">
+									<span>Check Out</span>
+								</div>
+							</div>
+						
+							<div flex></div>
+							<md-button class="md-accent md-icon-button" ng-click="printEquipmentSticker(equipment)">
+								<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+								<i class="material-icons">printer</i>
+							</md-button>
+							<md-button class="md-warn md-icon-button" ng-click="removeEquipment(equipment, $index)">
+								<md-tooltip>เอาออก/Remove</md-tooltip>
+								<i class="material-icons">clear</i>
+							</md-button>
+						</md-card-actions>
+					</md-card>
+						<!--
+					<div class="equipment category-container" ng-repeat="equipment in equipmentList">
+						-->
+						<!--
+						<div class="img-container">
+							<div ng-hide="equipment.image" camera on-snapshot="addEquipmentImage($image, equipment)">
+							</div>
+							<img ng-src="{{equipment.image.url}}" ng-show="equipment.image"/>
+						</div>
+						-->
+						<!--
+						<div class="equipment-info-container">
+							<div class="new-equipment container" ng-show="equipment.$new">
+								<md-input-container>
+									<label>รหัส/Equipment ID</label>
+									<input type="text" ng-model="equipment.id">
+								</md-input-container>
+								<md-input-container>
+									<label>คำอธิบาย/Description</label>
+									<input type="text" ng-model="equipment.description">
+								</md-input-container>
+								<md-input-container>
+									<label>ยี่ห้อ/Brand</label>
+									<input type="text" ng-model="equipment.brand">
+								</md-input-container>
+							
+								<md-button class="md-primary md-raised md-icon-button" ng-click="createEquipment(equipment)">
+									<md-tooltip>เก็บ/Save</md-tooltip>
+									<i class="material-icons">save</i>
+								</md-button>
+								<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
+									<md-tooltip>เอาออก/Remove</md-tooltip>
+									<i class="material-icons">clear</i>
+								</md-button>
+							</div>
+						
+							<div class="overview container" ng-hide="equipment.$new">
+								<h3>
+									{{equipment.brand | uppercase}} {{equipment.description | uppercase}}              <span style="margin-left:2em;">ID:{{equipment.id}}<span>
+								</h3>
+					
+								<div class="item-ctrl">
+									<md-radio-group ng-model="equipment.status">
+								      	<md-radio-button value="Checked In" aria-label="Checked In">
+											Checked In
+										</md-radio-button>
+								      	<md-radio-button value="Checked Out" aria-label="Add">
+											Checked Out
+										</md-radio-button>
+								    </md-radio-group>
+								</div>
+							</div>
+						
+							<div class="details container" ng-hide="equipment.$new">
+								<h4>Status: <span>{{equipment.status}}<span></h4>
+								<div class="equipment-employee-container">
+									<div class="img-container">
+										<img ng-src="{{equipment.employee.image.url}}">
+									</div>
+									<div>{{equipment.employee.first_name}} {{equipment.employee.last_name}}</div>
+								</div>
+								<md-button class="md-warn md-raised md-icon-button" ng-click="removeEquipment(equipment, $index)">
+									<md-tooltip>เอาออก/Remove</md-tooltip>
+									<i class="material-icons">clear</i>
+								</md-button>
+								<md-button class="md-accent md-raised md-icon-button" ng-click="printEquipmentSticker(equipment)">
+									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+									<i class="material-icons">printer</i>
+								</md-button>
+							</div>
+							
+						</div>
+					</div-->
+				
+				
+					<!--
+						List of supplies to either checkin or checkout
+					-->
+					<md-card class="supply" ng-repeat="supply in supplies" ng-init="supply.$$action = 'add'">
+						<md-card-content>
+							<div layout="column">
+								<h4>{{::supply.description}}</h4>
+								<span>จำนวน/Quantity: {{supply.quantity | number:2}}<span>
+							</div>
+							<div class="item-ctrl" layout="row" layout-align="center center">
+								<md-input-container>
+									<label>จำนวน/Quantity</label>
+									<input type="number" required ng-model="supply.$$quantity"/>
+								</md-input-container>
+							</div>
+						</md-card-content>
+						<md-card-actions layout="row">
+							<div class="toggle-button md-raised">
+								<div class="button" ng-class="{'active': supply.$$action.toLowerCase()=='add'}" ng-click="supply.$$action = 'add'">
+									<span>เพิ่ม/Add</span>
+								</div>
+								<div class="button" ng-class="{'active': supply.$$action.toLowerCase()=='subtract'}" ng-click="supply.$$action = 'subtract'">
+									<span>หัก/Subtract</span>
+								</div>
+							</div>
+							<div flex></div>
+							<div layout="row">
+								<md-button class="md-accent md-icon-button" ng-click="printSupplySticker(supply)">
+									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+									<i class="material-icons">printer</i>
+								</md-button>
+								<md-button class="md-warn md-icon-button" ng-click="remove($index, supply)">
+									<md-tooltip>เอาออก/Remove</md-tooltip>
+									<i class="material-icons">clear</i>
+								</md-button>
+							</div >
+						</md-card-actions>
+					</md-card>
+				
+					<!--
+					<div class="category-container">
+						<div class="supply" ng-class="{'warn': supply.$$quantity > supply.quantity && supply.$$action == 'subtract'}" ng-repeat="supply in supplies">
+							<div class="img-container">
+								<img ng-src="{{supply.image.url}}" />
+							</div>
+							<h3>{{supply.description}} <br/>  Qty:{{supply.quantity | number:2}}</h3>
+						
+							<div class="item-ctrl">
+								<md-radio-group ng-model="supply.$$action">
+							      	<md-radio-button checked="checked" value="subtract" aria-label="Subtract">หัก/Subtract</md-radio-button>
+							      	<md-radio-button value="add" aria-label="Add">เพิ่มAdd</md-radio-button>
+							    </md-radio-group>
+								<md-input-container>
+									<label>จำนวน/Quantity</label>
+									<input type="number" ng-model="supply.$$quantity"/>
+								</md-input-container>
+								<div class="btn-panel">
+									<md-button class="md-accent md-raised md-icon-button" ng-click="printSupplySticker(supply)">
+										<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
+										<i class="material-icons">printer</i>
+									</md-button>
+									<md-button class="md-warn md-raised md-icon-button" ng-click="remove($index, supply)">
+										<md-tooltip>เอาออก/Remove</md-tooltip>
+										<i class="material-icons">clear</i>
+									</md-button>
+								</div >
+							</div>
+						</div>
+					</div>
+						-->
+			  </md-content>
+		</div>
+	</form>
 </div>

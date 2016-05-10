@@ -1,47 +1,54 @@
-<form name="form" class="add-equipment" modal="visible" title="Add a new Equipment">
-		<div class="container">
-			<table class="details">
-				<tr>
-					<td>Equipment ID</td>
-					<td><input type="text" ng-model="equipment.equipment_id">
-				</tr>
-				<tr>
-					<td>Description</td>
-					<td>
-						<button class="select-description-btn" ng-click="showDescription=true" ng-class="{invalid:!equipment.description}">{{equipment.description || ""}}</button>
-						<div class="description-list" ng-class="{active:showDescription}">
-							<button ng-repeat="d in descriptions" ng-click="selectDescription(d)">
-								<img ng-src="{{d.image}}">
-								{{d.description | beautify}}
-							</button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Brand</td>
-					<td>
-						<select required ng-model="equipment.brand" ng-options="b | beautify for b in brands">
-						</select>
-					</td>
-				</tr>
+<md-dialog class="add-equipment">
+	<form name="form">
+		<md-toolbar>
+			<h4>Add a New Equipment</h4>
+			<div flex></div>
+		</md-toolbar>
+		<md-dialog-content>
+			<div class="container">
+				<table class="details">
+					<tr>
+						<td>
+							<md-input-container>
+								<label>Equipment ID (ไม่จำเป็น)</label>
+								<input type="text" ng-model="equipment.equipment_id">
+							</md-input-container>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<md-input-container>
+								<label>Description (จำเป็นต้องใช้)</label>
+								<input type="text" required ng-model="equipment.description">
+							</md-input-container>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<md-input-container>
+								<label>ยี่ห้อ/Brand (จำเป็นต้องใช้)</label>
+								<input type="text" required ng-model="equipment.brand">
+							</md-input-container>
+						</td>
+					</tr>
 				
-				<tr>
-					<td>Status</td>
-					<td>
-						<select ng-model="equipment.status" ng-options="s | beautify for s in statuses">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Notes</td>
-					<td><textarea ng-model="supply.notes" rows="6" cols="30"></textarea></td>
-				</tr>
-				<tr>
-					<td>Preview</td>
-					<td class="preview"><img ng-src="{{equipment.image.url}}"/></td>
-				</tr>
-			</table>
-			<div image-uploader url='/api/v1/supply/image' on-upload="addImage(data)"></div>
-		</div>
-		<div class="bottom-bar"><button ng-disabled="form.$invalid" ng-click="add(equipment)">Add</button></div>
+					<tr>
+						<td>
+							<md-input-container>
+								<label>Status (จำเป็นต้องใช้)</label>
+								<md-select required ng-model="equipment.status">
+									<md-option value="Checked In">Checked In</md-option>
+									<md-option value="Checked Out">Checked Out</md-option>
+								</md-select>
+							</md-input-container>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions>
+			<md-button class="md-raised md-accent" ng-disabled="form.$invalid" ng-click="create()">Add</md-button>
+			<md-button class="md-raised md-warn" ng-disabled="form.$invalid" ng-click="cancel()">Cancel</md-button>
+		</md-dialog-actions>
 	</form>
+</md-dialog>

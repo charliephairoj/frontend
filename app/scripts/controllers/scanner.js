@@ -9,7 +9,16 @@
 angular.module('employeeApp')
 .controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', '$mdToast', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
 function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
-    
+    /*
+	Equipment.get({'id': 116}, function (resp) {
+		$scope.equipmentList.push(resp);
+	});
+	Supply.query({'q': 'screw'}, function (resp) {
+		for (var i = 0; i < resp.length; i++) {
+			$scope.supplies.push(resp[i]);
+		}
+	});
+	*/
 
 	/*
 	 * Vars
@@ -55,6 +64,63 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 		$scope.po.items[$index].$$action = false;
 	};
 	
+	/**
+	 * 	EQUIPMENT SECTION
+	 */
+	
+	/**
+	 * Get the status of an equipment
+	 * @private
+	 * @param {Object} equipment Equipment object to get status for
+	 * @returns Equipment status
+	 * @type String
+	 */
+	$scope.getEquipmentStatus = function (equipment) {
+		try {
+			return equipment.status.toLowerCase() == "checked out" ? equipment.status + ' by ' + equipment.employee.name : equipment.status;
+		} catch (e) {
+			return equipment.status;
+		}
+	}
+	
+	/**
+	 * Show the 'Add Equipment' Dialog
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showAddEquipment = function () {
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-equipment.html',
+			locals: {
+				'equipmentList': $scope.equipmentList
+			},
+			clickOutsideToClose: true,
+			controller: function ($scope, $mdDialog, equipmentList) {
+				$scope.equipment = new Equipment();		
+				
+				$scope.create = function () {
+					$mdDialog.hide();
+					$scope.equipment.id = $scope.equipment.id || undefined;
+					
+					var savingFn = equipment.id ? '$update' : '$create';
+		
+					$scope.equipment[savingFn](function () {
+						equipmentList.push(angular.copy($scope.equipment));
+					}, function (e) {
+						console.log(e);
+					});
+					
+				}
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				};
+			}
+		});
+	};
+	
 	/*
     * Add a new equipment to the equipment list
 	*/
@@ -66,16 +132,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, $mdToast, Employee, $htt
 	
 	$scope.createEquipment = function (equipment) {
 		
-		equipment.id = equipment.id || undefined;
 		
-		if (equipment.$new) {
-			var savingFn = equipment.id ? '$update' : '$create';
-			
-			equipment[savingFn](function () {
-				delete this.$new;
-			}.bind(equipment));
-			
-		}
 	};
 
 	 /* 

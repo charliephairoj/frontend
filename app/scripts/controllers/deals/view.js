@@ -174,7 +174,7 @@ angular.module('employeeApp')
 			},
 			clickOutsideToClose: true
 		});
-	}
+	};
 	
 	
     $scope.updateStage = function (deal, status) {
@@ -183,5 +183,5 @@ angular.module('employeeApp')
 			$scope.deals[index].status = status;
 			$scope.deals[index].$update();
 		}
-    }
+    };
 }]);
