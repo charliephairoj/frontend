@@ -11666,6 +11666,47 @@ angular.module('employeeApp')
 			});
 		}
 	};
+	
+	/*
+	* Functions to print stickers
+	*/
+	function setPrint () {				
+	    var afterPrint = function() {
+	        $(".print").empty();
+	    };
+
+	    if (window.matchMedia) {
+	        var mediaQueryList = window.matchMedia('print');
+	        mediaQueryList.addListener(function(mql) {
+	            if (mql.matches) {
+	               	angular.noop();
+	            } else {
+	                afterPrint();
+	            }
+	        });
+	    }
+
+		window.onafterprint = afterPrint;
+			
+		this.contentWindow.focus();
+		this.contentWindow.print();
+	}
+	
+	/**
+	 * Print sticker for a fabric
+	 * @private
+	 * @param {Object} fabric fabric which to print the corresponding label
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.printFabricSticker = function (fabric) {
+		var container = $(".print").empty();
+		var iframe = document.createElement('iframe');
+		iframe.onload = setPrint;
+		iframe.src = "api/v1/supply/" + fabric.id + "/sticker/";
+		container.append(iframe);
+	};
+	
 }]);
 
 
@@ -13967,6 +14008,61 @@ angular.module('employeeApp')
 			});
       	}
     };
+}]);
+
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name frontendApp.directive:fabric
+ * @description
+ * # fabric
+ */
+angular.module('employeeApp')
+.directive('fabric', ['Notification', function (Notification) {
+	return {
+	  	templateUrl: 'views/templates/fabric.html',
+		replace: true,
+	  	restrict: 'E',
+	  	link: function postLink(scope, element, attrs) {
+			var timeoutVar;
+			
+			scope.switchActive = function () {
+				element.toggleClass('active');
+			}
+			
+			scope.addContent = function (newContent) {
+				if (newContent) {
+					if (newContent.content && newContent.percentage) {
+						scope.fabric.content += ' '
+						$scope.fiber.content += newContent.content + ':' + newContent.percentage;
+					}
+				}
+				
+			};
+			
+			scope.getContent = function () {
+				var contents = scope.fabric.content.split(' ');
+				for (var i = 0; i < contents.length; i++) {
+					//contents[i] = contents[i].split(':');
+				}
+				
+				return contents;
+			};
+			
+			scope.update = function () {
+				clearTimeout(timeoutVar);
+				timeoutVar = setTimeout(function () {
+					this.fabric.$update(function () {
+						Notification.display('Fabric updated.', 2000);
+					}, function () {
+					
+					});
+				}.bind(scope), 3000);
+				
+			}
+	  	}
+	};
 }]);
 
 
