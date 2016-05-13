@@ -11,7 +11,7 @@ angular.module('employeeApp')
 
     });
     
-    $scope.$watch('query', function (q) {
+    $scope.$watch('query.$.$', function (q) {
 		if (q) {
 			Model.query({q: q, limit: 10}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
@@ -26,6 +26,7 @@ angular.module('employeeApp')
 	$scope.loadNext = function () {
 		if (!fetching) {
 			Notification.display('Loading more models...', false);
+			fetching = true;
 			Model.query({
 				limit: 50,
 				offset: $scope.models.length
@@ -33,6 +34,10 @@ angular.module('employeeApp')
 				for (var i = 0; i < resources.length; i++) {
 					$scope.models.push(resources[i]);
 				}
+				fetching = false;
+			}, function (e) {
+				$log.error(e);
+				fetching = false;
 			});
 		}
 	};
