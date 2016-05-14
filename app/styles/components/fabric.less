@@ -1,0 +1,257 @@
+md-card.fabric{
+	margin:0;
+	max-height:3.5em;
+	min-height:3.5em;
+	min-width:1em;
+	
+	.transition(margin, 150ms);
+	.transition(max-height, 750ms);
+	.transition(all, 250ms);
+	.translateZ;
+	
+	transition: margin 4000ms, width 400ms, max-height 1s;
+	-webkit-transition: margin 400ms, width 400ms, max-height 1s;
+	width:100%;
+	
+	>md-card-title{
+		display:none;
+	}
+	
+	>md-card-content{
+		position:relative;
+		padding:0;
+		max-height:3.5em;
+		.transition(padding, 150ms);
+		.transition(max-height, 750ms);
+		background-color:rgba(255, 255, 255, 1);
+		
+		.list-display{
+			overflow:hidden;
+			display:flex;
+			flex-direction:row;
+            width:100%;
+            background-color:#FFF;
+            position:absolute;
+            left:0;
+			top:0;
+            font-size:1em;
+            height: 3.5em;
+            border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+            text-decoration:none;
+            color:#000;
+            .transition(all, 150ms, linear);
+        
+			&:hover{
+                background-color:#E4EEF4;
+            }
+        
+            &.selected{
+                background-color:orange;
+            }
+		
+			@tint-amount:80%;
+		
+			&.current{
+				background-color:tint(rgb(54, 66, 140), @tint-amount);
+			}
+		
+			&.limited{
+				background-color:tint(rgb(198, 148, 77), @tint-amount);
+			}
+		
+			&.discontinued{
+				background-color:tint(rgb(163, 81, 82), @tint-amount);
+			}
+		
+        
+			.column{
+				display:flex;
+				flex-direction:row;
+				align-items:center;
+				padding-left:1em;
+				justify-content:flex-start;
+				border-left:1px dotted rgba(0, 0, 0, 0.35);
+				text-decoration:none;
+				color:rgb(0, 0, 0);
+				cursor:pointer;
+				
+				&:first-child{
+					border-left:none;
+				}
+			
+				&.preview{
+					width:15%;
+					padding:0;
+					overflow:hidden;
+				
+					img{
+						height:auto;
+						width:100%;
+					}
+				}
+
+				&.id{
+					width:10%;
+				}
+
+				&.pattern{
+					width:30%;
+				}
+
+				&.color{
+					width:20%;
+				}
+
+				&.quantity{
+					width:15%;
+				}
+			
+				&.status{
+					width:10%;
+					cursor:default;
+				}
+            }
+		}
+		
+		.card-display{
+			height:0;
+			overflow:hidden;
+		}
+	}
+	
+	/*
+	 * Active phase for fabric direction
+	 */
+	&.active{
+		@maxHeight:600em;
+		margin:3em;
+		max-height:@maxHeight;
+		width:90%;
+		background-color:rgba(0,0,0, 0.1);
+		min-height:initial;
+		display:block;
+		
+		>md-card-title{
+			.flex;
+		}
+		
+		>md-card-content{
+			margin:2em;
+			background:transparent;
+			//background-color:rgba(0,0,0, 0.1);
+			max-height:@maxHeight;
+			
+			.list-display{
+				height:0;
+				display:none;
+			}
+			
+			.card-display{
+				height:auto;
+				width:100%;
+				.flex;
+				.justify-content(space-around);
+				
+				md-card{
+					&.summary{
+						width:40%;
+						min-width:20em;
+					
+						table{
+							width:100%;
+						
+							tr{
+							
+								td{
+									padding:0.25em;
+									font-size:0.9em;
+								
+									&:first-child{
+										padding-right:0.75em;
+										text-align:right;
+										color:rgba(0, 0, 0, 0.65);
+										vertical-align:top;
+										white-space:nowrap;
+									}
+									
+									i{
+										font-size:1em;
+										cursor:pointer;
+										outline:none;
+									}
+								
+									a{
+										text-decoration:none;
+										color:rgb(0, 0, 0);
+									}
+									
+									.content{
+										margin:0.25em 0;
+										span{
+											font-family: Roboto,"Helvetica Neue",sans-serif;
+										}
+									}
+									
+								
+									md-select{
+										margin:0;
+									}
+								
+									input{
+										border:none;
+										outline:none;
+										width:100%;
+										.transition(background, 250ms);
+									
+										&:focus{
+											background:rgb(234, 234, 234);
+										}
+							
+										&:hover{
+											background:rgb(234, 234, 234);
+										}
+									}
+								
+									textarea{
+										border:none;
+										outline:none;
+										width:100%;
+										.transition(background, 250ms);
+
+										&:focus{
+											background:rgb(234, 234, 234);
+										}
+							
+										&:hover{
+											background:rgb(234, 234, 234);
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					&.img{
+						width:55%;
+						max-height:20em;
+						
+						>md-card-content{
+							overflow:hidden;
+				
+							.img-container{
+								width:100%;
+								height:100%;
+								overflow:hidden;
+								
+								img{
+									height:100%;
+									width:auto;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

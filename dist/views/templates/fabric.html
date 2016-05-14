@@ -1,0 +1,104 @@
+<md-card class="fabric">
+	<md-card-title ng>
+		<div flex ng-click="switchActive()">
+		</div>
+		<div>
+			<md-button class="md-icon-button" ng-click="printFabricSticker(fabric)">
+				<i class="material-icons">print</i>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="switchActive()">
+				<i class="material-icons">close</i>
+			</md-button>
+		</div>
+	</md-card-title>
+	<md-card-content>
+		<div class="list-display">
+			<div class="column preview" ng-click="switchActive()">
+				<img ng-src="{{fabric.image.url}}" />
+			</div>
+			<div class="column id" ng-click="switchActive()">{{fabric.id}}</div>
+			<div class="column pattern" ng-click="switchActive()">{{fabric.pattern}}</div>
+			<div class="column color" ng-click="switchActive()">{{fabric.color}}</div>
+			<div class="column quantity" ng-click="switchActive()">{{fabric.quantity}}</div>
+			<div class="column staus">
+				<select ng-model="fabric.status">
+					<option value='current'>Current</option>
+					<option value='limited'>Limited</option>
+					<option value='discontinued'>Discontinued</option>
+				</select>
+			</div>
+		</div>
+		<div class="card-display">
+			<section layout="row">
+				<md-card class="summary">
+					<md-card-content>
+						<table>
+							<tr>
+								<td>
+									Pattern
+								</td>
+								<td>
+									<input type="text" ng-model="fabric.pattern" />
+							</tr>
+							<tr>
+								<td>
+									Color
+								</td>
+								<td>
+									<input type="text" ng-model="fabric.color" />
+							</tr>
+							<tr>
+								<td>
+									Content
+								</td>
+								<td>
+									<div layout="column">
+										<div layout="row">
+											<input type="text" placeholder="Content" ng-model="newContent.content" />
+											<span> : </span>
+											<input type="text" placeholder="percentage" ng-model="newContent.percentage" />
+											<i class="material-icons" ng-click="addContent(newContent)">add</i>
+										</div>
+										<div class="content" ng-repeat="content in getContent()">
+											<span>{{content}}</span>
+										</div>
+									</div>
+									<textarea ng-model="fabric.content" ng-change="update()"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Units
+								</td>
+								<td>
+									<input type="text" ng-model="fabric.units" />
+							</tr>
+							<tr>
+								<td>
+									Width
+								</td>
+								<td>
+									<input type="text" ng-model="fabric.width" />
+							</tr>
+							<tr>
+								<td>
+									Current Length
+								</td>
+								<td>
+									<input type="text" ng-model="fabric.quantity" />
+							</tr>
+						</table>
+					</md-card-conten>
+				</md-card>
+				<md-card class="img">
+					<md-card-content>
+						<div class="img-container">
+							<img ng-src="{{fabric.image.url}}" />
+						</div>
+					</md-card-content>
+				</md-card>
+			</section>
+		</div>
+	</md-card-content>
+</md-card>
+	
