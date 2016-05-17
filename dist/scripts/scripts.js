@@ -8861,6 +8861,47 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
             });
         }
     };
+	
+	/*
+ 	 * Acknowledgement SECTION
+	 *
+	 * This section deals with the customer searching and what happens when a customer is selected
+	*/
+	
+	/**
+	 * Acknowledgement Variables
+	 */
+	$scope.acknowledgements = Acknowledgement.query();
+	
+	// Watch on customerSearchText to get products from the server
+	$scope.retrieveAcknowledgements = function (query) {
+		if (query) {
+			Acknowledgement.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.acknowledgements.indexOfById(responses[i]) === -1) {
+						$scope.acknowledgements.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of customers whose name matches the query
+	 * 
+	 * @public
+	 * @param {String} query - the string to search against the customer names
+	 * @returns {Array} - An array of customes that matches the query
+	 */
+	
+	$scope.searchAcknowledgements = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var acknowledgements = [];
+		acknowledgements = $filter('filter')($scope.acknowledgements, query);
+		
+		return acknowledgements;
+	};
+	
     
     $scope.addAcknowledgement = function (ack) {
         $scope.shipping.acknowledgement = {id: ack.id};

@@ -21,6 +21,7 @@
 				</md-button>
 			</md-toolbar>
 			<md-content>
+			<!--
                 <div class="acknowledgement">
 					<md-input-container>
 				        <label>Acknowledgement</label>
@@ -31,11 +32,35 @@
 				        </md-select>
 				    </md-input-container>
          			<span></span>
+                </div>-->
+                <div class="acknowledgement">
+					<md-input-container>
+						<md-autocomplete flex required 
+							md-items="acknowledgement in searchAcknowledgements(ackSearchText)" 
+							md-search-text-change="retrieveAcknowledgements(ackSearchText)"
+							md-selected-item-change="addAcknowledgement(selectedAcknowledgement)"
+							md-selected-item="selectedAcknowledgement"
+							md-no-cache="true"
+							md-search-text="ackSearchText"
+							md-item-text="acknowledgement.id"
+							md-floating-label="Acknowledgement"
+							md-min-length="0">
+						    <md-item-template>
+						    	<span md-highlight-text="ackSearchText">{{acknowledgement.id}}</span>
+						    </md-item-template>
+							
+						</md-autocomplete>
+				    </md-input-container>
+         			<span></span>
                 </div>
                 <div class="customer">
                     <span class="title">Customer</span>
                     <table class="details">
                         <tr>
+                            <td>Acknowledgment #:</td>
+                            <td>{{shipping.acknowledgement.id}}</td>
+                        <tr>
+						<tr>
                             <td>Name:</td>
                             <td>{{shipping.customer.name}}</td>
                         <tr>
