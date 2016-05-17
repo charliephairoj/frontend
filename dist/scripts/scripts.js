@@ -8830,9 +8830,6 @@ angular.module('employeeApp')
 function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
-	$scope.acknowledgements = Acknowledgement.query({limit: 200, offset:0}, function () {
-		fetchingAck = false;
-	});
 
 	$scope.shipping = new Shipping();
     var ack;
@@ -8871,7 +8868,9 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 	/**
 	 * Acknowledgement Variables
 	 */
-	$scope.acknowledgements = Acknowledgement.query();
+	$scope.acknowledgements = Acknowledgement.query(function () {
+		fetching = false;
+	});
 	
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveAcknowledgements = function (query) {
