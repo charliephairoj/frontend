@@ -46,9 +46,42 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		}
 	});
 	
+	
+	/**
+	 * Activate the acknowledgement
+	 * @private
+	 * @param {Object} acknowledgement Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.activate = function (acknowledgement) {
+		acknowledgement.$$active = true;
+		
+		Notification.display('Retrieving Acknowledgement...', false);
+		Acknowledgement.get({'id': acknowledgement.id}, function (resp) {
+			angular.merge(acknowledgement, resp);
+			Notification.hide();
+		}, function (e) {
+			Notification.display(e);
+		});
+	}
+	
+	
+	/**
+	 * Deactivate the acknowledgement
+	 * @private
+	 * @param {Object} acknowledgement Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.deactivate = function (acknowledgement) {
+		acknowledgement.$$active = false;
+	};
+	
+	
 	$scope.openAttachment = function (link) {
 		window.open(link);
-	}
+	};
 	
 	/**
 	 * Show the Download dialog

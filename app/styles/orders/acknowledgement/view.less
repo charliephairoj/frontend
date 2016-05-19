@@ -469,11 +469,23 @@
 								.flex;
 								flex-direction:row;
 								align-items:center;
-								padding-left:1em;
+								padding:0 1em;
 								justify-content:flex-start;
 								border-left:1px dotted rgba(0, 0, 0, 0.35);
 								overflow:hidden;
+								text-overflow:ellipsis;
+								white-space:nowrap;
+								flex-wrap:nowrap;
+								min-width:0;
 								outline:none;
+								
+								span{
+									width:100%;
+									display:block;
+									overflow:hidden;
+									text-overflow:ellipsis;
+									white-space:nowrap;
+								}
 					
 								&:first-child{
 									border-left:none;

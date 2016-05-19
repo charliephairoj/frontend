@@ -35,11 +35,11 @@
 	/></noscript>
 	<!-- End Facebook Pixel Code -->
   </head>
-  <body ng-app="employeeApp" ng-init="activate=false" ng-class="{'inventory': inventory}">
+  <body ng-app="employeeApp" ng-init="menuActive=false" ng-class="{'inventory': inventory}">
 
     <!-- Add your site or application content here -->
     <div id="notification">testing the notification system</div>
-    <md-toolbar class="mainMenu" style="background: #566C7A" ng-class="{'activate':activate, 'inventory': inventory}">
+    <md-toolbar class="mainMenu" style="background: #566C7A" ng-class="{'activate':menuActive, 'inventory': inventory}">
         <img class="logo" src="img/DellaLogo.png" />
         <!--Holds all the different menu options. Determined which are visible based
             on the permissions of the current user-->
@@ -156,7 +156,7 @@
     
     
     
-    <div ng-view class="mainContainer md-background" ng-class="{'activate': activate, 'inventory': inventory}">
+    <div ng-view class="mainContainer md-background" ng-class="{'activate': menuActive, 'inventory': inventory}">
         
     </div>
 	<div class="print">
