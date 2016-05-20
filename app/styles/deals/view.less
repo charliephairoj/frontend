@@ -67,7 +67,7 @@
 							text-align:center;
 							pointer-events:none;
 							h4{
-								color:#6d787c;
+								color:rgb(109, 120, 124);
 								font-family:proxima;
 								pointer-events:none;
 							}
@@ -82,96 +82,12 @@
 						//max-height:100%;
 						//position:relative;
 					
-						md-card.deal{
-							box-shadow:none;
-							border:1px solid rgb(210,210, 210);
-							cursor:move;
-							cursor:-webkit-grab;
-							
-							&.opportunity{
-								.status-bar{
-									width:15%;
-								}
-							}
-							
-							&.qualified{
-								.status-bar{
-									width:30%;
-								}
-							}
-							
-							&.meeting{
-								.status-bar{
-									width:45%;
-								}
-							}
-							
-							&.proposal{
-								.status-bar{
-									width:90%;
-								}
-							}
-							
-							&.closed.won{
-								.status-bar{
-									width:100%;
-								}
-							}
-							
-							&.closed.lost{
-								.status-bar{
-									width:100%;
-									border-color:rgb(190, 190, 190);
-								}
-							}
-							
-							md-card-title{
-								padding:0 0.05em 0.5em 0.05em;
-								.flex;
-								flex-shrink:0;
-								.justify-content(flex-start);
-								.status-bar{
-									height:0;
-									width:0%;
-									border-top:1px solid green;
-									.transition(all, 500ms);
-									//transition-delay:2s;
-								}
-							}
-							
-							md-card-content{
-								a{
-									//font-size:0.8em;
-									cursor:pointer;
-									text-decoration:none;
-									color:rgb(50,50,50);
-									outline:none;
-									
-									&:hover{
-										text-decoration:underline;
-									}
-								}
-								
-								i{
-									font-size:0.8em;
-									margin-right:0.1em;
-								}
-								
-								.amount{
-									margin-top:0.5em;
-									color:rgb(80,80,80);
-								}
-								
-								.last-contacted{
-									font-size:0.8em;
-									color:rgb(80,80,80);
-								}
-							}
-						}
+						
 					}
 					
 					md-card-actions{
 						background:#e9eced;
+						color:rgb(109, 120, 124);
 						padding:0.5em;
 						margin:0;
 						text-align:center;

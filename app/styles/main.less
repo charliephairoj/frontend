@@ -12,6 +12,8 @@ body{
  	margin: 0;
 	padding: 0;
 	font-size: 16px;
+	font-family:Roboto, proxima, Helvetica, Tahoma;
+	letter-spacing:0.01em;
 	
 	&.inventory{
 		
@@ -109,6 +111,12 @@ select{
 	justify-content: @direction;
 	-webkit-justify-content: @direction;
 }
+
+.flex-wrap(@flex-wrap:nowrap) {
+	flex-wrap: @flex-wrap;
+	-webkit-flex-wrap: @flex-wrap;
+}
+
 
 .translateZ{
 	-webkit-transform: translate3d(0, 0, 0);
@@ -249,6 +257,8 @@ select{
 @import "components/add-deal.less";
 /* Fabric directive */
 @import "components/fabric.less";
+/* Deal directive */
+@import "components/deal.less";
 
 /*
  * Scanner Page 

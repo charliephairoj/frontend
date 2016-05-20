@@ -29,7 +29,7 @@
 			<section class="info">
 				<md-card class="summary">
 					<md-card-title layout="column">
-						<h5>{{customer.name}}</h5>
+						<h3 class="name">{{customer.name}}</h3>
 						<div layout="row">
 							<i class="material-icons">web</i>
 							<span>{{customer.website}}</span>
@@ -41,6 +41,9 @@
 					</md-card-title>
 				</md-card>
 		        <md-card class="customer">
+					<md-card-title>
+						<md-card-title-text>About {{customer.name}}</md-card-title-text>
+					</md-card-title>
 					<md-card-content>
 						<table>
 							<tr>
@@ -95,7 +98,24 @@
 					</md-card-content>
 				</md-card>
 				
+				<md-card class="deals">
+					<md-card-title layout="row" layout-align="center">
+						<h4>Deals</h4>
+						<div flex></div>
+						<md-button class="md-raised md-accent md-icon-button">
+							<i class="material-icons">add</i>
+						</md-button>
+					</md-card-title>
+					<md-card-content>
+						<deal ng-repeat="deal in deals">
+						</deal>
+					</md-card-content>
+				</md-card>
+				
 				<md-card class="contacts">
+					<md-card-title>
+						<md-card-title-text>Contacts</md-card-title-text>
+					</md-card-title>
 					<md-card-content>
 						<md-card class="new-contact">
 							<md-card-title>
@@ -106,6 +126,10 @@
 									<md-input-container>
 									  <label>Name</label>
 									  <input type="text" size="40" ng-model="contact.name">
+									</md-input-container>
+									<md-input-container>
+									  <label>Job Title</label>
+									  <input type="text" size="40" ng-model="contact.job_title">
 									</md-input-container>
 									<md-input-container>
 									  <label>Telephone</label>
@@ -131,6 +155,10 @@
 								<div class="contact-info">
 									<h5>{{::contact.name}}</h5>
 									<div layout="row">
+										<i class="material-icons">card_travel</i>
+										<input type="text" ng-model="contact.job_title" />
+									</div>
+									<div layout="row">
 										<i class="material-icons">phone</i>
 										<input type="text" ng-model="contact.telephone" />
 									</div>
@@ -146,23 +174,6 @@
 				
 			</section>
 			<section class="orders">
-				<md-card class="deals">
-					<md-card-title>
-						<h4>Deals</h4>
-						<div flex></div>
-						<md-button class="md-raised md-accent">New Deal</md-button>
-					</md-card-title>
-					<md-card-content>
-						<div>
-						</div>
-						<md-card ng-repeat="deal in deals">
-							<md-card-content layout="row" layout-align="space-between center">
-								<h5>{{deal.description}}</h5>
-								<md-button class="md-accent" ng-href="#/deal/{{deal.id}}">View</md-button>
-							</md-card-content>
-						</md-card>
-					</md-card-content>
-				</md-card>
 				<md-card class="acknowledgements">
 					<md-card-content>
 						<md-card ng-repeat="ack in acknowledgements">

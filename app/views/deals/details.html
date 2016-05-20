@@ -17,37 +17,17 @@
 						</div>
 					</md-card-title>
 				</md-card>
-		        <md-card class="customer">
+				
+		        <md-card class="about">
+					<md-card-title>
+						<md-card-title-text>About this Deal</md-card-title-text>
+					</md-card-title>
 					<md-card-content>
 						<table>
 							<tr>
 								<td>Customer</td>
 								<td>
 									<a ng-href="#/contact/customer/{{deal.customer.id}}"><h5>{{deal.customer.name}}</h5></a>
-								</td>
-							</tr>
-							<tr>
-								<td>Telephone</td>
-								<td>
-									{{deal.customer.telephone}}
-								</td>
-							</tr>
-							<tr>
-								<td>Fax</td>
-								<td>
-									{{deal.customer.fax}}
-								</td>
-							</tr>
-							<tr>
-								<td>Email</td>
-								<td>
-									{{deal.customer.email}}
-								</td>
-							</tr>
-							<tr>
-								<td>Website</td>
-								<td>
-									{{deal.customer.website}}
 								</td>
 							</tr>
 							<tr>
@@ -96,48 +76,71 @@
 					</md-card-content>
 				</md-card>
 				
-				<md-card class="contacts">
+		        <md-card class="company">
+					<md-card-title>
+						<md-card-title-text>Company</md-card-title-text>
+					</md-card-title>
 					<md-card-content>
-						<md-card class="new-contact">
-							<md-card-title>
-								<md-card-title-text>New Contact</md-card-title-text>
-							</md-card-title>
-							<md-card-content>
-								<div layout="column">
-									<md-input-container>
-									  <label>Name</label>
-									  <input type="text" size="40" ng-model="contact.name">
-									</md-input-container>
-									<md-input-container>
-									  <label>Telephone</label>
-									  <input type="text" size="20" ng-model="contact.telephone">
-									</md-input-container>
-									<md-input-container>
-									  <label>Email</label>
-									  <input type="text" size="40" ng-model="contact.email">
-									</md-input-container>
-								</div>
-							</md-card-content>
-							<md-card-actions>
-								<md-button class="md-raised md-icon-button md-accent" ng-click="addContact(contact)">
-									<md-tooltip>
-										Create
-									</md-tooltip>
-									<i class="material-icons">create</i>
-								</md-button>
-							</md-card-actions>
-						</md-card>
-						<md-card class="contact" ng-repeat="contact in customer.contacts">
+						<table>
+							<tr>
+								<td>Name</td>
+								<td>
+									<a ng-href="#/contact/customer/{{deal.customer.id}}"><h5>{{deal.customer.name}}</h5></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Telephone</td>
+								<td>
+									{{deal.customer.telephone}}
+								</td>
+							</tr>
+							<tr>
+								<td>Fax</td>
+								<td>
+									{{deal.customer.fax}}
+								</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>
+									{{deal.customer.email}}
+								</td>
+							</tr>
+							<tr>
+								<td>Website</td>
+								<td>
+									{{deal.customer.website}}
+								</td>
+							</tr>
+						</table>
+					</md-card-content>
+				</md-card>
+				
+				<md-card class="contacts">
+					<md-card-title>
+						<md-card-title-text>Contacts</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<md-card class="contact" ng-repeat="contact in deal.customer.contacts">
 							<md-card-content>
 								<div class="contact-info">
 									<h5>{{::contact.name}}</h5>
 									<div layout="row">
+										<i class="material-icons">card_travel</i>
+										<span>{{::contact.job_title}}</span>
+										<!--<input type="text" ng-model="contact.telephone" />-->
+									</div>
+									<div layout="row">
 										<i class="material-icons">phone</i>
-										<input type="text" ng-model="contact.telephone" />
+										<a ng-href="tel:{{::contact.telephone}}">{{::contact.telephone}}</a>
+										<!--<input type="text" ng-model="contact.telephone" />-->
 									</div>
 									<div layout="row">
 										<i class="material-icons">email</i>
+										<a ng-href="mailto:{{::contact.email}}">{{::contact.email}}</a>
+										<!--
 										<input type="text" ng-model="contact.email" />
+											-->
 									</div>
 								</div>
 							</md-card-content>
@@ -146,32 +149,52 @@
 				</md-card>
 				
 			</section>
-			<section class="orders">
-				<md-card class="deals">
-					<md-card-title>
-						<h4>Deals</h4>
-						<div flex></div>
-						<md-button class="md-raised md-accent">New Deal</md-button>
-					</md-card-title>
+			<section class="events">
+				<md-card class="add-event">
 					<md-card-content>
-						<div>
+						<div name="addEvent" class="container">
+							<div class="primary" layout="flex">
+								<div layout="row" layout-align="flex-start">
+									<md-select ng-model="newEvent.type" placeholder="Log an Activity">
+										<md-option ng-selected="true" value="emailed">Log a Email</md-option>
+										<md-option value="called">Log a Call</md-option>
+										<md-option value="had a meeting with">Log a Meeting</md-option>
+									</md-select>
+									<md-select ng-model="newEvent.contact" placeholder="Contact">
+										<md-option ng-selected="$index == 0" ng-value="contact" ng-repeat="contact in deal.customer.contacts">{{contact.name}}</md-option>
+									</md-select>
+								</div>
+								
+								<md-datepicker ng-model="newEvent.occured_at">
+								</md-datepicker>
+							</div>
+							<div class="notes">
+								<textarea ng-model="newEvent.notes">
+									
+								</textarea>
+							</div>
 						</div>
-						<md-card ng-repeat="deal in deals">
-							<md-card-content>
-								<h5>{{deal.description}}</h5>
-							</md-card-content>
-						</md-card>
 					</md-card-content>
+					<md-card-actions>
+						<md-button class="md-accent md-raised" ng-click="addEvent(newEvent)">Log Activity</md-button>
+					</md-card-actions>
 				</md-card>
-				<md-card class="acknowledgements">
-					<md-card-content>
-						<md-card ng-repeat="ack in acknowledgements">
-							<md-card-content>
-								Acknowledgement {{::ack.id}}
-							</md-card-content>
-						</md-card>
-					</md-card-content>
-				</md-card>
+				<div class="event-container" ng-class="{'first':$index == 0}" ng-repeat="event in deal.events">
+					<div class="circle">
+					</div>
+					<div class="connector">
+					</div>
+					<md-card class="event">
+						<md-card-content>
+
+							<deal-event-message description="event.description" class="description">
+							</deal-event-message>
+							<div class="timestamp">
+								{{::event.occured_at | date:'mediumDate'}} at {{::event.occured_at | date:'h:mm a Z'}}
+							</div>
+						</md-card-content>
+					</md-card>
+				</div>
 			</section>
 		</md-content>
     </div>

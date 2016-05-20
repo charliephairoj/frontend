@@ -18,10 +18,28 @@ angular.module('employeeApp')
 			'RMB':'¥',
 			'SGD':'S$'
 		};
-	
+		
+	$scope.newEvent = {
+		occured_at: new Date()
+	};
 	$scope.deal = Deal.get({'id': $routeParams.id}, function () {
 		$scope.deal.last_contacted = new Date($scope.deal.last_contacted);
 	});
+	
+	$scope.addEvent = function (event) {
+		var description = "You "
+		description += event.type;
+		description += " " + event.contact.name;
+		
+		$scope.deal.events.push({
+			description: description,
+			notes: event.notes,
+			occured_at: event.occured_at
+			
+		});
+		$scope.update();
+		$scope.newEvent = {occured_at: new Deal()};
+	};
 	
 	$scope.update = function () {
 		Notification.display('Updating deal...', false);
@@ -31,9 +49,10 @@ angular.module('employeeApp')
 			delete deal.customer.addresses[i].marker;
 		}
 		
-		deal.$update(function () {
+		deal.$update(function (resp) {
 			updateLoopActive = false;
 			Notification.display('Deal updated');
+			angular.merge($scope.deal, resp);
 		}, function (e) { 
 			updateLoopActive = false;
 			$log.error(e);
@@ -45,7 +64,11 @@ angular.module('employeeApp')
 		var deal = angular.copy($scope.deal);
 	
 		delete deal.last_modified;
-		delete deal.customer.last_modified;
+		try{
+			delete deal.customer.last_modified;
+		} catch (e) {
+			
+		}
 		return deal;
 	}, function (newVal, oldVal) {
 		if (oldVal.hasOwnProperty('id') && !updateLoopActive) {

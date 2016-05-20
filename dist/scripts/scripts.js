@@ -1742,10 +1742,28 @@ angular.module('employeeApp')
 			'RMB':'¥',
 			'SGD':'S$'
 		};
-	
+		
+	$scope.newEvent = {
+		occured_at: new Date()
+	};
 	$scope.deal = Deal.get({'id': $routeParams.id}, function () {
 		$scope.deal.last_contacted = new Date($scope.deal.last_contacted);
 	});
+	
+	$scope.addEvent = function (event) {
+		var description = "You "
+		description += event.type;
+		description += " " + event.contact.name;
+		
+		$scope.deal.events.push({
+			description: description,
+			notes: event.notes,
+			occured_at: event.occured_at
+			
+		});
+		$scope.update();
+		$scope.newEvent = {occured_at: new Deal()};
+	};
 	
 	$scope.update = function () {
 		Notification.display('Updating deal...', false);
@@ -1755,9 +1773,10 @@ angular.module('employeeApp')
 			delete deal.customer.addresses[i].marker;
 		}
 		
-		deal.$update(function () {
+		deal.$update(function (resp) {
 			updateLoopActive = false;
 			Notification.display('Deal updated');
+			angular.merge($scope.deal, resp);
 		}, function (e) { 
 			updateLoopActive = false;
 			$log.error(e);
@@ -1769,7 +1788,11 @@ angular.module('employeeApp')
 		var deal = angular.copy($scope.deal);
 	
 		delete deal.last_modified;
-		delete deal.customer.last_modified;
+		try{
+			delete deal.customer.last_modified;
+		} catch (e) {
+			
+		}
 		return deal;
 	}, function (newVal, oldVal) {
 		if (oldVal.hasOwnProperty('id') && !updateLoopActive) {
@@ -13417,6 +13440,55 @@ function (Customer, $mdToast, KeyboardNavigation, $rootScope, $filter) {
 		}
     };
 }]);
+
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name frontendApp.directive:dealEventMessage
+ * @description
+ * # dealEventMessage
+ */
+angular.module('employeeApp')
+.directive('dealEventMessage', function () {
+	var stages = [
+		'Opportunity',
+		'Qualified',
+		'Meeting',
+		'Proposal', 
+		'Closed Won',
+		'Closed Lost',
+		'emailed',
+		'called',
+		'had a meeting with'
+	];
+	
+	function formatEventDescription (description) {
+		for (var i = 0; i < stages.length; i++) {
+			console.log(stages[i]);
+			console.log(description.indexOf(stages[i]));
+			
+			if (description.indexOf(stages[i])) {
+				var replacement = "<b>" + stages[i] + "</b>";
+				description = description.replace(stages[i], replacement);
+			}
+		}
+		
+		return description;
+	}
+	
+	return {
+		restrict: 'E',
+		scope: {
+			'description': '='
+		},
+		link: function postLink(scope, element, attrs) {
+			var description = scope.description;
+			var newDescription = formatEventDescription(description);
+			element.html(newDescription);
+		}
+	};
+});
 
 'use strict';
 
