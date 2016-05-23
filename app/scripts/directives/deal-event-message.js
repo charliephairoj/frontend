@@ -22,9 +22,6 @@ angular.module('employeeApp')
 	
 	function formatEventDescription (description) {
 		for (var i = 0; i < stages.length; i++) {
-			console.log(stages[i]);
-			console.log(description.indexOf(stages[i]));
-			
 			if (description.indexOf(stages[i])) {
 				var replacement = "<b>" + stages[i] + "</b>";
 				description = description.replace(stages[i], replacement);

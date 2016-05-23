@@ -1,36 +1,41 @@
 
 angular.module('employeeApp.services')
 .factory('dateParser', ['$q', function($q) {
-	function formatter(obj){
-		if(obj.hasOwnProperty('delivery_date')){
-			obj.delivery_date = new Date(obj.delivery_date);
+	var attrs = [
+		'delivery_date',
+		'time_created',
+		'last_login',
+		'last_contacted',
+		'last_modified',
+		'occurred_at',
+	]
+	
+	function parseObj(data) {
+		for (var i in data) {
+			if (typeof(data[i]) === 'object') {
+				parseObj(data[i]);
+			} else if (typeof(data[i]) === 'string') {
+				if (attrs.indexOf(i) > -1) {
+					data[i] = new Date(data[i]);
+				}
+			}
 		}
-		if(obj.hasOwnProperty('time_created')){
-			obj.time_created = new Date(obj.time_created);
-		}
-		if(obj.hasOwnProperty('last_login')){
-			obj.last_login = new Date(obj.last_login);
-		}
-		return obj;
 	}
+	
 	
 	return {
 		'response': function (response) {
-			try {
-				var data = response.data;
-				if(angular.isArray(data)){
-					for(var i=0; i<data.length; i++){
-						try{
-							data[i] = formatter(data[i]);
-						} catch(e) {}
-					}
-				}else if(angular.isObject(data)){
-					data = formatter(data);
+			
+			var data = response.data;
+			
+			if(angular.isArray(data)) {
+				for(var i=0; i < data.length; i++) {
+					parseObj(data[i]);
 				}
-				response.data = data;
-			} catch(e) {
-				//$log.error(e);
+			} else if(angular.isObject(data)) {
+				parseObj(data);
 			}
+			response.data = data;
 			return response || $q.when(response);
 		},
 		'responseError': function (rejection) {

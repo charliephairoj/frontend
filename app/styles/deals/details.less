@@ -265,10 +265,13 @@
 								width:100%;
 								margin-top:1em;
 								border-top:1px solid rgb(200,200,200);
+								.flex;
+								height:auto;
+								min-height:8em;
 								
 								textarea{
 									width:100%;
-									height:8em;
+									padding:1em;
 									resize:vertical;
 									border:none;
 									outline:none;
@@ -308,7 +311,7 @@
 						width:@radius * 2;
 						border:1px solid rgb(180,180,180);
 						left:0;
-						margin-left:-@radius;
+						margin-left:-(@radius + 0.15em);
 						top:50%;
 						margin-top:-@radius;
 						background:rgb(230, 230, 230);
@@ -331,16 +334,34 @@
 							.flex-wrap(nowrap);
 							.justify-content(space-between);
 							
-							.description{
+							.summary{
 								.flex;
-								.flex-direction(row);
-								.flex-wrap(wrap);
-								.justify-content(flex-start);
+								.flex-direction(column);
+								width:100%;
 								
-								b{
-									margin:0 0.25em;
+								.description{
+									.flex;
+									.flex-direction(row);
+									.flex-wrap(wrap);
+									.justify-content(flex-start);
+								
+									b{
+										margin:0 0.25em;
+									}
+								}
+								
+								.notes{
+									margin-top:0.5em;
+									margin-left:2em;
+									.flex;
+									.flex-direction(row);
+									font-size:0.9em;
+									span{
+										margin-right:1em;
+									}
 								}
 							}
+							
 							
 							.timestamp{
 								width:15em;

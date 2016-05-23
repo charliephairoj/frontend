@@ -156,7 +156,7 @@
 							<div class="primary" layout="flex">
 								<div layout="row" layout-align="flex-start">
 									<md-select ng-model="newEvent.type" placeholder="Log an Activity">
-										<md-option ng-selected="true" value="emailed">Log a Email</md-option>
+										<md-option ng-selected="true" value="emailed">Log an Email</md-option>
 										<md-option value="called">Log a Call</md-option>
 										<md-option value="had a meeting with">Log a Meeting</md-option>
 									</md-select>
@@ -165,11 +165,11 @@
 									</md-select>
 								</div>
 								
-								<md-datepicker ng-model="newEvent.occured_at">
+								<md-datepicker ng-model="newEvent.occurred_at">
 								</md-datepicker>
 							</div>
 							<div class="notes">
-								<textarea ng-model="newEvent.notes">
+								<textarea placeholder="Notes" ng-model="newEvent.notes">
 									
 								</textarea>
 							</div>
@@ -186,11 +186,15 @@
 					</div>
 					<md-card class="event">
 						<md-card-content>
-
-							<deal-event-message description="event.description" class="description">
-							</deal-event-message>
+							<div class="summary">
+								<deal-event-message description="event.description" class="description">
+								</deal-event-message>
+								<div class="notes">
+									<span>Notes:  </span><p>{{::event.notes}}</p>
+								</div>
+							</div>
 							<div class="timestamp">
-								{{::event.occured_at | date:'mediumDate'}} at {{::event.occured_at | date:'h:mm a Z'}}
+								{{::event.occurred_at | date:'mediumDate'}} at {{::event.occurred_at | date:'h:mm a Z'}}
 							</div>
 						</md-card-content>
 					</md-card>

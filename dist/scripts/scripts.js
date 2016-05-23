@@ -1732,7 +1732,8 @@ function ($scope, Supplier, Notification, $filter) {
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('DealsDetailsCtrl', ['$scope', 'Deal', '$routeParams', 'Notification', '$timeout', '$log', function ($scope, Deal, $routeParams, Notification, $timeout, $log) {
+.controller('DealsDetailsCtrl', ['$scope', 'Deal', '$routeParams', 'Notification', '$timeout', '$log', '$rootScope',
+function ($scope, Deal, $routeParams, Notification, $timeout, $log, $rootScope) {
     var updateLoopActive = false,
 		timeoutPromise,
 		currencySigns = {
@@ -1742,56 +1743,68 @@ angular.module('employeeApp')
 			'RMB':'¥',
 			'SGD':'S$'
 		};
-		
+
 	$scope.newEvent = {
-		occured_at: new Date()
+		occurred_at: new Date()
 	};
-	$scope.deal = Deal.get({'id': $routeParams.id}, function () {
-		$scope.deal.last_contacted = new Date($scope.deal.last_contacted);
-	});
-	
+	$scope.deal = Deal.get({'id': $routeParams.id});
+
 	$scope.addEvent = function (event) {
 		var description = "You "
 		description += event.type;
-		description += " " + event.contact.name;
-		
+
+        if (event.contact) {
+            description += " " + event.contact.name;
+        } else {
+            description += " " + $scope.deal.customer.name;
+        }
+
 		$scope.deal.events.push({
 			description: description,
 			notes: event.notes,
-			occured_at: event.occured_at
-			
+			occurred_at: event.occurred_at
+
 		});
-		$scope.update();
-		$scope.newEvent = {occured_at: new Deal()};
+
+		$scope.newEvent = {occurred_at: new Date()};
 	};
-	
+
 	$scope.update = function () {
+
 		Notification.display('Updating deal...', false);
+
 		var deal = angular.copy($scope.deal);
-		
+
 		for (var i = 0; i < deal.customer.addresses.length; i++) {
 			delete deal.customer.addresses[i].marker;
 		}
-		
+
 		deal.$update(function (resp) {
 			updateLoopActive = false;
+
 			Notification.display('Deal updated');
-			angular.merge($scope.deal, resp);
-		}, function (e) { 
+
+			$rootScope.safeApply(function () {
+				angular.copy(resp, $scope.deal);
+			});
+		}, function (e) {
 			updateLoopActive = false;
+
 			$log.error(e);
+
 			Notification.display('There was an error updating the deal');
 		});
+
 	}
-	
+
 	$scope.$watch(function () {
 		var deal = angular.copy($scope.deal);
-	
+
 		delete deal.last_modified;
 		try{
 			delete deal.customer.last_modified;
 		} catch (e) {
-			
+
 		}
 		return deal;
 	}, function (newVal, oldVal) {
@@ -1800,13 +1813,13 @@ angular.module('employeeApp')
 			timeoutPromise = $timeout($scope.update, 5000);
 		}
 	}, true);
-	
+
 	$scope.getCurrencySign = function (currency) {
 		return currencySigns[currency];
 	}
-	
+
 	$scope.$on('$destroy', function () {
-		$scope.update();
+		$scope.deal.update();
 	})
 }]);
 
@@ -13465,9 +13478,6 @@ angular.module('employeeApp')
 	
 	function formatEventDescription (description) {
 		for (var i = 0; i < stages.length; i++) {
-			console.log(stages[i]);
-			console.log(description.indexOf(stages[i]));
-			
 			if (description.indexOf(stages[i])) {
 				var replacement = "<b>" + stages[i] + "</b>";
 				description = description.replace(stages[i], replacement);
@@ -19119,36 +19129,41 @@ angular.module('employeeApp.services')
 
 angular.module('employeeApp.services')
 .factory('dateParser', ['$q', function($q) {
-	function formatter(obj){
-		if(obj.hasOwnProperty('delivery_date')){
-			obj.delivery_date = new Date(obj.delivery_date);
+	var attrs = [
+		'delivery_date',
+		'time_created',
+		'last_login',
+		'last_contacted',
+		'last_modified',
+		'occurred_at',
+	]
+	
+	function parseObj(data) {
+		for (var i in data) {
+			if (typeof(data[i]) === 'object') {
+				parseObj(data[i]);
+			} else if (typeof(data[i]) === 'string') {
+				if (attrs.indexOf(i) > -1) {
+					data[i] = new Date(data[i]);
+				}
+			}
 		}
-		if(obj.hasOwnProperty('time_created')){
-			obj.time_created = new Date(obj.time_created);
-		}
-		if(obj.hasOwnProperty('last_login')){
-			obj.last_login = new Date(obj.last_login);
-		}
-		return obj;
 	}
+	
 	
 	return {
 		'response': function (response) {
-			try {
-				var data = response.data;
-				if(angular.isArray(data)){
-					for(var i=0; i<data.length; i++){
-						try{
-							data[i] = formatter(data[i]);
-						} catch(e) {}
-					}
-				}else if(angular.isObject(data)){
-					data = formatter(data);
+			
+			var data = response.data;
+			
+			if(angular.isArray(data)) {
+				for(var i=0; i < data.length; i++) {
+					parseObj(data[i]);
 				}
-				response.data = data;
-			} catch(e) {
-				//$log.error(e);
+			} else if(angular.isObject(data)) {
+				parseObj(data);
 			}
+			response.data = data;
 			return response || $q.when(response);
 		},
 		'responseError': function (rejection) {
