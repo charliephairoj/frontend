@@ -14190,7 +14190,7 @@ angular.module('employeeApp')
 				if (newContent) {
 					if (newContent.content && newContent.percentage) {
 						scope.fabric.content += ' '
-						$scope.fiber.content += newContent.content + ':' + newContent.percentage;
+						scope.fabric.content += newContent.content + ':' + newContent.percentage;
 					}
 				}
 
