@@ -14191,6 +14191,8 @@ angular.module('employeeApp')
 					if (newContent.content && newContent.percentage) {
 						scope.fabric.content += ' '
 						scope.fabric.content += newContent.content + ':' + newContent.percentage;
+
+						scope.update();
 					}
 				}
 
