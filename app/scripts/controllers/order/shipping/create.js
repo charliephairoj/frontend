@@ -1,13 +1,13 @@
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',   
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',
 function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
 
 	$scope.shipping = new Shipping();
     var ack;
-    
+
     scanner.onscan = function (code) {
         var re = new RegExp(/^A\-(s+)?/);
         if (re.test(code)) {
@@ -32,20 +32,20 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
             });
         }
     };
-	
+
 	/*
  	 * Acknowledgement SECTION
 	 *
 	 * This section deals with the customer searching and what happens when a customer is selected
 	*/
-	
+
 	/**
 	 * Acknowledgement Variables
 	 */
 	$scope.acknowledgements = Acknowledgement.query(function () {
 		fetching = false;
 	});
-	
+
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveAcknowledgements = function (query) {
 		if (query) {
@@ -58,48 +58,54 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 			});
 		}
 	};
-	
+
 	/**
 	 * Returns a list of customers whose name matches the query
-	 * 
+	 *
 	 * @public
 	 * @param {String} query - the string to search against the customer names
 	 * @returns {Array} - An array of customes that matches the query
 	 */
-	
+
 	$scope.searchAcknowledgements = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var acknowledgements = [];
 		acknowledgements = $filter('filter')($scope.acknowledgements, query);
-		
+
 		return acknowledgements;
 	};
-	
-    
+
+
     $scope.addAcknowledgement = function (ack) {
-        $scope.shipping.acknowledgement = {id: ack.id};
-        $scope.shipping.customer = ack.customer;
-        $scope.shipping.items = ack.items;
-        $scope.shipping.delivery_date = new Date(ack.delivery_date);
-		
-		for (var i = 0; i < $scope.shipping.items.length; i++) {
-			try{
-				$scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
-				$scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
-				$scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
-				$scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
-				
-				
-			} catch (e) {
-				$log.warn(e);
+		$scope.shipping.acknowledgement = Acknowledgement.get({id: ack.id},
+			function (resp) {
+				$scope.shipping.acknowledgement = {id: ack.id};
+		        $scope.shipping.customer = resp.customer;
+		        $scope.shipping.items = resp.items;
+		        $scope.shipping.delivery_date = new Date(resp.delivery_date);
+
+				for (var i = 0; i < $scope.shipping.items.length; i++) {
+					try{
+						$scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
+						$scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
+						$scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
+						$scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
+
+
+					} catch (e) {
+						$log.warn(e);
+					}
+
+				}
+
+
 			}
-			
-		}
-		
-        //Hide Customer Panel
-        $scope.showAck = false;
+		)
+
+		//Hide Customer Panel
+		$scope.showAck = false;
     };
-    
+
     $scope.$watch('query', function (q) {
 		if (q) {
 			Acknowledgement.query({limit: 5, q: q}, function (resources) {
@@ -111,7 +117,7 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 			});
 		}
 	});
-    
+
 	$scope.loadNext = function () {
 		if (!fetchingAck) {
 			fetchingAck = true;
@@ -126,10 +132,10 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 			});
 		}
 	};
-    
-    
+
+
     $scope.create = function () {
-        
+
         if ($scope.isValidated()) {
 			$mdToast.show($mdToast
 				.simple()
@@ -144,7 +150,7 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 					window.open(resource.pdf.url);
                 }
                 $location.path('/order/shipping');
-            }, 
+            },
             function () {
 				$mdToast.show($mdToast
 					.simple()
@@ -156,13 +162,13 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 				.simple()
 				.content('The Order is Not Complete'));
         }
-        
+
     };
-    
+
     $scope.removeProduct = function (index) {
         $scope.shipping.items.splice(index, 1);
     };
-    
+
     //Validations
     $scope.isValidated = function () {
         /*
@@ -172,15 +178,15 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
         if (!$scope.shipping.acknowledgement) {
             return false;
         }
-        
+
         if (!$scope.shipping.delivery_date) {
             return false;
         }
         //Return true for form validated
         return true;
     };
-    
+
     $scope.$on('$destroy', function () {
-        scanner.onscan = null; 
+        scanner.onscan = null;
     });
 }]);
