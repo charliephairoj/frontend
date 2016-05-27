@@ -1,18 +1,18 @@
 <div class="acknowledgementViewPage">
-    
-    
+
+
     <!--
         Workspace
     -->
-    
+
     <div class="workspace" ng-class="{'map': map}">
-		
-		
+
+
 		<md-toolbar layout="column" layout-align="center center" md-scroll-shrink="true">
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Acknowledgements</span></h3>
 				<div flex></div>
-				
+
 				<md-button class="md-icon-button md-primary md-raised" ng-show="::currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
 					<md-tooltip>
 						Create New Acknowledgement
@@ -37,10 +37,10 @@
 				</md-button>
 				<input class="search" type="text" ng-model="query.$.$" />
 			</div>
-			
+
 			<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
-			
-			
+
+
 			<div class="title-bar">
 				<div class="id">ID</div>
 				<div class="order-date">DATE</div>
@@ -52,14 +52,14 @@
 				<div class="status">STATUS</div>
 				<div class="remarks">REMARKS</div>
 			</div>
-			
-			
-			
+
+
+
 		</md-toolbar>
 		<md-content on-scroll-end="loadNext()">
-							
+
 							<md-card ng-class="{'active': ack.$$active}" class="acknowledgement" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
-								<md-card-title class="md-primary" ng-show="active" layout="row" layout-align="center center">
+								<md-card-title class="md-primary" ng-show="ack.$$active" layout="row" layout-align="center center">
 									<md-card-title-text ng-click="deactivate(ack)">
 										<span>Acknowledgement {{::ack.id}}</span>
 									</md-card-title-text>
@@ -74,7 +74,7 @@
 									</md-button>
 								</md-card-title>
 								<md-card-content>
-						    		<div class="item-preview-container" ng-hide="ack.$$active" flex="none">	
+						    		<div class="item-preview-container" ng-hide="ack.$$active" flex="none">
 						    			<div class="item" ng-class="{'selected':ack.$selected}">
 											<div class="id" ng-click="activate(ack)">{{::ack.id}}</div>
 											<div class="order-date" ng-click="activate(ack)">{{::ack.time_created | date: "MMM d, yyyy"}}</div>
@@ -90,9 +90,9 @@
 												<select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')" ng-change="update(ack)">
 													<option value="deposit received">Deposit Received</option>
 													<option value="acknowledged">Acknowledged</option>
-													
+
 													<option value="acknowledged">Acknowledged</option>
-													
+
 													<option value="in production">In Production</option>
 													<option value="ready to ship">Ready to Ship</option>
 													<option value="shipped">Shipped</option>
@@ -104,7 +104,7 @@
 											<div class="remarks" ng-click="activate(ack)">
 												<span>{{ack.remarks}}</span>
 											</div>
-									
+
 						    			</div>
 				    					<div class="status-bar">
 											<div class="event" ng-class="::{'acknowledged': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
@@ -130,7 +130,7 @@
 											</div>
 										</div>
 						    		</div>
-									
+
 									<div class="item-container" ng-if="ack.$$active">
   										<div class="file-placeholder-container">
 											<div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
@@ -174,9 +174,9 @@
 																	<md-select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
 																		<md-option value="deposit received">Deposit Received</md-option>
 																		<md-option value="acknowledged">Acknowledged</md-option>
-												
+
 																		<md-option value="acknowledged">Acknowledged</md-option>
-												
+
 																		<md-option value="in production">In Production</md-option>
 																		<md-option value="ready to ship">Ready to Ship</md-option>
 																		<md-option value="shipped">Shipped</md-option>
@@ -217,7 +217,7 @@
 														</table>
 													</md-card-content>
 												</md-card>
-								
+
 												<section class="files" file-drop="addFiles($files, ack)" file-drop-class="files-drag-active">
 													<div class="files">
 						  								<md-card class="file" ng-repeat="file in ack.files" ng-class="{'uploaded': file.id}" ng-click="openAttachment(file.url)">
@@ -230,9 +230,9 @@
 						  						      	</md-card>
 													</div>
 												</section>
-								
+
 											</section>
-										
+
 											<div class="status-bar">
 												<div class="event acknowledged" ng-class="::{'active': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
 													<span>Acknowledged</span>
@@ -268,9 +268,9 @@
 													<span>Paid</span>
 													<div class="arrow"></div>
 													<div class="arrow2"></div>
-												</div>	
+												</div>
 											</div>
-										
+
 										</div>
 										<section>
 											<md-subheader class="md-primary md-no-sticky">Products</md-subheader>
@@ -294,11 +294,11 @@
 																	<td>
 																		<input name="description" type="text" size="60" ng-model="item.description" required />
 																	</td>
-												
+
 																</tr>
 																<tr>
 																	<td>
-																		<span>Quantity</span>										
+																		<span>Quantity</span>
 																	</td>
 																	<td>
 																		<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
@@ -338,8 +338,8 @@
 																<tr class="fabric">
 																	<td><span>Fabric</span></td>
 																	<td>
-																		<md-autocomplete flex 
-																			md-items="fabric in searchFabrics(fabricSearchText)" 
+																		<md-autocomplete flex
+																			md-items="fabric in searchFabrics(fabricSearchText)"
 																			md-search-text-change="retrieveFabrics(fabricSearchText)"
 																			md-selected-item="item.fabric"
 																			md-search-text="fabricSearchText"
@@ -365,8 +365,8 @@
 																<tr class="fabric" ng-repeat="pillow in item.pillows">
 																	<td><span>{{pillow.type}} pillow</span></td>
 																	<td>
-																		<md-autocomplete flex 
-																			md-items="fabric in searchFabrics(fabricSearchText)" 
+																		<md-autocomplete flex
+																			md-items="fabric in searchFabrics(fabricSearchText)"
 																			md-search-text-change="retrieveFabrics(fabricSearchText)"
 																			md-selected-item="pillow.fabric"
 																			md-search-text="fabricSearchText"
@@ -405,15 +405,15 @@
 												</md-card>
 											</div>
 										</section>
-										
+
 									</div>
 								</md-card-content>
-					    		
+
 							</md-card>
-				    		
-				    	
+
+
 		</md-content>
-		
+
     </div>
-    
+
 </div>

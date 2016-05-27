@@ -1,16 +1,16 @@
 <div class="createAcknowledgementPage" fade-in file-drop="addFiles($files)" file-drop-class="page-drag-active">
-    
+
     <!--
         Forms
-    -->   
-    
+    -->
+
     <form class="ack" name="ackForm" novalidate ng-class="{success: ack.id}">
-        
+
         <!--
             Workspace
         -->
         <div class="workspace">
-			
+
 			<md-toolbar layout="row" layout-align="center center" md-scroll-shrink="true">
 				<h3><span>Open an Acknowledgement</span></h3>
 				<div flex></div>
@@ -18,7 +18,7 @@
 					<md-tooltip>
 						Create
 					</md-tooltip>
-					<i class="material-icons">create</i>				
+					<i class="material-icons">create</i>
 				</md-button>
             	<md-button class="md-icon-button md-warn md-raised" href="#/order/acknowledgement">
 					<md-tooltip>
@@ -33,7 +33,7 @@
 					<i class="material-icons">clear_all</i>
 				</md-button>
 			</md-toolbar>
-			
+
 
 			<md-content layout="column">
 				<md-card class="order-details">
@@ -47,11 +47,11 @@
 							    </md-select>
 							</md-input-container>
 							</div>
-				            <div class="customer">				
+				            <div class="customer">
 								<div class='info'>
-									<md-autocomplete flex="onshrink" required 
+									<md-autocomplete flex="onshrink" required
 										name='customer'
-										md-items="customer in searchCustomers(customerSearchText)" 
+										md-items="customer in searchCustomers(customerSearchText)"
 										md-selected-item="selectedCustomer"
 										md-selected-item-change="addCustomer(selectedCustomer)"
 										md-search-text="customerSearchText"
@@ -72,24 +72,24 @@
 									  <md-icon md-font-icon="material-icons">phone</md-icon>
 									  <input type="text" ng-model="ack.customer.telephone">
 							          <div class="hint">How do we contact them?</div>
-								  
+
 									</md-input-container>
 									<md-input-container>
 									  <label>Fax</label>
 									  <md-icon md-font-icon="material-icons">receipt</md-icon>
 									  <input type="text" ng-model="ack.customer.fax">
 							          <div class="hint">How do we send them an invoice?</div>
-								  
+
 									</md-input-container>
 									<md-input-container>
 									  <label>Email</label>
 									  <md-icon md-font-icon="material-icons">email</md-icon>
 									  <input type="text" ng-model="ack.customer.email">
 							          <div class="hint">How do we send them messages?</div>
-								  
+
 									</md-input-container>
 								</div>
-				
+
 								<div class="address">
 									<md-input-container>
 									  <label>Address</label>
@@ -113,9 +113,9 @@
 									</md-input-container>
 								</div>
 								<div class="contact">
-									<md-autocomplete flex="onshrink" required 
+									<md-autocomplete flex="onshrink" required
 										name='contact'
-										md-items="contact in (ack.customer.contacts || [])" 
+										md-items="contact in (ack.customer.contacts || [])"
 										md-selected-item="selectedContact"
 										md-selected-item-change="addContact(selectedContact)"
 										md-search-text="contactSearchText"
@@ -127,7 +127,7 @@
 									    <md-item-template>
 									    	<span md-highlight-text="contactSearchText">{{contact.name}}</span>
 									    </md-item-template>
-										
+
 									</md-autocomplete>
 									<md-input-container>
 									  <label>Contact Telephone</label>
@@ -140,7 +140,7 @@
 								</div>
 
 				            </div>
-            
+
 				            <div class="order">
 								<div class='details'>
 									<div class="date-container" layout="column">
@@ -148,7 +148,7 @@
 										</md-datepicker>
 							            <div class="hint">When do we deliver?</div>
 									</div>
-								
+
 									<md-input-container>
 									  	<label>Purchase Order #</label>
 									  	<input name="po" type="text" ng-model="ack.po_id" required>
@@ -159,7 +159,7 @@
 									</md-input-container>
 									<md-input-container>
 									  	<label>Vat</label>
-									  	<input name="vat" type="number" ng-model="ack.vat" required max="10">								  
+									  	<input name="vat" type="number" ng-model="ack.vat" required max="10">
 										<div ng-messages="ackForm.vat.$error" multiple>
 											<div ng-message-exp="'required'">This is required</div>
 											<div ng-message-exp="'max'">That's too much vat!</div>
@@ -173,23 +173,23 @@
 											-->
 										<textarea ng-model="ack.remarks"></textarea>
 							            <div class="hint">Any other details?</div>
-									
+
 									</md-input-container>
 								</div>
 				            </div>
 						</md-card-content>
 					</md-card>
-			
+
 			<!--
 				Project
 			-->
 			<md-section class="project">
 				<md-subheader class="md-primary">Project</md-subheader>
-				<md-card class="project">	
+				<md-card class="project">
 					<md-card-content>
 						<div class="project">
-								<md-autocomplete flex required 
-									md-items="project in searchProjects(projectSearchText)" 
+								<md-autocomplete flex required
+									md-items="project in searchProjects(projectSearchText)"
 									md-selected-item="selectedProject"
 									md-selected-item-change="addProject(selectedProject)"
 									md-search-text="projectSearchText"
@@ -203,8 +203,8 @@
 								    </md-item-template>
 								</md-autocomplete>
 
-								<md-autocomplete flex required 
-									md-items="room in searchRooms(roomSearchText)" 
+								<md-autocomplete flex required
+									md-items="room in searchRooms(roomSearchText)"
 									md-selected-item="selectedRoom"
 									md-selected-item-change="addRoom(selectedRoom)"
 									md-search-text="roomSearchText"
@@ -217,9 +217,9 @@
 								    	<span md-highlight-text="roomSearchText">{{room.description}}</span>
 								    </md-item-template>
 								</md-autocomplete>
-							
-								<md-autocomplete flex required 
-									md-items="phase in searchPhases(phaseSearchText)" 
+
+								<md-autocomplete flex required
+									md-items="phase in searchPhases(phaseSearchText)"
 									md-selected-item="selectedPhase"
 									md-selected-item-change="addPhase(selectedPhase)"
 									md-search-text="phaseSearchText"
@@ -249,16 +249,16 @@
 						</md-section>
 					</md-card-content>
 				</md-card>
-				
+
 			</md-section>
-			<!-- 
+			<!--
 				Map
 			-->
 			<md-card class="map" layout="row">
 				<md-card-actions layout="column" layout-align="start center">
 		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!ack.customer.name || marker" ng-click="addMarker()">
 						<md-tooltip>Add a Location</md-tooltip>
-						<i class="material-icons">add_location</i>				
+						<i class="material-icons">add_location</i>
 					</md-button>
 		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="!marker" ng-click="editMarker()">
 						<md-tooltip>Edit Location</md-tooltip>
@@ -266,20 +266,20 @@
 					</md-button>
 		          	<md-button class="md-raised md-accent md-icon-button" ng-disabled="directionsActive || !marker" ng-click="viewDirections()">
 						<md-tooltip>View Directions</md-tooltip>
-						<i class="material-icons">directions</i>				
+						<i class="material-icons">directions</i>
 					</md-button>
 		        </md-card-actions>
 				<md-card-content>
 					<div class="map-container">
 						<div id="create-ack-map"></div>
-						
+
 					</div>
 					<div id="directions"></div>
 				</md-card-content>
 			</md-card>
 
-                
-				
+
+
 				<md-card class="files" file-drop="addFiles($files)" file-drop-class="file-drag-active">
 					<div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
 						<h2>Drop Files Here</h2>
@@ -300,7 +300,7 @@
 						</md-card>
 					</md-card-content>
 				</md-card>
-            
+
 
 				<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (tempProduct || {description: productSearchText}))">
 					<md-card-actions layout="row" layout-align="center center">
@@ -310,8 +310,8 @@
 						</md-button>
 			        </md-card-actions>
 					<md-card-content layout="row" layout-align="start center">
-						<md-autocomplete flex required 
-							md-items="product in searchProducts(productSearchText)" 
+						<md-autocomplete flex required
+							md-items="product in searchProducts(productSearchText)"
 							md-search-text-change="retrieveUpholsteries(productSearchText)"
 							md-selected-item="tempProduct"
 							md-no-cache="true"
@@ -333,7 +333,7 @@
 						</div>
 					</md-card-title-media>
 				</md-card>
-			
+
 	            <md-card class="item" ng-repeat="item in ack.items track by $index" layout="column"  file-drop="addImage($files, item)" file-drop-class="item-drag-active">
 					<div class="drag-placeholder">
 						<h2>Drop Image Here</h2>
@@ -366,12 +366,12 @@
 								<td layout="row" colspan="2">
 									<md-input-container>
 										<label>Price Per Piece</label>
-										<input name="price" type="number" ng-model="item.price" required />
+										<input name="price" type="number" ng-model="item.unit_price" required />
 										<div ng-messages="ackForm.price.$error">
 											<div ng-message="required">This required is required</div>
 										</div>
 							            <div class="hint">How many one piece cost?</div>
-									
+
 									</md-input-container>
 								</td>
 							</tr>
@@ -397,8 +397,8 @@
 							</tr>
 							<tr class="fabric">
 								<td colspan="2">
-									<md-autocomplete flex 
-										md-items="fabric in searchFabrics(fabricSearchText)" 
+									<md-autocomplete flex
+										md-items="fabric in searchFabrics(fabricSearchText)"
 										md-search-text-change="retrieveFabrics(fabricSearchText)"
 										md-selected-item="item.fabric"
 										md-search-text="fabricSearchText"
@@ -427,7 +427,7 @@
 											-->
 										<textarea ng-model="item.comments"></textarea>
 							            <div class="hint">Any other details?</div>
-									
+
 									</md-input-container>
 								</td>
 							</tr>
@@ -438,13 +438,13 @@
 								<img ng-src="{{item.image.url}}">
 							</div>
 						</md-card-title-media>
-					</md-card-content>	
-				
+					</md-card-content>
+
 				</md-card>
-			
+
 			</md-content>
-              
+
         </div>
     </form>
-    
+
 </div>
