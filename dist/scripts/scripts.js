@@ -6873,7 +6873,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 angular.module('employeeApp')
 .controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
 function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
-	
+
 	/*
 	 * Setup vars
 	 */
@@ -6882,13 +6882,13 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	$scope.creating = false;
 	/**
 	 *	MAPS SECTION
-	 *  
+	 *
 	 * Implements all the functions and necessary to initialize and control
 	 * google maps instance
 	 */
-	
+
 	$scope.marker = null;
-	
+
 	var map,
 		home = new google.maps.LatLng(13.935441, 100.6864353),
 		directionsService = new google.maps.DirectionsService(),
@@ -6900,11 +6900,11 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				zoom: 4,
 				mapTypeId: google.maps.MapTypeId.ROAD
 		},
-		
+
 		/**
 		 * Map styling
 		 */
-		
+
 		styles = [
 			{
 				featureType: "road",
@@ -6934,17 +6934,17 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			    ]
 			  }
 		];
-    
+
 	//Create new map and set the map style
 	map = new google.maps.Map($('#create-po-map')[0], mapOptions);
-	
+
 	// Create the directions layer
 	directionsDisplay = new google.maps.DirectionsRenderer({
 		map: map,
 		draggable: true
 	});
     directionsDisplay.setMap(map);
-	
+
 	// Create a traffic layer and apply it to the map
 	var trafficLayer = new google.maps.TrafficLayer();
 	trafficLayer.setMap(map);
@@ -6957,9 +6957,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @returns Describe what it returns
 	 * @type String|Object|Array|Boolean|Number
 	 */
-	
+
 	function calculateRoute(start, end, errback) {
-		
+
 		var request = {
 			origin: start,
 			destination: end,
@@ -6967,45 +6967,45 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			avoidTolls: false,
 			travelMode: google.maps.TravelMode.DRIVING,
   		  	unitSystem: google.maps.UnitSystem.METRIC
-			
+
 		};
-		
+
 		directionsService.route(request, function(result, status) {
 			if (status == google.maps.DirectionsStatus.OK) {
 		    	directionsDisplay.setDirections(result);
 				$scope.directionsActive = true;
 			    //directionsDisplay.setPanel(document.getElementById("directions"));
-				
+
 		    } else {
 		    	(errback || angular.noop)();
 		    }
 		});
 	}
-	
+
 	/**
 	 * Clears the route from the map
 	 *
 	 * @private
 	 * @returns {null}
 	 */
-	
+
 	function clearRoute () {
 		directionsDisplay.set('directions', null);
 		$scope.directionsActive = false;
 	}
-	
+
 	/**
 	 * Create a new marker for the map
-	 * 
+	 *
 	 * @private
 	 * @param {Object} configs - An object container latitude and longitude to create the marker
 	 * @returns {Object} marker - Returns an instance of the new marker created
 	 */
-	
+
 	function createMarker(configs) {
 		var lat = null,
 			lng = null;
-			
+
 		if (configs.address) {
 			lat = configs.address.latitude || configs.latitude;
 			lng = configs.address.longitude || configs.longitude;
@@ -7013,74 +7013,74 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			lat = configs.latitude;
 			lng = configs.longitude;
 		}
-		
-		
-	
+
+
+
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lng),
 			title: configs.title,
 			draggable: true
 		});
-		
+
 		if (configs.icon) {
 			marker.setIcon(configs.icon);
 		}
-	
+
 		//Add marker to configs for later bindings
 		configs.marker = marker;
-	
+
 		//Swtich to let it be known a marker has been made for this address
 		configs.address.marker = true;
-	
+
 		//Add a listener to mark when the user stops dragging the marker
 		google.maps.event.addListener(marker, 'dragend', function () {
 			var latLng = this.marker.getPosition();
 			var index = Number(this.marker.getTitle()) - 1;
 			this.address.latitude = latLng.lat();
 			this.address.longitude = latLng.lng();
-			
+
 			//Ensure that the data in the supplier resource is consistent with the user's data
-			if (this.address.latitude != $scope.po.supplier.addresses[0].latitude || 
+			if (this.address.latitude != $scope.po.supplier.addresses[0].latitude ||
 				this.address.longitude != $scope.po.supplier.addresses[0].longitude) {
 					$scope.po.supplier.addresses[0].latitude = latLng.lat();
 					$scope.po.supplier.addresses[0].longitude = latLng.lng();
 			}
-				
+
 			//Change icon color
 			marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
-					
+
 		}.bind(configs));
-		
+
 		return configs.marker;
 	}
-	
+
 	/**
 	 * Creates a marker and then adds it to the map
 	 * @public
 	 * @returns {Object} Marker - returns and instance of the new marker
 	 */
-	
+
 	$scope.addMarker = function () {
 		$scope.marker = createMarker({address: {}, latitude: 13.935441, longitude: 100.6864353, title:$scope.po.supplier.name});
 		$scope.marker.setMap(map);
 		map.panTo($scope.marker.getPosition());
 		map.setZoom(17);
 	};
-	
+
 	$scope.editMarker = function () {
 		clearRoute();
-		
+
 		if ($scope.marker) {
 			$scope.marker.setMap(map);
 			map.panTo($scope.marker.getPosition());
 			map.setZoom(17);
-		}		
+		}
 	};
-	
+
 	$scope.viewDirections = function () {
 		//Clear marker
 		$scope.marker.setMap(null);
-		
+
 		//Get Directions and render
 		calculateRoute(home, $scope.marker.getPosition(), function () {
 			$scope.marker.setMap(map);
@@ -7088,15 +7088,15 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			map.setZoom(17);
 		});
 	};
-	
-	
+
+
 	/*
  	 * SUPPLIER SECTION
 	 *
 	 * This section deals with the customer searching and what happens when a customer is selected
 	*/
 	$scope.suppliers = Supplier.query({page_size:99999, limit:0});
-	
+
 	$scope.searchSuppliers = function (query) {
 		var lowercaseQuery = angular.lowercase(query.trim());
 		var suppliers = [];
@@ -7105,10 +7105,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				suppliers.push($scope.suppliers[i]);
 			}
 		}
-		
+
 		return suppliers;
 	};
-	
+
 	// Watch on supplierSearchText to get products from the server
 	$scope.retrieveSuppliers = function (query) {
 		if (query) {
@@ -7121,17 +7121,17 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			});
 		}
 	};
-	
+
 	/**
 	 * Updates the supplier name incase this is a new supplier
 	 * @public
 	 * @param {String} supplierName - Name of the Supplier
-	 * @returns {null} 
+	 * @returns {null}
 	 */
-	
+
 	$scope.updateSupplierName = function (supplierName) {
 		$scope.po.supplier = $scope.po.supplier || {name: '', addresses:[]};
-		
+
 		if (!$scope.po.supplier.id) {
 			$scope.po.supplier.name = supplierName || '';
 			//$scope.supplies = [];
@@ -7141,58 +7141,58 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			}
 		}
 	};
-	
+
 	/*
 	 * Add a supplier to the purchase order
 	 */
 	$scope.addSupplier = function (supplier) {
-		
+
 		// Clear the old supplies list to start with a fresh list
 		// dominated by supplies that belong to this supplier
 		$scope.supplies = [];
-	
+
 		// Apply the supplier to purchase order
 		$scope.po.supplier = supplier;
 		$scope.po.discount = supplier.discount;
 		$scope.po.terms = supplier.terms;
 		$scope.po.currency = supplier.currency;
-	
-		
+
+
 		Supply.query({supplier_id: supplier.id, limit: 0, page_size: 99999}, function (response) {
 			$scope.supplies = $filter('filter')(response, supplier.name);
 		});
-	
+
 		$scope.safeApply();
-	
+
 		//Reset the map
 		if ($scope.marker) {
 			$scope.marker.setMap(null);
 		}
 		clearRoute();
 	 	map.setZoom(9);
-		
-		
+
+
 		//Set marker for customer
 		try {
 			var address = supplier.addresses[0];
-			
+
 			if (address.latitude && address.longitude) {
 				$scope.marker = createMarker({address: address, title: $scope.po.supplier.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
-				
+
 				calculateRoute(home, $scope.marker.getPosition(), function () {
 					clearRoute();
 					$scope.marker.setMap(map);
    					map.panTo($scope.marker.getPosition());
    					map.setZoom(17);
 				});
-							 
+
 			} else {
 				$scope.marker = null;
 			}
 		} catch (e) {
 			$log.warn(JSON.stringify(e));
 		}
-		
+
 		//Update the pricing of all items so far
 		if ($scope.po.items) {
 			for (var h = 0; h < $scope.po.items.length; h++) {
@@ -7203,7 +7203,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 								if ($scope.po.items[h].suppliers[i].supplier == $scope.po.supplier.id) {
 									$scope.po.items[h].cost = Number($scope.po.items[h].suppliers[i].cost);
 									$scope.po.items[h].purchasing_units = $scope.po.items[h].suppliers[i].purchasing_units;
-									
+
 								}
 							}
 						}
@@ -7213,20 +7213,20 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				}
 			}
 		}
-		
+
 		//Retrieve known supplies for this supplier
 		$scope.retrieveSupplies();
 	};
-	
-	
+
+
 	/**
 	 * PROJECT SECTION
-	 * 
+	 *
 	 * Describes the projects, room and phases
 	 */
-	
+
 	$scope.projects = Project.query({page_size:99999, limit:0});
-	
+
 	/**
 	 * Returns a list of projects whose codename matches the search term
 	 * @public
@@ -7243,22 +7243,22 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 		return projects;
 	};
-	
+
 	$scope.addProject = function (project) {
 		$scope.po.project = project;
 	};
-	
+
 	/**
 	 * Update the project's name if a project is not selected yet. This is incase, the project
 	 * does not yet exist.
 	 * @public
 	 * @param {String} projectName - Name of the Project
-	 * @returns {null} 
+	 * @returns {null}
 	 */
 
 	$scope.updateProjectName = function (projectName) {
 		$scope.po.project = $scope.po.project || {codename: ''};
-	
+
 		if (!$scope.po.project.id) {
 			$scope.po.project.codename = projectName || '';
 		} else {
@@ -7267,7 +7267,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			}
 		}
 	};
-	
+
 	/*
 	 * Create dialog to add room
 	 */
@@ -7279,9 +7279,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			controller: function () {this.parent = $scope;}
 		});
 	};
-	
+
 	/*
-	 * Complete adding room process and close the dialog 
+	 * Complete adding room process and close the dialog
 	 */
 	$scope.completeAddRoom = function () {
 		$mdDialog.hide();
@@ -7295,15 +7295,15 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			$log.error(JSON.stringify(e));
 		});
 	};
-	
+
 	/*
-	 * Cancel adding a room 
+	 * Cancel adding a room
 	 */
 	$scope.cancelAddRoom = function () {
 		$mdDialog.hide();
 		$scope.room = new Room();
 	};
-	
+
 	/*
 	 * Create dialog to add phase
 	 */
@@ -7315,9 +7315,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			controller: function () {this.parent = $scope;}
 		});
 	};
-	
+
 	/*
-	 * Complete adding item process and close the dialog 
+	 * Complete adding item process and close the dialog
 	 */
 	$scope.completeAddPhase = function () {
 		$mdDialog.hide();
@@ -7331,28 +7331,28 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			$log.error(JSON.stringify(e));
 		});
 	};
-	
-	
+
+
 	/**
 	 * PRODUCT SECTION
-	 * 
+	 *
 	 * This section deals with the product listing and search
 	 */
-	
+
 	// Watch on productSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
 		$scope.supplies = $scope.supplies || [];
 		var options = {};
 		if (query) {
 			options.q = query;
-		} 
-		
+		}
+
 		if ($scope.po.supplier) {
 			if ($scope.po.supplier.id) {
 				//options.supplier_id = $scope.po.supplier.id;
 			}
 		}
-		
+
 		Supply.query(options, function (responses) {
 			for (var i = 0; i < responses.length; i++) {
 				if ($scope.supplies.indexOfById(responses[i]) === -1) {
@@ -7361,7 +7361,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			}
 		});
 	};
-	
+
 	/**
 	 * Returns a list of supplies whose description matches the search term
 	 * @public
@@ -7372,9 +7372,9 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		var lowercaseQuery = angular.lowercase(query.trim());
 		var supplies = [];
 		$scope.supplies = $scope.supplies || [];
-		
+
 		for (var i = 0; i < $scope.supplies.length; i++) {
-			
+
 			if (lowercaseQuery) {
 				if (angular.lowercase(String($scope.supplies[i].description)).indexOf(lowercaseQuery) !== -1) {
 					supplies.push($scope.supplies[i]);
@@ -7382,35 +7382,35 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			} else {
 				supplies.push($scope.supplies[i]);
 			}
-			
+
 		}
 		return supplies;
 	};
-	
+
 	/*
-	 * Cancel adding a item 
+	 * Cancel adding a item
 	 */
 	$scope.cancelAddPhase = function () {
 		$mdDialog.hide();
 		$scope.phase = undefined;
 	};
-	
+
     /*
 	 * Add an item to the purchase order
 	 */
 	$scope.addItem = function (item) {
-		
+
 		if (item.description) {
 			$scope.po.items = $scope.po.items || [];
 			var purchasedItem = angular.copy(item);
-		
+
 			delete purchasedItem.quantity;
-		
+
 			/*
 			 * Apply the items unit cost or cost from supplier to the supply cost
 			 */
 			purchasedItem.cost = Number((purchasedItem.cost || purchasedItem.unit_cost) || 0);
-		
+
 			if (!purchasedItem.cost && purchasedItem.hasOwnProperty('suppliers') && $scope.po.supplier) {
 				if ($scope.po.supplier.id) {
 					for (var i = 0; i < purchasedItem.suppliers.length; i++) {
@@ -7422,7 +7422,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					}
 				}
 			}
-		
+
 			// Update the specific supplier information for this item
 			if (purchasedItem.suppliers) {
 				for (var h = 0; h < purchasedItem.suppliers.length; h++) {
@@ -7431,28 +7431,28 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 							purchasedItem.suppliers[h].purchasing_units = purchasedItem.purchasing_units;
 						}
 					}
-					
+
 				}
 			}
-			
-			
+
+
 			//Add new supply to the list of items for the purchase order
 			$scope.po.items.push(purchasedItem);
 		}
-		
+
 	};
-	
+
 	/*
 	 * Remove an item fro the purchase order
 	 */
 	$scope.removeItem = function (index) {
 		$scope.po.items.splice(index, 1);
-		
+
 		if ($scope.po.items.length === 0) {
 			$scope.po.items = [];
 		}
 	};
-	
+
 	/**
 	 * Check if a supply is new for a supplier
 	 *
@@ -7469,25 +7469,25 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				}
 			}
 		}
-		
+
 		return true;
 	};
-	
-	
-	
+
+
+
 	/*
 	 * Watch Items for change
-	 * 
-	 * We initially tests that the lengths are the same, 
+	 *
+	 * We initially tests that the lengths are the same,
 	 * in order to eliminate add and subtracting items.
-	 * 
+	 *
 	 * We then loop through all the items and find the item
 	 * that has changed, and then we compare the costs and the id
-	 * to ensure the the same item has change. The costs is saved, 
+	 * to ensure the the same item has change. The costs is saved,
 	 * and a reference object is made.
-	 * 
+	 *
 	 * After a delay of 5 seconds, we compare the saved costs with the
-	 * current item cost, by using a reference. 
+	 * current item cost, by using a reference.
 	 */
 	/*
 	$scope.$watch('po.items', function (newVal, oldVal) {
@@ -7499,7 +7499,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					//Tests if the costs are different but the id is the same
 					if (newVal[i].cost != oldVal[i].cost && newVal[i].id == oldVal[i].id) {
 						var cost = newVal[i].cost;
-						//We make a reference to the original object, 
+						//We make a reference to the original object,
 						//So that we can make sure the price has settled
 						//in x milliseconds.
 						var obj = newVal[i];
@@ -7511,7 +7511,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 							}
 						}, 5000); //jshint ignore:line
 					}
-				
+
 					//if (po.items[i].cost == newVal[i].cost)
 				}
 			}
@@ -7520,14 +7520,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 	}, true);
 	*/
-	
+
 	/*
 	 * Unit costs
 	 */
 	$scope.unitCost = function (unitCost, discount) {
 		return unitCost - (unitCost * (discount / 100));
 	};
-	
+
 	/*
 	 * Functions to get summary totals
 	 */
@@ -7542,47 +7542,52 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 		return subtotal;
 	};
-	
+
 	$scope.discount = function () {
 		return $scope.subtotal() * (($scope.po.discount || 0) / 100);
 	};
-	
+
 	$scope.total = function () {
-		return $scope.subtotal() - $scope.discount(); 
+		return $scope.subtotal() - $scope.discount();
 	};
-	
+
 	$scope.grandTotal = function () {
 		var total = $scope.total();
 		return total + (total * ($scope.po.vat / 100));
 	};
-	
-	
+
+
 	/*
 	 * Verfication of order
 	 */
 	$scope.validatePurchaseOrder = function (purchaseOrder) {
 		purchaseOrder = purchaseOrder || $scope.po;
-		
+
 		if (!purchaseOrder.hasOwnProperty('supplier')) {
 			throw new Error("Please select a supplier");
 		}
-		
+
+		if (!purchaseOrder.receive_date instanceof Date ||
+			purchaseOrder.receive_date) {
+			throw new Error("Please select a 'Receiving Date' for the order");
+		}
+
 		if (purchaseOrder.items.length <= 0) {
 			throw new Error("Please add items to the purchase order");
 		}
-		
+
 		for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
 			if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
 				throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
 			}
-		} 
-		
+		}
+
 		return true;
 	};
-	
+
 	//Check the progress of customer, project creation
 	$scope._checkProgress = function (progress, callback) {
-		
+
 		for (var key in progress) {
 			if (progress[key] === false) {
 				return false;
@@ -7592,7 +7597,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 		(callback || angular.noop)();
 	};
-	
+
 	/**
 	 * Create or update the supplier
 	 *
@@ -7601,44 +7606,44 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @returns Describe what it returns
 	 * @type String|Object|Array|Boolean|Number
 	 */
-	
+
 	$scope._prepareSupplier = function (purchaseOrder, progress, callback) {
 		//Checks if customer exists and creates if not
 		if (!purchaseOrder.supplier.id && purchaseOrder.supplier.name) {
 			progress.supplier = false;
-			
+
 			var supplier = new Supplier();
 			angular.extend(supplier, purchaseOrder.supplier);
 
 			supplier.$create(function (resp) {
 				angular.extend(purchaseOrder.supplier, resp);
 				progress.supplier = true;
-				
+
 				callback();
 			}, function () {
 				progress.supplier = 'error';
 			});
 		} else if (purchaseOrder.supplier.id) {
 			progress.supplier = false;
-			
+
 			var supplier = new Supplier();
 			angular.extend(supplier, purchaseOrder.supplier);
-			
+
 			supplier.$update(function (resp) {
 				angular.extend(purchaseOrder.supplier, resp);
 				progress.supplier = true;
-				
+
 				callback();
-				
+
 			}, function () {
 				progress.supplier = 'error';
 			});
 		}
 	};
-	
-	
+
+
 	/**
-	 * Create a new supply 
+	 * Create a new supply
 	 *
 	 * @private
 	 * @param {Object} supply - supply object to create
@@ -7646,42 +7651,42 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @returns Describe what it returns
 	 * @type String|Object|Array|Boolean|Number
 	 */
-	
+
 	$scope._createSupply = function (supply, supplier, progress, callback) {
-		
+
 		// Add progress check
 		progress[supply.description] = false;
-		
+
 		console.log(supplier);
 		// Associate this supplier with the supply
 		supply.suppliers = [supplier];
 		supply.suppliers[0].supplier = {id: supplier.id};
 		supply.suppliers[0].cost = supply.cost;
-		
+
 		var resource = new Supply(supply);
 		console.log(resource);
 		// Create a new supply
 		resource.$create(function (response) {
-			
+
 			angular.extend(supply, response);
-			
-			// Move supply id location to avoid item update 
+
+			// Move supply id location to avoid item update
 			// instead of item creation
 	  		supply.supply = {id: supply.id};
 			delete supply.id;
-			
+
 			// Check the progress
 			progress[supply.description] = true;
 			$scope._checkProgress(progress, callback);
-			
+
 		}, function (reason) {
 			$log.error(reason);
 		});
-		
+
 	};
 
 	/**
-	 * Update and existing supply 
+	 * Update and existing supply
 	 *
 	 * @private
 	 * @param {Object} supply - supply object to create
@@ -7689,44 +7694,44 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @returns Describe what it returns
 	 * @type String|Object|Array|Boolean|Number
 	 */
-	
+
 	$scope._updateSupply = function (supply, supplier, progress, callback) {
-		
-		
-		
+
+
+
 		// Update supply with new supplier
 		if ($scope.isNewSupply(supply, supplier)) {
 			var supplierData = angular.copy(supplier);
 			supplierData.cost = supply.cost;
-			
+
 			// Move the supplier id
 			supplierData.supplier = {'id': supplierData.id};
 			delete supplierData.id;
-			
+
 			// Add new supplier
 			supply.suppliers.push(supplierData);
-			
+
 			// Add progress check
 			progress[supply.id] = false;
-			
+
 			var resource = new Supply(supply);
-			
+
 			resource.$update(function (response) {
 				angular.extend(supply, response);
-				
-				// Move supply id location to avoid item update 
+
+				// Move supply id location to avoid item update
 				// instead of item creation
 		  		supply.supply = {id: supply.id};
 				delete supply.id;
-				
+
 				// Check the progress
 				progress[supply.supply.id] = true;
 				$scope._checkProgress(progress, callback);
-				
+
 			}, function (reason) {
 				$log.error(reason);
 			});
-			
+
 		} else {
 			// Update the specific supplier information for this item
 			for (var h = 0; h < supply.suppliers.length; h++) {
@@ -7735,40 +7740,40 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 						supply.suppliers[h].purchasing_units = supply.purchasing_units;
 					}
 				}
-				
+
 			}
-			
+
 			var resource = new Supply(supply);
-			
+
 			resource.$update(function (response) {
 				angular.extend(supply, response);
-				
-				// Move supply id location to avoid item update 
+
+				// Move supply id location to avoid item update
 				// instead of item creation
 		  		supply.supply = {id: supply.id};
 				delete supply.id;
-				
+
 				// Check the progress
 				progress[supply.supply.id] = true;
 				$scope._checkProgress(progress, callback);
-				
+
 			}, function (reason) {
 				$log.error(reason);
 			});
 		}
 	};
-	
+
 	/**
-	 * Prepare the purchase order for creation. Creates supplier, project, room, and phase 
+	 * Prepare the purchase order for creation. Creates supplier, project, room, and phase
 	 * if they are respectively new
 	 *
 	 * @private
 	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
 	 * @param {Function} callback - Function to call if the creations are successful
 	 */
-	
+
 	$scope._preparePurchaseOrder = function (purchaseOrder, callback) {
-		
+
 		// Prepare the supplies and projects and makes final callback to create po
 		// To be passed into prepare supplier callback
 		function prepareSuppliesAndProjects() {
@@ -7778,7 +7783,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					progress.project = false;
 					var project = new Project();
 					angular.extend(project, purchaseOrder.project);
-				
+
 					project.$create(function (resp) {
 						angular.extend(purchaseOrder.project, resp);
 						progress.project = true;
@@ -7788,7 +7793,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					});
 				}
 			}
-				
+
 			//Check if items are custom
 			for (var i = 0; i < purchaseOrder.items.length; i++) {
 				if (purchaseOrder.items[i].hasOwnProperty('id')) {
@@ -7799,62 +7804,62 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					$scope._createSupply(purchaseOrder.items[i], purchaseOrder.supplier, progress, callback);
 				}
 			}
-		
+
 			// Signal to progress check that supplies preparation has passed
 			progress.supplies = true;
 			$scope._checkProgress(progress, callback);
 		}
-		
+
 		//Object used to track progress of sub-resource creations
 		var progress = {supplies:false};
 		$scope._prepareSupplier(purchaseOrder, progress, prepareSuppliesAndProjects);
-		
+
 	};
-	
+
 	$scope._sendCreateRequest = function () {
-		
+
 		if (!$scope.creating) {
 			$scope.creating = true;
-		
+
 			purchaseOrder = this || $scope.po;
-			
-			
+
+
 			purchaseOrder.$create(function (response) {
 				$scope.creating = false;
 				Notification.display('Purchase order created.');
-								
+
 				angular.extend(purchaseOrder, response);
 				//Change page to newly saved purchase order page
 				//$location.path("/order/purchase_order/" + response.id);
-		
+
 			}, function (e) {
 				$scope.creating = false;
 				$log.error(JSON.stringify(e));
 				Notification.display("There was an error in creating the purchase order. A report has been sent to Charlie");
-			
+
 			});
-			
+
 		}
-		
+
 	};
-	
+
 	/*
 	 * Save the purchase order to the server
 	 */
 	$scope.create = function (purchaseOrder) {
 		purchaseOrder = purchaseOrder || $scope.po;
-		try {			
+		try {
 			$scope.validatePurchaseOrder(purchaseOrder);
-			
+
 			Notification.display('Creating new purchase order...');
-			
+
 			$scope._preparePurchaseOrder(purchaseOrder, $scope._sendCreateRequest.bind(purchaseOrder));
 		} catch (e) {
 			$log.error(JSON.stringify(e));
 			Notification.display(e.message);
 		}
 	};
-	
+
 	/*
 	 * Reset the order
 	 */
@@ -7862,8 +7867,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		$scope.po = new PurchaseOrder();
 		$scope.po.items = [];
 	};
-	
-	
+
+
 }]);
 
 
