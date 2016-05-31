@@ -10,20 +10,21 @@ angular.module('employeeApp.services')
 				var msg = "AJAX failed. status: " + rejection.status + ". response: " + rejection.statusText;
 				var promise = $.ajax({
 					type: 'POST',
-					url: '/api/v1/client/log/', 
+					url: '/api/v1/client/log/',
 					data: {'type': 'error', 'message': msg},
 					processData: true
 				});
 			}
-			
+
 			if (rejection.status === 403) {
-				$window.location.href = '/login';
+				console.log(rejection);
+				//$window.location.href = '/login';
 			}
-			
+
 			return $q.reject(rejection);
 		}
 	};
-	
+
 }]).config(function($httpProvider){
 	$httpProvider.interceptors.push('requestError');
 });
