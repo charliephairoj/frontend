@@ -518,7 +518,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 			product.height = product.height || 0;
 			product.depth = product.depth || 0;
             product.unit_price = product.price;
-	        $scope.estimate.items.push(newProduct);
+	        $scope.estimate.items.push(product);
 	        $scope.tempSave();
 
 			delete $scope.tempProduct;
