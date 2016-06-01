@@ -7586,7 +7586,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		}
 
 		if (!purchaseOrder.receive_date instanceof Date ||
-			purchaseOrder.receive_date) {
+			!purchaseOrder.receive_date) {
 			throw new Error("Please select a 'Receiving Date' for the order");
 		}
 
@@ -7727,6 +7727,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			delete supplierData.id;
 
 			// Add new supplier
+			supply.suppliers = supply.suppliers || [];
 			supply.suppliers.push(supplierData);
 
 			// Add progress check
