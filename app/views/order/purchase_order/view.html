@@ -1,11 +1,11 @@
 <div class="po-view-page view-page">
-   
+
     <!--
         Workspace
     -->
-    
+
     <div class="workspace">
-				
+
 		<md-toolbar layout="column" md-scroll-shrink="true">
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Purchase Orders</span></h3>
@@ -14,7 +14,7 @@
 					<md-tooltip>
 						Create New Purchase Order
 					</md-tooltip>
-					<i class="material-icons">create</i>				
+					<i class="material-icons">create</i>
 				</md-button>
 				<input type="text" ng-model="query.$.$" class="search" />
 			</div>
@@ -30,10 +30,10 @@
 				<div class="status">STATUS</div>
 			</div>
 		</md-toolbar>
-		
-		
+
+
 		<md-content  on-scroll-end="loadNext()">
-							
+
 				<md-card class="po" ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
 					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
 						<md-card-title-text ng-click="active=false">
@@ -62,7 +62,7 @@
 								<div class="paid-date">{{po.paid_date | date: "MMM d, yyyy"}}</div>
 								<div class="total">{{po.grand_total | number:2}}</div>
 								<div class="status" ng-class="po.status.toLowerCase()">{{po.status}}</div>
-							
+
 							</div>
 						</div>
 						<div class="item-container" ng-if="active">
@@ -141,7 +141,7 @@
 										</table>
 									</md-card-content>
 								</md-card>
-				
+
 								<section class="files" file-drop="addFiles($files, ack)" file-drop-class="files-drag-active">
 									<div class="files">
 		  								<md-card class="file" ng-repeat="file in [po.pdf]" ng-class="{'uploaded': file.id}" ng-click="openAttachment(file.url)">
@@ -155,7 +155,7 @@
 									</div>
 								</section>
 							</section>
-							
+
 							<div class="status-bar">
 								<div class="event processed" ng-class="{'active': hasEvent(po, 'processed') || hasEvent(po, 'acknowledged')}">
 									<span>Processed</span>
@@ -172,7 +172,7 @@
 									<div class="arrow"></div>
 									<div class="arrow2"></div>
 								</div>
-								
+
 								<div class="event invoiced" ng-class="{'active': hasEvent(po, 'invoice')}">
 									<span>Invoiced</span>
 									<div class="arrow"></div>
@@ -184,7 +184,7 @@
 									<div class="arrow2"></div>
 								</div>
 							</div>
-							
+
 							<section>
 								<div class="items">
 									<md-card class="add-product" layout="row" layout-align="start center">
@@ -203,8 +203,8 @@
 											</md-button>
 								        </md-card-actions>
 										<md-card-content layout="row" layout-align="start center" flex="auto">
-											<md-autocomplete flex required 
-												md-items="supply in searchSupplies(supplySearchText)" 
+											<md-autocomplete flex required
+												md-items="supply in searchSupplies(supplySearchText)"
 												md-search-text-change="retrieveSupplies(supplySearchText)"
 												md-selected-item="selectedSupply"
 												md-search-text="supplySearchText"
@@ -223,7 +223,7 @@
 											</div>
 										</md-card-title-media>
 									</md-card>
-									
+
 									<md-card class="item" ng-repeat="item in po.items" ng-show="!listView">
 										<md-card-title layout="row" layout-align="center center">
 								          	<md-card-title-text>
@@ -243,11 +243,11 @@
 														<td>
 															<input name="description" type="text" size="60" ng-model="item.description" required />
 														</td>
-									
+
 													</tr>
 													<tr>
 														<td>
-															<span>Quantity</span>										
+															<span>Quantity</span>
 														</td>
 														<td>
 															<input name="quantity" type="number" ng-model="item.quantity" min="0" required />
@@ -257,7 +257,7 @@
 															<span>Unit Price<span>
 														</td>
 														<td>
-															<input name="price" type="number" ng-model="item.unit_price" required />
+															<input name="price" type="number" ng-model="item.unit_cost" required />
 														</td>
 													</tr>
 													<tr>
@@ -266,6 +266,14 @@
 														</td>
 														<td>
 															<input name="discount" type="number" ng-model="item.discount" required />
+														</td>
+													</tr>
+                                                    <tr>
+														<td>
+															<span>Item Total<span>
+														</td>
+														<td>
+															{{(item.unit_cost * item.quantity) * (1.00 - (item.discount/100))}}
 														</td>
 													</tr>
 													<tr>
@@ -292,7 +300,7 @@
 															<input type="number" ng-model="item.height" min="0" required />
 														</td>
 													</tr>
-													
+
 													<!--
 													<tr>
 														<td><span>Fabric Image</span></td>
@@ -314,7 +322,7 @@
 											</div>
 										</md-card-content>
 									</md-card>
-									
+
 									<md-card class="order-details" ng-show="listView && po.items">
 						            	<md-card-content>
 											<table ng-show="po.items">
@@ -333,7 +341,7 @@
 														<td class='description'>{{::item.description}}</td>
 														<td><textarea ng-model=item.comments row="4"></textarea></td>
 														<td class='discount'>
-															<input required type="number" min="0" ng-model="item.discount"/> 
+															<input required type="number" min="0" ng-model="item.discount"/>
 														</td>
 														<td class='unit-cost'><input required min="0" type="number" ng-model="item.cost" /></td>
 														<td class='quantity'>
@@ -397,15 +405,15 @@
 						            </md-card>
 								</div>
 							</section>
-								
+
 						</div>
 					</div>
 				</md-card-content>
 
 			</md-card>
-	    	
+
 		</md-content>
-		
+
     </div>
-    
+
 </div>
