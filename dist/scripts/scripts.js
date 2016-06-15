@@ -9510,7 +9510,35 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
 	        });
 		}.bind({upholstery: upholstery}), 3000);
 	}
-	
+
+
+	/*
+	 * Delete the Upholstery
+	 */
+	$scope.removeUpholstery = function (upholstery) {
+		// Build the confirmation message
+		var message = "Would you like to delete " + upholstery.description; 
+		message += "?";
+
+		// Display the confirmation message and act if true
+		if (window.confirm(message)) {
+			for (var i = 0; i < $scope.upholsteries.length; i++) {
+				if ($scope.upholsteries[i].id === upholstery.id) { 
+					$scope.upholsteries.splice(i, 1);
+				}
+			}
+
+			upholstery.$delete(function () {
+				Notification.display(upholstery.description + " deleted.", 2000);
+			}, function () {
+				Notification.display('There was an error deleting ' + upholstery.description, 5000);
+				$scope.upholsteries.push(upholstery);
+			});
+		}
+		
+	};
+
+
     $scope.update = function () {
 		
 		function updateModel () {

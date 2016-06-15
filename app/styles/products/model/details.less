@@ -41,15 +41,74 @@
 			}
 	 	}
 		
-		.upholsteries{
-			display:flex;
-			flex-direction:row;
-			flex-wrap:wrap;
-			
-			md-card{
-				width:45%;
+		.upholsteries-container{
+			margin: 1em 2em;
+
+			.title-bar{
+				min-height:1em;
+				display:flex;
+				flex-direction: row;
+				width:100%;
+				padding:0;
+				margin: 0;
+
+				div{
+					display: flex;
+					align-items:center;
+					justify-content: center;
+					width:16%;
+					border:1px solid rgb(230, 230, 230);
+					border-left:none;
+					padding:1em 0;
+
+					span{
+						font-weight: 500;
+					}
+
+					&:first-child{
+						width: 20%;
+						border-left:1px solid rgb(230, 230, 230);
+					}
+				}
+			}
+
+			.upholsteries{
+				display: flex;
+				flex-direction: column;
+
+				.upholstery{
+					display:flex;
+					flex-direction: row;
+
+					div{
+						display: flex;
+						align-items: center;
+						border:none;
+						border-right:1px solid rgb(230, 230, 230);
+						border-bottom:1px solid rgb(230, 230, 230);
+						width:16%;
+
+						input{
+							outline:none;
+							padding:1em;
+							border:none;
+						}
+
+						&:first-child{
+							width:20%;
+							border-left:1px solid rgb(230, 230, 230);
+							display:flex;
+							justify-content: space-between;
+							
+							span{
+								margin-left:1em;
+							}
+						}
+					}
+				}
 			}
 		}
+		
 		
 		.gallery{
 			height:auto;

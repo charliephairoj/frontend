@@ -96,6 +96,32 @@
            </tr>
         </table>
 		
+		<div class="upholsteries-container">
+			<div class="title-bar">
+				<div><span>Description</span></div>
+				<div><span>Price</span></div>
+				<div><span>Export Price</span></div>
+				<div><span>Width</span></div>
+				<div><span>Depth</span></div>
+				<div><span>Height</span></div>
+			</div>
+			<div class="upholsteries">
+				<div class="upholstery" ng-repeat="uphol in upholsteries | orderBy: 'description' track by uphol.id">
+					<div>
+						<span>{{uphol.description}}</span>
+						<md-button class="md-icon-button md-warn md-raised" ng-click="removeUpholstery(uphol, $index)">
+							<i class="material-icons">remove</i>
+						</md-button>
+					</div>
+					<div><input ng-model="uphol.price" ng-change="updateUpholstery(uphol)" /></div>
+					<div><input ng-model="uphol.export_price" ng-change="updateUpholstery(uphol)" /></div>
+					<div><input ng-model="uphol.width" ng-change="updateUpholstery(uphol)" /></div>
+					<div><input ng-model="uphol.depth" ng-change="updateUpholstery(uphol)" /></div>
+					<div><input ng-model="uphol.height" ng-change="updateUpholstery(uphol)" /></div>
+				</div>
+			</div>
+		</div>
+		<!--
 		<md-card class="upholsteries">
 			<md-card ng-repeat="uphol in upholsteries track by uphol.id">
 				<md-card-title>
@@ -126,7 +152,7 @@
 				</md-card-content>
 			</md-card>
 		</md-card>
-		
+		-->
 		<md-card class="gallery">
 			<md-card ng-repeat="image in model.images" ng-class="{'primary': image.primary}">
 				<md-card-title>
