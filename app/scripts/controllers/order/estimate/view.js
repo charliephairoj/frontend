@@ -369,7 +369,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 			}
 			
 			acknowledgement.items[i].price = acknowledgement.items[i].unit_price || acknowledgement.items[i].price || 0;
-			delete acknowledgement.items[i].unit_price;
+			
 		}
 		
 		acknowledgement.$create(function (resp) {
