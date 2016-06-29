@@ -532,7 +532,7 @@ module.exports = function (grunt) {
 	  
     'useminPrepare',
 	  
-    'newer:less',
+    'less',
     //'recess',
     //'imagemin',
     //'cssmin',
