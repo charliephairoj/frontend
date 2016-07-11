@@ -7,6 +7,36 @@ function ($scope, Model, $routeParams, $location, Notification, $http, FileUploa
     $scope.configuration = false;
 	
 	var updateVars = {};
+
+	// Uploads schematics for the upholstery
+	$scope.addSchematic = function (upholstery, files) {
+
+		function uploadImage (image, upholstery) {
+	        //display notification
+	        Notification.display('Uploading schematic...', false);
+
+	        //Notify of uploading image        
+			var promise = FileUploader.upload(image, "/api/v1/upholstery/image/");
+				promise.then(function (dataObj) {
+			        Notification.display('Schematic uploaded.');
+					
+					upholstery.schematic = dataObj.data;
+
+					$scope.updateUpholstery(upholstery);
+		
+			}, function () {
+		        Notification.display('Error uploading schematic', false);
+	
+			});
+		}
+
+		var image = files[0];
+		if (image.type = "image/svg+xml") {
+			uploadImage(image, upholstery);
+		} else {
+			Notification.display('Can only upload SVG files');
+		}
+	};
 	
     //Uploads Profie Image
     $scope.addImage = function (files) {

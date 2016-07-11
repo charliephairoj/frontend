@@ -99,6 +99,7 @@
 		<div class="upholsteries-container">
 			<div class="title-bar">
 				<div><span>Description</span></div>
+				<div><span>SKU</span></div>
 				<div><span>Price</span></div>
 				<div><span>Export Price</span></div>
 				<div><span>Width</span></div>
@@ -106,13 +107,17 @@
 				<div><span>Height</span></div>
 			</div>
 			<div class="upholsteries">
-				<div class="upholstery" ng-repeat="uphol in upholsteries | orderBy: 'description' track by uphol.id">
+				<div file-drop="addSchematic(uphol, $files)" file-drop-class="drop-active" class="upholstery" ng-repeat="uphol in upholsteries | orderBy: 'description' track by uphol.id">
 					<div>
 						<span>{{uphol.description}}</span>
 						<md-button class="md-icon-button md-warn md-raised" ng-click="removeUpholstery(uphol, $index)">
 							<i class="material-icons">remove</i>
 						</md-button>
 					</div>
+					<div>
+						<img ng-src="{{uphol.schematic.url}}" />
+					</div>
+					
 					<div><input ng-model="uphol.price" ng-change="updateUpholstery(uphol)" /></div>
 					<div><input ng-model="uphol.export_price" ng-change="updateUpholstery(uphol)" /></div>
 					<div><input ng-model="uphol.width" ng-change="updateUpholstery(uphol)" /></div>
