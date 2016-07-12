@@ -6833,6 +6833,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		// Assign order details
 		acknowledgement.customer = quotation.customer;
 		acknowledgement.delivery_date = quotation.delivery_date || 0;
+		acknowledgement.discount = quotation.discount || 0;
 		acknowledgement.vat = quotation.vat || 0;
 		acknowledgement.terms = quotation.terms || 0;
 		acknowledgement.po_id = quotation.po_id || 'NA';
@@ -6857,12 +6858,11 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		
 		// Prepare items for new creation
 		for (var i = 0; i < acknowledgement.items.length; i++) {
-			if (!acknowledgement.hasOwnProperty('model') || acknowledgement.hasOwnProperty('configuration')) {
+			if (!acknowledgement.items[i].hasOwnProperty('model') || acknowledgement.items[i].hasOwnProperty('configuration')) {
 				delete acknowledgement.items[i].id;
 			}
 			
 			acknowledgement.items[i].price = acknowledgement.items[i].unit_price || acknowledgement.items[i].price || 0;
-			
 		}
 		
 		acknowledgement.$create(function (resp) {
