@@ -136,6 +136,10 @@
 									  	<input name="discount" type="number" ng-model="estimate.discount" required max="99">
 									</md-input-container>
 									<md-input-container>
+									  	<label>Additional Discount</label>
+									  	<input name="discount" type="number" ng-model="estimate.second_discount" required max="99">
+									</md-input-container>
+									<md-input-container>
 									  	<label>Vat</label>
 									  	<input name="vat" type="number" ng-model="estimate.vat" required max="10">
 										<div ng-messages="ackForm.vat.$error" multiple>
