@@ -8920,8 +8920,8 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',
-function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scanner, $log) {
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',
+function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $location, scanner, $log) {
 
 	var fetchingAck = true;
 
@@ -8952,6 +8952,117 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
             });
         }
     };
+
+	/*
+ 	 * CUSTOMER SECTION
+	 *
+	 * This section deals with the customer searching and what happens when a customer is selected
+	*/
+	
+	/**
+	 * Customer Variables
+	 */
+	$scope.customers = Customer.query({page_size:9999, limit:0});
+	
+	// Watch on customerSearchText to get products from the server
+	$scope.retrieveCustomers = function (query) {
+		if (query) {
+			Customer.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.customers.indexOfById(responses[i]) === -1) {
+						$scope.customers.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of customers whose name matches the query
+	 * 
+	 * @public
+	 * @param {String} query - the string to search against the customer names
+	 * @returns {Array} - An array of customes that matches the query
+	 */
+	
+	$scope.searchCustomers = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var customers = [];
+		for (var i = 0; i < $scope.customers.length; i++) {
+			if (angular.lowercase($scope.customers[i].name).indexOf(lowercaseQuery) !== -1) {
+				customers.push($scope.customers[i]);
+			}
+		}
+		
+		return customers;
+	};
+	
+	
+	/**
+	 * Updates the customer name, so that if the customer is a new one, 
+	 * a customer object is already in place to accept the new details
+	 * 
+	 * @public
+	 * @param {String} customerName - Name of the Customer
+	 * @returns {null} 
+	 */
+	
+	$scope.updateCustomerName = function (customerName) {
+		$scope.shipping.customer = $scope.shipping.customer || {name: '', addresses: []};
+		
+		if (!$scope.shipping.customer.id) {
+			try{
+				clearRoute();
+			} catch (e) {
+				$log.warn(e);
+			}
+			$scope.shipping.customer.name = customerName || '';
+		} else {
+			if ($scope.shipping.customer.name.indexOf(customerName) == -1) {
+				$scope.shipping.customer = {name: customerName, addresses: []};
+			}
+		}
+	};
+	
+	
+	
+	//Add customer and hide modal
+    $scope.addCustomer = function (customer) {
+        //Set Customer and save
+        $scope.shipping.customer = customer;
+        //$scope.tempSave();
+			
+		//Reset the map
+		/*
+		if ($scope.marker) {
+			$scope.marker.setMap(null);
+		}
+		clearRoute();
+	 	map.setZoom(9);
+		*/
+		
+		//Set marker for customer
+		try {
+			var address = customer.addresses[0];
+			
+			if (address.latitude && address.longitude) {
+				$scope.marker = createMarker({address: address, title: $scope.shipping.customer.name, icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"});
+				
+				calculateRoute(home, $scope.marker.getPosition(), function () {
+					clearRoute();
+					$scope.marker.setMap(map);
+   					map.panTo($scope.marker.getPosition());
+   					map.setZoom(17);
+				});
+							 
+			} else {
+				$scope.marker = null;
+			}
+		} catch (e) {
+			$log.warn(JSON.stringify(e));
+		}
+    };
+
 
 	/*
  	 * Acknowledgement SECTION
@@ -8997,33 +9108,41 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 
 
     $scope.addAcknowledgement = function (ack) {
-		$scope.shipping.acknowledgement = Acknowledgement.get({id: ack.id},
-			function (resp) {
-				$scope.shipping.acknowledgement = {id: ack.id};
-		        $scope.shipping.customer = resp.customer;
-		        $scope.shipping.items = resp.items;
-		        $scope.shipping.delivery_date = new Date(resp.delivery_date);
+		ack = ack || $scope.selectedAcknowledgement;
+		console.log(ack);
+		console.log($scope.selectedAcknowledgement);
+		if (ack) {
+			$scope.shipping.acknowledgement = Acknowledgement.get({id: ack.id},
+				function (resp) {
+					$scope.shipping.acknowledgement = {id: ack.id};
 
-				for (var i = 0; i < $scope.shipping.items.length; i++) {
-					try{
-						$scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
-						$scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
-						$scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
-						$scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
+					/* Get Customer from the server
+					 */
+					$scope.shipping.customer = Customer.get({id: resp.customer.id}, function(resp){
+						$scope.selectedCustomer = resp;
+					});
+
+					$scope.shipping.items = resp.items;
+					$scope.shipping.delivery_date = new Date(resp.delivery_date);
+
+					for (var i = 0; i < $scope.shipping.items.length; i++) {
+						try{
+							$scope.shipping.items[i].quantity = Number($scope.shipping.items[i].quantity);
+							$scope.shipping.items[i].width = Number($scope.shipping.items[i].width || 0);
+							$scope.shipping.items[i].depth = Number($scope.shipping.items[i].depth || 0);
+							$scope.shipping.items[i].height = Number($scope.shipping.items[i].height || 0);
 
 
-					} catch (e) {
-						$log.warn(e);
+						} catch (e) {
+							$log.warn(e);
+						}
+
 					}
 
+
 				}
-
-
-			}
-		)
-
-		//Hide Customer Panel
-		$scope.showAck = false;
+			)
+		}
     };
 
     $scope.$watch('query', function (q) {
@@ -9053,6 +9172,27 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 		}
 	};
 
+
+	$scope.addItem = function (product) {
+		if (product.description) {
+			product.width = product.width || 0;
+			product.height = product.height || 0;
+			product.depth = product.depth || 0;
+			$scope.shipping.items = $scope.shipping.items || [];
+	        $scope.shipping.items.push(product);
+	        //$scope.tempSave();
+		
+			delete $scope.tempProduct;
+			delete $scope.productSearchText;
+		}
+    };
+    
+	
+	
+    $scope.removeItem = function (index) {
+        $scope.shipping.items.splice(index, 1);
+        //$scope.tempSave();
+    };
 
     $scope.create = function () {
 
@@ -9085,19 +9225,17 @@ function ($scope, Acknowledgement, $filter, $mdToast, Shipping, $location, scann
 
     };
 
-    $scope.removeProduct = function (index) {
-        $scope.shipping.items.splice(index, 1);
-    };
-
     //Validations
     $scope.isValidated = function () {
         /*
          * The following are test to see if
          * The property has already been added
          */
+		/*
         if (!$scope.shipping.acknowledgement) {
             return false;
         }
+		*/
 
         if (!$scope.shipping.delivery_date) {
             return false;

@@ -1,0 +1,97 @@
+md-card.acknowledgement{
+	box-shadow:none;
+	border:1px solid rgb(210,210, 210);
+	cursor:move;
+	cursor:-webkit-grab;
+	
+	.status(@color, @width:0) {
+		md-card-title{
+			.status-bar{
+				border-top-color:@color;
+				width:@width;
+			}
+		}
+		
+
+		md-card-content{
+			a{
+				color: @color;
+			}
+		}
+	}
+
+	&.acknowledged{
+		.status(rgb(54, 66, 140), 15%);
+	}
+	
+	&.deposit.received{
+		.status(rgb(50, 130, 120), 30%);
+	}
+	
+	&.in.production{
+		.status(rgb(198, 148, 77), 45%);
+	}
+	
+	&.ready.to.ship{
+		.status(rgb(87,117,83), 75%);
+	}
+	
+	&.shipped{
+		.status(rgb(97,92,130), 85%);
+	}
+	
+	&.invoiced{
+		.status(rgb(163, 81, 82), 95%);
+	}
+
+	&.paid{
+		.status(rgb(87, 132, 87), 100%);
+	}
+	
+	md-card-title{
+		padding:0 0.05em 0.5em 0.05em;
+		.flex;
+		flex-shrink:0;
+		.justify-content(flex-start);
+		.status-bar{
+			height:0;
+			width:0%;
+			border-top:1px solid green;
+			.transition(all, 500ms);
+			//transition-delay:2s;
+		}
+	}
+	
+	md-card-content{
+		a{
+			cursor:pointer;
+			text-decoration:none;
+			color:rgb(100,100,100);
+			outline:none;
+			h3{
+				margin-bottom:0.5em;
+			}
+			
+			&:hover{
+				text-decoration:underline;
+			}
+		}
+		
+		h4{
+			color:rgb(50,50,50);
+			margin-bottom:0.25em;
+			text-overflow: ellipsis;
+			
+			&.amount{
+				margin-top:0.5em;
+				color:rgb(125,125,125);
+			}
+		}
+
+		i{
+			font-size:0.8em;
+			margin-right:0.1em;
+		}
+
+	}
+}

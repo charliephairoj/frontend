@@ -1,0 +1,14 @@
+<md-card class="acknowledgement" drag-on="deal" ng-class="deal.status">
+	<md-card-title>
+		<div class="status-bar">
+		</div>
+	</md-card-title>
+	<md-card-content>
+		<a ng-href="#/deal/{{deal.id}}"><h3>Ack# {{::deal.id}}</h3></a>
+		<h4>{{::deal.customer.name}}</h4>
+		<h4>{{::deal.delivery_date | date: "MMM d, yyyy"}}</h4>
+		<h4 ng-if="deal.project">Project: {{::deal.project.codename}}</h4>
+
+		<h4 class="amount">{{::deal.total || 0 | number}}</h4>
+	</md-card-content>
+</md-card>
