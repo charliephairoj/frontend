@@ -9,48 +9,43 @@
     left:0;
 	
 
-    
-    /*Modals*/
-    //Customer Modal
-    .ack_modal{
-        .container{
-            overflow-y:scroll;
-            overflow-x:hidden;
-            bottom:0em;
-			padding:0;
-            .acknowledgements{
-                .item{
-                    border-top:1px solid #282828;
-                    cursor:pointer;
-                    padding:1em;  
-                    font-family:proxima;
-					list-style:none; 
-                }
-            }
-        }
-        
-    }
-        
-    .remarks_modal{
-        height:22em;
-        width:32em;
-        top:50%;
-        left:50%;
-        margin-top:-11em;
-        margin-left:-16em;
-        background-color:#313131;
-        textarea{
-            font-size:1em;
-            position:absolute;
-            top:50px;
-            bottom:50px;
-            right:10px;
-            left:10px
-        }
-    }
-  
-  
-  
+    &.page-drag-active{
+		.ack{
+			.workspace{
+				md-content{
+					
+					.files{
+						.drag-placeholder{
+							.flex;
+						}
+						
+						md-card-content{
+							pointer-events: none;
+							display:none;
+							
+							table{
+								pointer-events:none;
+							}
+							div{
+								pointer-events: none;
+							}
+							
+							md-card{
+								pointer-events: none;
+							}
+						}
+					}
+					
+					.item{
+						.drag-placeholder{
+							.flex;
+						}
+						
+					}
+				}
+			}
+		}
+	}
 
     .shipping{
         position:absolute;
@@ -72,7 +67,445 @@
 			
 			
 			md-toolbar{
-				padding:1em;
+				padding:0 5%;
+				.transition(all, 250ms);
+			}
+
+            md-content{
+				height:100%;
+				.flex;
+				flex-direction:column;
+				align-items:center;
+				.transition(all, 250ms);
+				
+				md-input-container{
+				
+					.hint{
+						/* Position the hint */
+					    //position: absolute;
+					    //left: 2px;
+					    //right: auto;
+					    //bottom: 7px;
+					    /* Copy styles from ng-messages */
+						margin-top:2px;
+					    font-size: 12px;
+					    line-height: 14px;
+					    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+					    /* Set our own color */
+					    color: rgba(0, 0, 0, 0.35);
+					}
+				}
+			
+				md-section{
+					width:100%;
+					
+					/*
+					 *  Section for Project
+					 */ 
+					&.project{
+						
+						md-card{
+						
+							.project{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+								margin-top:2em;
+								md-autocomplete{
+					
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+				
+								md-input-container{
+									margin:0;
+									margin-left:2em;
+								}
+				
+								.md-button{
+									margin-right:3em;
+								}
+							}
+							
+							md-section{
+								md-card{
+									.transition(background, 250ms);
+									border-bottom:1px solid rgba(0, 0, 0, 0.3);
+									
+									&:last-child{
+										border-bottom:none;
+									}
+									
+									&.selected{
+										background:#CFD8DC;
+										border-bottom:none;
+									}
+								}
+							}
+						}
+					}
+					
+					md-card{
+						width:90%;
+						margin:0 5%;
+					}
+				}
+				
+				md-card{
+					display:block;
+					min-height:initial;
+                    width: 90%;
+					
+					md-card-content{
+                        .customer{
+			                position:relative;
+							width:100%;
+			                margin-top:2em;
+			                color:rgba(0, 0, 0, 1);
+                
+				          	.info{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+								/* Bug workaround for http://crbug.com/546034 - flex issues on Chrome 48 */
+								min-width: 0;
+								min-height: 0;
+						
+								md-autocomplete{
+									.hint{
+										color: rgba(0, 0, 0, 0.35);
+									}
+						
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+				          	}
+				
+							.address{
+								.info;
+							}
+							
+							.contact{
+								.info;
+							}
+				
+							md-input-container{
+								margin-right:1em;
+							}
+		  	  
+						}
+			
+						.company{
+							.customer;
+				
+							.details{
+							  	opacity:1;
+							}
+						}
+			
+			            .order{
+			                .customer;
+            	
+							.details{
+				          		.flex;
+								
+								align-items:flex-start;
+					
+								.date-container{
+									md-datepicker{
+										margin-right:1em;							
+									}
+						
+									.hint{
+										/* Position the hint */
+									    //position: absolute;
+									    //left: 2px;
+									    //right: auto;
+									    //bottom: 7px;
+									    /* Copy styles from ng-messages */
+										margin-left:64px;
+									    font-size: 12px;
+									    line-height: 14px;
+									    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+									    /* Set our own color */
+									    color: rgba(0, 0, 0, 0.35);
+									}
+								}
+					
+					
+								md-input-container{
+									margin:3px 1em 18px 0;
+								}
+							}
+					
+			            }
+					}
+					
+					&.order-details{
+						width:90%;
+						
+			            
+					}
+					
+					
+					/*
+					 *  Card for Project
+					 */ 
+					&.project{
+						width:90%;
+						
+						.project{
+			          		.flex;
+							justify-content:flex-start;
+							align-items:flex-start;
+							margin-top:2em;
+							md-autocomplete{
+					
+								input{
+									color:rgb(0,0,0);
+								}
+							}
+				
+							md-input-container{
+								margin:0;
+								margin-left:2em;
+							}
+				
+							.md-button{
+								margin-right:3em;
+							}
+						}
+					}
+					
+					
+					/*
+					 *  Card for Map
+					 */
+					&.map{
+						width:90%;
+						margin:2em 0;
+						.flex;
+						min-height:32em;
+						height:32em;
+				
+						md-card-content{
+							width:100%;
+							height:auto;
+							.flex;
+							flex-direction:column;
+					
+							.map-container{
+								height:30em;
+								width:100%;
+					
+								#create-ack-map{
+									height:100%;
+									width:100%;
+								}
+							}
+					
+							#directions{
+								width:100%;
+								height:auto;
+							}
+						}
+				
+			   	 	}
+					
+					&.files{
+						position:relative;
+						width:90%;
+						min-height:20em;
+						
+						&.file-drag-active{
+						
+							.drag-placeholder{
+								.flex;
+								pointer-events: none;
+							}
+						
+							md-card-content{
+								pointer-events: none;
+								display:none;
+							
+								md-card{
+									pointer-events: none;
+								}
+							}
+						}
+					
+						.drag-placeholder{
+							display:none;
+							position:static;
+							pointer-events:none;
+							margin:1em;
+							min-height:10em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							&.no-files{
+								.flex;
+								
+								min-height:18em;
+							}
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
+					
+						md-card-content{
+							.flex;
+							flex-direction:row;
+												
+							md-card{
+								width:20%;
+							
+								md-card-title{
+									overflow:hidden;
+								}
+							}
+						}			
+					}
+					
+					&.add-product{
+						width:90%;
+						.flex;
+						min-height:10em;
+						
+						md-card-content{
+							width:60%;
+					
+							.hint{
+								color:rgba(0, 0, 0, 0.35);
+							}
+							
+							md-autocomplete{
+								width:20em;
+								
+								md-autocomplete-wrap{
+									width:30em;
+								}
+							}
+						}
+					}
+					
+					&.item{
+		            	width:90%;
+						position:relative;
+					
+						&.item-drag-active{
+							.drag-placeholder{
+								.flex;
+								pointer-events: none;
+							}
+						
+							md-card-content{
+								pointer-events: none;
+							
+								table{
+									pointer-events:none;
+								}
+								div{
+									pointer-events: none;
+								}
+							
+								md-card-title-media{
+									pointer-events: none;
+							
+									.card-media{
+										pointer-events: none;
+									
+									}
+								}
+							}
+						}
+					
+						.drag-placeholder{
+							display:none;
+							position:absolute;
+							pointer-events:none;
+							top:1em;
+							left:1em;
+							right:1em;
+							bottom:1em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
+					
+						md-card-content{
+												
+							.product-details{
+								max-width:40%;
+							
+								tr{
+							
+									&.fabric{
+								
+										td{
+									
+											&:last-child{
+												padding-left:1em;
+										
+												img{
+													max-height:5em;
+												}
+											}
+									
+											.hint{
+												margin-top:4px;
+											}
+										}
+									}
+									
+									&:last-child{
+										td{
+											md-input-container{
+												width:100%;
+											}
+										}
+									}
+								}
+							}
+					
+							md-card-title-media{
+								pointer-events: none;
+								max-width:40%;
+							
+								.card-media{
+									pointer-events: none;
+									max-width:100%;
+					
+									img{
+										max-height:20em;
+										max-width:100%;
+									}
+								}
+							}
+											
+						}
+					
+		            }
+				}
+				
 			}
 			
             .acknowledgement{
@@ -127,6 +560,7 @@
                     }
                 }
             }
+            /*
             .order{
                 .customer;
                 position:relative;
@@ -134,7 +568,7 @@
                 margin-left:20px;
                 color:#FFFFFF;
             }
-       
+       */
             .products{
                 position:relative;
                 height:auto;

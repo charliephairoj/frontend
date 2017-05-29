@@ -9195,13 +9195,14 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
     };
 
     $scope.create = function () {
-
-        if ($scope.isValidated()) {
+		
+		try{
+			$scope.isValidated()
 			$mdToast.show($mdToast
 				.simple()
 				.content('Creating shippping manifest...')
 				.hideDelay(0));
-            $scope.shipping.$save(function (resource) {
+			$scope.shipping.$save(function (resource) {
 				$mdToast.show($mdToast
 					.simple()
 					.content('Shipping manifest created')
@@ -9217,12 +9218,11 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 					.content('There was an error in creating the shipping manifest')
 					.hideDelay(0));
             });
-        } else {
+		} catch (e) {
 			$mdToast.show($mdToast
 				.simple()
-				.content('The Order is Not Complete'));
-        }
-
+				.content(e.message));
+		}
     };
 
     //Validations
@@ -9238,8 +9238,30 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 		*/
 
         if (!$scope.shipping.delivery_date) {
-            return false;
+            var message = "Missing delivery date";	
+			throw new Error(message);
         }
+
+		// Check if the shipping has any items
+		if (!$scope.shipping.items){
+			var message = "No items to delivery";	
+			throw new Error(message);
+		} else {
+			if ($scope.shipping.items.length === 0) {
+				var message = "No items to delivery";	
+				throw new Error(message);
+			}
+		}
+		
+		// Check if quantity is present
+		for (var i=0; i < $scope.shipping.items.length; i++) {
+			if (!$scope.shipping.items[i].quantity) {
+				var message = $scope.shipping.items[i].description;
+				message += " missing quantity";
+				throw new Error(message);
+			}
+		}
+
         //Return true for form validated
         return true;
     };
