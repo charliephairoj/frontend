@@ -2838,16 +2838,8 @@ angular.module('employeeApp')
 .controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', '$mdDialog', 'FileUploader', '$log', 'Shift', 'Attendance',
 function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, Attendance) {
     
-	var fetching = false,
-		nationalities = {
-			'thai': {'en': 'Thai',
-					 'th': 'ไทย'},
-			'cambodian': {'en': 'Cambodian',
-						  'th': 'ชาวกัมพูชา'},
-			'laos': {'en': 'Laotian',
-					 'th': 'ลาว'}
-		}, 
-		departments = {
+	var fetching = false;
+	$scope.departments = {
 			'tufting': {'en': 'Tufting',
 						'th': 'tufting'},
 			'woodworking': {'en': 'Woodworking',
@@ -2881,7 +2873,58 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			'management': {'en': 'Management',
 						   'th': 'Management'}
 		};
-	$scope.lang = 'th'
+	$scope.headings = {
+			'title': {'en': 'Title',
+					  'th': 'Title'},
+			'name': {'en': 'Name',
+					 'th': 'ชื่อ'},
+			'id': {'en': 'Government ID',
+				   'th': 'ID Card'},
+			'nationality': {'en': 'Nationality',
+							'th': 'สัญชาติ'},
+			'company': {'en': 'Company',
+						'th': 'บริษัท'},
+			'department': {'en': 'Department',
+						   'th': 'แผนก'},
+			'status': {'en': 'Status',
+					   'th': 'สภาพการจ้าง'},
+			'location': {'en': 'Location',
+						 'th': 'สถานที่ปัจจุบัน'},
+			'employment-date': {'en': 'Employment Date',
+								'th': 'วันที่เริ่มทำงาน'},
+			'card-number': {'en': 'Employee Card Number',
+							'th': 'หมายเลขพนักงาน'},
+			'bank': {'en': 'Bank',
+					 'th': 'ธนาคาร'},
+			'account-number': {'en': 'Bank Account Number',
+							   'th': 'หมายเลขบัญชี'},
+			'shift': {'en': 'Shift',
+					  'th': 'เวลาทำงาน'},
+			'wage': {'en': 'Pay Rate',
+					 'th': 'ค่าจ้าง'},
+			'pay-period': {'en': 'Pay Period',
+						   'th': 'ประเภทการจ่ายเงิน'},
+			'stipend': {'en': 'Stipend',
+					 	'th': 'เบี้ยขยัน'},
+			'manager': {'en': 'Manager Stipend',
+					 	'th': 'ตำแหน่ง'},
+			'pay-method': {'en': 'Payment Method',
+					 	   'th': 'วิธีจ่ายเงิน'},
+			
+		};
+	$scope.nationalities = {
+			'thai': {'en': 'Thai',
+					 'th': 'ไทย'},
+			'cambodian': {'en': 'Cambodian',
+						  'th': 'ชาวกัมพูชา'},
+			'laos': {'en': 'Laotian',
+					 'th': 'ลาว'},
+			'burmese': {'en': 'Burmese',
+					 'th': 'พม่า'},
+			'vietnamese': {'en': 'Vietnamese',
+					       'th': 'เวียตนาม'}
+		}, 
+	$scope.lang = 'th';
 	$scope.employees = Employee.query(function() {
 		for (var i = 0; i < $scope.employees.length; i++) {
 			if ($scope.employees[i].attendances) {
@@ -2945,7 +2988,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 
 	$scope.getNationality = function (nationality) {
 		try{
-			return nationalities[nationality][$scope.lang];
+			return $scope.nationalities[nationality][$scope.lang];
 		} catch (e) {
 			$log.warn(e);
 		}
@@ -2954,7 +2997,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	$scope.getDepartment = function (department) {
 		if (department) {
 			try{
-				return departments[department][$scope.lang];
+				return $scope.departments[department][$scope.lang];
 			} catch (e) {
 				return 'ยังไม่ได้กำหนดแผนก';
 			}

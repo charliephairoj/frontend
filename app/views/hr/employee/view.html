@@ -74,31 +74,31 @@
 							<md-card-content>
 								<table>
 									<tr>
-										<td>Title</td>
+										<td>{{headings.title[lang]}}</td>
 										<td><input type="text" ng-model="employee.title"></td>
 									</tr>
 									<tr>
-										<td>ชื่อ/Name</td>
+										<td>{{headings.name[lang]}}</td>
 										<td><input type="text" ng-model="employee.name"></td>
 									</tr>
 									<tr>
-										<td>National ID/Passport ID</td>
+										<td>{{headings.id[lang]}}</td>
 										<td><input type="text" ng-model="employee.government_id"></td>
 									</tr>
 									<tr>
-										<td>สัญชาติ/Nationality</td>
+										<td>{{headings.nationality[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.nationality">
-												<md-option value='thai'>ไทย/Thai</md-option>
-												<md-option value='cambodian'>กัมพูชา/Cambodian</md-option>
-												<md-option value='burmese'>พม่า/Burmese</md-option>
-												<md-option value='laos'>ลาว/Laos</md-option>
-												<md-option value='vietnam'>เวียตนาม/Vietnam</md-option>
+												<md-option value='thai'>{{nationalities.thai[lang]}}</md-option>
+												<md-option value='cambodian'>{{nationalities.cambodian[lang]}}</md-option>
+												<md-option value='burmese'>{{nationalities.burmese[lang]}}</md-option>
+												<md-option value='laos'>{{nationalities.laos[lang]}}</md-option>
+												<md-option value='vietnamese'>{{nationalities.vietnamese[lang]}}</md-option>
 											</md-select>
 										</td>
 									</tr>
 									<tr>
-										<td>Company</td>
+										<td>{{headings.company[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.company" required>
 												<md-option value='alinea group'>Alinea Group</md-option>
@@ -108,46 +108,41 @@
 										</td>
 									</tr>
 									<tr>
-										<td>แผนก/Department</td>
+										<td>{{headings.department[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.department">
-												<md-option value='woodworking'>ไม้/Woodworking</md-option>
-												<md-option value='painting'>สี/Painting</md-option>
-												<md-option value='polishing'>ปัดเงา/Polishing</md-option>
-												<md-option value='packing'>Packing</md-option>
-												<md-option value='upholstery'>หุ้ม/Upholstery</md-option>
-												<md-option value='sewing'>เย็บ/Sewing</md-option>
-												<md-option value='cutting fabric'>ตัดผ้า/Cutting Fabric</md-option>
-												<md-option value='foam'>ฟองน้ำ/Foam</md-option>
-												<md-option value='housekeeping'>แม่บ้าน/Housekeeping</md-option>
-												<md-option value='accounting'>บัญชี/Accounting</md-option>
-												<md-option value='office'>Office</md-option>
-												<md-option value='graphic'>Graphic</md-option>
-												<md-option value='management'>Management</md-option>
-												<md-option value='dyeing'>ย้อม/Dyeing</md-option>
-												<md-option value='carpet installation'>ตกแต่งพรม/Carpet Installation</md-option>
-												<md-option value='tufting'>Tufting</md-option>
-												<md-option value='tracing'>Tracing</md-option>
-												<md-option value='glue'>Glue</md-option>
-												<md-option value='security'>ยาม/Security</md-option>
-												<md-option value='technician'>ช่าง/Technician</md-option>
-												<md-option value='inventory'>สโตร์/Inventory</md-option>
+												<md-option value='woodworking'>{{departments.woodworking[lang]}}</md-option>
+												<md-option value='painting'>{{departments.painting[lang]}}</md-option>
+												<md-option value='polishing'>{{departments.polishing[lang]}}</md-option>
+												<md-option value='packing'>{{departments.packing[lang]}}</md-option>
+												<md-option value='upholstery'>{{departments.upholstery[lang]}}</md-option>
+												<md-option value='sewing'>{{departments.sewing[lang]}}</md-option>
+												<md-option value='cutting fabric'>{{departments['cutting fabric'][lang]}}</md-option>
+												<md-option value='foam'>{{departments.foam[lang]}}</md-option>
+												<md-option value='housekeeping'>{{departments.housekeeping[lang]}}</md-option>
+												<md-option value='accounting'>{{departments.accounting[lang]}}</md-option>
+												<md-option value='office'>{{departments.office[lang]}}</md-option>
+												<md-option value='management'>{{departments.management[lang]}}</md-option>
+												<md-option value='tufting'>{{departments.tufting[lang]}}</md-option>
+												<md-option value='security'>{{departments.security[lang]}}</md-option>
+												<md-option value='technician'>{{departments.technician[lang]}}</md-option>
+												<md-option value='inventory'>{{departments.inventory[lang]}}</md-option>
 											</md-select>
 										</td>
 									</tr>
 									<tr>
-										<td>Status</td>
+										<td>{{headings.status[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.status">
-												<md-option value='active'>Active</md-option>
+												<md-option value='active'>ทำงาน/Active</md-option>
 												<md-option value='probation'>Probation</md-option>
-												<md-option value='fired'>Fired</md-option>
-												<md-option value='quit'>Quit</md-option>
+												<md-option value='quit'>ละออก/Quit</md-option>
+												<md-option value='fired'>ไล่ออก/Fired</md-option>
 											</md-select>
 										</td>
 									</tr>
 									<tr>
-										<td>Location</td>
+										<td>{{headings.location[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.location">
 												<md-option value='thailand'>Thailand</md-option>
@@ -156,7 +151,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td>Employment Date</td>
+										<td>{{headings['employment-date'][lang]}}</td>
 										<td>
 											<md-datepicker ng-model="employee.employment_date">
 
@@ -164,7 +159,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td>Card Number</td>
+										<td>{{headings['card-number'][lang]}}</td>
 										<td><input type="text" ng-model="employee.card_id"></td>
 									</tr>
 								</table>
@@ -175,7 +170,7 @@
 							<md-card-content>
 								<table>
 									<tr>
-										<td>Bank</td>
+										<td>{{headings.bank[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.bank">
 												<md-option value="thanachart">Thanachart</md-option>
@@ -188,11 +183,11 @@
 										</td>
 									</tr>
 									<tr>
-										<td>Bank Account Number</td>
+										<td>{{headings['account-number'][lang]}}</td>
 										<td><input type="text" ng-model="employee.account_number"></td>
 									</tr>
 									<tr>
-										<td>Shift Schedule</td>
+										<td>{{headings.shift[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}">
 												<md-option ng-value="shift" ng-repeat="shift in ::shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
@@ -200,28 +195,28 @@
 										</td>
 									</tr>
 									<tr ng-if="::canViewPayRate(employee)">
-										<td>Pay Rate</td>
+										<td>{{headings.wage[lang]}}</td>
 										<td>
 											<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.wage" />
 										
 										</td>
 									</tr>
 									<tr ng-if="::canViewPayRate(employee)">
-										<td>เบี้ยขยัน/Stipend</td>
+										<td>{{headings.stipend[lang]}}</td>
 										<td>
 											<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.incentive_pay" />
 										
 										</td>
 									</tr>
 									<tr ng-if="::canViewPayRate(employee)">
-										<td>ตำแหน่ง/Manager's Stipend</td>
+										<td>{{headings.manager[lang]}}</td>
 										<td>
 											<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.manager_stipend" />
 										
 										</td>
 									</tr>
 									<tr>
-										<td>ประเภทการจ่ายเงิน/Payment Type</td>
+										<td>{{headings['pay-period'][lang]}}</td>
 										<td>
 											<md-select ng-model="employee.pay_period">
 												<md-option value='daily'>รายวัน/Daily</md-option>
@@ -230,7 +225,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td>Payment Option</td>
+										<td>{{headings['pay-method'][lang]}}</td>
 										<td>
 											<md-select ng-model="employee.payment_option">
 												<md-option value='cash'>เงินสด/Cash</md-option>
