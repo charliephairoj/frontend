@@ -2944,7 +2944,11 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	}
 
 	$scope.getNationality = function (nationality) {
-		return nationalities[nationality][$scope.lang];
+		try{
+			return nationalities[nationality][$scope.lang];
+		} catch (e) {
+			$log.warn(e);
+		}
 	}
 
 	$scope.getDepartment = function (department) {
@@ -3028,9 +3032,9 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 					$scope.employee.$create(function (resp) {
 						$scope.saving = false;
 						Notification.display('Employee: ' + $scope.employee.name + ' created.');
+						$mdDialog.hide()
 					}, function (resp) {
 						$log.error(resp);
-						$mdDialog.hide();
 						Notification.display('There was an error in creating employee: ' + $scope.employee.name + '.', 0);
 					})
 				};			

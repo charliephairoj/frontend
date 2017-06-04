@@ -52,10 +52,12 @@
 						<md-tooltip>บันทึกข้อมูล/Save {{::employee.name}}</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
+					<!--
 					<md-button class="md-warn md-icon-button md-raised" ng-if="::currentUser.hasPermission('delete_employee')">
 						<md-tooltip>ลบพนักงาน/Delete {{::employee.name}}</md-tooltip>
 						<i class="material-icons">remove</i>
 					</md-button>
+					-->
 					<md-button class="md-icon-button expand" ng-show="!active" ng-click="active=true">
 						<md-tooltip>Expand</md-tooltip>
 						<i class="material-icons">expand_more</i>
@@ -99,7 +101,7 @@
 										<td>Company</td>
 										<td>
 											<md-select ng-model="employee.company" required>
-												<md-option value='alinea'>Alinea Group</md-option>
+												<md-option value='alinea group'>Alinea Group</md-option>
 												<md-option value='dellarobbia'>Dellarobbia</md-option>
 												<md-option value='pci'>Pacific Carpet</md-option>
 											</md-select>

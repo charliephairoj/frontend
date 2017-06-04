@@ -43,6 +43,7 @@
 						<md-input-container>
 							<label>Company</label>
 							<md-select ng-model="employee.company" required>
+								<md-option value='alinea group'>Alinea Group</md-option>
 								<md-option value='dellarobbia'>Dellarobbia</md-option>
 								<md-option value='pci'>Pacific Carpet</md-option>
 							</md-select>
@@ -54,6 +55,11 @@
 							<label>Card Number</label>
 							<input type="text" ng-model="employee.card_id" />
 						</md-input-container>
+						<md-datepicker ng-model="employee.employment_date" md-placeholder="วันที่จ้างงาน">
+						</md-datepicker>
+						
+					</div>
+					<div layout="row">
 						<md-input-container>
 							<label>Bank</label>
 							<md-select ng-model="employee.bank">
@@ -68,7 +74,7 @@
 						<md-input-container>
 							<label>Bank Account Number</label>
 							<input type="text" ng-model="employee.account_number">
-		
+						</md-input-container>
 					</div>
 					<div layout="row">
 						<md-input-container>
@@ -91,7 +97,7 @@
 						</md-input-container>
 					</div>
 					<div layout="row">
-						<md-input-container>
+						<md-input-container class="pay-period">
 							<label>ประเภทการจ่ายเงิน/Payment Type</label>
 							<md-select ng-model="employee.pay_period" required>
 								<md-option value='daily'>รายวัน/Daily</md-option>
@@ -108,6 +114,10 @@
 								<md-option value='cash'>เงินสด/Cash</md-option>
 								<md-option value='direct deposit'>โอนเข้าธนาคาร/Direct Deposit</md-option>
 							</md-select>
+						</md-input-container>
+						<md-input-container>
+							<label>Wage</label>
+							<input type="text" ng-model="employee.wage" />
 						</md-input-container>
 					</div>
 				<!--
