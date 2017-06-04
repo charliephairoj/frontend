@@ -1,9 +1,27 @@
 /*
  * Declare the standard headers
  */
-angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', '$provide', 
-function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
+angular.module('employeeApp')
+.config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', '$provide', '$mdDateLocaleProvider',
+
+function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide, $mdDateLocaleProvider) {
 	
+	/*
+	 * Format Date
+	 */
+	$mdDateLocaleProvider.formatDate = function(date) {
+		if (date) {
+			var day = date.getDate();
+			var monthIndex = date.getMonth();
+			var year = date.getFullYear();
+
+			return day + '/' + (monthIndex + 1) + '/' + year;
+		} else {
+			return ""
+		}
+       	
+    };
+
 	/*
 	 * Change how the $log service works 
 	 */

@@ -365,9 +365,27 @@ function merge(permList, groupPerms) {
 /*
  * Declare the standard headers
  */
-angular.module('employeeApp').config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', '$provide', 
-function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide) {
+angular.module('employeeApp')
+.config(['$httpProvider', '$resourceProvider', '$mdThemingProvider', '$provide', '$mdDateLocaleProvider',
+
+function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide, $mdDateLocaleProvider) {
 	
+	/*
+	 * Format Date
+	 */
+	$mdDateLocaleProvider.formatDate = function(date) {
+		if (date) {
+			var day = date.getDate();
+			var monthIndex = date.getMonth();
+			var year = date.getFullYear();
+
+			return day + '/' + (monthIndex + 1) + '/' + year;
+		} else {
+			return ""
+		}
+       	
+    };
+
 	/*
 	 * Change how the $log service works 
 	 */
@@ -2820,7 +2838,50 @@ angular.module('employeeApp')
 .controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', '$mdDialog', 'FileUploader', '$log', 'Shift', 'Attendance',
 function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, Attendance) {
     
-	var fetching = false;
+	var fetching = false,
+		nationalities = {
+			'thai': {'en': 'Thai',
+					 'th': 'ไทย'},
+			'cambodian': {'en': 'Cambodian',
+						  'th': 'ชาวกัมพูชา'},
+			'laos': {'en': 'Laotian',
+					 'th': 'ลาว'}
+		},
+		departments = {
+			'tufting': {'en': 'Tufting',
+						'th': 'tufting'},
+			'woodworking': {'en': 'Woodworking',
+					        'th': 'ไม้'},
+			'painting': {'en': 'Painting',
+						 'th': 'สี'},
+			'sewing': {'en': 'Sewing',
+					   'th': 'เย็บ'},
+			'upholstery': {'en': 'Upholstery',
+						   'th': 'หุ้ม'},
+			'cutting fabric': {'en': 'Cutting Fabric',
+							  'th': 'ตัดผ้า'},
+			'foam': {'en': 'Foam',
+					 'th': 'ฟองน้ำ'},
+			'accounting': {'en': 'Accounting',
+						   'th': 'บัญชี'},
+			'inventory': {'en': 'Inventory',
+						  'th': 'สโตร์'},
+			'security': {'en': 'Security',
+						 'th': 'ยาม'},
+			'technician': {'en': 'Technician',
+						   'th': 'ช่าง'},
+			'polishing': {'en': 'Polishing',
+						  'th': 'ปัดเงา'},
+			'housekeeping': {'en': 'Housekeeping',
+							 'th': 'แม่บ้าน'},
+			'office': {'en': 'Office',
+					   'th': 'Office'},
+			'packing': {'en': 'Packing',
+						'th': 'Packing'},
+			'management': {'en': 'Management',
+						   'th': 'Management'}
+		};
+	$scope.lang = 'th'
 	$scope.employees = Employee.query(function() {
 		for (var i = 0; i < $scope.employees.length; i++) {
 			if ($scope.employees[i].attendances) {
@@ -2880,6 +2941,22 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		}
 		
 		return obj;
+	}
+
+	$scope.getNationality = function (nationality) {
+		return nationalities[nationality][$scope.lang];
+	}
+
+	$scope.getDepartment = function (department) {
+		if (department) {
+			try{
+				return departments[department][$scope.lang];
+			} catch (e) {
+				return 'ยังไม่ได้กำหนดแผนก';
+			}
+		} else {
+			return 'ยังไม่ได้กำหนดแผนก';
+		}
 	}
 	
 	$scope.canViewPayRate = function (employee) {
@@ -19450,6 +19527,7 @@ angular.module('employeeApp.services')
 		'last_contacted',
 		'last_modified',
 		'occurred_at',
+		'employment_date'
 	]
 	
 	function parseObj(data) {

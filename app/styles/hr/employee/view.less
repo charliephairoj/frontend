@@ -25,6 +25,14 @@
 				margin:0 1em;
 				padding:0 1em;
 			}
+
+			.lang-button-container{
+				button{
+					padding: 0 2px;
+					margin:0;
+					min-width:3.5em;
+				}
+			}
 		}
 		
 		md-content{
@@ -35,6 +43,33 @@
 			flex-wrap:wrap;
 			justify-content:space-between;
 			
+			.md-subheader{
+				width:100%;
+				.flex;
+				.flex-direction(row);
+				
+				.info-container{
+					width:80%;
+					height:100%;
+					background:red;
+					.flex;
+					.flex-direction(row);
+
+					.name{
+
+					}
+
+					.department{
+
+					}
+
+					.nationality{
+
+					}
+				}
+				
+			}
+
 			md-card.employee{
 				width:100%;
 				max-height:10em;
@@ -80,6 +115,7 @@
 					md-card-title{
 						visibility:hidden;
 						pointer-events:none;
+
 						
 					}
 					
@@ -102,12 +138,15 @@
 						height:100%;
 						cursor:pointer;
 						outline:none;
+						width:80%;
 						
 						md-card-title-media{
 							margin-right:2em;
 							height:100%;
 							.card-media{
-							
+								border-radius: 100%;
+								overflow:hidden;
+
 								i{
 									font-size:4.5em;
 									color:rgba(0, 0, 0, 0.35);
@@ -119,7 +158,9 @@
 								}
 							}
 						}
-					
+						md-card-title-text{
+							
+						}
 						
 					}
 					

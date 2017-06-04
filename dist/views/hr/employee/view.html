@@ -7,18 +7,22 @@
 			<h3><span>Employees</span></h3>
 			<div flex >
 			</div>
+			
 			<md-button class="md-icon-button md-raised md-accent" ng-show="::currentUser.hasPermission('add_employee')" ng-click="showAddEmployee()">
 				<md-tooltip>Create Employee</md-tooltip>
 				<i class="material-icons">add</i>
 			</md-button>
-		<md-button class="md-icon-button" ng-click="upload()" ng-disabled="::!currentUser.hasModule('hr')">
+			<md-button class="md-icon-button" ng-click="upload()" ng-disabled="::!currentUser.hasModule('hr')">
 				<md-tooltip>Upload Clockin Times</md-tooltip>
 				<i class="material-icons">file_upload</i>
 			</md-button>  
 			<div layout="row" layout-align="end center">
 				<input class="search" type="text" ng-model="query" />
 			</div>
-			
+			<div class="lang-button-container">
+				<md-button ng-class="{'md-accent md-raised': lang=='th'}" ng-click="lang='th'">TH</md-button>
+				<md-button ng-class="{'md-accent md-raised': lang=='en'}" ng-click="lang='en'">EN</md-button>
+			</div>
 		</md-toolbar>
 			
 		<md-content on-scroll-end="loadNext()">
@@ -34,10 +38,13 @@
 								<img ng-src="{{employee.image.url}}" ng-show="employee.image.url">
 							</div>
 						</md-card-title-media>
-						<md-card-title-text flex="nogrow">
-							<h3>{{::employee.name}}</h3>
-							<h4>{{employee.department}}</h4>
+						<md-card-title-text class="name" flex="nogrow">
+							<h3>{{employee.name}}</h3>
+							<h4>{{getDepartment(employee.department)}}</h4>
+							<h4>{{getNationality(employee.nationality)}}</h4>
+							
 						</md-card-title-text>
+
 						<div flex></div>
 					</div>
 					<md-button class="md-accent md-icon-button md-raised" ng-if="active" ng-click="update(employee)"
@@ -92,6 +99,7 @@
 										<td>Company</td>
 										<td>
 											<md-select ng-model="employee.company" required>
+												<md-option value='alinea'>Alinea Group</md-option>
 												<md-option value='dellarobbia'>Dellarobbia</md-option>
 												<md-option value='pci'>Pacific Carpet</md-option>
 											</md-select>
@@ -143,6 +151,14 @@
 												<md-option value='thailand'>Thailand</md-option>
 												<md-option value='cambodia'>Cambodia</md-option>
 											</md-select>
+										</td>
+									</tr>
+									<tr>
+										<td>Employment Date</td>
+										<td>
+											<md-datepicker ng-model="employee.employment_date">
+
+											</md-datepicker>
 										</td>
 									</tr>
 									<tr>
