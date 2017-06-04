@@ -11,7 +11,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 						  'th': 'ชาวกัมพูชา'},
 			'laos': {'en': 'Laotian',
 					 'th': 'ลาว'}
-		},
+		}, 
 		departments = {
 			'tufting': {'en': 'Tufting',
 						'th': 'tufting'},
