@@ -483,13 +483,61 @@
 											}
 										}
 									}
+
+
 									
-									&:last-child{
+									&.remarks{
 										td{
 											md-input-container{
 												width:100%;
 											}
 										}
+									}
+									
+									&.components{
+										width:100%;
+
+										td{
+
+											.add-component-container{
+												.flex;
+												.flex-direction(row);
+
+												md-input-container{
+													&.quantity{
+														width:5em;
+													}
+
+													&.description{
+														width:20em;
+													}
+													
+												}
+												
+											}
+
+											.components-list{
+												.flex;
+												.flex-direction(row);
+
+												.component{
+													md-input-container{
+														&.description{
+															input{
+																width:20em;
+															}
+														}
+
+														&.quantity{
+															input{
+																width:5em;
+															}
+														}
+													}
+												}
+											}
+										}
+										
 									}
 								}
 							}

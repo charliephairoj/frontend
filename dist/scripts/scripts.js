@@ -4678,6 +4678,17 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		return fabrics;
 	};
 	
+
+	/**
+	 * Add a Component to the list of components for an item
+	 */
+	$scope.addComponent = function ($index, component) {
+		$scope.ack.items[$index].components = $scope.ack.items[$index].components || [];
+
+		$scope.ack.items[$index].components.push(component);
+
+		delete $scope.tempComponent;
+	}
 	
 	/**
 	 * ACKNOWLEDGEMENT VALIDATION, PREPARATION AND CREATION

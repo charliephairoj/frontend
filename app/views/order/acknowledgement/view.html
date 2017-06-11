@@ -382,6 +382,23 @@
 																	</md-autocomplete>
 																	</td>
 																</tr>
+																<tr>
+																	<td>Components</td>
+																	<td>
+																		<table>
+																			<tr>
+																				<td>Description
+																				</td>
+																				<td>Qty
+																				</td>
+																			</tr>
+																			<tr ng-repeat="component in item.componenets track by component.id">
+																				<td>{{component.description}}</td>
+																				<td>{{component.quantity}}</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
 																<!--
 																<tr>
 																	<td><span>Fabric Image</span></td>

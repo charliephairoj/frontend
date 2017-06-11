@@ -425,7 +425,7 @@
 									<img ng-src="{{item.fabric.image.url}}" />
 								</td>
 							</tr>
-							<tr>
+							<tr class="remarks">
 								<td colspan="2">
 									<md-input-container>
 									  	<label>Remarks</label>
@@ -438,8 +438,43 @@
 									</md-input-container>
 								</td>
 							</tr>
+							<tr class="components">
+								<td colspan="3">
+									<div>
+										<div class="add-component-container">
+											<md-input-container class="description">
+												<label>Component Description</label>
+												<input type="text" ng-model="tempComponent.description" />
+											</md-input-container>
+											<md-input-container class="quantity">
+												<label>Quantity</label>
+												<input type="number" ng-model="tempComponent.quantity" />
+											</md-input-container>
+											<md-button class="add md-accent md-raised md-icon-button" ng-click="addComponent($index, tempComponent)">
+												<md-tooltip>Add Component</md-tooltip>
+												<i class="material-icons">add_shopping_cart</i>
+											</md-button>
+										</div>
+										<md-list class="components-list">
+											<md-list-item class="component" ng-repeat="component in item.components">
+												<md-input-container class="description">
+													<label>Component Description</label>
+													<input type="text" ng-model="component.description" />
+												</md-input-container>
+												<md-input-container class="quantity">
+													<label>Quantity</label>
+													<input type="number" width="3" ng-model="component.quantity" />
+												</md-input-container>
+											</md-list-item>
+
+										</md-list>
+									</div>
+								</td>
+							</tr>
 						</table>
 						<div flex></div>
+						
+
 						<md-card-title-media>
 							<div class="md-media-sm card-media">
 								<img ng-src="{{item.image.url}}">
