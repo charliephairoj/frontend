@@ -3845,7 +3845,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
     //Vars
     $scope.uploading = false;
     $scope.customImageScale = 100;
-	
+	$scope.tempComponent = {};
 	$scope.projects = Project.query({page_size:99999, limit:0, status__exclude:"completed"});
     $scope.ack = new Acknowledgement();
     
@@ -4688,6 +4688,13 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		$scope.ack.items[$index].components.push(angular.copy(component));
 
 		delete $scope.tempComponent;
+	}
+
+	/**
+	 * Add a Component to the list of components for an item
+	 */
+	$scope.removeComponent = function ($index, components) {
+		components.splice($index, 1);
 	}
 	
 	/**

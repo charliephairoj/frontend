@@ -465,6 +465,10 @@
 													<label>Quantity</label>
 													<input type="number" width="3" ng-model="component.quantity" />
 												</md-input-container>
+												<md-button class="add md-warn md-raised md-icon-button" ng-click="removeComponent($index, item.components)">
+													<md-tooltip>Remove Component</md-tooltip>
+													<i class="material-icons">remove</i>
+												</md-button>
 											</md-list-item>
 
 										</md-list>
