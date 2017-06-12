@@ -456,7 +456,7 @@
 											</md-button>
 										</div>
 										<md-list class="components-list">
-											<md-list-item class="component" ng-repeat="component in item.components">
+											<md-list-item class="component" ng-repeat="component in item.components track by $index">
 												<md-input-container class="description">
 													<label>Component Description</label>
 													<input type="text" ng-model="component.description" />
