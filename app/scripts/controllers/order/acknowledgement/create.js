@@ -846,7 +846,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.addComponent = function ($index, component) {
 		$scope.ack.items[$index].components = $scope.ack.items[$index].components || [];
 
-		$scope.ack.items[$index].components.push(component);
+		$scope.ack.items[$index].components.push(angular.copy(component));
 
 		delete $scope.tempComponent;
 	}

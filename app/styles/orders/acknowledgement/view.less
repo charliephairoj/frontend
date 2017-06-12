@@ -996,9 +996,6 @@
 											md-card-content{
 												pointer-events: none;
 							
-												table{
-													pointer-events:none;
-												}
 												div{
 													pointer-events: none;
 												}
@@ -1089,6 +1086,48 @@
 																	background:rgb(234, 234, 234);
 																}
 															}
+
+															
+
+															table.components-table{
+																thead{
+																	tr{
+																		td{
+																			font-style:bold;
+																			font-size: 1em;
+																			text-align: center;
+
+																			&:first-child{
+																				width:15em;
+																			}
+
+																			&:last-child{
+																				width:5em;
+																			}
+																		}
+																	}
+																}
+
+																tbody{
+																	tr{
+																		td{
+																			font-style:bold;
+																			font-size: 1em;
+																			text-align: center;
+																			color:rgba(0, 0, 0, 0.65);
+																			
+																			&:first-child{
+																				width:15em;
+																			}
+
+																			&:last-child{
+																				width:5em;
+																			}
+																		}
+																	}
+																}
+															}
+														
 										
 															textarea{
 																border:none;

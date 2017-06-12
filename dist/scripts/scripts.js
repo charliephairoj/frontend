@@ -4685,7 +4685,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.addComponent = function ($index, component) {
 		$scope.ack.items[$index].components = $scope.ack.items[$index].components || [];
 
-		$scope.ack.items[$index].components.push(component);
+		$scope.ack.items[$index].components.push(angular.copy(component));
 
 		delete $scope.tempComponent;
 	}
@@ -9307,6 +9307,10 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 		}
 	};
 
+	$scope.addComponent = function ($index, component) {
+		$scope.shipping.items[$index].components = $scope.shipping.items[$index].components || [];
+		$scope.shipping.items[$index].components.push(component);
+	}
 
 	$scope.addItem = function (product) {
 		if (product.description) {

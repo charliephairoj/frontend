@@ -252,6 +252,10 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 		}
 	};
 
+	$scope.addComponent = function ($index, component) {
+		$scope.shipping.items[$index].components = $scope.shipping.items[$index].components || [];
+		$scope.shipping.items[$index].components.push(component);
+	}
 
 	$scope.addItem = function (product) {
 		if (product.description) {
