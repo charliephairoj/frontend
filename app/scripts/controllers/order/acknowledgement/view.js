@@ -3,7 +3,9 @@ angular.module('employeeApp')
 .controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric', 'FileUploader', '$mdDialog',
 function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric, FileUploader, $mdDialog) {
 	
-	
+	$scope.test = function () {
+		window.alert('hi');
+	};
 	/*
 	 * Vars
 	 * 
@@ -45,6 +47,84 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			}
 		}
 	});
+
+
+	/**
+	 * Get the total from a list of deals that has a certain status
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.getTotal = function (stage) {
+		var total = 0;
+		
+		for (var i = 0; i < $scope.acknowledgements.length; i++) {
+			if ($scope.acknowledgements[i].status === stage) {
+				var amount;
+				
+				amount = $scope.acknowledgements[i].total;
+				/*
+				if ($scope.acknowledgements[i].currency.toLowerCase() === 'thb') {
+					amount = $scope.acknowledgements[i].grand_total;
+				} else {
+					switch($scope.acknowledgements[i].currency.toLowerCase()) {
+						case 'eur':
+							amount = $scope.acknowledgements[i].grand_total * 40;
+						case 'usd': 
+							amount = $scope.acknowledgements[i].grand_total * 35;
+					}
+						
+				}
+				*/
+				total += amount;
+			}
+		}
+		
+		return total;
+	};
+
+
+	$scope.updateStage = function (ack, status) {
+		console.log(ack);
+		console.log(status);
+		var index = $scope.acknowledgements.indexOfById(ack);
+		if (index > -1) {
+			$scope.acknowledgements[index].status = status;
+			$scope.acknowledgements[index].$update();
+		}
+    };
+	
+	/**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showAcknowledgement = function (ack) {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/view-acknowledgement.html',
+			controllerAs: 'ctrl',
+			locals: {
+				'customers': $scope.customers,
+				'acknowledgement': ack
+			},
+			controller: function ($scope, $mdDialog, customers, acknowledgement) {
+				$scope.ack = acknowledgement
+				$scope.customers = customers;
+				
+				
+				
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				}
+			},
+			clickOutsideToClose: true
+		});
+	};
 	
 	
 	/**
