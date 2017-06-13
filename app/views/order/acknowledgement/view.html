@@ -54,7 +54,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'acknowledged'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'acknowledged'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>
@@ -68,7 +68,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'awaiting deposit'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'awaiting deposit'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>
@@ -82,7 +82,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'in production'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'in production'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>
@@ -96,7 +96,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'ready to ship'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'ready to ship'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>
@@ -110,7 +110,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'shipped'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'shipped'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>
@@ -124,7 +124,7 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'invoiced'} | filter:query | orderBy:'delivery_date' track by ack.id">
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'invoiced'} | filter:query | orderBy:'-id' track by ack.id">
 						</acknowledgement>
 					</md-card-content>
 					<md-card-actions>

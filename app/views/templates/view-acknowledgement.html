@@ -8,9 +8,9 @@
             <md-tooltip>Save</md-tooltip>
             <i class="material-icons">save</i>
         </md-button>
-        <md-button class="md-icon-button" >
-            <md-tooltip>Minimize</md-tooltip>
-            <i class="material-icons">expand_less</i>
+        <md-button class="md-icon-button" ng-click="cancel()">
+            <md-tooltip>Close</md-tooltip>
+            <i class="material-icons">close</i>
         </md-button>
     </md-card-title>
     <md-card-content>
@@ -57,11 +57,8 @@
                                     <td>Order Status</td>
                                     <td>
                                         <md-select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
-                                            <md-option value="deposit received">Deposit Received</md-option>
                                             <md-option value="acknowledged">Acknowledged</md-option>
-
-                                            <md-option value="acknowledged">Acknowledged</md-option>
-
+                                            <md-option value="awaiting deposit">Awaiting Deposit</md-option>
                                             <md-option value="in production">In Production</md-option>
                                             <md-option value="ready to ship">Ready to Ship</md-option>
                                             <md-option value="shipped">Shipped</md-option>
@@ -117,44 +114,6 @@
                     </section>
 
                 </section>
-
-                <div class="status-bar">
-                    <div class="event acknowledged" ng-class="::{'active': hasEvent(ack, 'opened') || hasEvent(ack, 'acknowledged')}">
-                        <span>Acknowledged</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event deposit-received" ng-class="{'active': hasEvent(ack, 'deposit')}">
-                        <span>Deposit</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event in-production" ng-class="{'active': hasEvent(ack, 'in production')}">
-                        <span>In Production</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event ready-to-ship" ng-class="{'active': hasEvent(ack, 'ready to ship')}">
-                        <span>Ready to Ship</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event shipped" ng-class="{'active': hasEvent(ack, 'shipped')}">
-                        <span>Shipped</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event invoiced" ng-class="{'active': hasEvent(ack, 'invoiced')}">
-                        <span>Invoiced</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                    <div class="event paid" ng-class="{'active': hasEvent(ack, 'paid')}">
-                        <span>Paid</span>
-                        <div class="arrow"></div>
-                        <div class="arrow2"></div>
-                    </div>
-                </div>
 
             </div>
             <section>
