@@ -197,11 +197,15 @@
 															</tr>
 															<tr>
 																<td>Project</td>
-																<td><a ng-href="#/project/{{ack.project.id}}">{{ack.project.name}}</a></td>
+																<td>
+																	<input ng-model="ack.project.codename" type="text" />
+																</td>
 															</tr>
 															<tr>
 																<td>Room</td>
-																<td><a ng-href="#/project/{{ack.project.id}}">{{ack.room.description}}</a></td>
+																<td>
+																	<input ng-model="ack.room.description" type="text" />
+																</td>
 															</tr>
 															<tr>
 																<td>Phase</td>
