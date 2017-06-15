@@ -961,12 +961,15 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			 	message: "Please specify the project in the project selection"
 			}
 		];
+		
+		 
 		for (var j = 0; j < testWords.length; j++) {
-			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type]) {
+			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type] && !$scope.ack.project[testWords[j].type]) {
 				throw new TypeError(testWords[j].message);
 			}
 		}
 		
+		 
         //Return true for form validated
 		return true;
 	};
