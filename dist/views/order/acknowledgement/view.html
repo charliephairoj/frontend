@@ -382,7 +382,39 @@
 																	</md-autocomplete>
 																	</td>
 																</tr>
+																<tr>
+																	<td>Add Component</td>
+																	<td>
+																		<table class="add-components-table">
+																			<thead>
+																				<tr>
+																					<td>
+																						<md-input-container class="description">
+																							<label>Component Description</label>
+																							<input type="text" ng-model="tempComponent.description" />
+																						</md-input-container>
+											
+																					</td>
+																					<td>
+																						<md-input-container class="quantity">
+																							<label>Quantity</label>
+																							<input type="number" ng-model="tempComponent.quantity" />
+																						</md-input-container>
+																					</td>
+																					<td>
+																						<md-button class="add md-accent md-raised md-icon-button" ng-click="addComponent(item, tempComponent)">
+																							<md-tooltip>Add Component</md-tooltip>
+																							<i class="material-icons">add_shopping_cart</i>
+																						</md-button>
+																					</td>
+																				</tr>
+																			</thead>
+																			
+																		</table>
+																	</td>
+																</tr>
 																<tr ng-if="item.components.length > 0">
+																	
 																	<td>Components</td>
 																	<td>
 																		<table class="components-table">

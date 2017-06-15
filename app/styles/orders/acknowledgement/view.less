@@ -1089,44 +1089,63 @@
 
 															
 
-															table.components-table{
-																thead{
-																	tr{
-																		td{
-																			font-style:bold;
-																			font-size: 1em;
-																			text-align: center;
+															table{
+																&.add-components-table{
+																	thead{
+																		tr{
+																			td{
+																				.description input{
+																					width:15em;
+																				}
 
-																			&:first-child{
-																				width:15em;
-																			}
-
-																			&:last-child{
-																				width:5em;
+																				.quantity input{
+																					width:5em;
+																				}
 																			}
 																		}
 																	}
 																}
 
-																tbody{
-																	tr{
-																		td{
-																			font-style:bold;
-																			font-size: 1em;
-																			text-align: center;
-																			color:rgba(0, 0, 0, 0.65);
-																			
-																			&:first-child{
-																				width:15em;
-																			}
+																&.components-table{
+																	thead{
+																		tr{
+																			td{
+																				font-style:bold;
+																				font-size: 1em;
+																				text-align: center;
 
-																			&:last-child{
-																				width:5em;
+																				&:first-child{
+																					width:15em;
+																				}
+
+																				&:last-child{
+																					width:5em;
+																				}
+																			}
+																		}
+																	}
+
+																	tbody{
+																		tr{
+																			td{
+																				font-style:bold;
+																				font-size: 1em;
+																				text-align: center;
+																				color:rgba(0, 0, 0, 0.65);
+																				
+																				&:first-child{
+																					width:15em;
+																				}
+
+																				&:last-child{
+																					width:5em;
+																				}
 																			}
 																		}
 																	}
 																}
 															}
+															
 														
 										
 															textarea{

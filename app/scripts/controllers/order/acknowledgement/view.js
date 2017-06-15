@@ -45,6 +45,12 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			}
 		}
 	});
+
+	$scope.addComponent = function (item, component) {
+		item.components.push(angular.copy(component));
+		component = {};
+
+	}
 	
 	
 	/**
