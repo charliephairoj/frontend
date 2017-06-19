@@ -431,7 +431,7 @@
 																				</tr>
 																			</thead>
 																			<tbody>
-																				<tr ng-repeat="component in item.components track by component.id">
+																				<tr ng-repeat="component in item.components track by $index">
 																					<td>{{component.description}}</td>
 																					<td>{{component.quantity}}</td>
 																				</tr>

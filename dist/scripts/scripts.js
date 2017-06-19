@@ -5159,7 +5159,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		search = $location.search();
 	
 	var notification = Notification.display('Retrieving acknowledgements...', false);
-
+	$scope.tempComponent = {};
 	$scope.query = {};
 	
 	/* 
