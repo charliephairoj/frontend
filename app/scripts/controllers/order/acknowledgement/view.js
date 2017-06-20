@@ -114,7 +114,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			controller: function ($scope, $mdDialog, customers, acknowledgement) {
 				$scope.ack = Acknowledgement.get({'id':acknowledgement.id});
 				$scope.customers = customers;
-				
+				$scope.tempComponent = {};
 				$scope.openAttachment = function (link) {
 					window.open(link);
 				};
@@ -246,6 +246,13 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 					return fabrics;
 				};
 				
+				$scope.addComponent = function (item, component) {
+					item.components.push(angular.copy(component));
+
+					$scope.tempComponent = {};
+
+				}
+	
 				/**
 				 * Save the acknowledgement
 				 * 
