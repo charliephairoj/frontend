@@ -54,8 +54,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'acknowledged'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'acknowledged'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('acknowledged') | number}}</h5>
@@ -68,8 +70,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'awaiting deposit'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'awaiting deposit'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('awaiting deposit') | number}}</h5>
@@ -82,8 +86,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'in production'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'in production'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('in production') | number}}</h5>
@@ -96,8 +102,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'ready to ship'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'ready to ship'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('ready to ship') | number}}</h5>
@@ -110,8 +118,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'shipped'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'shipped'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('shipped') | number}}</h5>
@@ -124,8 +134,10 @@
 						</md-card-title-text>
 					</md-card-title>
 					<md-card-content>
-						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'invoiced'} | filter:query | orderBy:'-id' track by $index">
-						</acknowledgement>
+						<div ng-repeat="ack in acknowledgements | filter:{status:'invoiced'} | filter:query | orderBy:'-id' track by $index">
+							<acknowledgement>
+							</acknowledgement>
+						</div>
 					</md-card-content>
 					<md-card-actions>
 						<h5>Amount: ฿{{getTotal('invoiced') | number}}</h5>
