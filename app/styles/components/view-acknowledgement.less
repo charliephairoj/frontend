@@ -1,6 +1,5 @@
 md-card.view-acknowledgement-component{
-        margin:0;
-        max-height:3.5em;
+       
         min-height:3.5em;
         min-width:1em;
         
@@ -13,20 +12,21 @@ md-card.view-acknowledgement-component{
         -webkit-transition: margin 400ms, width 400ms, max-height 1s;
         width:100%;
 
-        @maxHeight:600em;
-        margin:3em;
+        @maxHeight:100%;
+        margin:0;
         max-height:@maxHeight;
-        width:90%;
         background-color:rgba(0,0,0, 0.1);
         min-height:initial;
         display:block;
         
         >md-card-content{
-            margin:2em;
+            margin:0;
             background:transparent;
             //background-color:rgba(0,0,0, 0.1);
             max-height:@maxHeight;
-            
+            padding-right:0.25em;
+            padding-left:0.25em;
+
             .item-preview-container{
                 display:block;
             }
@@ -165,7 +165,7 @@ md-card.view-acknowledgement-component{
                 }
                 
                 section{
-                    width:90%;
+                    width:98%;
                     
                     &.products{
                         .flex;
@@ -279,7 +279,7 @@ md-card.view-acknowledgement-component{
                                     justify-content:space-between;
                                     
                                     table.product-details{
-                                        width:50%;
+                                        width:70%;
                                         display:block;
                                         
                                         tr{
