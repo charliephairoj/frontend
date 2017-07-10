@@ -13025,7 +13025,7 @@ angular.module('employeeApp.directives')
 angular.module('employeeApp.directives')
 .directive('acknowledgement', [function () {
 	return {
-		templateUrl: 'views/templates/acknowledgement.html',
+		templateURL: 'views/templates/acknowledgement.html',
 		restrict: 'E',
 		link: function postLink(scope, element, attrs) {
 			var currencySigns = {
