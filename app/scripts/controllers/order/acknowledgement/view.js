@@ -89,9 +89,23 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		console.log(ack);
 		console.log(status);
 		var index = $scope.acknowledgements.indexOfById(ack);
+		console.log(index);
 		if (index > -1) {
-			$scope.acknowledgements[index].status = status;
-			$scope.acknowledgements[index].$update();
+			if (!$scope.acknowledgements[index].items) {
+				Acknowledgement.get({id:ack.id}, function (resp) {
+					console.log(resp);
+					console.log(index);
+					console.log($scope.acknowledgements[index]);
+					$scope.acknowledgements[index] = resp;
+					$scope.acknowledgements[index].status = status;
+					$scope.acknowledgements[index].$update();
+				});
+			} else {
+				$scope.acknowledgements[index].status = status;
+				$scope.acknowledgements[index].$update();
+			}
+			
+			
 		}
     };
 	

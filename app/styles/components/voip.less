@@ -1,0 +1,206 @@
+
+#voip-main{
+    width:3em;
+    height:3em;
+    background:rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position:fixed;
+    top:5em;
+    right:1em;
+    z-index:1000;
+    border-radius:0.5em;
+    overflow: hidden;
+    .flex;
+    .align-items(center);
+    .transition(all, 150ms, ease-in);
+
+    .inactive{
+        position:absolute;
+        bottom:0;
+        left:0;
+        height:3em;
+        width:3em;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        opacity:1;
+        z-index:1;
+        .transition(all, 150ms);
+    }
+
+    .active-container{
+        position:absolute;
+        top:0;
+        left:0;
+        height:3em;
+        width:3em;
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        opacity:0;
+        z-index:0;
+        .transition(all, 150ms);
+
+        .caller-info{
+            position:absolute;
+            height:7em;
+            width:100%;
+            top:0;
+            left:0em;
+            .flex;
+            .flex-direction(column);
+            .align-items(center);
+            .justify-content(space-around);
+
+            h3{
+
+                &.connected{
+                    display:none;
+                }
+
+                &.receiving{
+                    display:block;
+                }
+            }
+
+            span{
+                margin-bottom:1em;
+            }
+        }
+
+        .action-container{
+            position:absolute;
+            bottom:0;
+            left:0;
+            height:3em;
+            width:100%;
+            display:flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            .transition(all, 150ms);
+
+            @button-margin: 2em;
+
+            .answer-container{
+                position:absolute;
+                padding-left:@button-margin;
+                width:50%;
+                height:100%;
+                left:0;
+                top:0;
+                overflow: hidden;
+                .opacity(1);
+                .flex;
+                .justify-content(center);
+                .transition(all, 100ms);
+
+                .answer{
+                    color:green;
+                }
+            }
+            
+
+            .hangup-container{
+                position:absolute;
+                padding-right:@button-margin;
+                width:50%;
+                height:100%;
+                right:0;
+                top:0;
+                overflow: hidden;
+                .flex;
+                .justify-content(center);
+                .transition(all, 100ms);
+
+                .hangup{
+                    color:red;
+                }
+            }
+        } 
+    }
+    
+
+    &.incoming{
+        width:20em;
+        height:10em;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+
+        .inactive{
+            opacity: 0;
+            z-index: 0;
+        }
+
+        .active-container{
+            opacity: 1;
+            z-index: 1;
+            width:20em;
+            height:10em;
+
+            .caller-info{
+                h3{
+
+                    &.connected{
+                        display:none;
+                    }
+
+                    &.receiving{
+                        display:block;
+                    }
+                }
+            }
+        }
+    }
+
+    &.active{
+        width:20em;
+        height:10em;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+
+        .inactive{
+            opacity: 0;
+            z-index: 0;
+        }
+
+        .active-container{
+            opacity: 1;
+            z-index: 1;
+            width:20em;
+            height:10em;
+            padding:0;
+
+            .caller-info{
+                h3{
+
+                    &.connected{
+                        display:block;
+                    }
+
+                    &.receiving{
+                        display:none;
+                    }
+                }
+            }
+
+            .answer-container{
+                width:0%;
+                left:0;
+                top:0;
+                .opacity(0);
+                .answer{
+                    margin:0;
+                }
+            }
+            
+
+            .hangup-container{
+                width:100%;
+                padding:0;
+
+            }
+        }
+    }
+}
