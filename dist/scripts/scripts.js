@@ -3643,8 +3643,65 @@ function ($scope, Employee, Payroll, Attendance) {
 
 
 angular.module('employeeApp')
-.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope', '$log',
-function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope, $log) {
+.controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope', '$log', '$http',
+function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope, $log, $http) {
+
+	/**
+	 * VoIP: Twilio
+	 */
+	var voip = {
+		'status': '',
+		'conn': {parameters : {From: '+22324235234234'}}
+	};
+
+	$http.get('/api/v1/ivr/token/').then(function (resp) {
+		Twilio.Device.setup(resp.data.token, {"debug": true});
+		Twilio.Device.ready(function (device) {
+			$log.debug(device);
+		});
+
+
+		Twilio.Device.incoming(function(connection) {
+			voip.status = 'incoming';
+			voip.conn = connection;
+			console.log(connection);
+			$rootScope.safeApply();
+		});
+
+		Twilio.Device.connect(function (conn) {
+			voip.status = 'active';
+			voip.conn = conn;
+			$rootScope.safeApply();
+		});
+
+		Twilio.Device.disconnect(function (conn) {
+			voip.status = '';
+			voip.conn = null;
+			$rootScope.safeApply();
+		});
+
+		$rootScope.voipStatus = function () {
+			return voip.status;
+		};
+
+		$rootScope.voipFrom = function () {
+			return voip.conn ? voip.conn.parameters.From : "";
+		};
+
+		$rootScope.answer = function () {
+			voip.conn.accept();
+		};
+
+		$rootScope.hangup = function () {
+			voip.conn.reject();
+			Twilio.Device.disconnectAll();
+			voip.status = '';
+			voip.conn = null;
+
+		}
+	});
+	
+
 
 	var user = $scope.currentUser;
 	var changePage = function () {
@@ -4800,12 +4857,15 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 			 	message: "Please specify the project in the project selection"
 			}
 		];
+		
+		 
 		for (var j = 0; j < testWords.length; j++) {
 			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type] && !$scope.ack.project[testWords[j].type]) {
 				throw new TypeError(testWords[j].message);
 			}
 		}
 		
+		 
         //Return true for form validated
 		return true;
 	};
@@ -5147,7 +5207,9 @@ angular.module('employeeApp')
 .controller('OrderAcknowledgementViewCtrl', ['$scope', 'Acknowledgement', '$location', '$filter', 'KeyboardNavigation', 'Notification', '$log', 'Fabric', 'FileUploader', '$mdDialog',
 function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notification, $log, Fabric, FileUploader, $mdDialog) {
 	
-	
+	$scope.test = function () {
+		window.alert('hi');
+	};
 	/*
 	 * Vars
 	 * 
@@ -5190,11 +5252,248 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		}
 	});
 
-	$scope.addComponent = function (item, component) {
-		item.components.push(angular.copy(component));
-		component = {};
 
-	}
+	/**
+	 * Get the total from a list of deals that has a certain status
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.getTotal = function (stage) {
+		var total = 0;
+		
+		for (var i = 0; i < $scope.acknowledgements.length; i++) {
+			if ($scope.acknowledgements[i].status === stage) {
+				var amount;
+				
+				amount = $scope.acknowledgements[i].total;
+				/*
+				if ($scope.acknowledgements[i].currency.toLowerCase() === 'thb') {
+					amount = $scope.acknowledgements[i].grand_total;
+				} else {
+					switch($scope.acknowledgements[i].currency.toLowerCase()) {
+						case 'eur':
+							amount = $scope.acknowledgements[i].grand_total * 40;
+						case 'usd': 
+							amount = $scope.acknowledgements[i].grand_total * 35;
+					}
+						
+				}
+				*/
+				total += amount;
+			}
+		}
+		
+		return total;
+	};
+
+
+	$scope.updateStage = function (ack, status) {
+		console.log(ack);
+		console.log(status);
+		var index = $scope.acknowledgements.indexOfById(ack);
+		console.log(index);
+		if (index > -1) {
+			if (!$scope.acknowledgements[index].items) {
+				Acknowledgement.get({id:ack.id}, function (resp) {
+					console.log(resp);
+					console.log(index);
+					console.log($scope.acknowledgements[index]);
+					$scope.acknowledgements[index] = resp;
+					$scope.acknowledgements[index].status = status;
+					$scope.acknowledgements[index].$update();
+				});
+			} else {
+				$scope.acknowledgements[index].status = status;
+				$scope.acknowledgements[index].$update();
+			}
+			
+			
+		}
+    };
+	
+	/**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showAcknowledgement = function (ack) {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/view-acknowledgement.html',
+			controllerAs: 'ctrl',
+			locals: {
+				'customers': $scope.customers,
+				'acknowledgement': ack
+			},
+			controller: ['$scope', '$mdDialog', 'customers', 'acknowledgement', function ($scope, $mdDialog, customers, acknowledgement) {
+				$scope.ack = Acknowledgement.get({'id':acknowledgement.id});
+				$scope.customers = customers;
+				$scope.tempComponent = {};
+				$scope.openAttachment = function (link) {
+					window.open(link);
+				};
+				
+				/**
+				 * FILES SECTIONs
+				 *
+				 * This section deals with files that are associated or to be associated with this acknowledgement
+				 */
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addFiles = function (files, acknowledgement) {
+					
+					$scope.ack.files = ack.files || []; 
+				
+					/* jshint ignore:start */
+					
+					Notification.display('Uploading files', 2000);
+					
+					for (var i = 0; i < files.length; i++) {
+						$scope.ack.files.push({filename: files[i].name});
+					
+						var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+						promise.then(function (result) {
+							var data = result.data || result;
+							for (var h = 0; h < $scope.ack.files.length; h++) {
+								if (data.filename == $scope.ack.files[h].filename) {
+									angular.extend($scope.ack.files[h], data);
+								}
+							}
+							
+							Notification.display('File Uploaded', 2000);
+
+							$scope.ack.$update(function (resp) {
+								Notification.display('Acknowledgement ' + $scope.ack.id + ' saved.', 2000);
+								console.log($scope.ack);
+							}, function (e){
+								Notification.display(e, 0);
+							});
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							Notification.display(e.message, 0);
+							
+						});
+					}
+				
+					/* jshint ignore:end */
+				};
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addImage = function (files, item) {
+					
+					if (files.length > 0) {
+						/* jshint ignore:start */	
+						
+						Notification.display('Uploading image...');
+							
+						var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
+						promise.then(function (result) {
+							var data = result.data || result;
+							item.image = data
+							Notification.display('Image uploaded.');
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							
+							Notification.display(e.message, 0);
+							
+						});
+						/* jshint ignore:end */
+					}
+				};
+
+
+				/**
+				 * FABRIC SECTION
+				 * 
+				 * This section deals with the product listing and search
+				 */
+				
+				// Inital list of upholsteries
+				$scope.fabricSearchText = null;
+				$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
+				
+				// Watch on productSearchText to get products from the server
+				$scope.retrieveFabrics = function (query) {		
+					if (query) {
+						Fabric.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.fabrics.indexOfById(responses[i]) === -1) {
+									$scope.fabrics.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+				
+				/**
+				 * Returns a list of fabric whose description matches the search term
+				 *
+				 * @public
+				 * @param {String} query - Search term to apply against fabric.description
+				 * @returns {Array} - An array of fabrics whose description matches the search term
+				 */
+				$scope.searchFabrics = function (query) {
+					var lowercaseQuery = angular.lowercase(query.trim());
+					var fabrics = [];
+					for (var i = 0; i < $scope.fabrics.length; i++) {
+						try{
+							if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+								fabrics.push($scope.fabrics[i]);
+							}
+						} catch(e) {
+							
+						}
+						
+					}
+					return fabrics;
+				};
+				
+				$scope.addComponent = function (item, component) {
+					item.components.push(angular.copy(component));
+
+					$scope.tempComponent = {};
+
+				}
+	
+				/**
+				 * Save the acknowledgement
+				 * 
+				 * @public
+				 * @param {Object} acknowledgement - The acknowledgement to be saved
+				 */
+				$scope.update = function (acknowledgement) {
+					
+					Notification.display("Updating order #" + acknowledgement.id);
+					
+					acknowledgement.$update(function () {
+						Notification.display("Order #" + acknowledgement.id + " updated");
+					});
+				};
+				
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				}
+			}],
+			clickOutsideToClose: true
+		});
+	};
 	
 	
 	/**
@@ -5427,147 +5726,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	});
 	
 	
-	/**
-	 * FILES SECTIONs
-	 *
-	 * This section deals with files that are associated or to be associated with this acknowledgement
-	 */
-
-	/**
-	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
-	 * @public
-	 * @param {Array} files - Array of files with raw data
-	 * @returns {null}
-	 */
-	$scope.addFiles = function (files, acknowledgement) {
-		
-		acknowledgement.files = acknowledgement.files || []; 
 	
-		/* jshint ignore:start */
-		
-		Notification.display('Uploading files', 2000);
-		
-		for (var i = 0; i < files.length; i++) {
-			acknowledgement.files.push({filename: files[i].name});
-		
-			var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
-			promise.then(function (result) {
-				var data = result.data || result;
-				for (var h = 0; h < acknowledgement.files.length; h++) {
-					if (data.filename == acknowledgement.files[h].filename) {
-						angular.extend(acknowledgement.files[h], data);
-					}
-				}
-				
-				Notification.display('File Uploaded', 2000);
-
-				acknowledgement.$update(function (resp) {
-					Notification.display('Acknowledgement ' + acknowledgement.id + ' saved.', 2000);
-					angular.merge(acknowledgement, resp);
-				}, function (e){
-					Notification.display(e, 0);
-				});
-				
-			}, function (e) {
-				$log.error(JSON.stringify(e));
-				Notification.display(e.message, 0);
-				
-			});
-		}
-	
-		/* jshint ignore:end */
-	};
-
-	/**
-	 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
-	 * @public
-	 * @param {Array} files - Array of files with raw data
-	 * @returns {null}
-	 */
-	$scope.addImage = function (files, item) {
-		
-		if (files.length > 0) {
-			/* jshint ignore:start */	
-			
-			Notification.display('Uploading image...');
-				
-			var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
-			promise.then(function (result) {
-				var data = result.data || result;
-				item.image = data
-				Notification.display('Image uploaded.');
-				
-			}, function (e) {
-				$log.error(JSON.stringify(e));
-				
-				Notification.display(e.message, 0);
-				
-			});
-			/* jshint ignore:end */
-		}
-	};
-
-
-	/**
-	 * FABRIC SECTION
-	 * 
-	 * This section deals with the product listing and search
-	 */
-	
-	// Inital list of upholsteries
-	$scope.fabricSearchText = null;
-	$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
-	
-	// Watch on productSearchText to get products from the server
-	$scope.retrieveFabrics = function (query) {		
-		if (query) {
-			Fabric.query({q:query}, function (responses) {
-				for (var i = 0; i < responses.length; i++) {
-					if ($scope.fabrics.indexOfById(responses[i]) === -1) {
-						$scope.fabrics.push(responses[i]);
-					}
-				}
-			});
-		}
-	};
-	
-	/**
-	 * Returns a list of fabric whose description matches the search term
-	 *
-	 * @public
-	 * @param {String} query - Search term to apply against fabric.description
-	 * @returns {Array} - An array of fabrics whose description matches the search term
-	 */
-	$scope.searchFabrics = function (query) {
-		var lowercaseQuery = angular.lowercase(query.trim());
-		var fabrics = [];
-		for (var i = 0; i < $scope.fabrics.length; i++) {
-			try{
-				if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
-					fabrics.push($scope.fabrics[i]);
-				}
-			} catch(e) {
-				
-			}
-			
-		}
-		return fabrics;
-	};
-	
-	/**
-	 * Save the acknowledgement
-	 * 
-	 * @public
-	 * @param {Object} acknowledgement - The acknowledgement to be saved
-	 */
-	$scope.update = function (acknowledgement) {
-		
-		Notification.display("Updating order #" + acknowledgement.id);
-		
-		acknowledgement.$update(function () {
-			Notification.display("Order #" + acknowledgement.id + " updated");
-		});
-	};
 	
 }]);
 
@@ -12826,124 +12985,33 @@ function ($scope, Supply, Notification, $filter, KeyboardNavigation, $rootScope,
 
 
 
+'use strict';
 
 /**
  * @ngdoc directive
- * @name frontendApp.directive:purchaseOrderSummary
+ * @name frontendApp.directive:deal
  * @description
- * # purchaseOrderSummary
+ * # deal
  */
-angular.module('employeeApp')
-.directive('acknowledgementSummary', ['D3', '$http', '$filter', '$log', '$rootScope', function (D3, $http, $filter, $log, $rootScope) {
-	
-	function hasEvent(acknowledgement, e) {
-		if (acknowledgement) {
-			for (var i in acknowledgement.logs) {
-				if (acknowledgement.logs[i].hasOwnProperty('message')) {
-					if (acknowledgement.logs[i].message.indexOf(e) > -1) {
-						return true;
-					}
-				}
-				
+angular.module('employeeApp.directives')
+.directive('acknowledgement', [function () {
+	return {
+		templateUrl: 'views/templates/acknowledgement.html',
+		restrict: 'E',
+		link: function postLink(scope, element, attrs) {
+			var currencySigns = {
+				'THB':'฿',
+				'EUR':'€',
+				'USD':'$',
+				'RMB':'¥',
+				'SGD':'S$'
+			};
+			
+			scope.getCurrencySign = function (currency) {
+				return currencySigns[currency];
 			}
 		}
-		
-		return false;
-	}
-	
-	function createChart(element, data, callback, acknowledgements) {
-		//Create box charts for summary
-		var box = D3.select(element[0]).selectAll('div').data(data).enter().append('div')
-		.attr('class', function (d) {
-			return d.category.toLowerCase().replace(/ /gi, '-');
-		});
-		
-		//Attach amount
-		/*
-		box.append('h2').text(function (d) {
-			return "$" + $filter('number')(d.amount);
-		});*/
-		//Attach count
-		box.append('span').text(function (d) {
-			return d.category + " " + d.count;
-		});
-		
-		box.append('div').attr('class', 'arrow');
-		
-		box.on('click', function (d) {
-			angular.element('.acknowledgement-summary div.active').removeClass('active');
-			d3.select(this).attr('class', 'active ' + d.category.toLowerCase().replace(/ /gi, '-'));
-			(callback || angular.noop)({'$category': d.category});
-		}).on('mouseenter', function (d) {
-			
-			var cat = d.category.toLowerCase() == 'acknowledged' ? 'open' : d.category.toLowerCase();
-			$rootScope.safeApply(function () {
-				for (var i in (acknowledgements || [])) {
-					try {
-						if (hasEvent(acknowledgements[i], cat)) {
-							acknowledgements[i].$active = true;
-						}
-					} catch (e) {
-						$log.warn(e);
-					}
-				}
-			});
-			
-		}).on('mouseleave', function (d) {
-			$rootScope.safeApply(function () {
-				for (var i in (acknowledgements || [])) {
-					acknowledgements[i].$active = false;
-				}
-			});
-		});
-		
-		box.transition().duration(2000).ease('cubic-in-out').style('width', function (d) {
-			//Calculate bar width
-			var value =  ((d.count / d.total) * 100);
-			
-			//Equalize the values so that all bars are visible
-			if (value < 17) {
-				value = 17;
-			} else if (value > 70) {
-				value = 66;
-			}
-			
-			return value + '%';
-		});
-		
-	}
-	
-    return {
-      	restrict: 'EA',
-		scope: {
-			'onClick': '&',
-			'acknowledgements': '='
-		},
-      	link: function postLink(scope, element, attrs) {
-        	
-			//Set class for this element
-			element.addClass('acknowledgement-summary');
-			
-			//Get Summary data
-			var promise = $http.get('/api/v1/acknowledgement/stats/');
-			promise.then(function (e) {
-				e = e.data;
-				var total = e.total.count;
-				var data = [
-					{count:e.acknowledged.count, amount: e.acknowledged.amount, category:'Acknowledged', total:total},
-					{count:e.deposit_received.count, amount: e.deposit_received.amount, category:'Deposit Received', total:total},
-					{count:e.in_production.count, amount: e.in_production.amount, category:'In Production', total:total},
-					{count:e.ready_to_ship.count, amount: e.ready_to_ship.amount, category:'Ready to Ship', total:total},
-					{count:e.shipped.count, amount: e.shipped.amount, category:'Shipped', total:total},
-					{count:e.invoiced.count, amount: e.invoiced.amount, category:'Invoiced', total:total},
-					{count:e.paid.count, amount: e.paid.amount, category:'Paid', total:total},
-				];
-				
-				//Call fn to create chart
-				createChart(element, data, scope.onClick, scope.acknowledgements);
-			});
-      	}
-    };
+	};
 }]);
 
 'use strict';

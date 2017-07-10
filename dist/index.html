@@ -21,6 +21,9 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" media="(min-width:481px)" href="styles/main.css">
 	
+    <!-- Twilio SDK -->
+    <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
+
   </head>
   <body ng-app="employeeApp" ng-init="menuActive=false" ng-class="{'inventory': inventory}">
 
@@ -141,7 +144,35 @@
     </md-toolbar>
     
     
-    
+    <div id="voip-main" ng-class="voipStatus()">
+        <div class="inactive">
+            <i class="material-icons display">phone</i>
+        </div>
+        <div class="active-container">
+            <div class="caller-info">
+                <h3 class="connected">You are connected with:</h3>
+                <h3 class="receiving">You are receiving a call from:</h3> 
+                <span>{{voipFrom()}}</span>
+            </div>
+
+            <div class="action-container">
+                <div class="answer-container">
+                <md-button class="md-icon-button md-raised answer" ng-click="answer()">
+                        <md-tooltip md-direction="bottom">Answer</md-tooltip>
+                        <i class="material-icons">phone</i>
+                    </md-button>
+                </div>
+                <div class="hangup-container">
+                    <md-button class="md-icon-button md-raised hangup" ng-click="hangup()">
+                        <md-tooltip md-direction="bottom">Hang Up</md-tooltip>
+                        <i class="material-icons">phone</i>
+                    </md-button>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
     
     <div ng-view class="mainContainer md-background" ng-class="{'activate': menuActive, 'inventory': inventory}">
         
@@ -182,7 +213,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.5/angular-material.min.js"></script>
 		
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.9/d3.min.js" charset="utf-8"></script>
-		
+	
+    
+
     <script src="scripts/scripts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?language=en" type="text/javascript"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
