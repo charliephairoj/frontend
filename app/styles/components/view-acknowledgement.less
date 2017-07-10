@@ -1,0 +1,496 @@
+md-card.view-acknowledgement-component{
+       
+        min-height:3.5em;
+        min-width:1em;
+        
+        .transition(margin, 150ms);
+        .transition(max-height, 750ms);
+        .transition(all, 250ms);
+        .translateZ;
+        
+        transition: margin 4000ms, width 400ms, max-height 1s;
+        -webkit-transition: margin 400ms, width 400ms, max-height 1s;
+        width:100%;
+
+        @maxHeight:100%;
+        margin:0;
+        max-height:@maxHeight;
+        background-color:rgba(0,0,0, 0.1);
+        min-height:initial;
+        display:block;
+        
+        >md-card-content{
+            margin:0;
+            background:transparent;
+            //background-color:rgba(0,0,0, 0.1);
+            max-height:@maxHeight;
+            padding-right:0.25em;
+            padding-left:0.25em;
+
+            .item-preview-container{
+                display:block;
+            }
+            
+            .item-container{
+                height:auto;
+                width:100%;
+                .flex;
+                background:transparent;
+                //background-color:rgb(255, 255, 255);
+                flex-direction:column;
+                align-items:center;
+                
+                md-card.summary{
+                    width:50%;
+                    
+                    table{
+                        tr{
+                            td{
+                                padding:0.25em;
+                                font-size:0.9em;
+                                
+                                &:first-child{
+                                    padding-right:0.75em;
+                                    text-align:right;
+                                    color:rgba(0, 0, 0, 0.65);
+                                    vertical-align:top;
+                                    white-space:nowrap;
+                                }
+                                
+                                a{
+                                    text-decoration:none;
+                                    color:rgb(0, 0, 0);
+                                }
+                                
+                                md-select{
+                                    margin:0;
+                                }
+                                
+                                input{
+                                    border:none;
+                                    outline:none;
+                                    .transition(background, 250ms);
+                                    
+                                    &:focus{
+                                        background:rgb(234, 234, 234);
+                                    }
+                            
+                                    &:hover{
+                                        background:rgb(234, 234, 234);
+                                    }
+                                }
+                                
+                                textarea{
+                                    border:none;
+                                    outline:none;
+                                    width:100%;
+                                    min-height:10em;
+                                    .transition(background, 250ms);
+
+                                    &:focus{
+                                        background:rgb(234, 234, 234);
+                                    }
+                            
+                                    &:hover{
+                                        background:rgb(234, 234, 234);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+                
+                .file-placeholder-container{
+                    position:relative;
+                    margin:0;
+                    padding:0;
+                    width:100%;
+                    height:auto;
+                    .flex;
+                    align-items:center;
+                    flex-direction:column;
+                    
+                    .drag-placeholder{
+                        display:none;
+                        position:absolute;
+                        width:100%;
+                        height:100%;
+                        display:none;
+                        z-index:-1;
+                        background:white;
+                        border:2px dashed rgba(0, 0, 0, 0.35);
+                        align-items:center;
+                        justify-content:center;
+    
+                        h3{
+                            font-size:2em;
+                            color:rgba(0, 0, 0, 0.35);
+                        }
+    
+                    }
+                }
+                
+                .details{
+                    width:100%;
+                    padding:1em 1em 0 1em;
+                    margin-bottom:0.25em;
+                    color:rgba(0, 0, 0, 1);
+                    .flex;
+                    flex-direction:column;
+                    justify-content:space-between;
+
+                    .info{
+                        .flex;
+                        align-items:flex-start;
+                        justify-content:space-between;
+                        flex-wrap:wrap;
+                        flex-direction:column;
+                        margin-bottom:2em;
+                        padding-left:5%;
+    
+                        table{
+                            margin-right:2em
+        
+                            tr{
+            
+                                td{
+                                    height:100px;
+                                }
+                            }
+                        }
+                    }
+
+    
+                }
+                
+                section{
+                    width:98%;
+                    
+                    &.products{
+                        .flex;
+                        flex-direction:column;
+                        align-items:center;
+                    }
+                    
+                    .files{
+                        width:100%;
+                        display:flex;
+                        flex-direction:row;
+                        justify-content:flex-start;
+                        flex-wrap:wrap;
+                        align-items:flex-start;
+                        
+                        md-card.file{
+                            width:47%;
+                            height:3em;
+                            outline:none;
+                            
+                            md-card-title{
+                                
+                                md-card-title-text{
+                                    .flex;
+                                    align-items:center;
+                                    
+                                    i{
+                                        margin-right:0.5em;
+                                    }
+                                    
+                                    span{
+                                        font-size:0.9em;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                
+                    .items{
+                        width:100%;
+                        
+                        md-card.item{
+                            margin:1em 0;
+                            width:100%;
+                            max-height:none;
+                            position:relative;
+                            
+                            &.item-drag-active{
+                                .drag-placeholder{
+                                    .flex;
+                                    pointer-events: none;
+                                }
+                                
+                                md-card-title{
+                                    pointer-events:none;
+                                }
+                                
+                                md-card-content{
+                                    pointer-events: none;
+                
+                                    div{
+                                        pointer-events: none;
+                                    }
+                
+                                    md-card-title-media{
+                                        pointer-events: none;
+                
+                                        .card-media{
+                                            pointer-events: none;
+                        
+                                        }
+                                    }
+                                }
+                            }
+        
+                            .drag-placeholder{
+                                display:none;
+                                position:absolute;
+                                pointer-events:none;
+                                top:1em;
+                                left:1em;
+                                right:1em;
+                                bottom:1em;
+                                display:none;
+                                z-index:2;
+                                background:white;
+                                border:2px dashed rgba(0, 0, 0, 0.35);
+                                align-items:center;
+                                justify-content:center;
+            
+                                h3{
+                                    font-size:2em;
+                                    color:rgba(0, 0, 0, 0.35);
+                                }
+            
+                            }
+                    
+                            md-card-content{
+                                padding:1em;
+                                background:rgb(255, 255, 255);
+                                max-height:none;
+                                .flex;
+                                flex-direction:row;
+                                justify-content:space-between;
+                                
+                                .product-container{
+                                    .flex;
+                                    flex-direction:row;
+                                    flex-wrap:nowrap;
+                                    width:100%;
+                                    justify-content:space-between;
+                                    
+                                    table.product-details{
+                                        width:70%;
+                                        display:block;
+                                        
+                                        tr{
+                                            td{
+                                                padding:0.25em;
+                                                font-size:0.9em;
+                            
+                                                &:first-child{
+                                                    padding-right:0.75em;
+                                                    text-align:right;
+                                                    color:rgba(0, 0, 0, 0.65);
+                                                    vertical-align:top;
+                                                }
+                                            
+                                                md-autocomplete{
+                                            
+                                                }
+                                            
+                                                md-input-container{
+                                                    margin:0;
+                                                }
+                                            
+                                                input{
+                                                    border:none;
+                                                    outline:none;
+                                                    width:20em;
+                                                    .transition(background, 250ms);
+                                
+                                                    &:focus{
+                                                        background:rgb(234, 234, 234);
+                                                    }
+                        
+                                                    &:hover{
+                                                        background:rgb(234, 234, 234);
+                                                    }
+                                                }
+
+                                                
+
+                                                table.components-table{
+                                                    thead{
+                                                        tr{
+                                                            td{
+                                                                font-style:bold;
+                                                                font-size: 1em;
+                                                                text-align: center;
+
+                                                                &:first-child{
+                                                                    width:15em;
+                                                                }
+
+                                                                &:last-child{
+                                                                    width:5em;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    tbody{
+                                                        tr{
+                                                            td{
+                                                                font-style:bold;
+                                                                font-size: 1em;
+                                                                text-align: center;
+                                                                color:rgba(0, 0, 0, 0.65);
+                                                                
+                                                                &:first-child{
+                                                                    width:15em;
+                                                                }
+
+                                                                &:last-child{
+                                                                    width:5em;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            
+                            
+                                                textarea{
+                                                    border:none;
+                                                    outline:none;
+                                                    width:100%;
+                                                    min-height:10em;
+                                                    .transition(background, 250ms);
+
+                                                    &:focus{
+                                                        background:rgb(234, 234, 234);
+                                                    }
+                        
+                                                    &:hover{
+                                                        background:rgb(234, 234, 234);
+                                                    }
+                                                }
+                                            
+                                                img{
+                                                    max-height:5em;
+                                                    max-width:5em;
+                                                }
+                                            }
+                                        }
+                                    }
+                                
+                                    .img-container{
+                                        max-width:100%;
+                                        height:auto;
+                                        margin:0 1em;
+                                        display:block;
+                                        
+                                        img{
+                                            height:auto;
+                                            max-width:100%;
+                                            max-height:25em;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        
+        &.ack-drag-active.active{
+            
+            md-card-title{
+                pointer-events:none;
+            }
+            
+            md-card-content{
+                pointer-events: none;
+                
+                .item-container{
+                    pointer-events: none;
+                    
+                    .file-placeholder-container{
+                        position:relative;
+                        pointer-events: none;
+                        
+                        .drag-placeholder{
+                            .flex;
+                            pointer-events: none;
+                            z-index:20;
+                        }
+                    }
+                    
+                    section{
+                        pointer-events:none;
+                        
+                        md-subheader{
+                            pointer-events:none;
+                        }
+                        
+                        .items{
+                            pointer-events:none;
+                            
+                            md-card.item{
+                                pointer-events:auto;
+                                
+                                md-card-title{
+                                    pointer-events:auto;
+                                }
+                                
+                                md-card-content{
+                                    pointer-events:auto;
+                                }
+                                
+                                .drag-placeholder{
+                                    .flex;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        md-card-title{
+            padding:0;
+            outline:none;
+            
+            md-card-title-text{
+                padding:24px 16px;
+                cursor:pointer;
+                outline:none;
+            }
+            
+            .filler{
+                height:100%;
+                cursor:pointer;
+                min-height:66px;
+                outline:none;
+            }
+            
+            .md-button{
+                &:last-child{
+                    margin-right:16px;
+                }
+            }
+        }
+        
+        
+            
+        
+        &.active{
+            
+                
+                
+            
+        }
+        
+    
+}

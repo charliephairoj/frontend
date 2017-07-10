@@ -41,21 +41,99 @@
 			<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
 
 
-			<div class="title-bar">
-				<div class="id">ID</div>
-				<div class="order-date">DATE</div>
-				<div class="customer">CUSTOMER</div>
-				<div class="po">PO #</div>
-				<div class="project">PROJECT</div>
-				<div class="delivery-date">SHIP DATE</div>
-				<div class="total">TOTAL</div>
-				<div class="status">STATUS</div>
-				<div class="remarks">REMARKS</div>
-			</div>
-
+			
 
 
 		</md-toolbar>
+		<md-content>
+			<div class="container">
+				<md-card class="stage leads"  on-drop="updateStage($file, 'acknowledged')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Acknowledged</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'acknowledged'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('acknowledged') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage qualification" on-drop="updateStage($file, 'awaiting deposit')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Awaiting Deposit</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'awaiting deposit'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('awaiting deposit') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage meeting"  on-drop="updateStage($file, 'in production')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>In Production</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'in production'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('in production') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage proposal" on-drop="updateStage($file, 'ready to ship')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Ready to Ship</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'ready to ship'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('ready to ship') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage closed-won" on-drop="updateStage($file, 'shipped')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Shipped</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'shipped'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('shipped') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage closed-lost" on-drop="updateStage($file, 'invoiced')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Invoiced</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<acknowledgement ng-repeat="ack in acknowledgements | filter:{status:'invoiced'} | filter:query | orderBy:'-id' track by ack.id">
+						</acknowledgement>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('invoiced') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+			</div>
+		</md-content>
+		<!--
 		<md-content on-scroll-end="loadNext()">
 
 							<md-card ng-class="{'active': ack.$$active}" class="acknowledgement" ng-repeat="ack in acknowledgements | filter:query track by ack.id" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
@@ -447,6 +525,7 @@
 																	</td>
 																</tr>
 																	-->
+																	<!--
 																<tr>
 																	<td><span>Remarks</span></td>
 																	<td>
@@ -468,9 +547,10 @@
 
 							</md-card>
 
-
-		</md-content>
-
+							-->
+		
+<!--		</md-content>
+-->
     </div>
 
 </div>
