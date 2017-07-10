@@ -5236,7 +5236,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 		$scope.safeApply(function () {
 			$scope.query.status = search.status;
 		});
-	}
+	} 
 	
 	
 	//Poll the server for acknowledgements
