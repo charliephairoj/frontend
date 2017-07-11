@@ -9,13 +9,20 @@ md-card.acknowledgement{
 	.transition(all, 150ms);
 
 	md-card-title{
-		padding:0.05em;
+		padding:0.5em 0.05em;
 		.flex;
 		flex-shrink:0;
-		.justify-content(flex-start);
+		.justify-content(space-between;);
+		.align-items(center);
+
+		.delivery-date{
+			font-size:0.8em;
+			color:rgba(0,0,0, 0.6);
+		}
 	}
 	
 	md-card-content{
+		position:relative;
 
 		.customer{
 			margin-top:0.5em;
@@ -25,10 +32,12 @@ md-card.acknowledgement{
 			overflow:hidden;
 		}
 
-		.delivery-date{
+		
+
+		.project{
 			font-size:0.8em;
 			color:rgba(0,0,0, 0.6);
-			margin-top:0.25em;
+			margin-top:0.5em;
 		}
 
 		a{

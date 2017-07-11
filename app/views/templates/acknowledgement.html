@@ -2,12 +2,13 @@
 	
 	<md-card-title>
 		<h4>{{::ack.id}}</h4>
+		<h4 class="delivery-date">{{::ack.delivery_date | date: "MMM d, yyyy"}}</h4>
 	</md-card-title>
 	<md-card-content>
 		
 		<h4 class="customer">{{::ack.customer.name}}</h4>
-		<h4 class="delivery-date">{{::ack.delivery_date | date: "MMM d, yyyy"}}</h4>
-		<h4 ng-if="deal.project">Project: {{::ack.project.codename}}</h4>
+		
+		<h4 class="project" ng-if="ack.project">{{::ack.project.codename + ": " + ack.room.description || ''}}</h4>
 		
 		<h4 class="amount">฿{{::ack.total || 0 | number}}</h4>
 		
