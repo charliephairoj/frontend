@@ -98,6 +98,10 @@
 										</td>
 									</tr>
 									<tr>
+										<td>{{headings.telephone[lang]}}</td>
+										<td><input type="text" ng-model="employee.telephone"></td>
+									</tr>
+									<tr>
 										<td>{{headings.company[lang]}}</td>
 										<td>
 											<md-select ng-model="employee.company" required>
@@ -158,10 +162,7 @@
 											</md-datepicker>
 										</td>
 									</tr>
-									<tr>
-										<td>{{headings['card-number'][lang]}}</td>
-										<td><input type="text" ng-model="employee.card_id"></td>
-									</tr>
+									
 								</table>
 							</md-card-content>
 						</md-card>
@@ -169,6 +170,10 @@
 						<md-card class="summary">
 							<md-card-content>
 								<table>
+									<tr>
+										<td>{{headings['card-number'][lang]}}</td>
+										<td><input type="text" ng-model="employee.card_id"></td>
+									</tr>
 									<tr>
 										<td>{{headings.bank[lang]}}</td>
 										<td>

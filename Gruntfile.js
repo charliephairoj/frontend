@@ -76,6 +76,7 @@ module.exports = function (grunt) {
 	  			],
 	          	tasks: ['less:developement'],
 	  	  		options: {
+							nospawn: true,
 	  	  			livereload: true
 	  	  		}
 	        },

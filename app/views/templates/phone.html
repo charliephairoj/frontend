@@ -1,0 +1,184 @@
+<div id="voip-main" ng-class="voipStatus()">
+        <div class="inactive" ng-click="activateDialpad()">
+            <i class="material-icons display">phone</i>
+        </div>
+        <div class="active-container">
+            <div class="caller-info">
+                <div class="status">
+                    <h3 class="connected">You are connected with:</h3>
+                    <h3 class="receiving">You are receiving a call from:</h3> 
+                    <h3 class="calling">You are calling:</h3> 
+                    <span>{{voipFrom()}}</span>
+                    
+                </div>
+
+                <div class="profile">
+                    <!-- Employee Section -->
+                    <div class="employee" ng-if="contact.type=='employee'">
+                        <div class="profile-img-container">
+                            <i class="material-icons" ng-hide="contact.image.url">account_box</i>
+                            <img ng-src="{{contact.image.url}}" ng-show="contact.image.url">
+                        </div>
+                        <table class="details">
+                            <tbody>     
+                                <tr>
+                                    <td><label>Name</label></td>
+                                    <td><label>{{contact.name}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Government ID</label></td>
+                                    <td><label>{{contact.government_id}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Telephone</label></td>
+                                    <td><label>{{contact.telephone}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Nationality</label></td>
+                                    <td><label>{{contact.nationality}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Department</label></td>
+                                    <td><label>{{contact.department}}</label></td>
+                                </tr>                
+                            </tbody>       
+                        </table>
+                    </div>
+
+                    <!-- Customer Section -->
+                    <div class="customer" ng-if="contact.type == 'customer'">
+                        <md-card class="details">
+                            <md-card-content>
+
+                                <table>
+                                    <tbody> 
+                                        <tr>
+                                            <td><label>Customer Number</label></td>
+                                            <td><label>{{contact.id}}</label></td>
+                                        </tr>    
+                                        <tr>
+                                            <td><label>Customer Name</label></td>
+                                            <td><label>{{contact.name}}</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Telephone</label></td>
+                                            <td><label>{{contact.telephone}}</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Email</label></td>
+                                            <td><label>{{contact.email}}</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Tax ID</label></td>
+                                            <td><label>{{contact.tax_id}}</label></td>
+                                        </tr>             
+                                    </tbody>       
+                                </table>
+                            </md-card-content>
+                        </md-card>
+                        
+                        <md-card class="orders">
+                            <md-card-content>
+                                <acknowledgement status ng-repeat="ack in contact.acknowledgements | orderBy: '-delivery_date'"></acknowledgement>
+                            </md-card-content>
+                        </md-card>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-container">
+                <div class="answer-container">
+                <md-button class="md-icon-button md-raised answer" ng-click="answer()">
+                        <md-tooltip md-direction="bottom">Answer</md-tooltip>
+                        <i class="material-icons">phone</i>
+                    </md-button>
+                </div>
+                <div class="hangup-container">
+                    <md-button class="md-icon-button md-raised hangup" ng-click="hangup()">
+                        <md-tooltip md-direction="bottom">Hang Up</md-tooltip>
+                        <i class="material-icons">phone</i>
+                    </md-button>
+                </div>
+
+            </div>
+            
+        </div>
+        <div class="dialpad">
+            <md-button class="md-icon-button close" md-no-ink ng-click="hangup()"><i class="material-icons">close</i></md-button>
+            <div class="contact-container">
+                <md-autocomplete flex="onshrink" required
+                    name='contact'
+                    md-items="contact in searchContacts(contactSearchText)"
+                    md-selected-item="selectedContact"
+                    md-selected-item-change="selectContact(selectedContact)"
+                    md-search-text="contactSearchText"
+                    md-search-text-change="retrieveContacts(contactSearchText)"
+                    md-item-text="contact.name"
+                    md-floating-label="Contact Name"
+                    md-no-cache="true"
+                    md-min-length="0">
+                    <md-item-template>
+                        <span md-highlight-text="contactSearchText">{{contact.name}}</span>
+                    </md-item-template>
+                </md-autocomplete>
+            </div>
+            <div class="display-container">
+                <h3 class="number-display" >{{dialed_number}}</h3>
+                <md-button class="md-icon-button" ng-click="backspace()">
+                    <i class="material-icons">backspace</i>
+                </md-button>
+            </div>
+            <div class="dialpad-container">
+                <div class="dial-row">
+                    <div class="dial-button" ng-click="addNumber(1)">
+                        <h4>1</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(2)">
+                        <h4>2</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(3)">
+                        <h4>3</h4>
+                    </div>
+                </div>
+                <div class="dial-row">
+                    <div class="dial-button" ng-click="addNumber(4)">
+                        <h4>4</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(5)">
+                        <h4>5</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(6)">
+                        <h4>6</h4>
+                    </div>
+                </div>
+                <div class="dial-row">
+                    <div class="dial-button" ng-click="addNumber(7)">
+                        <h4>7</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(8)">
+                        <h4>8</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(9)">
+                        <h4>9</h4>
+                    </div>
+                </div>
+                <div class="dial-row">
+                    <div class="dial-button" ng-click="addNumber(*)">
+                        <h4>*</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(0)">
+                        <h4>0</h4>
+                    </div>
+                    <div class="dial-button" ng-click="addNumber(#)">
+                        <h4>#</h4>
+                    </div>
+                </div>
+                <div class="dial-row">
+                    <div class="call-button" ng-click="call()">
+                        <h4>Call</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -38,7 +38,6 @@
 					-->
 					<div ng-click="showAddRoom()">
 						<span>Add a Room</span>
-						<img src="img/icons/ikons/square_add.png" />
 					</div>
                 </li>
                 <li>
@@ -47,7 +46,6 @@
 					-->
 					<div ng-click="showAddPhase()">
 						<span>Add a Phase</span>
-						<img src="img/icons/ikons/slideshow.png" />
 					</div>
                 </li>
                 <li>
@@ -55,7 +53,7 @@
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
 					<a ng-href="/api/v1/project/{{project.id}}/report/" target="_blank">
-						View Report <img src="img/icons/ikons/bar_chart_2.png" />
+						View Report
 					</a>
                 </li>
                 <li>
@@ -63,7 +61,7 @@
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
 					<div ng-click="showCreatePacking()" target="_blank">
-						Create Packing List<img src="img/icons/ikons/bar_chart_2.png" />
+						Create Packing List
 					</div>
                 </li>
             </ul>

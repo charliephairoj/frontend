@@ -76,6 +76,10 @@ select{
  * Application wide stuff
  */
 
+.md-autocomplete-suggestions-container{  
+	z-index:100000 !important; /* any number of choice > 1050*/
+}
+
 /*general mixins*/
 .transition (@prop: all; @time: 1s; @ease: linear;){
     -webkit-transition: @prop @time @ease;

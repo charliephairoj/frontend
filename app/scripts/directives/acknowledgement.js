@@ -23,6 +23,7 @@ angular.module('employeeApp.directives')
 			scope.getCurrencySign = function (currency) {
 				return currencySigns[currency];
 			}
+
 		}
 	};
 }]);

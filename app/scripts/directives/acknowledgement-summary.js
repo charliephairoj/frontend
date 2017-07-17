@@ -12,6 +12,7 @@ angular.module('employeeApp.directives')
 		templateUrl: 'views/templates/acknowledgement.html',
 		restrict: 'E',
 		link: function postLink(scope, element, attrs) {
+			scope.status = false;
 			var currencySigns = {
 				'THB':'฿',
 				'EUR':'€',
@@ -23,6 +24,11 @@ angular.module('employeeApp.directives')
 			scope.getCurrencySign = function (currency) {
 				return currencySigns[currency];
 			}
+
+			if (attrs.hasOwnProperty('status')) {
+				scope.status = true;
+			};
+			
 		}
 	};
 }]);

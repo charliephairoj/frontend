@@ -10,7 +10,9 @@ angular.module('employeeApp.services')
 			onright, 
 			onup,
 			ondown,
-			onenter;
+			onenter,
+			backspace,
+			defaultFn;
 			
 		configs = configs || {};
 			
@@ -32,6 +34,9 @@ angular.module('employeeApp.services')
 			
 			
 			switch(evt.which) {
+				case 8:
+					if (backspace) {backspace();}
+					break;
 				case 37:
 					if (onleft) {directionHandler(evt, onleft);}
 					break;
@@ -49,8 +54,44 @@ angular.module('employeeApp.services')
 				case 13:
 					if (onenter) {directionHandler(evt, onenter);}
 					break;
-			
-			}
+				case 48:
+					if (defaultFn) {defaultFn.call(this, 0)};
+					break;
+				case 49:
+					if (defaultFn) {defaultFn.call(this, 1)};
+					break;
+				case 50:
+					if (defaultFn) {defaultFn.call(this, 2)};
+					break;
+				case 51:
+					if (defaultFn) {defaultFn.call(this, 3)};
+					break;
+				case 52:
+					if (defaultFn) {defaultFn.call(this, 4)};
+					break;
+				case 53:
+					if (defaultFn) {defaultFn.call(this, 5)};
+					break;
+				case 54:
+					if (defaultFn) {defaultFn.call(this, 6)};
+					break;
+				case 55:
+					if (defaultFn) {defaultFn.call(this, 7)};
+					break;
+				case 56:
+					if (defaultFn) {defaultFn.call(this, 8)};
+					break;
+				case 57:
+					if (defaultFn) {defaultFn.call(this, 9)};
+					break;
+				default: 
+					console.log(evt.which);
+					break;
+
+
+
+
+			} 
 		}
 		
 		function disable() {
@@ -110,6 +151,16 @@ angular.module('employeeApp.services')
 			onenter: {
 				set: function (fn) {
 					onenter = fn;
+				}
+			},
+			onbackspace: {
+				set: function (fn) {
+					backspace = fn;
+				}
+			},
+			default: {
+				set: function (fn) {
+					defaultFn = fn;
 				}
 			}
 		});

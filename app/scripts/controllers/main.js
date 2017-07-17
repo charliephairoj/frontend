@@ -3,60 +3,7 @@ angular.module('employeeApp')
 .controller('MainCtrl', ['$scope', '$location', 'Acknowledgement', 'mapMarker', 'PurchaseOrder', '$rootScope', '$log', '$http',
 function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootScope, $log, $http) {
 
-	/**
-	 * VoIP: Twilio
-	 */
-	var voip = {
-		'status': '',
-		'conn': {parameters : {From: '+22324235234234'}}
-	};
-
-	$http.get('/api/v1/ivr/token/').then(function (resp) {
-		Twilio.Device.setup(resp.data.token, {"debug": true});
-		Twilio.Device.ready(function (device) {
-			$log.debug(device);
-		});
-
-
-		Twilio.Device.incoming(function(connection) {
-			voip.status = 'incoming';
-			voip.conn = connection;
-			console.log(connection);
-			$rootScope.safeApply();
-		});
-
-		Twilio.Device.connect(function (conn) {
-			voip.status = 'active';
-			voip.conn = conn;
-			$rootScope.safeApply();
-		});
-
-		Twilio.Device.disconnect(function (conn) {
-			voip.status = '';
-			voip.conn = null;
-			$rootScope.safeApply();
-		});
-
-		$rootScope.voipStatus = function () {
-			return voip.status;
-		};
-
-		$rootScope.voipFrom = function () {
-			return voip.conn ? voip.conn.parameters.From : "";
-		};
-
-		$rootScope.answer = function () {
-			voip.conn.accept();
-		};
-
-		$rootScope.hangup = function () {
-			voip.conn.reject();
-			Twilio.Device.disconnectAll();
-			voip.status = '';
-			voip.conn = null;
-
-		}
-	});
+	
 	
 
 

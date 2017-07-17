@@ -14,6 +14,20 @@
     .align-items(center);
     .transition(all, 150ms, ease-in);
 
+    @keyframes blink {
+        from {
+            background:rgba(255, 255, 255, 0.8);
+        }
+
+        50% {
+            background:rgba(86, 108, 122, 1);
+        }
+
+        to {
+            background:rgba(255, 255, 255, 0.8);
+        }
+    }
+
     .inactive{
         position:absolute;
         bottom:0;
@@ -25,7 +39,28 @@
         justify-content: center;
         opacity:1;
         z-index:1;
+        cursor: pointer;
         .transition(all, 150ms);
+
+        @keyframes invite {
+            from {
+                background:rgba(255, 255, 255, 0.1);
+            }
+
+            50% {
+                background:rgba(86, 108, 122, 0.5);
+            }
+
+            to {
+                background:rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        &:hover{
+            animation-duration: 2s;
+            animation-name: invite;
+            animation-iteration-count: infinite;
+        }
     }
 
     .active-container{
@@ -34,7 +69,7 @@
         left:0;
         height:3em;
         width:3em;
-        display:flex;
+        display:none;
         flex-direction: row;
         align-items: center;
         justify-content: center;
@@ -44,7 +79,7 @@
 
         .caller-info{
             position:absolute;
-            height:7em;
+            height:31em;
             width:100%;
             top:0;
             left:0em;
@@ -53,19 +88,127 @@
             .align-items(center);
             .justify-content(space-around);
 
-            h3{
+            .status{
+                position: absolute;
+                height:7em;
+                width:100%;
+                top:0;
+                .flex;
+                .flex-direction(column);
+                .align-items(center);
+                .justify-content(space-around);
 
-                &.connected{
-                    display:none;
+                h3{
+
+                    &.connected{
+                        display:none;
+                    }
+
+                    &.receiving{
+                        display:block;
+                    }
+
+                    &.calling{
+                        display:none;
+                    }
                 }
 
-                &.receiving{
-                    display:block;
+                span{
+                    margin-bottom:1em;
                 }
             }
+           
 
-            span{
-                margin-bottom:1em;
+            .profile{
+                position: absolute;
+                height:24em;
+                width:100%;
+                bottom:0;
+                background:rgba(0, 0, 0, 0);
+
+                .employee{
+                    width:100%;
+                    height:100%;
+                    .flex;
+                    .flex-direction(column);
+                    .justify-content(flex-start);
+                    .align-items(center);
+
+                    .profile-img-container{
+                        width:10em;
+                        height:10em;
+                        margin-bottom:2em;
+                        overflow:hiden;
+                        .flex;
+                        .flex-direction(row);
+                        .justify-content(center);
+
+                        img{
+                            width:auto;
+                            height:100%;
+                        }
+                    }
+
+                    .details{
+                        width:50%;
+                        td{
+                            &:first-child{
+                                padding:0.25em 1em 0.25em 0;
+                            }
+
+                            &:last-child{
+                                align-content: center;
+                                text-align: center;
+                                
+                            }
+                        }
+                        
+                    }
+                }
+
+                .customer{
+                    width:100%;
+                    height:100%;
+                    .flex;
+                    .flex-direction(row);
+                    .justify-content(space-between);
+                    .align-items(center);
+
+                    md-card{
+                        height:100%;
+                        width:100%;
+                        
+                        &.details{
+                            table{
+                                td{
+                                    &:first-child{
+                                        padding:0.25em 1em 0.25em 0;
+                                    }
+
+                                    &:last-child{
+                                        align-content: center;
+                                        text-align: center;
+                                        
+                                    }
+                                }
+                            }
+                        }
+
+                        &.orders{
+                            md-card-content{
+                                overflow-y:scroll;
+
+                                md-card.acknowledgement{
+                                    margin:0.5em 0;
+                                }
+                            }
+                        }
+
+                    }
+                    
+
+                    
+                }
             }
         }
 
@@ -120,6 +263,107 @@
             }
         } 
     }
+
+    .dialpad{
+        display:none;
+        position:absolute;
+        bottom:0;
+        left:0;
+        height:3em;
+        width:100%;
+        .flex-direction(column);
+        .align-items(center);
+        .justify-content(center);
+        .transition(all, 150ms);
+
+        .close{
+            position: absolute;
+            top: 0em;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            height: 1.5em;
+            width: 1.5em;
+            margin:0.25em;
+        }
+        @button-margin: 2em;
+
+        .contact-container{
+            height:5em;
+            width:18em;
+        }
+
+        .display-container{
+            width:20em;
+            height:5em;
+            .flex;
+            .align-items(center);
+            .justify-content(center);
+
+            .number-display{
+                font-size:1.8em;
+            }
+
+            button{
+                position: absolute;
+                right:1.3em;
+            }
+
+
+        }
+        .dialpad-container{
+            width:20em;
+            height:25em;
+            .flex;
+            .flex-direction(column);
+
+            .dial-row{
+                width:20em;
+                height:5em;
+                padding:0.2em 0;
+                .flex;
+                .flex-direction(row);
+                .justify-content(center);
+
+                .dial-button{
+                    width:5.5em;
+                    height:4.6em;
+                    margin:0 0.2em;
+                    border-radius: 0.5em;
+                    border:1px solid rgba(0, 0, 0, 0.6);
+                    outline:none;
+                    cursor: pointer;
+                    .flex;
+                    .flex-direction(row);
+                    .align-items(center);
+                    .justify-content(center);
+
+                    h4{
+                        font-size:1.75em;
+                    }
+
+                    &:active{
+                        background: rgba(0, 0, 0, 0.5);
+                    }
+                }
+
+                .call-button{
+                    .dial-button;
+                    width:88%;
+                    background:green;
+                    color: rgba(255, 255, 255, 1);
+
+                    h4{
+
+                    }
+
+                    &:active{
+                        background: rgba(51, 103, 51, 1);
+                    }
+                }
+            }
+        }
+    }
     
 
     &.incoming{
@@ -128,9 +372,14 @@
         background: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(0, 0, 0, 0.3);
 
+        animation-duration: 2s;
+        animation-name: blink;
+        animation-iteration-count: infinite;
+
         .inactive{
             opacity: 0;
             z-index: 0;
+            display:none;
         }
 
         .active-container{
@@ -138,7 +387,8 @@
             z-index: 1;
             width:20em;
             height:10em;
-
+            .flex;
+            
             .caller-info{
                 h3{
 
@@ -151,13 +401,17 @@
                     }
                 }
             }
+
+            .profile{
+                display:none;
+            }
         }
     }
 
     &.active{
-        width:20em;
-        height:10em;
-        background: rgba(255, 255, 255, 0.9);
+        width:50em;
+        height:35em;
+        background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(0, 0, 0, 0.3);
 
         .inactive{
@@ -168,9 +422,10 @@
         .active-container{
             opacity: 1;
             z-index: 1;
-            width:20em;
-            height:10em;
+            width:100%;
+            height:100%;
             padding:0;
+            .flex;
 
             .caller-info{
                 h3{
@@ -183,6 +438,10 @@
                         display:none;
                     }
                 }
+            }
+
+            .profile{
+                .flex;
             }
 
             .answer-container{
@@ -201,6 +460,87 @@
                 padding:0;
 
             }
+        }
+    }
+
+    &.calling{
+        width:20em;
+        height:10em;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+
+        .inactive{
+            opacity: 0;
+            z-index: 0;
+            display:none;
+        }
+
+        .active-container{
+            opacity: 1;
+            z-index: 1;
+            width:20em;
+            height:10em;
+            .flex;
+            
+            .answer-container{
+                width:0%;
+                left:0;
+                top:0;
+                .opacity(0);
+                .answer{
+                    margin:0;
+                }
+            }
+
+            .hangup-container{
+                width:100%;
+                padding:0;
+
+            }
+
+            .caller-info{
+                h3{
+
+                    &.connected{
+                        display:none;
+                    }
+
+                    &.receiving{
+                        display:none;
+                    }
+
+                    &.calling{
+                        display:block;
+                    }
+                }
+            }
+        }
+    }
+
+    &.dialpad{
+        width:20.5em;
+        height:35.5em;
+        padding:0.5em;
+        background: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+
+        .inactive{
+            opacity: 0;
+            z-index: 0;
+            display:none;
+        }
+
+        .active-container{
+            display:none;
+        }
+        
+        .dialpad{
+            .flex;
+            opacity: 1;
+            z-index: 1;
+            width:100%;
+            height:100%;
+            padding:0;
         }
     }
 }

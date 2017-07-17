@@ -7,7 +7,7 @@
 	<md-card-content>
 		
 		<h4 class="customer">{{::ack.customer.name}}</h4>
-		
+		<h4 ng-if="status">{{::ack.status | uppercase}}</h4>
 		<h4 class="project" ng-if="ack.project">{{::ack.project.codename + ": " + ack.room.description || ''}}</h4>
 		
 		<h4 class="amount">฿{{::ack.total || 0 | number}}</h4>
