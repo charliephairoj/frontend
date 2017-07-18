@@ -4816,7 +4816,42 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
                         if (!$scope.ack.items[i].has_price) {
                             //throw new TypeError("Product missing price");
                         }
-                    }
+					}
+					
+					/**
+					 * Validates the component if there are components
+					 */
+					if (item.hasOwnProperty('components')) {
+						if (item.components.length > 1) {
+							
+							/**
+							 * Validate that the component is not null and has a 
+							 * description and quantity
+							 */
+							for (var k = 0; k < item.components.length; k++) {
+								if (item.components[k] == undefined || item.components[k] == null) {
+									var message = "Expected a component, but the component for ";
+									message += item.description + " is null or undefined. Please tell Charlie";
+									$log.error(message);
+									throw new TypeError(message);
+								} else {
+									if (item.components[k].description == '' || item.components[k].description == undefined || item.components[k].description == null) {
+										var message = "Expected a description the component, but the component for ";
+										message += item.description + " has no description. Please tell Charlie";
+										$log.error(message);
+										throw new TypeError(message);
+									}
+
+									if (item.components[k].quantity <= 0 || item.components[k].description == undefined || item.components[k].description == null) {
+										var message = "Expected a quantity for component: ";
+										message += component.description + ".";
+										$log.error(message);
+										throw new TypeError(message);
+									}
+								}
+							}
+						}
+					}
                 }
             }
         }
@@ -4955,6 +4990,24 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				});
 			}
 		}
+
+		//Checks if the room exists and create if not
+		if (acknowledgement.room) {
+			if (!acknowledgement.room.id && acknowledgement.room.description) {
+				progress.room = false;
+				var room = new Room();
+				room.project = acknowledgement.project;
+				angular.extend(room, acknowledgement.room);
+				
+				room.$create(function (resp) {
+					angular.extend(acknowledgement.room, resp);
+					progress.room = true;
+					checkProgress(callback);
+				}, function () {
+					progress.project = 'error';
+				});
+			}
+		}
 		
 		//Check if items are custom
 		for (var i = 0; i < acknowledgement.items.length; i++) {
@@ -4964,7 +5017,6 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		}
 		
 		progress.fullRun = true;
-		console.log(progress)
 		
 		checkProgress(callback);
 		
