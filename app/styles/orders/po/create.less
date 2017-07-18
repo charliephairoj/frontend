@@ -86,23 +86,212 @@
 						width:90%;
 					}
 					
-					md-card{
-						display:block;
-						min-height:initial;
+					section.order{
+						.flex;
+						.flex-direction(row);
 						
-						&.add-product{
-							.flex;
-							min-height:12em;
+						md-card{
+							width:90%;
+							margin-top:2em;
+					
+							.supplier{
+								position:relative;
+								width:100%;
+								margin-top:2em;
+								color:rgba(0, 0, 0, 1);
+					
+								.info{
+									.flex;
+									justify-content:flex-start;
+									align-items:flex-start;
+						
+									md-autocomplete{
+										.hint{
+											color: rgba(0, 0, 0, 0.35);
+										}
 							
-							md-autocomplete{
-								width:20em;
+										input{
+											color:rgb(0,0,0);
+										}
+									}
+								}
+					
+								.address{
+									.info;
+								}
+					
+								md-input-container{
+									margin-right:1em;
+								}
+				
+							}
+					
+							.order{
+								.supplier;
+					
+								.details{
+									.flex;
+									justify-content:flex-start;
+									align-items:flex-start;
+						
+									.date-container{
+										md-datepicker{
+											margin-right:1em;							
+										}
+							
+										.hint{
+											/* Position the hint */
+											//position: absolute;
+											//left: 2px;
+											//right: auto;
+											//bottom: 7px;
+											/* Copy styles from ng-messages */
+											margin-left:64px;
+											font-size: 12px;
+											line-height: 14px;
+											transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+											/* Set our own color */
+											color: rgba(0, 0, 0, 0.35);
+										}
+									}
+						
+						
+									md-input-container{
+										margin:3px 1em 18px 0;
+									}
+								}
+						
+								.details-2{
+									.details;
+									margin-top:1em;
+							
+								}
+						
+								.project{
+									.details;
+									.flex;
+									justify-content:flex-start;
+									align-items:flex-start;
+									margin-top:2em;
+									md-autocomplete{
+							
+										md-input-container{
+											margin:0;
+									
+											input{
+												color:rgb(0,0,0);
+											}
+										}
 								
-								md-autocomplete-wrap{
-									width:40em;
+									}
+						
+									md-input-container{
+										margin:0;
+										margin-left:2em;
+									}
+						
+									.md-button{
+										margin-right:3em;
+									}
+								}
+						
+							}
+							
+							&.order{
+								width:70%;
+							}
+
+							&.map{
+								width:30%;
+								margin:2em 0;
+								.flex;
+								min-height:32em;
+					
+								md-card-content{
+									width:100%;
+									height:auto;
+									.flex;
+									flex-direction:column;
+						
+									.map-container{
+										height:30em;
+										width:100%;
+						
+										#create-po-map{
+											height:100%;
+											width:100%;
+										}
+									}
+						
+									#directions{
+										width:100%;
+										height:auto;
+									}
+								}
+					
+							}
+					
+							&.item{
+								width:90%;
+							
+								md-card-title{
+								
+									h6{
+										font-family:proxima, Helvetica, Arial;
+										color:red;
+										background:rgba(241, 218, 54, 0.5);
+										width:100%;
+										padding:0.5em;
+										letter-spacing:0.08em;
+									}
+								}
+								md-card-content{
+						
+									.product-details{
+										tr{
+								
+											&.fabric{
+									
+												td{
+										
+													&:last-child{
+														padding-left:1em;
+											
+														img{
+															max-height:5em;
+														}
+													}
+										
+													.hint{
+														margin-top:4px;
+													}
+												}
+											}
+											
+											&:last-child{
+												td{
+													md-input-container{
+														width:100%;
+													}
+												}
+											}
+										}
+									}
+						
+									.card-media{
+										max-width:100%;
+						
+										img{
+											max-height:20em;
+											max-width:100%;
+										}
+									}					
 								}
 							}
+					
 						}
 					}
+					
 					
 					.files{
 						width:90%;
@@ -142,202 +331,7 @@
 						}
 					}
 					
-					md-card{
-						width:90%;
-						margin-top:2em;
-				
-			            .supplier{
-			                position:relative;
-							width:100%;
-			                margin-top:2em;
-			                color:rgba(0, 0, 0, 1);
-                
-				          	.info{
-				          		.flex;
-								justify-content:flex-start;
-								align-items:flex-start;
 					
-								md-autocomplete{
-									.hint{
-										color: rgba(0, 0, 0, 0.35);
-									}
-						
-									input{
-										color:rgb(0,0,0);
-									}
-								}
-				          	}
-				
-							.address{
-								.info;
-							}
-				
-							md-input-container{
-								margin-right:1em;
-							}
-		  	  
-						}
-				
-			            .order{
-			                .supplier;
-            	
-							.details{
-				          		.flex;
-								justify-content:flex-start;
-								align-items:flex-start;
-					
-								.date-container{
-									md-datepicker{
-										margin-right:1em;							
-									}
-						
-									.hint{
-										/* Position the hint */
-									    //position: absolute;
-									    //left: 2px;
-									    //right: auto;
-									    //bottom: 7px;
-									    /* Copy styles from ng-messages */
-										margin-left:64px;
-									    font-size: 12px;
-									    line-height: 14px;
-									    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-									    /* Set our own color */
-									    color: rgba(0, 0, 0, 0.35);
-									}
-								}
-					
-					
-								md-input-container{
-									margin:3px 1em 18px 0;
-								}
-							}
-					
-							.details-2{
-								.details;
-								margin-top:1em;
-						
-							}
-					
-							.project{
-								.details;
-				          		.flex;
-								justify-content:flex-start;
-								align-items:flex-start;
-								margin-top:2em;
-								md-autocomplete{
-						
-									md-input-container{
-										margin:0;
-								
-										input{
-											color:rgb(0,0,0);
-										}
-									}
-							
-								}
-					
-								md-input-container{
-									margin:0;
-									margin-left:2em;
-								}
-					
-								.md-button{
-									margin-right:3em;
-								}
-							}
-					
-			            }
-				
-				   	 	&.map{
-							width:90%;
-							margin:2em 0;
-							.flex;
-							min-height:32em;
-				
-							md-card-content{
-								width:100%;
-								height:auto;
-								.flex;
-								flex-direction:column;
-					
-								.map-container{
-									height:30em;
-									width:100%;
-					
-									#create-po-map{
-										height:100%;
-										width:100%;
-									}
-								}
-					
-								#directions{
-									width:100%;
-									height:auto;
-								}
-							}
-				
-				   	 	}
-				
-			            &.item{
-			            	width:90%;
-						
-							md-card-title{
-							
-								h6{
-									font-family:proxima, Helvetica, Arial;
-									color:red;
-									background:rgba(241, 218, 54, 0.5);
-									width:100%;
-									padding:0.5em;
-									letter-spacing:0.08em;
-								}
-							}
-							md-card-content{
-					
-								.product-details{
-									tr{
-							
-										&.fabric{
-								
-											td{
-									
-												&:last-child{
-													padding-left:1em;
-										
-													img{
-														max-height:5em;
-													}
-												}
-									
-												.hint{
-													margin-top:4px;
-												}
-											}
-										}
-										
-										&:last-child{
-											td{
-												md-input-container{
-													width:100%;
-												}
-											}
-										}
-									}
-								}
-					
-								.card-media{
-									max-width:100%;
-					
-									img{
-										max-height:20em;
-										max-width:100%;
-									}
-								}					
-							}
-			            }
-				
-					}
 						
 	   
 	      

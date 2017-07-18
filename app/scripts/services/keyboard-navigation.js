@@ -85,7 +85,6 @@ angular.module('employeeApp.services')
 					if (defaultFn) {defaultFn.call(this, 9)};
 					break;
 				default: 
-					console.log(evt.which);
 					break;
 
 
