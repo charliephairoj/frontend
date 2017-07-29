@@ -124,7 +124,7 @@
                 </md-autocomplete>
             </div>
             <div class="display-container">
-                <h3 class="number-display" >{{dialed_number}}</h3>
+                <h3 class="number-display" >{{dialedNumber}}</h3>
                 <md-button class="md-icon-button" ng-click="backspace()">
                     <i class="material-icons">backspace</i>
                 </md-button>
@@ -164,13 +164,13 @@
                     </div>
                 </div>
                 <div class="dial-row">
-                    <div class="dial-button" ng-click="addNumber(*)">
+                    <div class="dial-button" ng-click="addNumber('*')">
                         <h4>*</h4>
                     </div>
                     <div class="dial-button" ng-click="addNumber(0)">
                         <h4>0</h4>
                     </div>
-                    <div class="dial-button" ng-click="addNumber(#)">
+                    <div class="dial-button" ng-click="addNumber('#')">
                         <h4>#</h4>
                     </div>
                 </div>

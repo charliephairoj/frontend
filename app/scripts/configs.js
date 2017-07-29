@@ -122,6 +122,11 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.get('csrftoken'));
 	});
+
+	/**
+	 * Set the language
+	 */
+	$rootScope.lang = 'th';
 	
 	/*
 	 * Get the current user and place it at the top scope

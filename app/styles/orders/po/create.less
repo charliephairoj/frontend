@@ -39,14 +39,26 @@
 			
 			md-toolbar{
 				padding:0 5%;
+
+				.lang-button-container{
+					margin-left:1em;
+					
+					button{
+						padding: 0 2px;
+						margin:0;
+						min-width:3.5em;
+					}
+				}
 			}
 			
 			md-content{
 				height:100%;
-				overflow-x:hidden;
-				overflow-y:scroll;
 				padding-bottom:10em;
-				
+				.flex;
+				flex-direction:column;
+				align-items:center;
+				.transition(all, 250ms);
+
 				md-input-container{
 				
 					.hint{
@@ -75,17 +87,47 @@
 					align-items:flex-start;
 				}
 			
-				section {
+				md-section.container {
 					width:100%;
-					.flex;
-					flex-direction:column;
-					align-items:center;
-					min-height:45em;
+					display: block;
 					
-					.md-subheader{
-						width:90%;
+					&.order-details-container{
+						margin-top:0;
+						margin-bottom:2em;
+
+						.order-container{
+							width: 100%;
+							.flex;
+							.flex-direction(row);
+							.justify-content(space-around);
+							.align-items(flex-start);
+
+							md-card{
+								
+
+								&.order{
+									width:58%;
+								}
+
+								&.map{
+									width:38%;
+
+									.map-container{
+										height:43em;
+
+										#create-po-map{
+											height:100%;
+											width:100%;
+										}
+									}
+									
+								}
+							}
+						}
 					}
-					
+
+
+					/*
 					section.order{
 						.flex;
 						.flex-direction(row);
@@ -115,209 +157,6 @@
 										}
 									}
 								}
-					
-								.address{
-									.info;
-								}
-					
-								md-input-container{
-									margin-right:1em;
-								}
-				
-							}
-					
-							.order{
-								.supplier;
-					
-								.details{
-									.flex;
-									justify-content:flex-start;
-									align-items:flex-start;
-						
-									.date-container{
-										md-datepicker{
-											margin-right:1em;							
-										}
-							
-										.hint{
-											/* Position the hint */
-											//position: absolute;
-											//left: 2px;
-											//right: auto;
-											//bottom: 7px;
-											/* Copy styles from ng-messages */
-											margin-left:64px;
-											font-size: 12px;
-											line-height: 14px;
-											transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-											/* Set our own color */
-											color: rgba(0, 0, 0, 0.35);
-										}
-									}
-						
-						
-									md-input-container{
-										margin:3px 1em 18px 0;
-									}
-								}
-						
-								.details-2{
-									.details;
-									margin-top:1em;
-							
-								}
-						
-								.project{
-									.details;
-									.flex;
-									justify-content:flex-start;
-									align-items:flex-start;
-									margin-top:2em;
-									md-autocomplete{
-							
-										md-input-container{
-											margin:0;
-									
-											input{
-												color:rgb(0,0,0);
-											}
-										}
-								
-									}
-						
-									md-input-container{
-										margin:0;
-										margin-left:2em;
-									}
-						
-									.md-button{
-										margin-right:3em;
-									}
-								}
-						
-							}
-							
-							&.order{
-								width:70%;
-							}
-
-							&.map{
-								width:30%;
-								margin:2em 0;
-								.flex;
-								min-height:32em;
-					
-								md-card-content{
-									width:100%;
-									height:auto;
-									.flex;
-									flex-direction:column;
-						
-									.map-container{
-										height:30em;
-										width:100%;
-						
-										#create-po-map{
-											height:100%;
-											width:100%;
-										}
-									}
-						
-									#directions{
-										width:100%;
-										height:auto;
-									}
-								}
-					
-							}
-					
-							&.item{
-								width:90%;
-							
-								md-card-title{
-								
-									h6{
-										font-family:proxima, Helvetica, Arial;
-										color:red;
-										background:rgba(241, 218, 54, 0.5);
-										width:100%;
-										padding:0.5em;
-										letter-spacing:0.08em;
-									}
-								}
-								md-card-content{
-						
-									.product-details{
-										tr{
-								
-											&.fabric{
-									
-												td{
-										
-													&:last-child{
-														padding-left:1em;
-											
-														img{
-															max-height:5em;
-														}
-													}
-										
-													.hint{
-														margin-top:4px;
-													}
-												}
-											}
-											
-											&:last-child{
-												td{
-													md-input-container{
-														width:100%;
-													}
-												}
-											}
-										}
-									}
-						
-									.card-media{
-										max-width:100%;
-						
-										img{
-											max-height:20em;
-											max-width:100%;
-										}
-									}					
-								}
-							}
-					
-						}
-					}
-					
-					
-					.files{
-						width:90%;
-						min-height:10em;
-						
-						md-card.file{
-							margin:1em 0;
-							margin-right:1em;
-							width:23%;
-							max-height:none;
-							overflow:hidden;
-
-							md-card-title{
-								md-card-title-media{
-									height:16px;
-									width:16px;
-									
-									.card-media{
-										max-width:100%;
-		
-										img{
-											max-height:20em;
-											max-width:100%;
-										}
-									}
-								}
 							}
 							
 							md-card-content{
@@ -330,178 +169,241 @@
 							}
 						}
 					}
+					*/
 					
 					
+					
+					&.files-container{
+
+						.files{
+							width:96%;
+							min-height:10em;
+							
+							md-card.file{
+								margin:1em 0;
+								margin-right:1em;
+								width:23%;
+								max-height:none;
+								overflow:hidden;
+
+								md-card-title{
+									md-card-title-media{
+										height:16px;
+										width:16px;
+										
+										.card-media{
+											max-width:100%;
+			
+											img{
+												max-height:20em;
+												max-width:100%;
+											}
+										}
+									}
+								}
+								
+								md-card-content{
+									padding:1em;
+									background:rgb(255, 255, 255);
+									max-height:none;
+							
+									
+					
+								}
+							}
+						}
+					}
+					
+					&.product-container{
 						
-	   
-	      
-			      .order-details{
-					  //.supplier;
-					  margin-top:2em;
-					  margin-bottom:2em;
-					  .flex;
-					  flex-direction:column;
-					  align-items:center;
-			  
-					  h2{
-						  align-self:flex-start;
-					  }
-			  
-					  .item-menu{
-						  margin-top:2em;
-						  height:2.2em;
-						  width:100%;
-						  .flex;
-						  align-items:flex-start;
-				  
-						  .md-button{
-							  padding:0.5em;
-							  font-family:proxima;
-							  margin-right:1.25em;
-						  }
-					  }
-		  
-				      	table{
-							margin-top:2em;
-							width:100%;
+					
+						.add-product{
+							width:98%;
+						}
 			
-							tr{
-								td{
-									padding:0.25em 0.5em;
+						.order-details{
+							width:98%;
+							margin-top:2em;
+							margin-bottom:2em;
+							.flex;
+							flex-direction:column;
+							align-items:center;
+					
+							h2{
+								align-self:flex-start;
+							}
+					
+							.item-menu{
+								margin-top:2em;
+								height:2.2em;
+								width:100%;
+								.flex;
+								align-items:flex-start;
+						
+								.md-button{
+									padding:0.5em;
+									font-family:proxima;
+									margin-right:1.25em;
 								}
 							}
-							thead{
-								tr{
-									td{
-										color:rgba(255, 255, 255, 1);
-										padding:1em;
-										text-align:center;
-										background-color:rgb(96,125,139);
-										border-left:1px dotted rgba(0, 0, 0, 0.35);
-								
-										&:first-child{
-											border:none;
+							
+							md-card-content{
+								width: 96%;
+							
+								table{
+									margin-top:2em;
+									width:100%;
+					
+									tr{
+										td{
+											padding:0.25em 0.5em;
 										}
 									}
-								}
-							}
-							tbody{
-								font-family:proxima;
-								letter-spacing:0.08em;
-				        		.items{
-									border-bottom:1px dotted rgba(0, 0, 0, 0.35);
-		        			
-									td{
-				        				color:rgba(0, 0, 0, 1);
-										border-left:1px dotted rgba(0, 0, 0, 0.35);
-										padding:0;
-								
-										input{
-											width:100%;
-											height:100%;
-											background-color:rgba(255, 255, 255, 1);
-											color:rgba(0, 0, 0, 1);
-											border-radius:none;
-											border:none;
-									
-											&.ng-invalid{
-												background-color:#A54243;
-											}
-										}
-								
-										textarea{
-											width:100%;
-											background-color:rgba(255, 255, 255, 1);
-											color:rgba(0, 0, 0, 1);
-											border:none;
-									
-											&.ng-invalid{
-												background-color:#A54243;
-											}
-									
-											&:focus{
-												//width:10em;
-											}
-										}
-							
-								
-										&:first-child{
-											border-left:none;
-										}
-								
-										&:last-child{
-											border-left:none;
-										}
-								
-										&.description{
-											text-align:left;
-											width:30%;
-										}
-				
-										&.discount{
-											text-align:center;
-											input{
+									thead{
+										tr{
+											td{
+												color:rgba(255, 255, 255, 1);
+												padding:1em;
 												text-align:center;
+												background-color:rgb(96,125,139);
+												border-left:1px dotted rgba(0, 0, 0, 0.35);
+										
+												&:first-child{
+													border:none;
+												}
 											}
 										}
-				
-										&.quantity{
-											width:3em;
-											text-align:center;
-											input{
-												text-align:center;
+									}
+									tbody{
+										font-family:proxima;
+										letter-spacing:0.08em;
+										.items{
+											border-bottom:1px dotted rgba(0, 0, 0, 0.35);
+									
+											td{
+												color:rgba(0, 0, 0, 1);
+												border-left:1px dotted rgba(0, 0, 0, 0.35);
+												padding:0;
+												@input-height:5em;
+
+												input{
+													width:100%;
+													height:@input-height;
+													outline:none;
+													background-color:rgba(255, 255, 255, 1);
+													color:rgba(0, 0, 0, 1);
+													border-radius:none;
+													border:none;
+											
+													&.ng-invalid{
+														background-color:#A54243;
+													}
+												}
+										
+												textarea{
+													width:100%;
+													width: 15em;
+													height:@input-height;
+													background-color:rgba(255, 255, 255, 1);
+													color:rgba(0, 0, 0, 1);
+													border:none;
+													outline:none;
+													padding:0;
+													.transition(width, 150ms);
+
+													&.ng-invalid{
+														background-color:#A54243;
+													}
+											
+													&:focus{
+														width:20em;
+													}
+												}
+									
+										
+												&:first-child{
+													border-left:none;
+												}
+										
+												&:last-child{
+													border-left:none;
+												}
+										
+												&.description{
+													text-align:left;
+													width:30%;
+												}
+						
+												&.discount{
+													text-align:center;
+													input{
+														text-align:center;
+													}
+												}
+						
+												&.quantity{
+													width:3em;
+												
+													text-align:center;
+													input{
+														outline:none;
+														min-height:3.5em;
+														text-align:center;
+													}
+												}
+						
+												&.unit-cost{
+													text-align:center;
+													input{
+														text-align:center;
+													}
+												}
+						
+												&.total{
+													text-align:right;
+													padding-right:3em;
+													width:10%;
+												}
+									
+												.remove-btn{
+													position:relative;
+													top:0;
+													opacity:1;
+													z-index:0;
+												}
 											}
-										}
-				
-										&.unit-cost{
-											text-align:center;
-											input{
-												text-align:center;
-											}
-										}
-				
-										&.total{
-											text-align:right;
-											padding-right:3em;
-											width:10%;
-										}
-							
-										.remove-btn{
-											position:relative;
-											top:0;
-											opacity:1;
-											z-index:0;
-										}
-				        			}
-				        		}
-			
-								.summary{
-									color:rgba(0, 0, 0, 1);
-									td{
-										&.title{
-											text-align:right;
-											padding-right:3em;
 										}
 					
-										&.value{
-											text-align:right;
-											padding-right:3em;
+										.summary{
+											color:rgba(0, 0, 0, 1);
+											td{
+												&.title{
+													text-align:right;
+													padding-right:3em;
+												}
+							
+												&.value{
+													text-align:right;
+													padding-right:3em;
+												}
+											}
+										}
+										.subtotal{
+											color:rgba(0, 0, 0, 1);
+										}
+					
+										.discount{
+											color:rgba(0, 0, 0, 1);
 										}
 									}
-								}
-								.subtotal{
-									color:rgba(0, 0, 0, 1);
-								}
-			
-								.discount{
-									color:rgba(0, 0, 0, 1);
+									.totals{
+					
+									}
 								}
 							}
-							.totals{
-			
-							}
-				      	}
-			      	}
+						}
+				
+					}
 				}
 		    
 			}
