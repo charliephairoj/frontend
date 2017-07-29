@@ -1,47 +1,10 @@
 <div class="supply-view-page">
 			
-    <!--
+    <!-- 
         Sidebar
     -->
-		
-    <div class="sidebar">
-        <header>
-            <h1><span>Supplies</span></h1>
-        </header> 
-        <nav>
-            <ul>
-            	<li><!--ng-show="currentUser.hasPermission('add_supplier')">-->
-                	<button ng-click="showAddSupplier=true">Add Supplier</button>
-                </li>
-                <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
-                	<button ng-click="showAddSupply=true">Add Supply</button>
-                </li>
-                <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
-                	<button ng-click="showAddEquipment=true">Add Equipment</button>
-                </li>
-                 <li><!-- ng-show="currentUser.hasPermission('add_supply')">-->
-                	<button class="scanner-mode" ng-class="{'on':scannerMode==true, 'off': scannerMode==false}" ng-click="showScanner()">Scanner Mode</button>
-                </li>
-                <li ng-show="currentUser.hasPermission('add_fabric')"><a ng-href="#/supply/fabric">Fabric</a></li>
-				
-				<!--
-                <li ng-show="currentUser.hasPermission('add_foam')"><a ng-href="#/supply/foam">Foam</a></li>
-                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/glue">Glue</a></li>
-                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/lumber">Lumber</a></li>
-                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/prop">Prop</a></li>
-                <li ng-show="currentUser.hasPermission('add_screw')"><a ng-href="#/supply/screws">Screws</a></li>
-                <li ng-show="currentUser.hasPermission('add_staple')"><a ng-href="#/supply/staple">Staple</a></li>
-                <li ng-show="currentUser.hasPermission('add_sewingthread')"><a ng-href="#/supply/thread">Thread</a></li>
-                <li ng-show="currentUser.hasPermission('add_webbing')"><a ng-href="#/supply/webbing">Webbing</a></li>
-                <li ng-show="currentUser.hasPermission('add_wool')"><a ng-href="#/supply/wool">Wool</a></li>
-                <li ng-show="currentUser.hasPermission('add_zipper')"><a ng-href="#/supply/zipper">Zipper</a></li>
-				
-				<li><a class="log-btn" ng-href="#/supply/log">Log</a></li>
-				-->
-            </ul>
-        </nav>
-    </div>
-    
+	
+	
     <!--
         Workspace
     -->
@@ -52,6 +15,9 @@
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Supplies</span></h3>
 				<div flex></div>
+				<md-button class="md-icon-button md-raised md-accent" ng-click="showAddSupply=true">
+					<i class="material-icons">add</i>
+				</md-button>
 				<input class="search" type="text" ng-model="query" />
 			</div>
 			<div class="title-bar">

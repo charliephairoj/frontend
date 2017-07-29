@@ -39,6 +39,16 @@
 			
 			md-toolbar{
 				padding:0 5%;
+
+				.lang-button-container{
+					margin-left:1em;
+					
+					button{
+						padding: 0 2px;
+						margin:0;
+						min-width:3.5em;
+					}
+				}
 			}
 			
 			md-content{
@@ -82,6 +92,11 @@
 					align-items:center;
 					min-height:45em;
 					
+					&.order-details-container{
+						margin-top:0;
+						margin-bottom:10em;
+					}
+
 					.md-subheader{
 						width:90%;
 					}
@@ -141,6 +156,25 @@
 							}
 						}
 					}
+
+					section.order-container{
+						.flex;
+						.flex-direction(row);
+						.justify-content(space-around);
+						.align-items(flex-start);
+
+						md-card{
+							
+
+							&.order{
+								width:58%;
+							}
+
+							&.map{
+								width:38%;
+							}
+						}
+					}
 					
 					md-card{
 						width:90%;
@@ -179,7 +213,13 @@
 						}
 				
 			            .order{
-			                .supplier;
+							.supplier;
+											
+							.name{
+								.flex;
+								.justify-content(flex-start);
+								.align-items(flex-start);
+							}
             	
 							.details{
 				          		.flex;

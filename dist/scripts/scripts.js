@@ -486,6 +486,11 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.get('csrftoken'));
 	});
+
+	/**
+	 * Set the language
+	 */
+	$rootScope.lang = 'th';
 	
 	/*
 	 * Get the current user and place it at the top scope
@@ -7258,6 +7263,58 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 angular.module('employeeApp')
 .controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
 function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
+
+	/**
+	 * Titles 
+	 */
+	$scope.labels = {
+		'name': {'en': 'Supplier Name',
+				 'th': 'ชื่อผู้ผลิต'},
+		'telephone': {'en': 'Telephone',
+					  'th': 'โทรศัพท์'},
+		'fax': {'en': 'Fax',
+				'th': 'แฟกซ์'},
+		'email': {'en': 'Email',
+				'th': 'อีเมล'},
+		'address': {'en': 'Address',
+					'th': 'หมายเลขที่อยู่'},
+		'city': {'en': 'City',
+				 'th': 'เขต'},
+		'territory': {'en': 'Territory',
+					  'th': 'จังหวัด'},
+		'country': {'en': 'Country',
+					'th': 'ประเทศ'},
+		'zipcode': {'en': 'Zipcode',
+					'th': 'รหัสไปรษณีย์'},
+		'receiving_date': {'en': 'Receiving Date',
+					'th': 'วันรับสินค้า'},
+		'currency': {'en': 'Currency',
+					 'th': 'เงินของประเทศ'},
+		'discount': {'en': 'Discount',
+					 'th': 'ส่วนลด'},
+		'vat': {'en': 'VAT',
+				'th': 'ภาษีมูลค่าเพิ่ม'},
+		'terms': {'en': 'Terms',
+				  'th': 'เครดิตกี่วัน'},
+		'deposit': {'en': 'Deposit',
+					'th': 'วางมัดจำ'},
+		'project': {'en': 'Project',
+					'th': 'โครงการ'},
+		'room': {'en': 'Room',
+				 'th': 'ห้อง'},
+		'phase': {'en': 'Phase',
+				  'th': 'ระยะ'},
+		'add_location': {'en': 'Add Location',
+				  		 'th': 'เพิ่มสถานที่อยู่'},
+		'edit_location': {'en': 'Edit Location',
+				  		  'th': 'แก้ไขที่อยู่'},
+		'directions': {'en': 'Directions',
+				  	   'th': 'เส้นทางไป'}
+
+
+				  
+
+	};
 
 	/*
 	 * Setup vars
@@ -20166,7 +20223,6 @@ angular.module('employeeApp.services')
 					if (defaultFn) {defaultFn.call(this, 9)};
 					break;
 				default: 
-					console.log(evt.which);
 					break;
 
 
