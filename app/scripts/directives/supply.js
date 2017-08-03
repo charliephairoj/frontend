@@ -276,6 +276,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				}
 			});
 			
+			/*
 			function setPrint () {				
 			    var afterPrint = function() {
 			        $(".print").empty();
@@ -298,6 +299,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				this.contentWindow.print();
 			}
 			
+
 			scope.printSticker = function () {
 				var container = $(".print").empty();
 				var iframe = document.createElement('iframe');
@@ -305,6 +307,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				iframe.src = "api/v1/supply/" + scope.supply.id + "/sticker/";
 				container.append(iframe);
 			};
+			*/
   	  	}
 	};
 }]);
