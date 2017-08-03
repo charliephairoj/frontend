@@ -242,143 +242,7 @@
 							</md-card-content>
 						</md-card>
 					</section>
-					<!--
-					<div class="employee-info" layout="row" layout-align="start start">
-						<md-input-container ng-disabled="::!currentUser.hasPermission('change_employee')" flex="20">
-							<label>Title</label>
-							<input type="text" ng-model="employee.title" />
-						</md-input-container>
-						<md-input-container ng-disabled="::!currentUser.hasPermission('change_employee')" flex="40">
-							<label>ชื่อ/Name</label>
-							<input type="text" ng-model="employee.name" />
-						</md-input-container>
-						<md-input-container ng-disabled="::!currentUser.hasPermission('change_employee')">
-							<label>Status</label>
-							<md-select ng-model="employee.status">
-								<md-option value='active'>Active</md-option>
-								<md-option value='probation'>Probation</md-option>
-								<md-option value='fired'>Fired</md-option>
-								<md-option value='quit'>Quit</md-option>
-							</md-select>
-						</md-input-container>
-					</div>
-					<div class="employee-info" layout="row" layout-align="start start">
-						<md-input-container ng-disabled="::!currentUser.hasPermission('change_employee')" flex="30">
-							<label>National ID/Passport ID</label>
-							<input type="text" ng-model="employee.government_id" />
-						</md-input-container>
-						<md-input-container ng-disabled="::!currentUser.hasPermission('change_employee')">
-							<label>แผนก/Department</label>
-							<md-select ng-model="employee.department">
-								<md-option value='woodworking'>ไม้/Woodworking</md-option>
-								<md-option value='painting'>สี/Painting</md-option>
-								<md-option value='polishing'>ปัดเงา/Polishing</md-option>
-								<md-option value='packing'>Packing</md-option>
-								<md-option value='upholstery'>หุ้ม/Upholstery</md-option>
-								<md-option value='sewing'>เย็บ/Sewing</md-option>
-								<md-option value='cutting fabric'>ตัดผ้า/Cutting Fabric</md-option>
-								<md-option value='foam'>ฟองน้ำ/Foam</md-option>
-								<md-option value='housekeeping'>แม่บ้าน/Housekeeping</md-option>
-								<md-option value='accounting'>บัญชี/Accounting</md-option>
-								<md-option value='office'>Office</md-option>
-								<md-option value='graphic'>Graphic</md-option>
-								<md-option value='management'>Management</md-option>
-								<md-option value='dyeing'>ย้อม/Dyeing</md-option>
-								<md-option value='carpet installation'>ตกแต่งพรม/Carpet Installation</md-option>
-								<md-option value='tufting'>Tufting</md-option>
-								<md-option value='tracing'>Tracing</md-option>
-								<md-option value='glue'>Glue</md-option>
-								<md-option value='security'>ยาม/Security</md-option>
-								<md-option value='technician'>ช่าง/Technician</md-option>
-								<md-option value='inventory'>สโตร์/Inventory</md-option>
-							</md-select>
-						</md-input-container>
-						<md-input-container>
-							<label>Company</label>
-							<md-select ng-model="employee.company" required>
-								<md-option value='dellarobbia'>Dellarobbia</md-option>
-								<md-option value='pci'>Pacific Carpet</md-option>
-							</md-select>
-						</md-input-container>
-						<md-input-container>
-							<label>Location</label>
-							<md-select ng-model="employee.location">
-								<md-option value='thailand'>Thailand</md-option>
-								<md-option value='cambodia'>Cambodia</md-option>
-							</md-select>
-						</md-input-container>
-					</div>
-					<div class="employee-info" layout="row">
-						<md-input-container>
-							<label>Card Number</label>
-							<input type="text" ng-model="employee.card_id" />
-						</md-input-container>
-						<md-input-container>
-							<label>Bank</label>
-							<md-select ng-model="employee.bank">
-								<md-option value="thanachart">Thanachart</md-option>
-								<md-option value="kasikorn">Kasikorn</md-option>
-								<md-option value="bangkok bank">Bangkok Bank</md-option>
-								<md-option value="SCB">SCB</md-option>
-								<md-option value="krungsri">Krungsri</md-option>
-								<md-option value="khrung thai bank">Khrung Thai Bank</md-option>
-							</md-select>
-						</md-input-container>
-						<md-input-container>
-							<label>Bank Account Number</label>
-							<input type="text" ng-model="employee.account_number">
-						
-					</div>
-					<div class="employee-info" layout="row">
-						<md-input-container>
-							<label>สัญชาติ/Nationality</label>
-							<md-select ng-model="employee.nationality">
-								<md-option value='thai'>ไทย/Thai</md-option>
-								<md-option value='cambodian'>กัมพูชา/Cambodian</md-option>
-								<md-option value='burmese'>พม่า/Burmese</md-option>
-								<md-option value='laos'>ลาว/Laos</md-option>
-								<md-option value='vietnam'>เวียตนาม/Vietnam</md-option>
-							</md-select>
-						</md-input-container>
-						
-						
-						<md-input-container>
-					    	<label>Shift Schedule</label>
-							<md-select ng-model="employee.shift" ng-model-options="{trackBy: '$value.id'}">
-								<md-option ng-value="shift" ng-repeat="shift in ::shifts">{{shift.start_time + ' - ' + shift.end_time}}</md-option>
-							</md-select>
-						</md-input-container>
-					</div>
-					<div class="employee-info" layout="row">
-						<md-input-container>
-							<label>ประเภทการจ่ายเงิน/Payment Type</label>
-							<md-select ng-model="employee.pay_period">
-								<md-option value='daily'>รายวัน/Daily</md-option>
-								<md-option value='monthly'>รายเดือน/Monthly</md-option>
-							</md-select>
-						</md-input-container>
-						<md-input-container ng-if="::canViewPayRate(employee)">
-							<label>Pay Rate</label>
-							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.wage" />
-						</md-input-container>
-						<md-input-container ng-if="::canViewPayRate(employee)">
-							<label>เบี้ยขยัน/Stipend</label>
-							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.incentive_pay" />
-						</md-input-container>
-						<md-input-container ng-if="::canViewPayRate(employee)">
-							<label>ตำแหน่ง/Manager's Stipend</label>
-							<input type="text" number-formatter ng-model-options="{ updateOn: 'blur' }" ng-model="employee.manager_stipend" />
-						</md-input-container>
-						<md-input-container>
-							<label>Payment Option</label>
-							<md-select ng-model="employee.payment_option">
-								<md-option value='cash'>เงินสด/Cash</md-option>
-								<md-option value='direct deposit'>โอนเข้าธนาคาร/Direct Deposit</md-option>
-							</md-select>
-						</md-input-container>
-					</div>
 					
-					-->
 						
 					<section class="attendances">
 						<md-card flex>
@@ -397,17 +261,16 @@
 						<md-card class="attendance-container" layout="column" ng-if="active && employee.attendances.length">
 						
 							<md-card-title class="title">
-								<h4 class="date">Date</h4>
-								<h4 class="clockin">Clockin</h4>
-								<h4 class="clockout">Clockout</h4>
+								<h4 class="date">{{headings.date[lang]}}</h4>
+								<h4 class="clockin">{{headings['time-in'][lang]}}</h4>
+								<h4 class="clockout">{{headings['time-out'][lang]}}</h4>
 								<h4 class="ot-request">Request</h4>
-								<h4 class="regular-time">Regular</h4>
+								<h4 class="regular-time">{{headings.regular[lang]}}</h4>
 								<h4 class="overtime">Overtime</h4>
 								<h4 class="enable-overtime">Overtime</h4>
 								<h4 class="lunch">Lunch</h4>
 								<h4 class="sick">Sick Leave</h4>
 								<h4 class="vacation">Vacation</h4>
-								<h4 class="cambodia">Cambodia</h4>
 							</md-card-title>
 							<md-card-content>
 								<div class="attendance" ng-class="{'sunday': isSunday(a), 'expanded': a.sick_leave || a.vacation}" ng-repeat="a in employee.attendances | orderBy:'-date'">
@@ -441,9 +304,6 @@
 											<md-option ng-value="true" >Excused</md-option>
 											<md-option ng-value="false" >Unexcused</md-option>
 										</md-select>
-									</div>
-									<div class="col cambodia">
-										<md-switch ng-model="a.cambodia" ng-change="updateAttendance(a)"></md-switch>
 									</div>
 							</md-card-content>
 						</md-card>

@@ -76,7 +76,16 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			'manager': {'en': 'Manager Stipend',
 					 	'th': 'ตำแหน่ง'},
 			'pay-method': {'en': 'Payment Method',
-					 	   'th': 'วิธีจ่ายเงิน'},
+						   'th': 'วิธีจ่ายเงิน'},
+			'time-in': {'en': 'Clock In',
+						'th': 'เวลาเข้า'},
+			'time-out': {'en': 'Clock Out',
+						 'th': 'เวลาออก'},
+			'date': {'en': 'Date',
+					 'th': 'วันที่'},
+			'regular': {'en': 'Regular',
+					 	'th': 'เวลาปกติ'}
+									
 			
 		};
 	$scope.nationalities = {
