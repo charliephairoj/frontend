@@ -1,0 +1,92 @@
+
+
+.workspace{
+    width:100%;
+    height:100%;
+    position: relative;
+
+    .header{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:5em;
+        .flex;
+        .flex-direction(row);
+        
+        div{
+            text-align: center;
+            padding:2em 0;
+
+            border-right:1px solid rgba(0,0,0,1);
+            border-bottom:1px solid rgba(0,0,0,1);
+
+            &:first-child{
+                border-left:1px solid rgba(0,0,0,1);
+            }
+
+            &.message{
+                padding-left:1em;
+            }
+        }
+    }
+
+    .logs-container{
+        position: absolute;
+        top:5em;
+        bottom:0;
+        width:100%;
+        overflow-y:scroll;
+
+        .log{
+            width:100%;
+            height:auto;
+            .flex;
+            .flex-direction(row);
+            
+            div{
+                padding:1em 0;
+
+                border-right:1px solid rgba(0,0,0,1);
+                border-bottom:1px solid rgba(0,0,0,1);
+
+                &:first-child{
+                    border-left:1px solid rgba(0,0,0,1);
+                }
+
+                &.message{
+                    padding-left:1em;
+                }
+
+                &.user{
+                    text-align: center;
+                }
+
+                &.type{
+                    text-align: center;
+                }
+
+                &.timestamp{
+                    text-align: center;
+                }
+            }
+        }
+    }
+    
+
+    .message{
+        width:50%;
+    }
+
+    .user{
+        width:15%;
+    }
+
+    .type{
+        width:15%
+    }
+
+    .timestamp{
+        width:20%;
+    }
+}

@@ -118,6 +118,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
 	})
       .when('/administrator', {
         templateUrl: 'views/administrator.html'
+  })
+      .when('/administrator/log', {
+        templateUrl: 'views/administrator/log/view.html',
+        controller: 'AdministratorLogViewCtrl'
 	})
       .when('/supply', {
         templateUrl: 'views/supply/view.html',
