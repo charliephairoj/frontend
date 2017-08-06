@@ -146,12 +146,15 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 			markerArray,
 			lats = [],
 			lngs = [];
+		console.log(target);
+		console.log(markers);
 
-		for (var i in markers[$scope.active]) {
+		for (var i=0; i < markers[$scope.active].length; i++) {
 			try {
 				markers[$scope.active][i].setMap(null);
 			} catch (e) {
-				$log.error(e);
+				console.warn(e);
+				//$log.error(e);
 			}
 		}
 

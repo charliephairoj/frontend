@@ -226,7 +226,9 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	//Restore saved acknowledgement from localStorage
     if (storage.getItem('acknowledgement-create')) {
-        angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
+		var data = JSON.parse(storage.getItem('acknowledgement-create'));
+		data.delivery_date = data.delivery_date ? new Date(data.delivery_date) : data.delivery_date;
+        angular.extend($scope.ack, data);
 				
 		//Set marker for customer
 		try {

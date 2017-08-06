@@ -118,6 +118,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
 	})
       .when('/administrator', {
         templateUrl: 'views/administrator.html'
+  })
+      .when('/administrator/log', {
+        templateUrl: 'views/administrator/log/view.html',
+        controller: 'AdministratorLogViewCtrl'
 	})
       .when('/supply', {
         templateUrl: 'views/supply/view.html',
@@ -941,6 +945,18 @@ angular.module('employeeApp')
 
 }]);
 
+angular.module('employeeApp')
+.controller('AdministratorLogViewCtrl', ['$scope', '$http', 'Group', 'Notification', 
+function ($scope, $http, Group, Notification) {
+    $scope.logs = [];
+
+    $scope.logs = $http.get('/api/v1/administrator/log/').success(function (resp) {
+        console.log(resp);
+        $scope.logs = resp;
+    });
+	
+}]);
+
 
 angular.module('employeeApp')
 .controller('AdministratorUserAddCtrl', ['$scope', 'User', 'Group', '$location',
@@ -1307,8 +1323,8 @@ function ($scope, Customer, $routeParams, $location, Notification, $timeout, Ack
 		
 		//Focus map on single location
 		if ($scope.customer.addresses.length === 1) {
-			map.panTo(marker.getPosition());
-			map.setZoom(17);
+			//map.panTo(marker.getPosition());
+			//map.setZoom(17);
 		}
     
         
@@ -2974,7 +2990,16 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			'manager': {'en': 'Manager Stipend',
 					 	'th': 'ตำแหน่ง'},
 			'pay-method': {'en': 'Payment Method',
-					 	   'th': 'วิธีจ่ายเงิน'},
+						   'th': 'วิธีจ่ายเงิน'},
+			'time-in': {'en': 'Clock In',
+						'th': 'เวลาเข้า'},
+			'time-out': {'en': 'Clock Out',
+						 'th': 'เวลาออก'},
+			'date': {'en': 'Date',
+					 'th': 'วันที่'},
+			'regular': {'en': 'Regular',
+					 	'th': 'เวลาปกติ'}
+									
 			
 		};
 	$scope.nationalities = {
@@ -3854,12 +3879,15 @@ function ($scope, $location, Acknowledgement, mapMarker, PurchaseOrder, $rootSco
 			markerArray,
 			lats = [],
 			lngs = [];
+		console.log(target);
+		console.log(markers);
 
-		for (var i in markers[$scope.active]) {
+		for (var i=0; i < markers[$scope.active].length; i++) {
 			try {
 				markers[$scope.active][i].setMap(null);
 			} catch (e) {
-				$log.error(e);
+				console.warn(e);
+				//$log.error(e);
 			}
 		}
 
@@ -4134,7 +4162,9 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	//Restore saved acknowledgement from localStorage
     if (storage.getItem('acknowledgement-create')) {
-        angular.extend($scope.ack, JSON.parse(storage.getItem('acknowledgement-create')));
+		var data = JSON.parse(storage.getItem('acknowledgement-create'));
+		data.delivery_date = data.delivery_date ? new Date(data.delivery_date) : data.delivery_date;
+        angular.extend($scope.ack, data);
 				
 		//Set marker for customer
 		try {
@@ -6447,8 +6477,10 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
 	$scope.searchProducts = function (query) {
-		var lowercaseQuery = angular.lowercase(query.trim());
+
 		var products = [];
+		var lowercaseQuery = query ? angular.lowercase(query.trim()) : '';
+
 		for (var i = 0; i < $scope.upholsteries.length; i++) {
             try{
                 var description = $scope.upholsteries[i].description;
@@ -6461,8 +6493,6 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
             }
 
 		}
-
-		console.log(lowercaseQuery, products);
 
 		return products;
 	};
@@ -6499,7 +6529,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 	 * @returns {Array} - An array of fabrics whose description matches the search term
 	 */
 	$scope.searchFabrics = function (query) {
-		var lowercaseQuery = angular.lowercase(query.trim());
+		var lowercaseQuery = query ? angular.lowercase(query.trim()) : '';
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
             try{
@@ -6544,6 +6574,11 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
                 throw new ReferenceError("Missin customer name");
             }
         }
+
+		if (!$scope.estimate.currency) {
+            throw new TypeError("Please select a currency.");
+        }
+
 
         //Validate ordered Items
         if (!$scope.estimate.items) {
@@ -17814,6 +17849,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				}
 			});
 			
+			/*
 			function setPrint () {				
 			    var afterPrint = function() {
 			        $(".print").empty();
@@ -17836,6 +17872,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				this.contentWindow.print();
 			}
 			
+
 			scope.printSticker = function () {
 				var container = $(".print").empty();
 				var iframe = document.createElement('iframe');
@@ -17843,6 +17880,7 @@ function ($http, Supply, $rootScope, $mdToast, $timeout, $window, scanner, D3, $
 				iframe.src = "api/v1/supply/" + scope.supply.id + "/sticker/";
 				container.append(iframe);
 			};
+			*/
   	  	}
 	};
 }]);

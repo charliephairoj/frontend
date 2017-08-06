@@ -632,8 +632,10 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
 	$scope.searchProducts = function (query) {
-		var lowercaseQuery = angular.lowercase(query.trim());
+
 		var products = [];
+		var lowercaseQuery = query ? angular.lowercase(query.trim()) : '';
+
 		for (var i = 0; i < $scope.upholsteries.length; i++) {
             try{
                 var description = $scope.upholsteries[i].description;
@@ -646,8 +648,6 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
             }
 
 		}
-
-		console.log(lowercaseQuery, products);
 
 		return products;
 	};
@@ -684,7 +684,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 	 * @returns {Array} - An array of fabrics whose description matches the search term
 	 */
 	$scope.searchFabrics = function (query) {
-		var lowercaseQuery = angular.lowercase(query.trim());
+		var lowercaseQuery = query ? angular.lowercase(query.trim()) : '';
 		var fabrics = [];
 		for (var i = 0; i < $scope.fabrics.length; i++) {
             try{
@@ -729,6 +729,11 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
                 throw new ReferenceError("Missin customer name");
             }
         }
+
+		if (!$scope.estimate.currency) {
+            throw new TypeError("Please select a currency.");
+        }
+
 
         //Validate ordered Items
         if (!$scope.estimate.items) {

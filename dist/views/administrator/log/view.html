@@ -1,0 +1,33 @@
+<div class="workspace">
+    <div class="header">
+         <div class="message">
+            <h3>MESSAGE</h3>
+        </div>
+        <div class="user">
+            <h3>USER</h3>
+        </div>
+        <div class="type">
+            <h3>TYPE</h3>
+        </div>
+        <div class="timestamp">
+            <h3>TIMESTAMP</h3>
+        </div>
+    </div>
+    <div class="logs-container">
+        <div class="log" ng-repeat="log in logs">
+            <div class="message">
+                {{log.message}}
+            </div>
+            <div class="user">
+                {{log.user}}
+            </div>
+            <div class="type">
+                {{log.type}}
+            </div>
+            <div class="timestamp">
+                {{log.timestamp | date:'hh:mm:ss a dd/MM/yyyy'}}
+            </div>
+        </div>
+    </div>
+    
+</div>
