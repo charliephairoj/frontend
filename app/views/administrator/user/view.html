@@ -57,9 +57,15 @@
 							<label>Last Name</label>
 							<input type="text" ng-model="user.last_name" />
 						</md-input-container>
+						<md-switch ng-model="user.is_active">
+						</md-switch>
 		          	</md-card-title-text>
 		        </md-card-title>
 				<md-card-content>
+					<md-input-container>
+						<input type="text" ng-model="user.username" />
+					</md-input-container>
+
 					<md-input-container flex="100">
 						<label>Email</label>
 						<input type="email" ng-model="user.email" />
