@@ -24,9 +24,11 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	 * Vars
 	 */
 	var keyboardNav = new KeyboardNavigation(),
-		checkoutActive = false;
+		checkoutActive = false,
+		supplyList = [];
 	$scope.scanner = new scanner('supply-scanner-modal'); //jshint ignore: line
 	$scope.interfaceType = 'equipment';
+
 	$scope.supplies = [];
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
@@ -49,6 +51,56 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.fractSize = function () {
 		return $scope.supply ? $scope.supply.units == 'pc' ? 0 : 2 : 2;
 	};
+
+
+	/*
+ 	 * Supply SECTION
+	 *
+	 * This section deals with the supply searching and what happens when a supply is selected
+	*/
+
+	$scope.selectedSupply = null;
+	$scope.supplySearchText = '';
+	
+	// Watch on customerSearchText to get products from the server
+	$scope.retrieveSupplies = function (query) {
+		if (query) {
+			Supply.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if (supplyList.indexOfById(responses[i]) === -1) {
+						supplyList.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+	
+	/**
+	 * Returns a list of customers whose name matches the query
+	 * 
+	 * @public
+	 * @param {String} query - the string to search against the customer names
+	 * @returns {Array} - An array of customes that matches the query
+	 */
+	
+	$scope.searchSupplies = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var data = [];
+		for (var i = 0; i < supplyList.length; i++) {
+			if (angular.lowercase(supplyList[i].description).indexOf(lowercaseQuery) !== -1) {
+				data.push(supplyList[i]);
+			}
+		}
+		
+		return data;
+	};
+
+	$scope.addSupply = function (supply) {
+		$scope.supplies.push(angular.copy(supply));
+		$scope.selectedSupply = null;
+		$scope.supplySearchText = '';
+	}
+
 
 	/*
 	 * Remove item from list of supplies
@@ -435,6 +487,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	};
 	
 	$scope.printSupplySticker = function (supply) {
+		console.log(supply);
 		var container = $(".print").empty();
 		var iframe = document.createElement('iframe');
 		iframe.onload = setPrint;

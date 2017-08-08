@@ -9,13 +9,30 @@
 	}
 	
 	md-action{
-		display:flex;
-		justify-content:space-between;
+		.flex;
+		.justify-content(space-between);
 		padding:1em;
 		//color:#607d8b;
 		background:#607d8b;
 		color:#FFF;
 		margin:0;
+		.align-items(center);
+
+		.search-container{
+			.flex;
+			.flex-direction(row);
+			
+			md-autocomplete{
+
+				width:20em;
+
+				input{
+					color: rgba(0,0,0,1);
+				}
+				
+			}
+		}
+		
 		
 		.btn-container{
 			display:flex;
