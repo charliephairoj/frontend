@@ -31,14 +31,53 @@
     -->
     
     <div class="workspace">
-    	
+        
+        <md-toolbar layout="column" layout-align="center center" md-scroll-shrink="true">
+			<div class="container" layout="row" layout-align="center center">
+				<h3><span>Acknowledgements</span></h3>
+				<div flex></div>
+
+				<md-button class="md-icon-button md-primary md-raised" ng-show="::currentUser.hasPermission('add_acknowledgement')" ng-href="#/order/acknowledgement/create">
+					<md-tooltip>
+						Create New Acknowledgement
+					</md-tooltip>
+					<i class="material-icons">create</i>
+				</md-button>
+				<md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="::!currentUser.hasPermission('view_acknowledgement')">
+					<md-tooltip>Download</md-tooltip>
+					<i class="material-icons">file_download</i>
+				</md-button>
+				<md-button class="md-icon-button md-accent" ng-hide="map" ng-click="viewMap()">
+					<md-tooltip>
+						Show Map
+					</md-tooltip>
+					<i class="material-icons">map</i>
+				</md-button>
+				<md-button class="md-icon-button md-warn" ng-hide="!map" ng-click="map=false">
+					<md-tooltip>
+						Hide Map
+					</md-tooltip>
+					<i class="material-icons">map</i>
+				</md-button>
+				<input class="search" type="text" ng-model="query.$.$" />
+			</div>
+
+			<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>
+
+
+			
+
+
+        </md-toolbar>
+        <!--
 		<div class="title-bar">
 			<div class="id">PROJECT ID</div>
 			<div class="codename">NAME</div>
 			<div class="customer">CUSTOMER</div>
 			<div class="status">STATUS</div>
 		</div>
-    	<div class="outer-container" on-scroll-end="loadNext()"> 
+    -->
+        <div class="outer-container" on-scroll-end="loadNext()"> 
 	    	<ul class="inner-container" >
 	    		<li class="item-container" data-ng-repeat="project in projects | filter:query">
 	    			<div class="item" ng-class="{'selected':project.$selected}">

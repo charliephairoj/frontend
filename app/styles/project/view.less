@@ -45,6 +45,88 @@
 		display:flex;
 		flex-direction:column;
 		align-items:center;
+
+		md-toolbar{
+			
+			div{
+				
+				&.container{
+					width:100%;
+					padding:0.5em 1em;
+						
+					.search{
+						color:rgb(0, 0, 0);
+						font-family:proxima;
+						outline:none;
+						margin:0 1em;
+						padding:0 1em;
+					}
+				}
+				
+				
+				&.title-bar{
+					.flex;
+					flex-direction:row;
+					border-bottom: 1px solid #4F6874;
+					border-top: 1px solid #4F6874;
+					width:100%;
+			
+					div{
+						.flex;
+						flex-direction:row;
+						align-items:center;
+						justify-content:space-around;
+						padding:0.25em;
+						background:#607d8b;
+						color:rgba(255, 255, 255, 1);
+						border-left:1px dotted rgba(0, 0, 0, 0.35);
+						font-size:0.8em;
+						
+						&:first-child{
+							border-left:none;
+						}
+			
+						&.id{
+							width:5%;
+						}
+
+						&.order-date{
+							width:9%;
+						}
+
+						&.customer{
+							width:15%;
+						}
+			
+						&.po{
+							width:8%
+						}
+			
+						&.project{
+							width:15%;
+						}
+
+						&.delivery-date{
+							width:10%;
+						}
+			
+						&.total{
+							width:8%;
+						}
+			
+						&.status{
+							width:15%;
+						}
+			
+						&.remarks{
+							width:15%;
+						}
+					}
+				}
+			}
+			
+			
+		}
 		
 		.title-bar{
 			display:flex;

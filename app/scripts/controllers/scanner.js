@@ -486,12 +486,22 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		container.append(iframe);
 	};
 	
-	$scope.printSupplySticker = function (supply) {
+	$scope.printSupplySticker = function (supply, type) {
+
+		var id = '';
+		if (type == 'po') {
+			id = supply.supply;
+		} else if (type == 'supply') {
+			id = supply.id;
+		} else {
+			$log.error('No id to retrieve the sticker for this supply');
+		}
+
 		console.log(supply);
 		var container = $(".print").empty();
 		var iframe = document.createElement('iframe');
 		iframe.onload = setPrint;
-		iframe.src = "api/v1/supply/" + supply.id + "/sticker/";
+		iframe.src = "api/v1/supply/" + id + "/sticker/";
 		container.append(iframe);
 	};
 	
