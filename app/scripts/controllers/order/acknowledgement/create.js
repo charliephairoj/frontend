@@ -916,13 +916,22 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
                             //throw new TypeError("Product missing price");
                         }
 					}
+
+					if (item.unit_price == undefined || item.unit_price == null) {
+						var message = item.description;
+						message += ' is missing a unit price';
+						throw new TypeError(message);
+					}
 					
+					console.log(item);
+
 					/**
 					 * Validates the component if there are components
 					 */
 					if (item.hasOwnProperty('components')) {
-						if (item.components.length > 1) {
-							
+
+						if (item.components.length > 0) {
+							console.log(item.components);
 							/**
 							 * Validate that the component is not null and has a 
 							 * description and quantity
@@ -941,9 +950,10 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 										throw new TypeError(message);
 									}
 
-									if (item.components[k].quantity <= 0 || item.components[k].description == undefined || item.components[k].description == null) {
+									if (item.components[k].quantity <= 0 || item.components[k].description == undefined || item.components[k].description == null ||
+										item.components[k].quantity == undefined || item.components[k].quantity == null) {
 										var message = "Expected a quantity for component: ";
-										message += component.description + ".";
+										message += item.components[k].description + ".";
 										$log.error(message);
 										throw new TypeError(message);
 									}
@@ -1138,6 +1148,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				
 				Notification.display("Creating new acknowledgment...", false);
 				
+				/*
 				prepareAcknowledgement($scope.ack, function () {
 	                $scope.ack.$create(function (response) {
 					
@@ -1156,7 +1167,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 						Notification.display("There was an error in creating the acknowledgement. A report has been sent to Charlie.", false);
 	                });
 				});
-				
+				*/
                 
             }
         } catch (e) {

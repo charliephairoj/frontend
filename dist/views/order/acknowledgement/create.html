@@ -444,11 +444,11 @@
 										<div class="add-component-container">
 											<md-input-container class="description">
 												<label>Component Description</label>
-												<input type="text" ng-model="tempComponent.description" />
+												<input type="text" ng-model="tempComponent.description" required />
 											</md-input-container>
 											<md-input-container class="quantity">
 												<label>Quantity</label>
-												<input type="number" ng-model="tempComponent.quantity" />
+												<input type="number" ng-model="tempComponent.quantity" required />
 											</md-input-container>
 											<md-button class="add md-accent md-raised md-icon-button" ng-click="addComponent($index, tempComponent)">
 												<md-tooltip>Add Component</md-tooltip>
@@ -459,11 +459,17 @@
 											<md-list-item class="component" ng-repeat="component in item.components track by $index">
 												<md-input-container class="description">
 													<label>Component Description</label>
-													<input type="text" ng-model="component.description" />
+													<input type="text" ng-model="component.description" name="component" required />
+													<div ng-messages="ackForm.component.$error">
+														<div ng-message="required">This description is required</div>
+													</div>
 												</md-input-container>
 												<md-input-container class="quantity">
 													<label>Quantity</label>
-													<input type="number" width="3" ng-model="component.quantity" />
+													<input type="number" width="3" ng-model="component.quantity" name="componentQty" required />
+													<div ng-messages="ackForm.componentQty.$error">
+														<div ng-message="required">This quantity is required</div>
+													</div>
 												</md-input-container>
 												<md-button class="add md-warn md-raised md-icon-button" ng-click="removeComponent($index, item.components)">
 													<md-tooltip>Remove Component</md-tooltip>
