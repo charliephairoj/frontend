@@ -2,33 +2,34 @@
     
     <div class="workspace">
 		
-		<md-toolbar class="md-primary" layout="row" layout-align="center center">
+		<md-toolbar class="md-primary">
 			<h3><span>{{group.name}}</span></h3>
 			<div flex></div>
-			<md-button class="md-accent md-icon-button" ng-click="remove()">
+			
+			<md-select ng-model="category" placeholder="Select a category">
+				<md-option value="">--</md-option>
+				<md-option ng-value="c" ng-repeat="c in categories">{{c}}</md-option>
+			</md-select>
+			<input class="search" type="text" ng-model="query" />
+
+			<div flex></div>
+
+			<md-button class="md-accent md-icon-button md-warn md-raised" ng-click="remove()">
 				<md-tooltip>Delete {{group.name}}</md-tooltip>
 				<i class="material-icons">delete</i>
 			</md-button>
-			<input class="search" type="text" ng-model="query" />
 		</md-toolbar>
 		
 		<md-content>
-			<md-list>
-				<md-list-item layout="row" layout-align="space-between center" ng-repeat="perm in permissions | filter:query">
-                    <h5>  
-                        {{perm.app}}
-                    </h5>
-                    <h5>
-                        {{perm.name}}
-                    </h5>
-                    <h5>
-                        {{perm.content_type}}
-                    </h5>
-					
+			<md-card ng-repeat="perm in permissions | filter:{'content_type': category} | filter:query track by $index">
+				<md-card-content>
+					<h5>{{perm.name}}</h5>
+					<h5>{{perm.content_type}}</h5>
 					<md-switch ng-model="perm.$checked" ng-change="updatePermission(perm)">
 					</md-switch>
-				</md-list-item>
-			</md-list>
+				</md-card-content>
+			</md-card>
+			
 		</md-content>
 			
 			

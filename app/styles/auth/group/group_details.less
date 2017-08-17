@@ -9,28 +9,50 @@
 	.workspace{
 		
 		md-toolbar{
+			.flex;
+			.flex-direction(row);
+			.align-items(center);
+
+			height: 3.2em;
+			padding: 0 1em;
+
+			md-select{
+
+				span{
+					color:rgba(255, 255, 255, 1);
+				}
+			}
+
 			.search{
 				color:rgb(0, 0, 0);
 				font-family:proxima;
 				outline:none;
-				margin:0 1em;
+				margin:0 1em 0 3em;
 				padding:0 1em;
 			}
 		}
 		
 		md-content{
-			
-			height:100%;
-			
-			md-list{
-				
-				md-list-item{
-					display:flex;
-					justify-content:space-between;
-					
-					.md-list-item-inner{
-						justify-content:space-between;
+			position: absolute;
+			top:4em;
+			bottom:0;
+			width:100%;
+			.flex;
+			.flex-direction(column);	
+			overflow-y:scroll;
+
+			md-card{
+				min-height: 5em;
+
+				md-card-content{
+					.flex;
+					.flex-direction(row);
+					.justify-content(space-between);
+
+					md-switch{
+						margin-right:5em;
 					}
+					
 				}
 			}
 		}

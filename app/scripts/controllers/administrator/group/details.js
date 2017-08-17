@@ -3,6 +3,8 @@ angular.module('employeeApp')
 .controller('AdministratorGroupDetailsCtrl', ['$scope', 'Group', 'Permission', '$routeParams', '$location',
 function ($scope, Group, Permission, $routeParams, $location) {
   
+    $scope.categories = [];
+
     /*
      * Return the index of the first
      * occurence of the id in the list
@@ -48,6 +50,16 @@ function ($scope, Group, Permission, $routeParams, $location) {
      */
     $scope.permissions = Permission.query({limit: 0, page_size:10000}, function () {
         merge($scope.permissions, $scope.group.permissions);
+
+        for (var i = 0; i < $scope.permissions.length; i++) {
+            console.log($scope.categories.indexOf($scope.permissions[i].content_type));
+            console.log($scope.permissions[i].content_type);
+            if ($scope.categories.indexOf($scope.permissions[i].content_type) === -1) {
+                $scope.categories.push($scope.permissions[i].content_type);
+            }
+        }
+
+        console.log($scope.categories);
     });
 	
     $scope.group = Group.get({'id': $routeParams.id}, function () {
