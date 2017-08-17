@@ -4888,7 +4888,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 
 									if (item.components[k].quantity <= 0 || item.components[k].description == undefined || item.components[k].description == null ||
 										item.components[k].quantity == undefined || item.components[k].quantity == null) {
-										var message = "Expected a quantity for component: ";
+										var message = "Expected a quantity of at least 1 for component: ";
 										message += item.components[k].description + ".";
 										$log.error(message);
 										throw new TypeError(message);
@@ -5084,7 +5084,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				
 				Notification.display("Creating new acknowledgment...", false);
 				
-				/*
+				
 				prepareAcknowledgement($scope.ack, function () {
 	                $scope.ack.$create(function (response) {
 					
@@ -5103,7 +5103,7 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 						Notification.display("There was an error in creating the acknowledgement. A report has been sent to Charlie.", false);
 	                });
 				});
-				*/
+				
                 
             }
         } catch (e) {
