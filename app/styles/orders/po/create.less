@@ -107,13 +107,63 @@
 
 								&.order{
 									width:58%;
+
+									md-card-content{
+
+										.order{
+
+											.details{
+												.flex;
+												.flex-direction(row);
+												.justify-content(space-between);
+												.align-items(flex-start);
+
+												.date-container{
+													margin:15px 0;
+												}
+											}
+
+											.details-2{
+												.flex;
+												.flex-direction(row);
+												.align-items(flex-start);
+												.justify-content(flex-start);
+
+												md-input-container{
+													margin-right:1em;
+
+													textarea{
+														min-width: 20em;
+													}
+												}
+											}
+
+											.project{
+												.flex;
+												.flex-direction(row);
+												.align-items(flex-start);
+												.justify-content(flex-start);
+											}
+
+											.project-2{
+												.flex;
+												.flex-direction(row);
+												.align-items(flex-start);
+												.justify-content(flex-start);
+
+												md-input-container{
+													min-width:10em;
+												}
+											}
+										}
+									}
 								}
 
 								&.map{
 									width:38%;
 
 									.map-container{
-										height:43em;
+										height:54em;
 
 										#create-po-map{
 											height:100%;
@@ -267,9 +317,15 @@
 												text-align:center;
 												background-color:rgb(96,125,139);
 												border-left:1px dotted rgba(0, 0, 0, 0.35);
-										
+												@radius: 0.25em;
+
 												&:first-child{
 													border:none;
+													border-radius: @radius 0 0 0;
+												}
+
+												&:last-child{
+													border-radius: 0 @radius 0 0;
 												}
 											}
 										}

@@ -7345,6 +7345,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				  'th': 'เครดิตกี่วัน'},
 		'deposit': {'en': 'Deposit',
 					'th': 'วางมัดจำ'},
+		'comments': {'en': 'Comments',
+					 'th': 'Comments'},
 		'project': {'en': 'Project',
 					'th': 'โครงการ'},
 		'room': {'en': 'Room',
@@ -8061,15 +8063,24 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			throw new Error("Please select a 'Receiving Date' for the order");
 		}
 
+		if (!purchaseOrder.currency) {
+			throw new TypeError("Please select a currency for this order");
+		}
+
 		if (purchaseOrder.items.length <= 0) {
 			throw new Error("Please add items to the purchase order");
 		}
 
-		for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
-			if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
-				throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
+		if (purchaseOrder.items) {
+			for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
+				if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
+					throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
+				}
 			}
+		} else {
+			throw new TypeError("Please add items to purchase before creating");
 		}
+		
 
 		return true;
 	};
@@ -8339,11 +8350,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	$scope.create = function (purchaseOrder) {
 		purchaseOrder = purchaseOrder || $scope.po;
 		try {
-			$scope.validatePurchaseOrder(purchaseOrder);
+			if ($scope.validatePurchaseOrder(purchaseOrder)) {
 
-			Notification.display('Creating new purchase order...');
-
-			$scope._preparePurchaseOrder(purchaseOrder, $scope._sendCreateRequest.bind(purchaseOrder));
+				Notification.display('Creating new purchase order...');
+				
+				$scope._preparePurchaseOrder(purchaseOrder, $scope._sendCreateRequest.bind(purchaseOrder));
+			}
 		} catch (e) {
 			$log.error(JSON.stringify(e));
 			Notification.display(e.message);

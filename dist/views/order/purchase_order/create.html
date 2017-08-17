@@ -122,14 +122,14 @@
 								</div>
 			
 								<div class="order">
-									<div class='details' layout="row" layout="start center">
+									<div class='details'>
 										<div class="date-container" layout="column">
-											<md-datepicker name="dateField" ng-model="po.receive_date" md-placeholder="วันรับสินค้า" required>
+											<md-datepicker name="dateField" ng-model="po.receive_date" md-placeholder="วันรับสินค้า" ng-required>
 											</md-datepicker>
 										</div>
 										<md-input-container>
 											<label>{{labels.currency[lang]}}</label>
-											<md-select ng-model="po.currency" required>
+											<md-select name="currency" ng-model="po.currency" required>
 												<md-option ng-value="'THB'">Thai Baht</md-option>
 												<md-option ng-value="'USD'">US Dollar</md-option>
 												<md-option ng-value="'EUR'">Euro</md-option>
@@ -149,7 +149,7 @@
 												<div ng-message-exp="'max'">Don't you think that's too generous?</div>
 											</div>
 										</md-input-container>
-										<md-input-container flex="shrink">
+										<md-input-container>
 											<label>{{labels.vat[lang]}} (%)</label>
 											<input name="vat" type="number" ng-model="po.vat" required max="10">								  
 											<div ng-messages="poForm.vat.$error" multiple>
@@ -160,13 +160,14 @@
 									</div>
 						
 									<div class="details-2" layout="row" layout="start center">
-										<md-input-container flex="shrink">
+										<md-input-container>
 											<label>{{labels.terms[lang]}}</label>
-											<input name="terms" type="number" ng-model="po.terms" required min="0" max="180">								  
+											<input name="terms" type="number" ng-model="po.terms" required min="0" max="180" step="1"> 								  
 											<div ng-messages="poForm.terms.$error" multiple>
 												<div ng-message-exp="'required'">This is required</div>
 												<div ng-message-exp="'max'">That's too many days!</div>
 											</div>
+											<div class="hint">How many days until we pay?</div>
 										</md-input-container>
 										<md-input-container>
 											<label>{{labels.deposit[lang]}}</label>
@@ -175,6 +176,9 @@
 											</div>
 											<div class="hint">How much to get work started?</div>
 										</md-input-container>
+										
+									</div>
+									<div class="details-2">
 										<md-input-container>
 											<label>{{labels.comments[lang]}}</label>
 											<!--
@@ -186,7 +190,7 @@
 										</md-input-container>
 									</div>
 			
-									<div class="project" layout="row" layout-align="start start">
+									<div class="project">
 											<md-autocomplete flex="noshrink" required 
 												md-items="project in searcProjects(projectSearchText)" 
 												md-selected-item="selectedProject"
@@ -201,25 +205,28 @@
 												</md-item-template>
 											</md-autocomplete>
 
-											<md-input-container>
-												<label>{{labels.room[lang]}}</label>
-												<md-select ng-model="po.room"  ng-model-options="{trpoBy: '$value.id'}">
-													<md-option ng-repeat="room in po.project.rooms" ng-value="room">
-														{{room.description}}
-													</md-option>
-												</md-select>
-											</md-input-container>
-											<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
-								
-											<md-input-container>
-												<label>{{labels.phase[lang]}}</label>
-												<md-select ng-model="po.phase"  ng-model-options="{trackBy: '$value.id'}">
-													<md-option ng-repeat="phase in po.project.phases" ng-value="phase">
-														{{phase.description}}
-													</md-option>
-												</md-select>
-											</md-input-container>
-											<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
+											
+									</div>
+									<div class="project-2">
+										<md-input-container>
+											<label>{{labels.room[lang]}}</label>
+											<md-select ng-model="po.room"  ng-model-options="{trpoBy: '$value.id'}">
+												<md-option ng-repeat="room in po.project.rooms" ng-value="room">
+													{{room.description}}
+												</md-option>
+											</md-select>
+										</md-input-container>
+										<md-button class="md-accent md-raised" ng-click="showAddRoom()">Add a Room</md-button>
+							
+										<md-input-container>
+											<label>{{labels.phase[lang]}}</label>
+											<md-select ng-model="po.phase"  ng-model-options="{trackBy: '$value.id'}">
+												<md-option ng-repeat="phase in po.project.phases" ng-value="phase">
+													{{phase.description}}
+												</md-option>
+											</md-select>
+										</md-input-container>
+										<md-button class="md-accent md-raised" ng-click="showAddPhase()">Add a Phase</md-button>
 									</div>
 								</div>
 							</md-card-content>
