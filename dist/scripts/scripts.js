@@ -6600,7 +6600,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 
 		
 		if (!$scope.estimate.currency) {
-            throw new TypeError("Please select a currency.");
+            //throw new TypeError("Please select a currency.");
         }
 		
 
