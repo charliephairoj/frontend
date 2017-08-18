@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderEstimateViewCtrl', ['$scope', 'Estimate', '$location', '$filter', 'KeyboardNavigation', '$mdToast', 'Fabric', 'FileUploader', 'Notification', 'Upholstery', 'Acknowledgement',
-function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fabric, FileUploader, Notification, Upholstery, Acknowledgement) {
+.controller('OrderEstimateViewCtrl', ['$scope', 'Estimate', '$location', '$filter', 'KeyboardNavigation', '$mdToast', 'Fabric', 'FileUploader', 'Notification', 'Upholstery', 'Acknowledgement', '$log',
+function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fabric, FileUploader, Notification, Upholstery, Acknowledgement, $log) {
 	
 	
 	/*
@@ -124,16 +124,25 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	//keyboardNav.enable();
 	
 	
-    $scope.addItem = function (estimate, product) {
+    $scope.addItem = function (estimate, product, configs) {
+		
+
 		if (product.description) {
 			product.width = product.width || 0;
 			product.height = product.height || 0;
 			product.depth = product.depth || 0;
+			product.unit_price = product.price || 0;
 	        estimate.items.push(product);
 	       
-			delete $scope.tempProduct;
-			delete $scope.productSearchText;
+			
 		}
+
+		estimate.$$product = null;
+		estimate.$$searchText = '';
+
+		console.log(estimate.$$product)
+		console.log(estimate.$$searchText)
+
     };
     
 	
@@ -307,6 +316,77 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		return fabrics;
 	};
 
+	$scope.quotationIsValidated = function (quotation) {
+		/*
+         * The following are test to see if
+         * The property has already been added
+         */
+        if (!quotation.customer) {
+            throw new TypeError("Please add a customer.");
+        } else {
+            if (!quotation.customer.hasOwnProperty('name')) {
+                throw new ReferenceError("Missing customer name");
+            }
+        }
+
+		
+		if (!quotation.currency) {
+            //throw new TypeError("Please select a currency.");
+        }
+		
+
+        //Validate ordered Items
+        if (!quotation.items) {
+            throw new TypeError("Please add products to this order");
+        } else {
+			//Verifies that there are items ordered
+            if (quotation.items.length <= 0) {
+                throw new RangeError("Please add products to this order");
+            } else {
+                for (var i = 0; i < quotation.items.length; i++) {
+					var item = quotation.items[i];
+                    /*
+                     * Check that there is a quantity
+                     * for each piece of product
+                     */
+                    if (!quotation.items[i].hasOwnProperty('quantity') || !quotation.items[i].quantity) {
+                        throw new RangeError("Expecting a quantity of at least 1 for " + quotation.items[i].description);
+                    }
+
+                    /*
+                     * Validates that every item has a price
+                     */
+                    if (!quotation.items[i].hasOwnProperty('unit_price')) {
+
+					} else {
+                        if (!quotation.items[i].unit_price) {
+                            throw new TypeError("Product missing unit price");
+                        }
+                    }
+                }
+            }
+        }
+
+        //Validate Delivery Date
+        if (!quotation.delivery_date) {
+            throw new TypeError("Please select a preliminary delivery date.");
+        }
+
+        //Validate vat
+        if (quotation.vat === undefined || quotation.vat === null) {
+            throw new TypeError("Please set the vat.");
+        }
+
+        //Validate purchase order number
+        if (!quotation.po_id) {
+            //throw new TypeError("PO# is not defined");
+        }
+
+
+        //Return true for form validated
+		return true;
+	}
+
 	/**
 	 * Save the quotation
 	 * 
@@ -316,10 +396,18 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	$scope.update = function (quotation) {
 	
 		Notification.display("Updating Quotation #" + quotation.id);
+
+		try {
+			if ($scope.quotationIsValidated(quotation)) {
+				quotation.$update(function () {
+					Notification.display("Quotation #" + quotation.id + " updated");
+				});
+			}
+		} catch (e) {
+			$log.error(JSON.stringify({message: e, data: quotation}));
+			Notification.display(e.message, false);
+		}
 	
-		quotation.$update(function () {
-			Notification.display("Quotation #" + quotation.id + " updated");
-		});
 	};
 
 	/**

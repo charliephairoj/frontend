@@ -149,7 +149,7 @@
 											<tr>
 												<td>Remarks</td>
 												<td>
-													<textarea ng-model="ack.customer.remarks">
+													<textarea ng-model="ack.remarks">
 													</textarea>
 												</td>
 											</tr>
@@ -175,25 +175,25 @@
 							
 						</div>
 						<section class="products">
-							<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (tempProduct || {description: productSearchText}))">
+							<md-card class="add-product" layout="row" layout-align="start center" file-drop="addImage($files, (ack.$$product || {description: ack.$$searchText}))">
 								<md-card-actions layout="row" layout-align="center center">
-									<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(ack, tempProduct || {description: productSearchText})">
+									<md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(ack, ack.$$product || {description: ack.$$searchText})">
 										<md-tooltip>Add Product</md-tooltip>
 										<i class="material-icons">add_shopping_cart</i>
 									</md-button>
 						        </md-card-actions>
 								<md-card-content layout="row" layout-align="start center">
 									<md-autocomplete flex required 
-										md-items="product in searchProducts(productSearchText)" 
-										md-search-text-change="retrieveUpholsteries(productSearchText)"
-										md-selected-item="tempProduct"
+										md-items="product in searchProducts(ack.$$searchText)" 
+										md-search-text-change="retrieveUpholsteries(ack.$$searchText)"
+										md-selected-item="ack.$$product"
 										md-no-cache="true"
-										md-search-text="productSearchText"
+										md-search-text="ack.$$searchText"
 										md-item-text="product.description"
 										md-floating-label="Product Description"
 										md-min-length="0">
 									    <md-item-template>
-									    	<span md-highlight-text="productSearchText">{{product.description}}</span>
+									    	<span md-highlight-text="ack.$$searchText">{{product.description}}</span>
 									    </md-item-template>
 										<div ng-messages="true">
 											<div class="hint" ng-message="true">Starting typing to search or just type the description and add...</div>
@@ -202,7 +202,7 @@
 								</md-card-content>
 								<md-card-title-media>
 									<div class="md-media-md card-media">
-										<img ng-src="{{tempProduct.image.url}}">
+										<img ng-src="{{ack.$$product.image.url || '//:0' }}">
 									</div>
 								</md-card-title-media>
 							</md-card>
@@ -210,7 +210,7 @@
 							<div class="items">
 								
 								
-								<md-card class="item" ng-repeat="item in ack.items" file-drop="addImage($files, item)" file-drop-class="item-drag-active">
+								<md-card class="item" ng-repeat="item in ack.items track by $index" file-drop="addImage($files, item)" file-drop-class="item-drag-active">
 									<div class="drag-placeholder">
 										<h2>Drop Image Here</h2>
 									</div>
@@ -330,10 +330,10 @@
 													</td>
 												</tr>
 													-->
-												<tr>
+												<tr class="comments">
 													<td><span>Remarks</span></td>
 													<td>
-														<!--<textarea ng-model="item.comments"></textarea>-->
+														<textarea ng-model="item.comments"></textarea>
 													</td>
 												</tr>
 											</table>
