@@ -416,7 +416,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @param {String} query - Search term to apply against project.codename
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
-	$scope.searcProjects = function (query) {
+	$scope.searchProjects = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var projects = [];
 		for (var i = 0; i < $scope.projects.length; i++) {
