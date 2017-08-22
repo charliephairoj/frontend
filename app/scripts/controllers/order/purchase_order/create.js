@@ -532,13 +532,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 
 		if ($scope.po.supplier) {
 			if ($scope.po.supplier.id) {
-				//options.supplier_id = $scope.po.supplier.id;
+				options.supplier_id = $scope.po.supplier.id;
 			}
 		}
 
 		Supply.query(options, function (responses) {
 			for (var i = 0; i < responses.length; i++) {
 				if ($scope.supplies.indexOfById(responses[i]) === -1) {
+					console.log(responses[i]);
 					$scope.supplies.push(responses[i]);
 				}
 			}
