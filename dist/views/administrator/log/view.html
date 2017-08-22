@@ -13,7 +13,7 @@
             <h3>TIMESTAMP</h3>
         </div>
     </div>
-    <div class="logs-container">
+    <div class="logs-container" on-scroll-end="loadNext()">
         <div class="log" ng-repeat="log in logs">
             <div class="message">
                 {{log.message}}

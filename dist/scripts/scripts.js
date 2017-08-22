@@ -960,13 +960,43 @@ angular.module('employeeApp')
 angular.module('employeeApp')
 .controller('AdministratorLogViewCtrl', ['$scope', '$http', 'Group', 'Notification', 
 function ($scope, $http, Group, Notification) {
-    $scope.logs = [];
 
-    $scope.logs = $http.get('/api/v1/administrator/log/').success(function (resp) {
+    var fetching = false;
+    $scope.logs = [];
+    $http.get('/api/v1/administrator/log/').success(function (resp) {
         console.log(resp);
         $scope.logs = resp;
     });
-	
+    
+    
+    $scope.loadNext = function () {
+		if (!fetching) {
+			//System wide message
+			Notification.display('Loading more logs...');
+			fetching = true;
+			
+			var config = {
+				limit:20,
+				offset: $scope.logs.length
+			};
+            
+            url = '/api/v1/administrator/log/';
+            url += "?limit=20";
+            url += "&offset=";
+            url += $scope.logs.length;
+
+            $http.get(url).success(function (resources) {
+                for (var i = 0; i < resources.length; i++) {
+					if ($scope.logs.indexOfById(resources[i].id) == -1) {
+						$scope.logs.push(resources[i]);
+					}
+                }
+                
+                fetching = false;
+            });
+			
+		}
+	};
 }]);
 
 
@@ -8959,8 +8989,8 @@ function ($scope, $routeParams, PurchaseOrder, $mdToast, $location, $window, Pro
 
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'KeyboardNavigation', '$location', 'Notification', 'Supply', 'Supplier',
-function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notification, Supply, Supplier) {
+.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'KeyboardNavigation', '$location', 'Notification', 'Supply', 'Supplier', '$log',
+function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notification, Supply, Supplier, $log) {
 	
 	//Flags and variables
 	var fetching = true,
@@ -16244,7 +16274,7 @@ angular.module('employeeApp')
 		restrict: 'A',
 		link: function postLink(scope, element, attrs) {
 			var lastScrollTop = 0;
-			
+			console.log(attrs);
 			element.bind('scroll', function (e) {
 				
 				var scrollTop = element.scrollTop();
@@ -16253,9 +16283,12 @@ angular.module('employeeApp')
 					lastScrollTop = scrollTop;
 					
 					if (scrollTop > element[0].scrollHeight * scrollFactor) {
+						console.log(attrs.onScrollEnd);
 						try {
 							scope.$eval(attrs.onScrollEnd);
+							
 						} catch (err) {
+							console.log(err);
 							console.error("Missing a function for 'on-scroll-end'");
 						}
 					}
@@ -20267,7 +20300,8 @@ angular.module('employeeApp.services')
 		'last_contacted',
 		'last_modified',
 		'occurred_at',
-		'employment_date'
+		'employment_date',
+		'receive_date'
 	]
 	
 	function parseObj(data) {
