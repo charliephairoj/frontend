@@ -7854,7 +7854,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * @param {String} query - Search term to apply against project.codename
 	 * @returns {Array} - An array of projects whose codename matches the search term
 	 */
-	$scope.searcProjects = function (query) {
+	$scope.searchProjects = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var projects = [];
 		for (var i = 0; i < $scope.projects.length; i++) {
@@ -9021,19 +9021,68 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 		window.open(link);
 	}
 	
-	//Help determine if an event occured for the given acknowledgement
-	$scope.hasEvent = function (ack, e) {
-		for (var i in ack.logs) {
-			if (ack.logs[i].hasOwnProperty('message')) {
-				if (ack.logs[i].message.toLowerCase().indexOf(e) > -1) {
-					return true;
+	/**
+	 * Get the total from a list of deals that has a certain status
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.getTotal = function (stage) {
+		var total = 0;
+		
+		for (var i = 0; i < $scope.poList.length; i++) {
+			if ($scope.poList[i].status.toLowerCase() === stage.toLowerCase()) {
+				var amount;
+				
+				amount = $scope.poList[i].total;
+				/*
+				if ($scope.acknowledgements[i].currency.toLowerCase() === 'thb') {
+					amount = $scope.acknowledgements[i].grand_total;
+				} else {
+					switch($scope.acknowledgements[i].currency.toLowerCase()) {
+						case 'eur':
+							amount = $scope.acknowledgements[i].grand_total * 40;
+						case 'usd': 
+							amount = $scope.acknowledgements[i].grand_total * 35;
+					}
+						
 				}
+				*/
+				total += amount;
 			}
-			
 		}
 		
-		return false;
+		return total;
 	};
+
+
+	$scope.updateStage = function (po, status) {
+
+		if (po.status.toLowerCase() == "approved" && po.approval_pass || 1==1) {
+			console.log(po);
+			console.log(status);
+			var index = $scope.poList.indexOfById(po);
+			console.log(index);
+			if (index > -1) {
+				if (!$scope.poList[index].items) {
+					PurchaseOrder.get({id:po.id}, function (resp) {
+						console.log(resp);
+						console.log(index);
+						console.log($scope.poList[index]);
+						$scope.poList[index] = resp;
+						$scope.poList[index].status = status;
+						$scope.poList[index].$update();
+					});
+				} else {
+					$scope.poList[index].status = status;
+					$scope.poList[index].$update();
+				}
+				
+				
+			}
+		}
+    };
 	
 
 	/*
@@ -16735,6 +16784,37 @@ angular.module('employeeApp')
 			});
       	}
     };
+}]);
+
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name frontendApp.directive:deal
+ * @description
+ * # deal
+ */
+angular.module('employeeApp.directives')
+.directive('purchaseOrder', [function () {
+	return {
+		templateUrl: 'views/templates/purchase-order.html',
+		restrict: 'E',
+		link: function postLink(scope, element, attrs) {
+
+			var currencySigns = {
+				'THB':'฿',
+				'EUR':'€',
+				'USD':'$',
+				'RMB':'¥',
+				'SGD':'S$'
+			};
+			
+			scope.getCurrencySign = function (currency) {
+				return currencySigns[currency];
+			}
+
+		}
+	};
 }]);
 
 

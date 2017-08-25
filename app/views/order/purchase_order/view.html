@@ -7,33 +7,144 @@
     <div class="workspace">
 
 		<md-toolbar layout="column" md-scroll-shrink="true">
+
 			<div class="container" layout="row" layout-align="center center">
 				<h3><span>Purchase Orders</span></h3>
 				<div flex></div>
-	        	<md-button class="md-icon-button md-primary md-raised" ng-href="#/order/purchase_order/create">
+
+				<md-button class="md-icon-button md-primary md-raised" ng-href="#/order/purchase_order/create">
 					<md-tooltip>
 						Create New Purchase Order
 					</md-tooltip>
 					<i class="material-icons">create</i>
 				</md-button>
+				
+				
 				<input type="text" ng-model="query.$.$" class="search" />
 			</div>
-			<purchase-order-summary></purchase-order-summary>
-			<div class="title-bar md-primary">
-				<div class="id">ID</div>
-				<div class="order-date">DATE</div>
-				<div class="customer">SUPPLIER</div>
-				<div class="project">PROJECT</div>
-				<div class="delivery-date">RECEIVE DATE</div>
-				<div class="paid-date">PAID DATE</div>
-				<div class="total">TOTAL</div>
-				<div class="status">STATUS</div>
-			</div>
+			
 		</md-toolbar>
 
 
-		<md-content  on-scroll-end="loadNext()">
+		<md-content>
+			<div class="container">
+				<md-card class="stage leads"  on-drop="updateStage($file, 'awaiting approval')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Waiting Approval</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'awaiting approval'} | filter:query | orderBy:'-id' track by po.id">
+							<purchase-order>
+							</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('awaiting approval') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage qualification" on-drop="updateStage($file, 'approved')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Approved</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'approved'} | filter:query | orderBy:'-id' track by po.id">
+								<purchase-order>
+								</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('approved') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage meeting"  on-drop="updateStage($file, 'awaiting deposit')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Awaiting Deposit</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'awaiting deposit'} | filter:query | orderBy:'-id' track by po.id">
+								<purchase-order>
+								</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('awaiting deposit') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage proposal" on-drop="updateStage($file, 'in production')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>In Production</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'in production'} | filter:query | orderBy:'-id' track by po.id">
+								<purchase-order>
+									</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('in production') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage closed-won" on-drop="updateStage($file, 'received')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Received</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'received'} | filter:query | orderBy:'-id' track by po.id">
+							<purchase-order>
+							</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('received') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage closed-lost" on-drop="updateStage($file, 'invoiced')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Invoiced</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'invoiced'} | filter:query | orderBy:'-id' track by po.id">
+								<purchase-order>
+									</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('invoiced') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+				<md-card class="stage closed-lost" on-drop="updateStage($file, 'closed')">
+					<md-card-title>
+						<md-card-title-text>
+							<h4>Closed</h4>
+						</md-card-title-text>
+					</md-card-title>
+					<md-card-content>
+						<div ng-repeat="po in poList | filter:{status:'closed'} | filter:query | orderBy:'-id' track by po.id">
+								<purchase-order>
+									</purchase-order>
+						</div>
+					</md-card-content>
+					<md-card-actions>
+						<h5>Amount: ฿{{getTotal('closed') | number}}</h5>
+					</md-card-actions>
+				</md-card>
+			</div>
 
+
+
+				<!--
 				<md-card class="po" ng-class="{'active': active}" ng-repeat="po in poList | filter: query track by po.id ">
 					<md-card-title class="md-primary title" ng-show="active" layout="row" layout-align="center center">
 						<md-card-title-text ng-click="active=false">
@@ -309,14 +420,12 @@
 														</td>
 													</tr>
 
-													<!--
 													<tr>
 														<td><span>Fabric Image</span></td>
 														<td>
 															<img ng-src="{{pillow.fabric.image.url}}" />
 														</td>
 													</tr>
-														-->
 													<tr>
 														<td><span>Remarks</span></td>
 														<td>
@@ -415,10 +524,11 @@
 							</section>
 
 						</div>
-					</div>
-				</md-card-content>
+				
+					</md-card-content>
 
-			</md-card>
+				</md-card>
+			-->
 
 		</md-content>
 

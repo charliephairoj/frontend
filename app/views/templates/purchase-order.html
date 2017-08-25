@@ -1,0 +1,16 @@
+<md-card class="acknowledgement" drag-on="po" ng-class="po.status" ng-click="showPurchaseOrder(po)">
+        
+        <md-card-title>
+            <h4>{{::po.id}}</h4>
+            <h4 class="delivery-date">{{::po.receive_date | date: "MMM d, yyyy"}}</h4>
+        </md-card-title>
+        <md-card-content>
+            
+            <h4 class="customer">{{::po.supplier.name}}</h4>
+            <h4 ng-if="status">{{::po.status | uppercase}}</h4>
+            <h4 class="project" ng-if="po.project">{{::po.project.codename + ": " + po.room.description || ''}}</h4>
+            
+            <h4 class="amount">฿{{::po.total || 0 | number}}</h4>
+            
+        </md-card-content>
+    </md-card>
