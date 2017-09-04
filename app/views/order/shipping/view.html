@@ -26,27 +26,28 @@
 				<div class="order-date">DATE</div>
 				<div class="customer">CUSTOMER</div>
 				<div class="project">PROJECT</div>
+				<div class="room">ROOM</div>
 				<div class="delivery-date">SHIP DATE</div>
 				<div class="status">STATUS</div>
 			</div>
 		</md-toolbar>
-		<md-content>
+		<md-content on-scroll-end="loadNext()">
 		
 			
 		
-	    	<div class="outer-container" on-scroll-end="loadNext()">
+	    	<div class="outer-container">
 	    		<ul class="inner-container">
 		        	<li class="item-container" ng-repeat="shipping in shippingList | filter:query" >
-		        		<a class="item" ng-href="#/order/shipping/{{shipping.id}}">
+		        		<div class="item" ng-click="showShipping(shipping);">
 							<div class="id">{{shipping.id}}</div>
 							<div class="ack-id">{{shipping.acknowledgement.id}}</div>
 							<div class="order-date">{{shipping.time_created | date: "MMM d, yyyy"}}</div>
 							<div class="customer">{{shipping.customer.name}}</div>
-							<div class="project-id">{{shipping.acknowledgement.project.id}}</div>
-							<div class="project">{{shipping.acknowledgement.project.codename}}</div>
+							<div class="project">{{shipping.project.codename}}</div>
+							<div class="room">{{shipping.room.description}}</div>
 							<div class="delivery-date">{{shipping.delivery_date | date: "MMM d, yyyy"}}</div>
 							<div class="status" ng-class="po.status.toLowerCase()">{{shipping.acknowledgement.status}}</div>
-		        		</a>
+						</div>
 	        		
 	        		
 		        	</li>

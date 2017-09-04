@@ -165,12 +165,64 @@
 										<!--
 	  								  	<md-icon md-font-icon="material-icons">comment</md-icon>
 											-->
-										<textarea ng-model="shipping.remarks"></textarea>
+										<textarea ng-model="shipping.comments"></textarea>
 							            <div class="hint">Any other details?</div>
 
 									</md-input-container>
 								</div>
-				            </div>
+							</div>
+							<!--
+								Project
+							-->
+		
+							<div class="project">
+									<md-autocomplete flex required
+										md-items="project in searchProjects(projectSearchText)"
+										md-selected-item="selectedProject"
+										md-selected-item-change="addProject(selectedProject)"
+										md-search-text="projectSearchText"
+										md-search-text-change="updateProjectName(projectSearchText)"
+										md-item-text="project.codename"
+										md-floating-label="Project"
+										md-no-cache="true"
+										md-min-length="0">
+										<md-item-template>
+											<span md-highlight-text="projectSearchText">{{project.codename}}</span>
+										</md-item-template>
+									</md-autocomplete>
+	
+									<md-autocomplete flex required
+										md-items="room in searchRooms(roomSearchText)"
+										md-selected-item="selectedRoom"
+										md-selected-item-change="addRoom(selectedRoom)"
+										md-search-text="roomSearchText"
+										md-search-text-change="updateRoomName(roomSearchText)"
+										md-item-text="room.description"
+										md-floating-label="Room"
+										md-no-cache="true"
+										md-min-length="0">
+										<md-item-template>
+											<span md-highlight-text="roomSearchText">{{room.description}}</span>
+										</md-item-template>
+									</md-autocomplete>
+	
+									<md-autocomplete flex required
+										md-items="phase in searchPhases(phaseSearchText)"
+										md-selected-item="selectedPhase"
+										md-selected-item-change="addPhase(selectedPhase)"
+										md-search-text="phaseSearchText"
+										md-search-text-change="updatePhaseName(phaseSearchText)"
+										md-item-text="phase.description"
+										md-floating-label="Phase"
+										md-no-cache="true"
+										md-min-length="0">
+										<md-item-template>
+											<span md-highlight-text="phaseSearchText">{{phase.description}}</span>
+										</md-item-template>
+									</md-autocomplete>
+							</div>
+							
+						
 
 					</md-card-content>
 				</md-card>

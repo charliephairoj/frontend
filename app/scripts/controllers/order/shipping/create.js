@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',
-function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $location, scanner, $log) {
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log', 'Room', 'Project',
+function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $location, scanner, $log, Room, Project) {
 
 	var fetchingAck = true;
 
@@ -195,6 +195,10 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 			$scope.shipping.acknowledgement = Acknowledgement.get({id: ack.id},
 				function (resp) {
 					$scope.shipping.acknowledgement = {id: ack.id};
+					
+					//Add project and room to the shipping
+					$scope.shipping.project = $scope.shipping.acknowledgement.project;
+					$scope.shipping.room = $scope.shipping.acknowledgement.room;
 
 					/* Get Customer from the server
 					 */
@@ -223,7 +227,110 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 				}
 			)
 		}
-    };
+	};
+	
+
+	/**
+	 * PROJECT SECTION
+	 * 
+	 * Describes the projects, room and phases
+	 */
+	$scope.projects = Project.query({page_size:9999, limit:0});
+	
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searchProjects = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var projects = [];
+		for (var i = 0; i < $scope.projects.length; i++) {
+			if (angular.lowercase($scope.projects[i].codename).indexOf(lowercaseQuery) !== -1) {
+				projects.push($scope.projects[i]);
+			}
+		}
+		console.log(projects);
+		return projects;
+	};
+	
+	$scope.addProject = function (project) {
+		$scope.shipping.project = project;
+		$scope.tempSave();
+	};
+	
+	/**
+	 * Update the project's name if a project is not selected yet. This is incase, the project
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Project
+	 * @returns {null} 
+	 */
+
+	$scope.updateProjectName = function (projectName) {
+		$scope.shipping.project = $scope.shipping.project || {codename: ''};
+	
+		if (!$scope.shipping.project.id) {
+			$scope.shipping.project.codename = projectName || '';
+		} else {
+			if ($scope.shipping.project.codename.indexOf(projectName) == -1) {
+				$scope.shipping.project = {codename: projectName};
+			}
+		}
+	};
+	
+	/**
+	 * Returns a list of rooms whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against room.description
+	 * @returns {Array} - An array of rooms whose codename matches the search term
+	 */
+	$scope.searchRooms = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var rooms = [];
+
+		if ($scope.shipping.project) {
+			if ($scope.shipping.project.rooms){
+				for (var i = 0; i < $scope.shipping.project.rooms.length; i++) {
+					if (angular.lowercase($scope.shipping.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
+						rooms.push($scope.shipping.project.rooms[i]);
+					}
+				}
+			}
+		}
+		
+		
+		return rooms;
+	};
+	
+	$scope.addRoom = function (room) {
+		$scope.shipping.room = angular.copy(room);
+		$scope.tempSave();
+	};
+	
+	/**
+	 * Update the room's name if a room is not selected yet. This is incase, the room
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Room
+	 * @returns {null} 
+	 */
+
+	$scope.updateRoomName = function (roomName) {
+		$scope.shipping.room = $scope.shipping.room || {description: ''};
+	
+		if (!$scope.shipping.room.id) {
+			$scope.shipping.room.description = roomName || '';
+		} else {
+			// If add a new room where there is a room with a similar name
+			if ($scope.shipping.room.description.indexOf(roomName) == -1) {
+
+				$scope.shipping.room = {description: roomName};
+			}
+		}
+	};
+
 
     $scope.$watch('query', function (q) {
 		if (q) {

@@ -9057,6 +9057,189 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 	};
 
 
+	/**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showAcknowledgement = function (ack) {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/view-acknowledgement.html',
+			controllerAs: 'ctrl',
+			locals: {
+				'customers': $scope.customers,
+				'acknowledgement': ack
+			},
+			controller: ['$scope', '$mdDialog', 'customers', 'acknowledgement', function ($scope, $mdDialog, customers, acknowledgement) {
+				$scope.ack = Acknowledgement.get({'id':acknowledgement.id});
+				$scope.customers = customers;
+				$scope.tempComponent = {};
+				$scope.openAttachment = function (link) {
+					window.open(link);
+				};
+				
+				/**
+				 * FILES SECTIONs
+				 *
+				 * This section deals with files that are associated or to be associated with this acknowledgement
+				 */
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addFiles = function (files, acknowledgement) {
+					
+					$scope.ack.files = ack.files || []; 
+				
+					/* jshint ignore:start */
+					
+					Notification.display('Uploading files', 2000);
+					
+					for (var i = 0; i < files.length; i++) {
+						$scope.ack.files.push({filename: files[i].name});
+					
+						var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+						promise.then(function (result) {
+							var data = result.data || result;
+							for (var h = 0; h < $scope.ack.files.length; h++) {
+								if (data.filename == $scope.ack.files[h].filename) {
+									angular.extend($scope.ack.files[h], data);
+								}
+							}
+							
+							Notification.display('File Uploaded', 2000);
+
+							$scope.ack.$update(function (resp) {
+								Notification.display('Acknowledgement ' + $scope.ack.id + ' saved.', 2000);
+								console.log($scope.ack);
+							}, function (e){
+								Notification.display(e, 0);
+							});
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							Notification.display(e.message, 0);
+							
+						});
+					}
+				
+					/* jshint ignore:end */
+				};
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addImage = function (files, item) {
+					
+					if (files.length > 0) {
+						/* jshint ignore:start */	
+						
+						Notification.display('Uploading image...');
+							
+						var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
+						promise.then(function (result) {
+							var data = result.data || result;
+							item.image = data
+							Notification.display('Image uploaded.');
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							
+							Notification.display(e.message, 0);
+							
+						});
+						/* jshint ignore:end */
+					}
+				};
+
+
+				/**
+				 * FABRIC SECTION
+				 * 
+				 * This section deals with the product listing and search
+				 */
+				
+				// Inital list of upholsteries
+				$scope.fabricSearchText = null;
+				$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
+				
+				// Watch on productSearchText to get products from the server
+				$scope.retrieveFabrics = function (query) {		
+					if (query) {
+						Fabric.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.fabrics.indexOfById(responses[i]) === -1) {
+									$scope.fabrics.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+				
+				/**
+				 * Returns a list of fabric whose description matches the search term
+				 *
+				 * @public
+				 * @param {String} query - Search term to apply against fabric.description
+				 * @returns {Array} - An array of fabrics whose description matches the search term
+				 */
+				$scope.searchFabrics = function (query) {
+					var lowercaseQuery = angular.lowercase(query.trim());
+					var fabrics = [];
+					for (var i = 0; i < $scope.fabrics.length; i++) {
+						try{
+							if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+								fabrics.push($scope.fabrics[i]);
+							}
+						} catch(e) {
+							
+						}
+						
+					}
+					return fabrics;
+				};
+				
+				$scope.addComponent = function (item, component) {
+					item.components.push(angular.copy(component));
+
+					$scope.tempComponent = {};
+
+				}
+	
+				/**
+				 * Save the acknowledgement
+				 * 
+				 * @public
+				 * @param {Object} acknowledgement - The acknowledgement to be saved
+				 */
+				$scope.update = function (acknowledgement) {
+					
+					Notification.display("Updating order #" + acknowledgement.id);
+					
+					acknowledgement.$update(function () {
+						Notification.display("Order #" + acknowledgement.id + " updated");
+					});
+				};
+				
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				}
+			}],
+			clickOutsideToClose: true
+		});
+	};
+
+
 	$scope.updateStage = function (po, status) {
 
 		if (po.status.toLowerCase() == "approved" && po.approval_pass || 1==1) {
@@ -9582,8 +9765,8 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 
 
 angular.module('employeeApp')
-.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log',
-function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $location, scanner, $log) {
+.controller('OrderShippingCreateCtrl', ['$scope', 'Acknowledgement', 'Customer', '$filter', '$mdToast', 'Shipping', '$location', 'scanner', '$log', 'Room', 'Project',
+function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $location, scanner, $log, Room, Project) {
 
 	var fetchingAck = true;
 
@@ -9777,6 +9960,10 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 			$scope.shipping.acknowledgement = Acknowledgement.get({id: ack.id},
 				function (resp) {
 					$scope.shipping.acknowledgement = {id: ack.id};
+					
+					//Add project and room to the shipping
+					$scope.shipping.project = $scope.shipping.acknowledgement.project;
+					$scope.shipping.room = $scope.shipping.acknowledgement.room;
 
 					/* Get Customer from the server
 					 */
@@ -9805,7 +9992,110 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 				}
 			)
 		}
-    };
+	};
+	
+
+	/**
+	 * PROJECT SECTION
+	 * 
+	 * Describes the projects, room and phases
+	 */
+	$scope.projects = Project.query({page_size:9999, limit:0});
+	
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searchProjects = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var projects = [];
+		for (var i = 0; i < $scope.projects.length; i++) {
+			if (angular.lowercase($scope.projects[i].codename).indexOf(lowercaseQuery) !== -1) {
+				projects.push($scope.projects[i]);
+			}
+		}
+		console.log(projects);
+		return projects;
+	};
+	
+	$scope.addProject = function (project) {
+		$scope.shipping.project = project;
+		$scope.tempSave();
+	};
+	
+	/**
+	 * Update the project's name if a project is not selected yet. This is incase, the project
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Project
+	 * @returns {null} 
+	 */
+
+	$scope.updateProjectName = function (projectName) {
+		$scope.shipping.project = $scope.shipping.project || {codename: ''};
+	
+		if (!$scope.shipping.project.id) {
+			$scope.shipping.project.codename = projectName || '';
+		} else {
+			if ($scope.shipping.project.codename.indexOf(projectName) == -1) {
+				$scope.shipping.project = {codename: projectName};
+			}
+		}
+	};
+	
+	/**
+	 * Returns a list of rooms whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against room.description
+	 * @returns {Array} - An array of rooms whose codename matches the search term
+	 */
+	$scope.searchRooms = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var rooms = [];
+
+		if ($scope.shipping.project) {
+			if ($scope.shipping.project.rooms){
+				for (var i = 0; i < $scope.shipping.project.rooms.length; i++) {
+					if (angular.lowercase($scope.shipping.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
+						rooms.push($scope.shipping.project.rooms[i]);
+					}
+				}
+			}
+		}
+		
+		
+		return rooms;
+	};
+	
+	$scope.addRoom = function (room) {
+		$scope.shipping.room = angular.copy(room);
+		$scope.tempSave();
+	};
+	
+	/**
+	 * Update the room's name if a room is not selected yet. This is incase, the room
+	 * does not yet exist.
+	 * @public
+	 * @param {String} projectName - Name of the Room
+	 * @returns {null} 
+	 */
+
+	$scope.updateRoomName = function (roomName) {
+		$scope.shipping.room = $scope.shipping.room || {description: ''};
+	
+		if (!$scope.shipping.room.id) {
+			$scope.shipping.room.description = roomName || '';
+		} else {
+			// If add a new room where there is a room with a similar name
+			if ($scope.shipping.room.description.indexOf(roomName) == -1) {
+
+				$scope.shipping.room = {description: roomName};
+			}
+		}
+	};
+
 
     $scope.$watch('query', function (q) {
 		if (q) {
@@ -10001,8 +10291,8 @@ angular.module('employeeApp')
  * All shipped orders view
  */
 angular.module('employeeApp')
-.controller('OrderShippingViewCtrl', ['$scope', 'Shipping', '$filter', '$mdToast',
-function ($scope, Shipping, $filter, $mdToast) {
+.controller('OrderShippingViewCtrl', ['$scope', 'Shipping', '$filter', '$mdToast', '$mdDialog', 'Fabric', 'Upholstery', 'Notification',
+function ($scope, Shipping, $filter, $mdToast, $mdDialog, Fabric, Upholstery, Notification) {
 	
 	/*
 	 * Vars and flags
@@ -10051,10 +10341,12 @@ function ($scope, Shipping, $filter, $mdToast) {
 	 */
 	$scope.loadNext = function () {
 		if (!fetching) {
+			fetching = true;
 			$mdToast.show($mdToast
 				.simple()
 				.content('Loading more shipping manifests...')
 				.hideDelay(0));
+				
 			Shipping.query({
 				offset: $scope.shippingList.length,
 				limit: 20
@@ -10063,8 +10355,195 @@ function ($scope, Shipping, $filter, $mdToast) {
 				for (var i = 0; i < resources.length; i++) {
 					$scope.shippingList.push(resources[i]);
 				}
+
+				fetching = false;
+			}, function () {
+				fetching = false;
 			});
 		}
+	};
+
+
+	/**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showShipping = function (shipping) {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/view-shipping.html',
+			controllerAs: 'ctrl',
+			locals: {
+				//'customers': $scope.customers,
+				'shipping': shipping
+			},
+			controller: ['$scope', '$mdDialog', 'shipping', function ($scope, $mdDialog, shipping) {
+				$scope.shipping = Shipping.get({'id':shipping.id});
+				//$scope.customers = customers;
+				$scope.tempComponent = {};
+				$scope.openAttachment = function (link) {
+					window.open(link);
+				};
+				
+				/**
+				 * FILES SECTIONs
+				 *
+				 * This section deals with files that are associated or to be associated with this acknowledgement
+				 */
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addFiles = function (files, acknowledgement) {
+					
+					$scope.ack.files = ack.files || []; 
+				
+					/* jshint ignore:start */
+					
+					Notification.display('Uploading files', 2000);
+					
+					for (var i = 0; i < files.length; i++) {
+						$scope.ack.files.push({filename: files[i].name});
+					
+						var promise = FileUploader.upload(files[i], "/api/v1/acknowledgement/file/");
+						promise.then(function (result) {
+							var data = result.data || result;
+							for (var h = 0; h < $scope.ack.files.length; h++) {
+								if (data.filename == $scope.ack.files[h].filename) {
+									angular.extend($scope.ack.files[h], data);
+								}
+							}
+							
+							Notification.display('File Uploaded', 2000);
+
+							$scope.ack.$update(function (resp) {
+								Notification.display('Acknowledgement ' + $scope.ack.id + ' saved.', 2000);
+								console.log($scope.ack);
+							}, function (e){
+								Notification.display(e, 0);
+							});
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							Notification.display(e.message, 0);
+							
+						});
+					}
+				
+					/* jshint ignore:end */
+				};
+
+				/**
+				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
+				 * @public
+				 * @param {Array} files - Array of files with raw data
+				 * @returns {null}
+				 */
+				$scope.addImage = function (files, item) {
+					
+					if (files.length > 0) {
+						/* jshint ignore:start */	
+						
+						Notification.display('Uploading image...');
+							
+						var promise = FileUploader.upload(files[0], "api/v1/acknowledgement/item/image");
+						promise.then(function (result) {
+							var data = result.data || result;
+							item.image = data
+							Notification.display('Image uploaded.');
+							
+						}, function (e) {
+							$log.error(JSON.stringify(e));
+							
+							Notification.display(e.message, 0);
+							
+						});
+						/* jshint ignore:end */
+					}
+				};
+
+
+				/**
+				 * FABRIC SECTION
+				 * 
+				 * This section deals with the product listing and search
+				 */
+				
+				// Inital list of upholsteries
+				$scope.fabricSearchText = null;
+				$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
+				
+				// Watch on productSearchText to get products from the server
+				$scope.retrieveFabrics = function (query) {		
+					if (query) {
+						Fabric.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.fabrics.indexOfById(responses[i]) === -1) {
+									$scope.fabrics.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+				
+				/**
+				 * Returns a list of fabric whose description matches the search term
+				 *
+				 * @public
+				 * @param {String} query - Search term to apply against fabric.description
+				 * @returns {Array} - An array of fabrics whose description matches the search term
+				 */
+				$scope.searchFabrics = function (query) {
+					var lowercaseQuery = angular.lowercase(query.trim());
+					var fabrics = [];
+					for (var i = 0; i < $scope.fabrics.length; i++) {
+						try{
+							if (angular.lowercase($scope.fabrics[i].description).indexOf(lowercaseQuery) !== -1) {
+								fabrics.push($scope.fabrics[i]);
+							}
+						} catch(e) {
+							
+						}
+						
+					}
+					return fabrics;
+				};
+				
+				$scope.addComponent = function (item, component) {
+					item.components.push(angular.copy(component));
+
+					$scope.tempComponent = {};
+
+				}
+	
+				/**
+				 * Save the acknowledgement
+				 * 
+				 * @public
+				 * @param {Object} acknowledgement - The acknowledgement to be saved
+				 */
+				$scope.update = function (acknowledgement) {
+					
+					Notification.display("Updating order #" + acknowledgement.id);
+					
+					acknowledgement.$update(function () {
+						Notification.display("Order #" + acknowledgement.id + " updated");
+					});
+				};
+				
+				
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				}
+			}],
+			clickOutsideToClose: true
+		});
 	};
 }]);
 
