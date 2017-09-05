@@ -1,10 +1,10 @@
-<md-card class="view-acknowledgement-component" file-drop="addFiles($files, ack)" file-drop-class="ack-drag-active">
+<md-card class="view-acknowledgement-component" file-drop="addFiles($files, po)" file-drop-class="ack-drag-active">
     <md-card-title class="md-primary" layout="row" layout-align="center center">
         <md-card-title-text >
-            <span>Acknowledgement {{::ack.id}}</span>
+            <span>Purchase Order {{::po.id}}</span>
         </md-card-title-text>
         <div class="filler" flex ></div>
-        <md-button class="md-icon-button md-raised md-primary" ng-click="update(ack)">
+        <md-button class="md-icon-button md-raised md-primary" ng-click="update(po)">
             <md-tooltip>Save</md-tooltip>
             <i class="material-icons">save</i>
         </md-button>
@@ -18,7 +18,7 @@
 
         <div class="item-container">
             <div class="file-placeholder-container">
-                <div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
+                <div class="drag-placeholder" ng-class="{'no-files': po.files.length===0 || !po.files}">
                     <h2>Drop Files Here</h2>
                 </div>
                 <section layout="row">
@@ -26,38 +26,42 @@
                         <md-card-content>
                             <table>
                                 <tr>
-                                    <td>Customer</td>
-                                    <td><a ng-href="#/contact/customer/{{ack.customer.id}}">{{ack.customer.name}}</a></td>
+                                    <td>Supplier</td>
+                                    <td><a ng-href="#/contact/supplier/{{po.supplier.id}}" target="_blank">{{po.supplier.name}}</a></td>
                                 </tr>
-                                <tr ng-if="::ack.customer.telephone">
+                                <tr ng-if="::po.supplier.telephone">
                                     <td>Telephone</td>
-                                    <td>{{ack.customer.telephone}}</td>
+                                    <td>{{po.supplier.telephone}}</td>
                                 </tr>
-                                <tr ng-if="::ack.customer.fax">
+                                <tr ng-if="::po.supplier.fax">
                                     <td>Fax</td>
-                                    <td>{{ack.customer.fax}}</td>
+                                    <td>{{po.supplier.fax}}</td>
                                 </tr>
-                                <tr ng-if="::ack.customer.email">
+                                <tr ng-if="::po.supplier.email">
                                     <td>Email</td>
-                                    <td>{{ack.customer.email}}</td>
+                                    <td>{{po.supplier.email}}</td>
                                 </tr>
-                                <tr ng-if="::ack.customer.website">
+                                <tr ng-if="::po.supplier.website">
                                     <td>Website</td>
-                                    <td>{{ack.customer.website}}</td>
+                                    <td>{{po.supplier.website}}</td>
                                 </tr>
                                 <tr>
                                     <td>Acknowledged By</td>
-                                    <td>{{ack.employee.name}}</td>
+                                    <td>{{po.employee.name}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Delivery Date</td>
-                                    <td><md-datepicker ng-model="ack.delivery_date"></md-datepicker></td>
+                                    <td>Order Date</td>
+                                    <td><md-datepicker ng-model="po.order_date"></md-datepicker></td>
+                                </tr>
+                                <tr>
+                                    <td>Receive Date</td>
+                                    <td><md-datepicker ng-model="po.receive_date"></md-datepicker></td>
                                 </tr>
                                 <tr>
                                     <td>Order Status</td>
                                     <td>
-                                        <md-select ng-model="ack.status" ng-disabled="::!currentUser.hasPermission('change_acknowledgement')">
-                                            <md-option value="acknowledged">Acknowledged</md-option>
+                                        <md-select ng-model="po.status" ng-disabled="::!currentUser.hasPermission('change_purchase_order')">
+                                            <md-option value="awaiting approval">Awaiting Approval</md-option>
                                             <md-option value="awaiting deposit">Awaiting Deposit</md-option>
                                             <md-option value="in production">In Production</md-option>
                                             <md-option value="ready to ship">Ready to Ship</md-option>
@@ -71,28 +75,25 @@
                                 </tr>
                                 <tr>
                                     <td>VAT</td>
-                                    <td><input type="text" ng-model="ack.vat"/></td>
+                                    <td><input type="text" ng-model="po.vat"/></td>
                                 </tr>
-                                <tr>
-                                    <td>PO #</td>
-                                    <td><input type="text" ng-model="ack.po_id"/></td>
-                                </tr>
+                                
                                 <tr>
                                     <td>Project</td>
-                                    <td><a ng-href="#/project/{{ack.project.id}}">{{ack.project.codename}}</a></td>
+                                    <td><a ng-href="#/project/{{po.project.id}}">{{po.project.codename}}</a></td>
                                 </tr>
                                 <tr>
                                     <td>Room</td>
-                                    <td><a ng-href="#/project/{{ack.project.id}}">{{ack.room.description}}</a></td>
+                                    <td><a ng-href="#/project/{{po.project.id}}">{{po.room.description}}</a></td>
                                 </tr>
                                 <tr>
                                     <td>Phase</td>
-                                    <td><a ng-href="#/project/{{ack.project.id}}">{{ack.phase.description}}</a></td>
+                                    <td><a ng-href="#/project/{{po.project.id}}">{{po.phase.description}}</a></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
                                     <td>
-                                        <textarea ng-model="ack.remarks">
+                                        <textarea ng-model="po.comments">
                                         </textarea>
                                     </td>
                                 </tr>
@@ -100,9 +101,17 @@
                         </md-card-content>
                     </md-card>
 
-                    <section class="files" file-drop="addFiles($files, ack)" file-drop-class="files-drag-active">
+                    <section class="files" file-drop="addFiles($files, po)" file-drop-class="files-drag-active">
                         <div class="files">
-                            <md-card class="file" ng-repeat="file in ack.files" ng-class="{'uploaded': file.id}" ng-click="openAttachment(file.url)">
+                            <md-card class="file" ng-class="{'uploaded': po.pdf.id}" ng-click="openAttachment(po.pdf.url)">
+                                <md-card-title>
+                                    <md-card-title-text layout="row">
+                                        <i class="material-icons">attachment</i>
+                                        <span class="md-headline">{{po.pdf.filename}}</span>
+                                    </md-card-title-text>
+                                </md-card-title>
+                            </md-card>
+                            <md-card class="file" ng-repeat="file in po.files" ng-class="{'uploaded': file.id}" ng-click="openAttachment(file.url)">
                                 <md-card-title>
                                     <md-card-title-text layout="row">
                                         <i class="material-icons">attachment</i>
@@ -117,9 +126,44 @@
 
             </div>
             <section>
-                <md-subheader class="md-primary md-no-sticky">Products</md-subheader>
+                <md-card class="add-product" layout="row" layout-align="start center">
+                    <md-card-actions layout="column" layout-align="center center">
+                        <md-button class="add md-accent md-raised md-icon-button" ng-click="addItem(selectedSupply || {description: supplySearchText});supplySearchText=''">
+                            <md-tooltip>Add Product</md-tooltip>
+                            <i class="material-icons">add_shopping_cart</i>
+                        </md-button>
+                        <md-button class="add md-accent md-raised md-icon-button" ng-click="listView=true">
+                            <md-tooltip>View as List</md-tooltip>
+                            <i class="material-icons"><i class="material-icons">list</i></i>
+                        </md-button>
+                        <md-button class="add md-accent md-raised md-icon-button" ng-click="listView=false">
+                            <md-tooltip>View as Cards</md-tooltip>
+                            <i class="material-icons"><i class="material-icons">view_module</i></i>
+                        </md-button>
+                    </md-card-actions>
+                    <md-card-content layout="row" layout-align="start center" flex="auto">
+                        <md-autocomplete flex required 
+                            md-items="supply in searchSupplies(supplySearchText)" 
+                            md-search-text-change="retrieveSupplies(supplySearchText)"
+                            md-selected-item="selectedSupply"
+                            md-search-text="supplySearchText"
+                            md-item-text="supply.description"
+                            md-no-cache="true"
+                            md-floating-label="Supply Description"
+                            md-min-length="0">
+                            <md-item-template>
+                                <span md-highlight-text="supplySearchText">{{supply.description}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </md-card-content>
+                    <md-card-title-media>
+                        <div class="md-media-md card-media">
+                            <img ng-src="{{tempProduct.image.url}}">
+                        </div>
+                    </md-card-title-media>
+                </md-card>
                 <div class="items">
-                    <md-card class="item" ng-repeat="item in ack.items" file-drop="addImage($files, item)" file-drop-class="item-drag-active">
+                    <md-card class="item" ng-repeat="item in po.items" file-drop="addImage($files, item)" file-drop-class="item-drag-active">
                         <div class="drag-placeholder">
                             <h2>Drop Image Here</h2>
                         </div>
@@ -152,7 +196,7 @@
                                             <span>Unit Price<span>
                                         </td>
                                         <td>
-                                            <input name="price" type="number" ng-model="item.unit_price" required />
+                                            <input name="price" type="number" ng-model="item.unit_cost" required />
                                         </td>
                                     </tr>
                                     <tr>
@@ -179,105 +223,8 @@
                                             <input type="number" ng-model="item.height" min="0" required />
                                         </td>
                                     </tr>
-                                    <tr class="fabric">
-                                        <td><span>Fabric</span></td>
-                                        <td>
-                                            <md-autocomplete flex
-                                                md-items="fabric in searchFabrics(fabricSearchText)"
-                                                md-search-text-change="retrieveFabrics(fabricSearchText)"
-                                                md-selected-item="item.fabric"
-                                                md-search-text="fabricSearchText"
-                                                md-item-text="fabric.description"
-                                                md-no-cache="true"
-                                                md-min-length="0">
-                                            <md-item-template>
-                                                <span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
-                                            </md-item-template>
-                                            <div ng-messages="true">
-                                                <div class="hint" ng-message="true">What's the number on their purchase order?</div>
-                                            </div>
-                                        </md-autocomplete>
-                                        </td>
-                                    <tr>
-                                        <td><span>Fabric Image</span></td>
-                                        </td>
-                                        <td>
-                                            <img ng-src="{{item.fabric.image.url}}" />
-                                        </td>
-                                    </tr>
-                                    </tr>
-                                    <tr class="fabric" ng-repeat="pillow in item.pillows">
-                                        <td><span>{{pillow.type}} pillow</span></td>
-                                        <td>
-                                            <md-autocomplete flex
-                                                md-items="fabric in searchFabrics(fabricSearchText)"
-                                                md-search-text-change="retrieveFabrics(fabricSearchText)"
-                                                md-selected-item="pillow.fabric"
-                                                md-search-text="fabricSearchText"
-                                                md-item-text="fabric.description"
-                                                md-no-cache="true"
-                                                md-min-length="0">
-                                            <md-item-template>
-                                                <span md-highlight-text="fabricSearchText">{{fabric.description}}</span>
-                                            </md-item-template>
-                                            <div ng-messages="true">
-                                                <div class="hint" ng-message="true">What's the number on their purchase order?</div>
-                                            </div>
-                                        </md-autocomplete>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Add Component</td>
-                                        <td>
-                                            <table class="add-components-table">
-                                                <thead>
-                                                    <tr>
-                                                        <td>
-                                                            <md-input-container class="description">
-                                                                <label>Component Description</label>
-                                                                <input type="text" ng-model="tempComponent.description" />
-                                                            </md-input-container>
-                
-                                                        </td>
-                                                        <td>
-                                                            <md-input-container class="quantity">
-                                                                <label>Quantity</label>
-                                                                <input type="number" ng-model="tempComponent.quantity" />
-                                                            </md-input-container>
-                                                        </td>
-                                                        <td>
-                                                            <md-button class="add md-accent md-raised md-icon-button" ng-click="addComponent(item, tempComponent)">
-                                                                <md-tooltip>Add Component</md-tooltip>
-                                                                <i class="material-icons">add_shopping_cart</i>
-                                                            </md-button>
-                                                        </td>
-                                                    </tr>
-                                                </thead>
-                                                
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr ng-if="item.components.length > 0">
-                                        <td>Components</td>
-                                        <td>
-                                            <table class="components-table">
-                                                <thead>
-                                                    <tr>
-                                                        <td>Description
-                                                        </td>
-                                                        <td>Qty
-                                                        </td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr ng-repeat="component in item.components track by $index">
-                                                        <td>{{component.description}}</td>
-                                                        <td>{{component.quantity}}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                    
+                                   
                                     <!--
                                     <tr>
                                         <td><span>Fabric Image</span></td>

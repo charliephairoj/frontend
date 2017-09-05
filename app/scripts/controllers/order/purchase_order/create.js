@@ -895,7 +895,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		// Update supply with new supplier
 		if ($scope.isNewSupply(supply, supplier)) {
 			var supplierData = angular.copy(supplier);
-			supplierData.cost = supply.cost;
+			supplierData.cost = supply.unit_cost || supply.cost;
 
 			// Move the supplier id
 			supplierData.supplier = {'id': supplierData.id};

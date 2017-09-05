@@ -19,7 +19,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	var notification = Notification.display('Retrieving acknowledgements...', false);
 	$scope.tempComponent = {};
 	$scope.query = {};
-	
+	$scope.fabrics = [];
+
 	/* 
 	 * Set default search from search url
 	 */
@@ -46,6 +47,8 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 				
 			}
 		}
+
+		$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
 	});
 
 
@@ -123,9 +126,11 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 			controllerAs: 'ctrl',
 			locals: {
 				'customers': $scope.customers,
-				'acknowledgement': ack
+				'acknowledgement': ack,
+				'fabrics': $scope.fabrics
 			},
-			controller: function ($scope, $mdDialog, customers, acknowledgement) {
+			controller: function ($scope, $mdDialog, customers, acknowledgement, fabrics) {
+				$scope.fabrics = fabrics;
 				$scope.ack = Acknowledgement.get({'id':acknowledgement.id});
 				$scope.customers = customers;
 				$scope.tempComponent = {};
@@ -222,7 +227,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 				
 				// Inital list of upholsteries
 				$scope.fabricSearchText = null;
-				$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
+				//$scope.fabrics = Fabric.query({page_size:9999, offset:0, limit:0});
 				
 				// Watch on productSearchText to get products from the server
 				$scope.retrieveFabrics = function (query) {		

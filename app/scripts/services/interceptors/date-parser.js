@@ -9,7 +9,8 @@ angular.module('employeeApp.services')
 		'last_modified',
 		'occurred_at',
 		'employment_date',
-		'receive_date'
+		'receive_date',
+		'order_date'
 	]
 	
 	function parseObj(data) {
