@@ -21316,7 +21316,7 @@ angular.module('employeeApp.services')
 
 			if (rejection.status === 403) {
 				console.log(rejection);
-				//$window.location.href = '/login';
+				$window.location.href = '/login';
 			}
 
 			return $q.reject(rejection);
