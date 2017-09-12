@@ -749,6 +749,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 
 		if (!purchaseOrder.hasOwnProperty('supplier')) {
 			throw new Error("Please select a supplier");
+		} else {
+			if (!purchaseOrder.supplier.name) {
+				throw new Error("Please add a name for the supplier.");
+			}
+
+			if (!purchaseOrder.supplier.telephone) {
+				throw new Error("Please add a telephone number for " + purchaseOrder.supplier.name);
+			}
 		}
 
 		if (!purchaseOrder.receive_date instanceof Date ||

@@ -297,8 +297,11 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveCustomers = function (query) {
+		console.log(query);
 		if (query) {
+			console.log(query);
 			Customer.query({q:query}, function (responses) {
+				console.log(responses);
 				for (var i = 0; i < responses.length; i++) {
 					if ($scope.customers.indexOfById(responses[i]) === -1) {
 						$scope.customers.push(responses[i]);
@@ -339,6 +342,9 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 	
 	$scope.updateCustomerName = function (customerName) {
+
+		$scope.retrieveCustomers(customerName);
+		
 		$scope.ack.customer = $scope.ack.customer || {name: '', addresses: []};
 		
 		if (!$scope.ack.customer.id) {

@@ -18,7 +18,21 @@ angular.module('employeeApp.services')
 
 			if (rejection.status === 403) {
 				console.log(rejection);
-				$window.location.href = '/login';
+				console.log($window);
+				var hash = $window.location.hash;
+				console.log(hash);
+				var url = '/login';
+				console.log((hash !== '' && hash !== '#/' && hash))
+				if (hash !== '' && hash !== '#/' && hash) {
+					url += '?next=';
+					hash = hash.split('#')[1];
+					url += hash;
+
+					console.log(url);
+				}
+				
+				
+				$window.location.href = url;
 			}
 
 			return $q.reject(rejection);

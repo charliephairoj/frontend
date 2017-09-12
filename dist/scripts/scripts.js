@@ -4275,8 +4275,11 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveCustomers = function (query) {
+		console.log(query);
 		if (query) {
+			console.log(query);
 			Customer.query({q:query}, function (responses) {
+				console.log(responses);
 				for (var i = 0; i < responses.length; i++) {
 					if ($scope.customers.indexOfById(responses[i]) === -1) {
 						$scope.customers.push(responses[i]);
@@ -4317,6 +4320,9 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 	
 	$scope.updateCustomerName = function (customerName) {
+
+		$scope.retrieveCustomers(customerName);
+		
 		$scope.ack.customer = $scope.ack.customer || {name: '', addresses: []};
 		
 		if (!$scope.ack.customer.id) {
@@ -8192,6 +8198,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 
 		if (!purchaseOrder.hasOwnProperty('supplier')) {
 			throw new Error("Please select a supplier");
+		} else {
+			if (!purchaseOrder.supplier.name) {
+				throw new Error("Please add a name for the supplier.");
+			}
+
+			if (!purchaseOrder.supplier.telephone) {
+				throw new Error("Please add a telephone number for " + purchaseOrder.supplier.name);
+			}
 		}
 
 		if (!purchaseOrder.receive_date instanceof Date ||
@@ -21316,7 +21330,21 @@ angular.module('employeeApp.services')
 
 			if (rejection.status === 403) {
 				console.log(rejection);
-				$window.location.href = '/login';
+				console.log($window);
+				var hash = $window.location.hash;
+				console.log(hash);
+				var url = '/login';
+				console.log((hash !== '' && hash !== '#/' && hash))
+				if (hash !== '' && hash !== '#/' && hash) {
+					url += '?next=';
+					hash = hash.split('#')[1];
+					url += hash;
+
+					console.log(url);
+				}
+				
+				
+				$window.location.href = url;
 			}
 
 			return $q.reject(rejection);
