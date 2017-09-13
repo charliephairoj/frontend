@@ -539,7 +539,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		Supply.query(options, function (responses) {
 			for (var i = 0; i < responses.length; i++) {
 				if ($scope.supplies.indexOfById(responses[i]) === -1) {
-					console.log(responses[i]);
 					$scope.supplies.push(responses[i]);
 				}
 			}
@@ -583,11 +582,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Add an item to the purchase order
 	 */
 	$scope.addItem = function (item) {
+		console.log(item);
 
 		if (item.description) {
 			$scope.po.items = $scope.po.items || [];
 			var purchasedItem = angular.copy(item);
-
+			console.log(purchasedItem);
 			delete purchasedItem.quantity;
 
 			/*
@@ -600,6 +600,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					for (var i = 0; i < purchasedItem.suppliers.length; i++) {
 						if (purchasedItem.suppliers[i].supplier.id === $scope.po.supplier.id) {
 							purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
+							purchasedItem.unit_cost = Number(purchasedItem.suppliers[i].cost);
 							purchasedItem.purchasing_units = purchasedItem.suppliers[i].purchasing_units;
 							purchasedItem.suppliers[i].supplier = {id: $scope.po.supplier.id};
 						}
@@ -618,7 +619,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 
 				}
 			}
-
+			console.log(purchasedItem);
 
 			//Add new supply to the list of items for the purchase order
 			$scope.po.items.push(purchasedItem);
@@ -940,6 +941,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				if (supplier && supply.suppliers[h].supplier) {
 					if (supply.suppliers[h].supplier.id === supplier.id) {
 						supply.suppliers[h].purchasing_units = supply.purchasing_units;
+
+						// Update the supply with the new cost for this supplier
+						supply.suppliers[h].cost = supply.unit_cost;
+						supply.suppliers[h].unit_cost = supply.unit_cost;
 					}
 				}
 
@@ -954,6 +959,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				// instead of item creation
 		  		supply.supply = {id: supply.id};
 				delete supply.id;
+
+				// Create the unit cost 
+				for (var h=0; h < supply.suppliers.length; h++) {
+					if (supply.suppliers[h].id == $scope.po.supplier.id) {
+						supply.unit_cost = supply.suppliers[h].cost;
+						supply.cost = supply.suppliers[h].cost;
+					}
+				}
 
 				// Check the progress
 				progress[supply.supply.id] = true;

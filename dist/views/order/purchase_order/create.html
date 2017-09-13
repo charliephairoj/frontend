@@ -468,7 +468,7 @@
 										<td class='quantity'>
 											<input required type="number" min="0" ng-model="item.quantity" />
 										</td>
-										<td class='total'>{{unitCost(item.cost, item.discount) * item.quantity || 0 | number:2}}</td>
+										<td class='total'>{{unitCost(item.unit_cost, item.discount) * item.quantity || 0 | number:2}}</td>
 										<td><md-button class="remove-btn md-icon-button md-warn md-raised" ng-click="removeItem($index)">
 												<i class="material-icons">remove</i>
 											</md-button>

@@ -7988,7 +7988,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		Supply.query(options, function (responses) {
 			for (var i = 0; i < responses.length; i++) {
 				if ($scope.supplies.indexOfById(responses[i]) === -1) {
-					console.log(responses[i]);
 					$scope.supplies.push(responses[i]);
 				}
 			}
@@ -8032,11 +8031,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Add an item to the purchase order
 	 */
 	$scope.addItem = function (item) {
+		console.log(item);
 
 		if (item.description) {
 			$scope.po.items = $scope.po.items || [];
 			var purchasedItem = angular.copy(item);
-
+			console.log(purchasedItem);
 			delete purchasedItem.quantity;
 
 			/*
@@ -8049,6 +8049,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 					for (var i = 0; i < purchasedItem.suppliers.length; i++) {
 						if (purchasedItem.suppliers[i].supplier.id === $scope.po.supplier.id) {
 							purchasedItem.cost = Number(purchasedItem.suppliers[i].cost);
+							purchasedItem.unit_cost = Number(purchasedItem.suppliers[i].cost);
 							purchasedItem.purchasing_units = purchasedItem.suppliers[i].purchasing_units;
 							purchasedItem.suppliers[i].supplier = {id: $scope.po.supplier.id};
 						}
@@ -8067,7 +8068,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 
 				}
 			}
-
+			console.log(purchasedItem);
 
 			//Add new supply to the list of items for the purchase order
 			$scope.po.items.push(purchasedItem);
@@ -8389,6 +8390,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				if (supplier && supply.suppliers[h].supplier) {
 					if (supply.suppliers[h].supplier.id === supplier.id) {
 						supply.suppliers[h].purchasing_units = supply.purchasing_units;
+
+						// Update the supply with the new cost for this supplier
+						supply.suppliers[h].cost = supply.unit_cost;
+						supply.suppliers[h].unit_cost = supply.unit_cost;
 					}
 				}
 
@@ -8403,6 +8408,14 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				// instead of item creation
 		  		supply.supply = {id: supply.id};
 				delete supply.id;
+
+				// Create the unit cost 
+				for (var h=0; h < supply.suppliers.length; h++) {
+					if (supply.suppliers[h].id == $scope.po.supplier.id) {
+						supply.unit_cost = supply.suppliers[h].cost;
+						supply.cost = supply.suppliers[h].cost;
+					}
+				}
 
 				// Check the progress
 				progress[supply.supply.id] = true;
@@ -15351,6 +15364,30 @@ angular.module('employeeApp')
             element.bind('dragstart', function (event) {
                 event.originalEvent.dataTransfer.setData('text/plain', JSON.stringify(scope.$eval(attrs.dragOn)));
             });
+
+            function touchHandler(event) {
+                var touch = event.changedTouches[0];
+            
+                var simulatedEvent = document.createEvent("MouseEvent");
+                    simulatedEvent.initMouseEvent({
+                    touchstart: "mousedown",
+                    touchmove: "mousemove",
+                    touchend: "mouseup"
+                }[event.type], true, true, window, 1,
+                    touch.screenX, touch.screenY,
+                    touch.clientX, touch.clientY, false,
+                    false, false, false, 0, null);
+            
+                touch.target.dispatchEvent(simulatedEvent);
+                event.preventDefault();
+            }
+            
+            function init() {
+                document.addEventListener("touchstart", touchHandler, true);
+                document.addEventListener("touchmove", touchHandler, true);
+                document.addEventListener("touchend", touchHandler, true);
+                document.addEventListener("touchcancel", touchHandler, true);
+            }
             
         }
     };
