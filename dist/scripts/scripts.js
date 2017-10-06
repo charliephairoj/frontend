@@ -6204,8 +6204,9 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveCustomers = function (query) {
+		console.log(query);
 		if (query) {
-			Customer.query({q:query}, function (responses) {
+			Customer.query({q:query, limit:5}, function (responses) {
 				for (var i = 0; i < responses.length; i++) {
 					if ($scope.customers.indexOfById(responses[i]) === -1) {
 						$scope.customers.push(responses[i]);
@@ -6246,6 +6247,9 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 	 */
 
 	$scope.updateCustomerName = function (customerName) {
+
+		$scope.retrieveCustomers(customerName);
+
 		$scope.estimate.customer = $scope.estimate.customer || {name: '', addresses: []};
 
 		if (!$scope.estimate.customer.id) {
@@ -8312,7 +8316,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		// Associate this supplier with the supply
 		supply.suppliers = [supplier];
 		supply.suppliers[0].supplier = {id: supplier.id};
-		supply.suppliers[0].cost = supply.cost;
+		supply.suppliers[0].cost = supply.unit_cost || supply.cost;
 
 		var resource = new Supply(supply);
 		console.log(resource);
@@ -8325,6 +8329,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			// instead of item creation
 	  		supply.supply = {id: supply.id};
 			delete supply.id;
+
+			//Add price
+			supply.unit_cost = supply.suppliers[0].cost;
+			supply.cost = supply.suppliers[0].cost;
 
 			// Check the progress
 			progress[supply.description] = true;
