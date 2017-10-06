@@ -863,7 +863,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		// Associate this supplier with the supply
 		supply.suppliers = [supplier];
 		supply.suppliers[0].supplier = {id: supplier.id};
-		supply.suppliers[0].cost = supply.cost;
+		supply.suppliers[0].cost = supply.unit_cost || supply.cost;
 
 		var resource = new Supply(supply);
 		console.log(resource);
@@ -876,6 +876,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			// instead of item creation
 	  		supply.supply = {id: supply.id};
 			delete supply.id;
+
+			//Add price
+			supply.unit_cost = supply.suppliers[0].cost;
+			supply.cost = supply.suppliers[0].cost;
 
 			// Check the progress
 			progress[supply.description] = true;
