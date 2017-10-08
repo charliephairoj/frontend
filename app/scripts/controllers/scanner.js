@@ -87,8 +87,10 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		var lowercaseQuery = angular.lowercase(query);
 		var data = [];
 		for (var i = 0; i < supplyList.length; i++) {
-			if (angular.lowercase(supplyList[i].description).indexOf(lowercaseQuery) !== -1) {
-				data.push(supplyList[i]);
+			if (angular.lowercase(supplyList[i].description || '').indexOf(lowercaseQuery) !== -1) {
+				if ($scope.supplies.indexOfById(supplyList[i]) === -1) {
+					data.push(supplyList[i]);					
+				}
 			}
 		}
 		
@@ -99,6 +101,19 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		$scope.supplies.push(angular.copy(supply));
 		$scope.selectedSupply = null;
 		$scope.supplySearchText = '';
+	}
+
+	$scope.quantityDescription = function (supply) {
+		return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+	}
+
+	$scope.newSupplyQuantity = function (supply) {
+
+		return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+	}
+
+	$scope.supplyQuantityLabel = function (supply) {
+		return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
 	}
 
 
@@ -220,6 +235,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 
 		});
 	};
+
+
 
 
 	/*
@@ -384,8 +401,15 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 					var supplyPromise = $http.put('/api/v1/supply/', supplies);
 			
 					//Define callbacks for the request
-					supplyPromise.success(function () {
+					supplyPromise.success(function (resp) {
 						$scope.supplies = [];
+
+						//Update supplies in the supply list
+						for (var h=0; h < resp.length; h++) {
+							var index = supplyList.indexOfById(resp[h].id);
+
+							supplyList[index] = angular.copy(resp[h]);
+						}
 						$scope.postCheckout();
 					}).error(function (e) {
 						$scope.checkoutError(e);

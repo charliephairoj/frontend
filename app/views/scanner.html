@@ -241,18 +241,22 @@
 					-->
 					<md-card class="supply" ng-repeat="supply in supplies" ng-init="supply.$$action = 'add'">
 						<md-card-content>
-							<div layout="column">
-								<h4>{{::supply.description}}</h4>
-								<span>จำนวน/Quantity: {{supply.quantity | number:2}}<span>
+							<div class='img-container'>
+								<img ng-src="{{supply.image.url}}"/>
+							</div>
+							<div class="supply-details">
+								<h3>{{::supply.description}}</h3>
+								<h5>{{quantityDescription(supply)}}:</h5>
+								<h5>{{newSupplyQuantity(supply) | number:2}}<h5>
 							</div>
 							<div class="item-ctrl" layout="row" layout-align="center center">
 								<md-input-container>
-									<label>จำนวน/Quantity</label>
+									<label>{{supplyQuantityLabel(supply)}}</label>
 									<input type="number" required ng-model="supply.$$quantity"/>
 								</md-input-container>
 							</div>
 						</md-card-content>
-						<md-card-actions layout="row">
+						<md-card-actions>
 							<div class="toggle-button md-raised">
 								<div class="button" ng-class="{'active': supply.$$action.toLowerCase()=='add'}" ng-click="supply.$$action = 'add'">
 									<span>เพิ่ม/Add</span>
@@ -261,8 +265,7 @@
 									<span>หัก/Subtract</span>
 								</div>
 							</div>
-							<div flex></div>
-							<div layout="row">
+							<div class="context-menu">
 								<md-button class="md-accent md-icon-button" ng-click="printSupplySticker(supply, 'supply')">
 									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
 									<i class="material-icons">printer</i>

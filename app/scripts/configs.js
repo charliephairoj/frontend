@@ -170,9 +170,12 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 		needle = typeof(needle) == "object" ? needle.hasOwnProperty('id') ? needle.id : null : needle;
 		var haystack = this;
 		for (var i = 0; i < haystack.length; i++) {
-			if (haystack[i].id == needle) {
-				return i;
+			if (haystack[i]){
+				if (haystack[i].id == needle) {
+					return i;
+				}
 			}
+			
 		}
 		return -1;
 	};
