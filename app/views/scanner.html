@@ -29,6 +29,10 @@
 			 	<md-button class="md-accent md-raised" ng-show="po" ng-click="checkout()">เช็คอิน/Check In</md-button>
 	
 				<md-button class="md-accent md-raised" ng-hide="po" ng-disabled="form.$invalid"  ng-click="checkout()">เช็คเอาท์/Checkout</md-button>
+				<div class="lang-button-container">
+					<md-button ng-class="{'md-accent md-raised': lang=='th'}" ng-click="lang='th'">TH</md-button>
+					<md-button ng-class="{'md-accent md-raised': lang=='en'}" ng-click="lang='en'">EN</md-button>
+				</div>
 			</div>
 		</md-action>
 	
@@ -246,6 +250,12 @@
 							</div>
 							<div class="supply-details">
 								<h3>{{::supply.description}}</h3>
+								<md-input-container>
+									<label>Type</label>
+									<md-select ng-model="supply.type">
+										<md-option ng-repeat="supplyType in supplyTypes" ng-value="supplyType.en">{{supplyType[lang]}}</md-option>
+									</md-select>
+								</md-input-container>
 								<h5>{{quantityDescription(supply)}}:</h5>
 								<h5>{{newSupplyQuantity(supply) | number:2}}<h5>
 							</div>

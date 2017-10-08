@@ -29,6 +29,10 @@
 			 	<md-button class="md-accent md-raised" ng-show="po" ng-click="checkout()">เช็คอิน/Check In</md-button>
 	
 				<md-button class="md-accent md-raised" ng-hide="po" ng-disabled="form.$invalid"  ng-click="checkout()">เช็คเอาท์/Checkout</md-button>
+				<div class="lang-button-container">
+					<md-button ng-class="{'md-accent md-raised': lang=='th'}" ng-click="lang='th'">TH</md-button>
+					<md-button ng-class="{'md-accent md-raised': lang=='en'}" ng-click="lang='en'">EN</md-button>
+				</div>
 			</div>
 		</md-action>
 	
@@ -241,18 +245,28 @@
 					-->
 					<md-card class="supply" ng-repeat="supply in supplies" ng-init="supply.$$action = 'add'">
 						<md-card-content>
-							<div layout="column">
-								<h4>{{::supply.description}}</h4>
-								<span>จำนวน/Quantity: {{supply.quantity | number:2}}<span>
+							<div class='img-container'>
+								<img ng-src="{{supply.image.url}}"/>
+							</div>
+							<div class="supply-details">
+								<h3>{{::supply.description}}</h3>
+								<md-input-container>
+									<label>Type</label>
+									<md-select ng-model="supply.type">
+										<md-option ng-repeat="supplyType in supplyTypes" ng-value="supplyType.en">{{supplyType[lang]}}</md-option>
+									</md-select>
+								</md-input-container>
+								<h5>{{quantityDescription(supply)}}:</h5>
+								<h5>{{newSupplyQuantity(supply) | number:2}}<h5>
 							</div>
 							<div class="item-ctrl" layout="row" layout-align="center center">
 								<md-input-container>
-									<label>จำนวน/Quantity</label>
+									<label>{{supplyQuantityLabel(supply)}}</label>
 									<input type="number" required ng-model="supply.$$quantity"/>
 								</md-input-container>
 							</div>
 						</md-card-content>
-						<md-card-actions layout="row">
+						<md-card-actions>
 							<div class="toggle-button md-raised">
 								<div class="button" ng-class="{'active': supply.$$action.toLowerCase()=='add'}" ng-click="supply.$$action = 'add'">
 									<span>เพิ่ม/Add</span>
@@ -261,8 +275,7 @@
 									<span>หัก/Subtract</span>
 								</div>
 							</div>
-							<div flex></div>
-							<div layout="row">
+							<div class="context-menu">
 								<md-button class="md-accent md-icon-button" ng-click="printSupplySticker(supply, 'supply')">
 									<md-tooltip>พิมพ์สติ๊กเกอร์/Print Sticker</md-tooltip>
 									<i class="material-icons">printer</i>

@@ -1,8 +1,9 @@
 
 angular.module('employeeApp')
-.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast', '$log',
-function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log) {
-    
+.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast', '$log', 'Label',
+function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log, Label) {
+	
+	$scope.banks = Label.query({'type':'bank'});
 	var updateLoopActive = false,
 		timeoutPromise,
 	map,

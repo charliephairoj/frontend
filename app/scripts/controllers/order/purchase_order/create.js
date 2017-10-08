@@ -1,11 +1,22 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
-function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope',
+function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope) {
 
 	/**
 	 * Titles 
 	 */
+	$scope.banks = Label.query({'type': 'bank'});
+	$scope.supplyTypes = Label.query({'type': 'supply type'});
+	$scope.labels = {};
+	Label.query({'type': 'po create title'}, function (resp) {
+		for (var i=0; i < resp.length; i++) {
+			$scope.labels[resp[i].category] = {'en': resp[i].en, 'th': resp[i].th};
+		}	
+
+		$rootScope.safeApply();
+	});
+	/*
 	$scope.labels = {
 		'name': {'en': 'Supplier Name',
 				 'th': 'ชื่อผู้ผลิต'},
@@ -56,11 +67,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				  
 
 	};
-
+	*/
 	/*
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
+	$scope.po.items = [{description:'test'}];
 	$scope.listView = true;
 	$scope.creating = false;
 	/**
@@ -710,7 +722,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Unit costs
 	 */
 	$scope.unitCost = function (unitCost, discount) {
-		return unitCost - (unitCost * (discount / 100));
+		var costPreDiscount = unitCost;
+		var discountAmount = (unitCost * (discount / 100));
+
+		return unitCost - ((unitCost * (discount / 100)) || 0);
 	};
 
 	/*
@@ -722,10 +737,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			for (var i = 0; i < $scope.po.items.length; i++) {
 				var item = $scope.po.items[i];
 				discount = item.discount || 0;
-				subtotal += ($scope.unitCost(item.cost, discount) * item.quantity);
+				subtotal += ($scope.unitCost(item.unit_cost, discount) * item.quantity);
 			}
 		}
-		return subtotal;
+		return subtotal || 0;
 	};
 
 	$scope.discount = function () {
@@ -776,7 +791,11 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		if (purchaseOrder.items) {
 			for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
 				if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
-					throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
+					throw new Error(purchaseOrder.items[i].description + " " + $scope.labels.quantity_error[$scope.lang]);
+				}
+
+				if (!purchaseOrder.items[i].type) {
+					throw new Error(purchaseOrder.items[i].description + " " + $scope.labels.type_error[$scope.lang]);
 				}
 			}
 		} else {

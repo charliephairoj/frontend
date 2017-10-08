@@ -111,6 +111,21 @@
 									md-card-content{
 
 										.order{
+											.bank-details{
+												.flex;
+												.flex-direction(row);
+												.justify-content(flex-start);
+												.align-items(flex-start);
+
+												md-input-container:first-child{
+													margin-right:2em;
+													width:15em;
+												}
+
+												md-input-container:last-child{
+													width:25em;
+												}
+											}
 
 											.details{
 												.flex;
@@ -388,6 +403,10 @@
 												&.description{
 													text-align:left;
 													width:30%;
+												}
+
+												&.type{
+
 												}
 						
 												&.discount{

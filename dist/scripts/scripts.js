@@ -119,6 +119,10 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
       .when('/administrator', {
         templateUrl: 'views/administrator.html'
   })
+      .when('/administrator/label', {
+        templateUrl: 'views/administrator/label/view.html',
+        controller: 'AdministratorLabelViewCtrl'
+  })
       .when('/administrator/log', {
         templateUrl: 'views/administrator/log/view.html',
         controller: 'AdministratorLogViewCtrl'
@@ -538,9 +542,12 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 		needle = typeof(needle) == "object" ? needle.hasOwnProperty('id') ? needle.id : null : needle;
 		var haystack = this;
 		for (var i = 0; i < haystack.length; i++) {
-			if (haystack[i].id == needle) {
-				return i;
+			if (haystack[i]){
+				if (haystack[i].id == needle) {
+					return i;
+				}
 			}
+			
 		}
 		return -1;
 	};
@@ -955,6 +962,64 @@ angular.module('employeeApp')
 	$scope.groups = Group.query({limit: 0});
 
 
+}]);
+
+angular.module('employeeApp')
+.controller('AdministratorLabelViewCtrl', ['$scope', '$http', 'Group', 'Notification', 'Label',
+function ($scope, $http, Group, Notification, Label) {
+
+    var fetching = false;
+    $scope.newLabel = new Label();
+    $scope.labels = Label.query();
+   
+
+    $scope.create = function () {
+
+        Notification.display('Creating Label...');
+
+        $scope.newLabel.$create(function (resp) {
+            $scope.labels.push(resp);
+            $scope.newLabel = new Label();
+            Notification.display('Label created.');
+        });
+    };
+
+    $scope.update = function (label) {
+        Notification.display('Updating Label');
+        
+        label.$update(function (resp) {
+            Notification.display('Label updated.');
+        });
+    };
+    
+    $scope.loadNext = function () {
+		if (!fetching) {
+			//System wide message
+			Notification.display('Loading more logs...');
+			fetching = true;
+			
+			var config = {
+				limit:20,
+				offset: $scope.logs.length
+			};
+            
+            url = '/api/v1/label/';
+            url += "?limit=20";
+            url += "&offset=";
+            url += $scope.labels.length;
+
+            $http.get(url).success(function (resources) {
+                for (var i = 0; i < resources.length; i++) {
+					if ($scope.labels.indexOfById(resources[i].id) == -1) {
+						$scope.labels.push(resources[i]);
+					}
+                }
+                
+                fetching = false;
+            });
+			
+		}
+	};
 }]);
 
 angular.module('employeeApp')
@@ -1580,9 +1645,10 @@ angular.module('employeeApp')
 
 
 angular.module('employeeApp')
-.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast', '$log',
-function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log) {
-    
+.controller('ContactSupplierDetailsCtrl', ['$scope', 'Supplier', '$routeParams', '$location', 'SupplierContact', 'Notification', '$timeout', '$mdDialog', '$mdToast', '$log', 'Label',
+function ($scope, Supplier, $routeParams, $location, SupplierContact, Notification, $timeout, $mdDialog, $mdToast, $log, Label) {
+	
+	$scope.banks = Label.query({'type':'bank'});
 	var updateLoopActive = false,
 		timeoutPromise,
 	map,
@@ -7453,12 +7519,23 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location',
-function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope',
+function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope) {
 
 	/**
 	 * Titles 
 	 */
+	$scope.banks = Label.query({'type': 'bank'});
+	$scope.supplyTypes = Label.query({'type': 'supply type'});
+	$scope.labels = {};
+	Label.query({'type': 'po create title'}, function (resp) {
+		for (var i=0; i < resp.length; i++) {
+			$scope.labels[resp[i].category] = {'en': resp[i].en, 'th': resp[i].th};
+		}	
+
+		$rootScope.safeApply();
+	});
+	/*
 	$scope.labels = {
 		'name': {'en': 'Supplier Name',
 				 'th': 'ชื่อผู้ผลิต'},
@@ -7509,11 +7586,12 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 				  
 
 	};
-
+	*/
 	/*
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
+	$scope.po.items = [{description:'test'}];
 	$scope.listView = true;
 	$scope.creating = false;
 	/**
@@ -8163,7 +8241,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Unit costs
 	 */
 	$scope.unitCost = function (unitCost, discount) {
-		return unitCost - (unitCost * (discount / 100));
+		var costPreDiscount = unitCost;
+		var discountAmount = (unitCost * (discount / 100));
+
+		return unitCost - ((unitCost * (discount / 100)) || 0);
 	};
 
 	/*
@@ -8175,10 +8256,10 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			for (var i = 0; i < $scope.po.items.length; i++) {
 				var item = $scope.po.items[i];
 				discount = item.discount || 0;
-				subtotal += ($scope.unitCost(item.cost, discount) * item.quantity);
+				subtotal += ($scope.unitCost(item.unit_cost, discount) * item.quantity);
 			}
 		}
-		return subtotal;
+		return subtotal || 0;
 	};
 
 	$scope.discount = function () {
@@ -8229,7 +8310,11 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		if (purchaseOrder.items) {
 			for (var i = 0; i < (purchaseOrder.items.length ||[]); i++) {
 				if (!purchaseOrder.items[i].quantity || purchaseOrder.items[i].quantity <= 0) {
-					throw new Error(purchaseOrder.items[i].description + " is missing a quantity");
+					throw new Error(purchaseOrder.items[i].description + " " + $scope.labels.quantity_error[$scope.lang]);
+				}
+
+				if (!purchaseOrder.items[i].type) {
+					throw new Error(purchaseOrder.items[i].description + " " + $scope.labels.type_error[$scope.lang]);
 				}
 			}
 		} else {
@@ -12496,8 +12581,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
-function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
+.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log', 'Label',
+function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log, Label) {
     /*
 	Equipment.get({'id': 116}, function (resp) {
 		$scope.equipmentList.push(resp);
@@ -12521,6 +12606,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.supplies = [];
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
+	$scope.supplyTypes = Label.query({'type': 'supply type'});
 	$scope.employees = Employee.query({limit:0, page_size:99999});
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
@@ -12576,8 +12662,10 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		var lowercaseQuery = angular.lowercase(query);
 		var data = [];
 		for (var i = 0; i < supplyList.length; i++) {
-			if (angular.lowercase(supplyList[i].description).indexOf(lowercaseQuery) !== -1) {
-				data.push(supplyList[i]);
+			if (angular.lowercase(supplyList[i].description || '').indexOf(lowercaseQuery) !== -1) {
+				if ($scope.supplies.indexOfById(supplyList[i]) === -1) {
+					data.push(supplyList[i]);					
+				}
 			}
 		}
 		
@@ -12588,6 +12676,19 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		$scope.supplies.push(angular.copy(supply));
 		$scope.selectedSupply = null;
 		$scope.supplySearchText = '';
+	}
+
+	$scope.quantityDescription = function (supply) {
+		return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+	}
+
+	$scope.newSupplyQuantity = function (supply) {
+
+		return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+	}
+
+	$scope.supplyQuantityLabel = function (supply) {
+		return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
 	}
 
 
@@ -12709,6 +12810,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 
 		});
 	};
+
+
 
 
 	/*
@@ -12873,8 +12976,15 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 					var supplyPromise = $http.put('/api/v1/supply/', supplies);
 			
 					//Define callbacks for the request
-					supplyPromise.success(function () {
+					supplyPromise.success(function (resp) {
 						$scope.supplies = [];
+
+						//Update supplies in the supply list
+						for (var h=0; h < resp.length; h++) {
+							var index = supplyList.indexOfById(resp[h].id);
+
+							supplyList[index] = angular.copy(resp[h]);
+						}
 						$scope.postCheckout();
 					}).error(function (e) {
 						$scope.checkoutError(e);
@@ -21906,6 +22016,19 @@ angular.module('employeeApp.services')
         create: {
 			method: 'POST'
         }
+	});   
+}]);
+
+
+angular.module('employeeApp.services')
+.factory('Label', ['$resource', '$http', function($resource, $http) {
+	return $resource('/api/v1/label/:id/', {id:'@id'}, {
+		update: {
+			method: 'PUT'
+		},
+		create: {
+			method: 'POST'
+		}
 	});   
 }]);
 

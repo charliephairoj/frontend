@@ -7,8 +7,8 @@
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log',
-function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log) {
+.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log', 'Label',
+function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log, Label) {
     /*
 	Equipment.get({'id': 116}, function (resp) {
 		$scope.equipmentList.push(resp);
@@ -32,6 +32,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.supplies = [];
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
+	$scope.supplyTypes = Label.query({'type': 'supply type'});
 	$scope.employees = Employee.query({limit:0, page_size:99999});
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();

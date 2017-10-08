@@ -64,7 +64,19 @@
 					<label>Zipcode</label>
 					<input type="text" size="60" ng-model="supplier.addresses[0].zipcode" ec-blur="update()" />
 		   	   </md-input-container>
-		   </div>
+           </div>
+           <div class="bank-details">
+                <md-input-container>
+                    <label>Bank</label>
+                    <md-select name="bank" ng-model="supplier.bank" required>
+                        <md-option ng-repeat="bank in banks" ng-value="bank.category">{{bank.en}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container>
+                    <label>Bank Account Number</label>
+                    <input type="text" ng-model="supplier.bank_account_number">
+                </md-input-container>
+            </div>
 		   <div class="input-containers">
 			   <md-input-container class="terms">
 					<label>Terms</label>

@@ -47,8 +47,8 @@
 							<md-card-content>
 								<div class="company">
 								<md-input-container>
-									<label>Company</label>
-									<md-select ng-selected="0" ng-model="po.company">
+									<label>{{labels.company[lang]}}</label>
+									<md-select ng-model="po.company">
 										<md-option value="Alinea Group">Alinea Group</md-option>
 										<md-option value="Dellarobbia Thailand">Dellarobbia Thailand</md-option>
 									</md-select>
@@ -119,9 +119,23 @@
 										<input type="text" ng-model="po.supplier.poaddresses[0].zipcode">
 										</md-input-container>
 									</div>
+									
 								</div>
 			
 								<div class="order">
+									<div class="bank-details">
+										<md-input-container>
+											<label>{{labels.bank[lang]}}</label>
+											<md-select name="bank" ng-model="po.supplier.bank" required>
+												<md-option ng-repeat="bank in banks" ng-value="bank.category">{{bank[lang]}}</md-option>
+											</md-select>
+										</md-input-container>
+										<md-input-container>
+											<label>{{labels.bank_account_number[lang]}}</label>
+											<input type="text" ng-model="po.supplier.bank_account_number">
+										</md-input-container>
+										
+									</div>
 									<div class='details'>
 										<div class="date-container" layout="column">
 											<md-datepicker name="dateField" ng-model="po.receive_date" md-placeholder="วันรับสินค้า" ng-required>
@@ -450,16 +464,25 @@
 								<thead>
 									<tr class='heading'>
 										<td>Description</td>
-										<td>Comments</td>
-										<td>Discount</td>
-										<td>Unit Cost</td>
-										<td>Quantity</td>
-										<td colspan="2">Total</td>
+										<td>{{labels.type[lang]}}</td>
+										<td>{{labels.comments[lang]}}</td>
+										<td>{{labels.discount[lang]}}</td>
+										<td>{{labels.unit_cost[lang]}}</td>
+										<td>{{labels.quantity[lang]}}</td>
+										<td colspan="2">{{labels.total[lang]}}</td>
 									</tr>
 								</thead>
 								<tbody>
 									<tr class="items" ng-repeat="item in po.items">
 										<td class='description'>{{item.description}}</td>
+										<td class='type'>
+											<md-input-container>
+												<label>{{labels.type[lang]}}</label>
+												<md-select ng-model="item.type" ng-required>
+													<md-option ng-repeat="supplyType in supplyTypes" ng-value="supplyType.en">{{supplyType[lang]}}</md-option>
+												</md-select>
+											</md-input-container>
+										</td>
 										<td><textarea ng-model=item.comments row="4"></textarea></td>
 										<td class='discount'>
 											<input required type="number" min="0" ng-model="item.discount"/> 
@@ -479,8 +502,9 @@
 										<td></td>
 										<td></td>
 										<td></td>
+										<td></td>
 										<td class="title">Subtotal</td>
-										<td class="value">{{subtotal() || 0 | number:2}}</td>
+										<td class="value">{{subtotal() | number:2}}</td>
 										<td></td>
 									</tr>
 									<tr class="summary discount" ng-show="po.discount">
@@ -488,11 +512,13 @@
 										<td></td>
 										<td></td>
 										<td></td>
-										<td class="title">Discount {{po.discount}}%</td>
+										<td></td>
+										<td class="title">{{labels.discount[lang]}} {{po.discount}}%</td>
 										<td class="value">-{{discount() || 0 | number:2}}</td>
 										<td></td>
 									</tr>
 									<tr class="summary total" ng-show="po.discount">
+										<td></td>
 										<td></td>
 										<td></td>
 										<td></td>
@@ -506,11 +532,13 @@
 										<td></td>
 										<td></td>
 										<td></td>
-										<td class="title">Vat {{po.vat}}%</td>
+										<td></td>
+										<td class="title">{{labels.vat[lang]}} {{po.vat}}%</td>
 										<td class="value">{{total() * (po.vat / 100) || 0 | number:2}}</td>
 										<td></td>
 									</tr>
 									<tr class="summary grand-total" ng-show="po.vat">
+										<td></td>
 										<td></td>
 										<td></td>
 										<td></td>

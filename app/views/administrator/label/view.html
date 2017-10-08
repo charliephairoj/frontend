@@ -1,0 +1,64 @@
+<div class="workspace label-container">
+    <form name="addLabel" class="add-container">
+        <md-input-container>
+            <label>Type</label>
+            <input type="text" ng-model="newLabel.type" required />
+        </md-input-container>
+        <md-input-container>
+            <label>Category</label>
+            <input type="text" ng-model="newLabel.category" />
+        </md-input-container>
+        <md-input-container>
+            <label>English Translation</label>
+            <input type="text" ng-model="newLabel.en" required />
+        </md-input-container>
+        <md-input-container>
+            <label>Thai Translation</label>
+            <input type="text" ng-model="newLabel.th" required />
+        </md-input-container>
+        <md-button class="md-icon-button md-primary md-raised" ng-click="create()">
+            <md-tooltip>Create</md-tooltip>
+            <i class="material-icons">create</i>
+        </md-button>
+    </form>
+    
+    <div class="header">
+        <div class="type">
+            <h3>Type</h3>
+        </div>
+        <div class="category">
+            <h3>Type</h3>
+        </div>
+        <div class="en">
+            <h3>English</h3>
+        </div>
+        <div class="th">
+            <h3>Thai</h3>
+        </div>
+        <div class="save">
+        </div>
+    </div>
+    <div class="labels-container" on-scroll-end="loadNext()">
+        <div class="label" ng-repeat="label in labels">
+            <div class="type">
+                <input type="text" ng-model="label.type" />
+            </div>
+            <div class="category">
+                <input type="text" ng-model="label.category" />
+            </div>
+            <div class="en">
+                <input type="text" ng-model="label.en" />
+            </div>
+            <div class="th">
+                <input type="text" ng-model="label.th" />
+            </div>
+            <div class="save">
+                <md-button class="md-icon-button md-primary md-raised" ng-click="update(label)">
+                    <md-tooltip>Save</md-tooltip>
+                    <i class="material-icons">save</i>
+                </md-button>
+            </div>
+        </div>
+    </div>
+    
+</div>
