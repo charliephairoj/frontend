@@ -1184,7 +1184,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
     
     $scope.reset = function () {
         $scope.ack = new Acknowledgement();
-        $scope.ack.items = [];
+		$scope.ack.items = [];
+		$scope.customerSearchText = "";
         storage.removeItem('acknowledgement-create');
     };
     

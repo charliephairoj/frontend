@@ -257,7 +257,7 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 	
 	$scope.addProject = function (project) {
 		$scope.shipping.project = project;
-		$scope.tempSave();
+		//$scope.tempSave();
 	};
 	
 	/**
@@ -306,7 +306,7 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 	
 	$scope.addRoom = function (room) {
 		$scope.shipping.room = angular.copy(room);
-		$scope.tempSave();
+		//$scope.tempSave();
 	};
 	
 	/**
