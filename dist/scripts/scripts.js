@@ -7591,7 +7591,8 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
-	$scope.po.items = [{description:'test'}];
+	$scope.po.id = 1;
+	$scope.po.items = [];
 	$scope.listView = true;
 	$scope.creating = false;
 	/**
@@ -8397,14 +8398,18 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		// Add progress check
 		progress[supply.description] = false;
 
-		console.log(supplier);
-		// Associate this supplier with the supply
-		supply.suppliers = [supplier];
+		/**
+		 * 	Associate this supplier with the supply. The supplier needs to be
+		 * copied so that reference is not passed along to succeeding new 
+		 * items.
+		 */
+		supply.suppliers = [angular.copy(supplier)];
 		supply.suppliers[0].supplier = {id: supplier.id};
 		supply.suppliers[0].cost = supply.unit_cost || supply.cost;
+		supply.suppliers[0].unit_cost = supply.unit_cost || supply.cost;
 
 		var resource = new Supply(supply);
-		console.log(resource);
+
 		// Create a new supply
 		resource.$create(function (response) {
 
@@ -8574,7 +8579,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	};
 
 	$scope._sendCreateRequest = function () {
-
 		if (!$scope.creating) {
 			$scope.creating = true;
 
