@@ -46,7 +46,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	try {
 		window.globalScanner.disable();
 	} catch (e) {
-	
+		$log.error(e);
 	}
 
 	$scope.fractSize = function () {
@@ -277,13 +277,19 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		}
 	
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
-			response[0].$$action = 'subtract';
-			$scope.supplies.push(response[0]);
-			Notification.display('Added ' + response.description + ' to checkout.', 2000);
+			if (reponse.length > 0){
+				response[0].$$action = 'subtract';
+				$scope.supplies.push(response[0]);
+				Notification.display('Added ' + response.description + ' to checkout.', 2000);
+			} else {
+				Notification.display('Unable to find supply.', false);
+			}
+			
 			
 		}, function (e) {
 			var msg = JSON.stringify(e);
 			$log.error(msg);
+			Notification.display('Unable to find supply with id: ' + code, false);			
 		});
 	});
 
@@ -532,12 +538,13 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	
 
 	$scope.$on('$destroy', function () {
-		$scope.scanner.disable();
 	
 		try {
+			$scope.scanner.disable();
 			window.globalScanner.enable();
+			keyboardNav.disable();
 		} catch (e) {
-		
+			$log.error(e);
 		}
 	});
 

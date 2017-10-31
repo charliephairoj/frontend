@@ -25,6 +25,7 @@ angular.module('employeeApp.services')
     function Scanner(identity) {
 		this._identity = identity;
 		this._activeParse = false;
+		this._timeoutParse = null;
 		this.enabled = false;
 		this._onscan = null;
 		this.f = check.bind(this);
@@ -90,6 +91,14 @@ angular.module('employeeApp.services')
 		if (evt.keyCode === 76 && evt.altKey) {
 			evt.preventDefault();
 			this._activeParse = true;
+
+			this._timeoutParse = $timeout(function () {
+				this._activeParse = false;
+				console.debug("Active parse timed out");
+
+			}.bind(this), 1000, false);
+
+			console.debug("scanner " + this._identity + " activated.");
 		
 		/*
 		 * Checks if the character is the end code for the scanner.
@@ -97,15 +106,31 @@ angular.module('employeeApp.services')
 		 * and reset the code variable
 		 */
 		} else if (evt.altKey && evt.keyCode == 71) {
+			$timeout.cancel(this._timeoutParse);
 			evt.preventDefault();
 			this._activeParse = false;
 			this._dispatch(code);
 			code = '';
+			console.debug("scanner " + this._identity + " deactivated.");
+			
 		/*
 		 * If the parse switch is on, add the keypressed character to the code string
 		 */
 		} else {
+			console.log(evt.code);
+			console.log(this._activeParse);
 			if (this._activeParse) {
+				// Cancel original timeout
+				$timeout.cancel(this._timeoutParse);
+				
+				// Extend timeout as characters have been pressed
+				this._timeoutParse = $timeout(function () {
+					this._activeParse = false;
+					console.debug("Active parse timed out");
+	
+				}.bind(this), 1000, false);		
+
+				console.log(code);
 				evt.preventDefault();
 				this._parse(evt);
 			}

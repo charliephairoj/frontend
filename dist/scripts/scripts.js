@@ -5228,7 +5228,8 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
     
     $scope.reset = function () {
         $scope.ack = new Acknowledgement();
-        $scope.ack.items = [];
+		$scope.ack.items = [];
+		$scope.customerSearchText = "";
         storage.removeItem('acknowledgement-create');
     };
     
@@ -10540,7 +10541,7 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 	
 	$scope.addProject = function (project) {
 		$scope.shipping.project = project;
-		$scope.tempSave();
+		//$scope.tempSave();
 	};
 	
 	/**
@@ -10589,7 +10590,7 @@ function ($scope, Acknowledgement, Customer, $filter, $mdToast, Shipping, $locat
 	
 	$scope.addRoom = function (room) {
 		$scope.shipping.room = angular.copy(room);
-		$scope.tempSave();
+		//$scope.tempSave();
 	};
 	
 	/**
@@ -12624,7 +12625,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	try {
 		window.globalScanner.disable();
 	} catch (e) {
-	
+		$log.error(e);
 	}
 
 	$scope.fractSize = function () {
@@ -12855,13 +12856,19 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		}
 	
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
-			response[0].$$action = 'subtract';
-			$scope.supplies.push(response[0]);
-			Notification.display('Added ' + response.description + ' to checkout.', 2000);
+			if (reponse.length > 0){
+				response[0].$$action = 'subtract';
+				$scope.supplies.push(response[0]);
+				Notification.display('Added ' + response.description + ' to checkout.', 2000);
+			} else {
+				Notification.display('Unable to find supply.', false);
+			}
+			
 			
 		}, function (e) {
 			var msg = JSON.stringify(e);
 			$log.error(msg);
+			Notification.display('Unable to find supply with id: ' + code, false);			
 		});
 	});
 
@@ -13110,12 +13117,13 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	
 
 	$scope.$on('$destroy', function () {
-		$scope.scanner.disable();
 	
 		try {
+			$scope.scanner.disable();
 			window.globalScanner.enable();
+			keyboardNav.disable();
 		} catch (e) {
-		
+			$log.error(e);
 		}
 	});
 
@@ -22868,6 +22876,7 @@ angular.module('employeeApp.services')
     function Scanner(identity) {
 		this._identity = identity;
 		this._activeParse = false;
+		this._timeoutParse = null;
 		this.enabled = false;
 		this._onscan = null;
 		this.f = check.bind(this);
@@ -22933,6 +22942,14 @@ angular.module('employeeApp.services')
 		if (evt.keyCode === 76 && evt.altKey) {
 			evt.preventDefault();
 			this._activeParse = true;
+
+			this._timeoutParse = $timeout(function () {
+				this._activeParse = false;
+				console.debug("Active parse timed out");
+
+			}.bind(this), 1000, false);
+
+			console.debug("scanner " + this._identity + " activated.");
 		
 		/*
 		 * Checks if the character is the end code for the scanner.
@@ -22940,15 +22957,31 @@ angular.module('employeeApp.services')
 		 * and reset the code variable
 		 */
 		} else if (evt.altKey && evt.keyCode == 71) {
+			$timeout.cancel(this._timeoutParse);
 			evt.preventDefault();
 			this._activeParse = false;
 			this._dispatch(code);
 			code = '';
+			console.debug("scanner " + this._identity + " deactivated.");
+			
 		/*
 		 * If the parse switch is on, add the keypressed character to the code string
 		 */
 		} else {
+			console.log(evt.code);
+			console.log(this._activeParse);
 			if (this._activeParse) {
+				// Cancel original timeout
+				$timeout.cancel(this._timeoutParse);
+				
+				// Extend timeout as characters have been pressed
+				this._timeoutParse = $timeout(function () {
+					this._activeParse = false;
+					console.debug("Active parse timed out");
+	
+				}.bind(this), 1000, false);		
+
+				console.log(code);
 				evt.preventDefault();
 				this._parse(evt);
 			}
