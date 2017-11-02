@@ -105,16 +105,27 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	}
 
 	$scope.quantityDescription = function (supply) {
-		return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+		try{
+			return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+		} catch (e) {
+			return 'จำนวน ในสต๊อก/Quantity';
+		}
 	}
 
 	$scope.newSupplyQuantity = function (supply) {
-
-		return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+		try {
+			return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+		} catch (e) {
+			return 0;
+		}
 	}
 
 	$scope.supplyQuantityLabel = function (supply) {
-		return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
+		try {
+			return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
+		} catch (e) {
+			return 'เพิ่มจำนวน/Add Quantity'
+		}
 	}
 
 

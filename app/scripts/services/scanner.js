@@ -117,8 +117,6 @@ angular.module('employeeApp.services')
 		 * If the parse switch is on, add the keypressed character to the code string
 		 */
 		} else {
-			console.log(evt.code);
-			console.log(this._activeParse);
 			if (this._activeParse) {
 				// Cancel original timeout
 				$timeout.cancel(this._timeoutParse);
@@ -130,7 +128,7 @@ angular.module('employeeApp.services')
 	
 				}.bind(this), 1000, false);		
 
-				console.log(code);
+				console.debug("Add character: " + code);
 				evt.preventDefault();
 				this._parse(evt);
 			}

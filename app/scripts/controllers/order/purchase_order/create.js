@@ -72,7 +72,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
-	$scope.po.id = 1;
 	$scope.po.items = [];
 	$scope.listView = true;
 	$scope.creating = false;

@@ -142,6 +142,7 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	});
 	
 	//Check if user is from decoroom
+	/*
 	$rootScope.currentUser.onready = function () {
 		for (var z = 0; z < this.groups.length; z++) {
 			if (this.groups[z].toLowerCase() == 'decoroom') {
@@ -149,6 +150,7 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 			}
 		}
 	}.bind($rootScope.currentUser);
+	*/
 	
 	//Check if user is inventory
 	$rootScope.currentUser.onready = function () {

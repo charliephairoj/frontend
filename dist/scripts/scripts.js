@@ -514,6 +514,7 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	});
 	
 	//Check if user is from decoroom
+	/*
 	$rootScope.currentUser.onready = function () {
 		for (var z = 0; z < this.groups.length; z++) {
 			if (this.groups[z].toLowerCase() == 'decoroom') {
@@ -521,6 +522,7 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 			}
 		}
 	}.bind($rootScope.currentUser);
+	*/
 	
 	//Check if user is inventory
 	$rootScope.currentUser.onready = function () {
@@ -4501,12 +4503,18 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				projects.push($scope.projects[i]);
 			}
 		}
-		console.log(projects);
 		return projects;
 	};
 	
 	$scope.addProject = function (project) {
 		$scope.ack.project = project;
+
+		// Add selected room to the project if user input room first
+		if ($scope.ack.room) {
+			$scope.ack.project.room = angular.copy($scope.ack.room);
+			delete $scope.ack.room;
+		}
+
 		$scope.tempSave();
 	};
 	
@@ -4539,11 +4547,14 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.searchRooms = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var rooms = [];
-		for (var i = 0; i < $scope.ack.project.rooms.length; i++) {
-			if (angular.lowercase($scope.ack.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
-				rooms.push($scope.ack.project.rooms[i]);
+		if ($scope.ack.project) {
+			for (var i = 0; i < $scope.ack.project.rooms.length; i++) {
+				if (angular.lowercase($scope.ack.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
+					rooms.push($scope.ack.project.rooms[i]);
+				}
 			}
 		}
+		
 		return rooms;
 	};
 	
@@ -4561,14 +4572,19 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 
 	$scope.updateRoomName = function (roomName) {
-		$scope.ack.project.room = $scope.ack.project.room || {description: ''};
-	
-		if (!$scope.ack.project.room.id) {
-			$scope.ack.project.room.description = roomName || '';
-		} else {
-			if ($scope.ack.project.room.description.indexOf(roomName) == -1) {
-				$scope.ack.project.room = {description: roomName};
+		
+		if ($scope.ack.project) {
+			$scope.ack.project.room = $scope.ack.project.room || {description: ''};
+			
+			if (!$scope.ack.project.room.id) {
+				$scope.ack.project.room.description = roomName || '';
+			} else {
+				if ($scope.ack.project.room.description.indexOf(roomName) == -1) {
+					$scope.ack.project.room = {description: roomName};
+				}
 			}
+		} else {
+			$scope.ack.room = {description: roomName};
 		}
 	};
 	
@@ -5062,7 +5078,13 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		 
 		for (var j = 0; j < testWords.length; j++) {
 			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type] && !$scope.ack.project[testWords[j].type]) {
-				throw new TypeError(testWords[j].message);
+				//throw new TypeError(testWords[j].message);
+			}
+		}
+
+		if ($scope.ack.room) {
+			if (!$scope.ack.project) {
+				throw new TypeError('Missing a project for the room.');
 			}
 		}
 		
@@ -7592,7 +7614,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	 * Setup vars
 	 */
 	$scope.po = new PurchaseOrder();
-	$scope.po.id = 1;
 	$scope.po.items = [];
 	$scope.listView = true;
 	$scope.creating = false;
@@ -12684,16 +12705,27 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	}
 
 	$scope.quantityDescription = function (supply) {
-		return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+		try{
+			return supply.$$quantity ? 'จำนวนใหม่ ในสต๊อก/Updated Quantity' : 'จำนวน ในสต๊อก/Quantity';
+		} catch (e) {
+			return 'จำนวน ในสต๊อก/Quantity';
+		}
 	}
 
 	$scope.newSupplyQuantity = function (supply) {
-
-		return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+		try {
+			return supply.quantity + ((supply.$$action == 'add' ? supply.$$quantity : (-1 * supply.$$quantity)) || 0);
+		} catch (e) {
+			return 0;
+		}
 	}
 
 	$scope.supplyQuantityLabel = function (supply) {
-		return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
+		try {
+			return supply.$$action == 'add' ? 'เพิ่มจำนวน/Add Quantity' : 'ลดจำนวน/Reduce Quantity';
+		} catch (e) {
+			return 'เพิ่มจำนวน/Add Quantity'
+		}
 	}
 
 
@@ -22968,8 +23000,6 @@ angular.module('employeeApp.services')
 		 * If the parse switch is on, add the keypressed character to the code string
 		 */
 		} else {
-			console.log(evt.code);
-			console.log(this._activeParse);
 			if (this._activeParse) {
 				// Cancel original timeout
 				$timeout.cancel(this._timeoutParse);
@@ -22981,7 +23011,7 @@ angular.module('employeeApp.services')
 	
 				}.bind(this), 1000, false);		
 
-				console.log(code);
+				console.debug("Add character: " + code);
 				evt.preventDefault();
 				this._parse(evt);
 			}

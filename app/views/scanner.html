@@ -80,7 +80,7 @@
 					<!--
 						List of items in the Purchase Order
 					-->
-					<md-card class="item" ng-repeat="item in po.items">
+					<md-card class="item" ng-repeat="item in po.items track by item.id">
 						<md-card-content>
 							<div layout="column">
 								<h4>{{::item.description}}</h4>
@@ -135,7 +135,7 @@
 					<!--
 						List of Equipments
 					-->
-					<md-card class="equipment" ng-repeat="equipment in equipmentList">
+					<md-card class="equipment" ng-repeat="equipment in equipmentList track by $index">
 						<md-card-content layout="row">
 							<div layout="column">
 								<h4>{{::equipment.description}}</h4>
@@ -243,13 +243,16 @@
 					<!--
 						List of supplies to either checkin or checkout
 					-->
-					<md-card class="supply" ng-repeat="supply in supplies" ng-init="supply.$$action = 'add'">
+					<md-card class="supply" ng-repeat="supply in supplies track by $index" ng-init="supply.$$action = 'add'">
 						<md-card-content>
 							<div class='img-container'>
 								<img ng-src="{{supply.image.url}}"/>
 							</div>
 							<div class="supply-details">
-								<h3>{{::supply.description}}</h3>
+								<md-input-container>
+									<label>ชื่อรายการ/Description</label>
+									<textarea ng-model="supply.description"></textarea>
+								</md-input-container>
 								<md-input-container>
 									<label>Type</label>
 									<md-select ng-model="supply.type">

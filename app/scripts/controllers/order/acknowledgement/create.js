@@ -457,12 +457,18 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 				projects.push($scope.projects[i]);
 			}
 		}
-		console.log(projects);
 		return projects;
 	};
 	
 	$scope.addProject = function (project) {
 		$scope.ack.project = project;
+
+		// Add selected room to the project if user input room first
+		if ($scope.ack.room) {
+			$scope.ack.project.room = angular.copy($scope.ack.room);
+			delete $scope.ack.room;
+		}
+
 		$scope.tempSave();
 	};
 	
@@ -495,11 +501,14 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	$scope.searchRooms = function (query) {
 		var lowercaseQuery = angular.lowercase(query);
 		var rooms = [];
-		for (var i = 0; i < $scope.ack.project.rooms.length; i++) {
-			if (angular.lowercase($scope.ack.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
-				rooms.push($scope.ack.project.rooms[i]);
+		if ($scope.ack.project) {
+			for (var i = 0; i < $scope.ack.project.rooms.length; i++) {
+				if (angular.lowercase($scope.ack.project.rooms[i].description).indexOf(lowercaseQuery) !== -1) {
+					rooms.push($scope.ack.project.rooms[i]);
+				}
 			}
 		}
+		
 		return rooms;
 	};
 	
@@ -517,14 +526,19 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 	 */
 
 	$scope.updateRoomName = function (roomName) {
-		$scope.ack.project.room = $scope.ack.project.room || {description: ''};
-	
-		if (!$scope.ack.project.room.id) {
-			$scope.ack.project.room.description = roomName || '';
-		} else {
-			if ($scope.ack.project.room.description.indexOf(roomName) == -1) {
-				$scope.ack.project.room = {description: roomName};
+		
+		if ($scope.ack.project) {
+			$scope.ack.project.room = $scope.ack.project.room || {description: ''};
+			
+			if (!$scope.ack.project.room.id) {
+				$scope.ack.project.room.description = roomName || '';
+			} else {
+				if ($scope.ack.project.room.description.indexOf(roomName) == -1) {
+					$scope.ack.project.room = {description: roomName};
+				}
 			}
+		} else {
+			$scope.ack.room = {description: roomName};
 		}
 	};
 	
@@ -1018,7 +1032,13 @@ function ($scope, Acknowledgement, Customer, $filter, $window, Project, Notifica
 		 
 		for (var j = 0; j < testWords.length; j++) {
 			if (testWords[j].re.test($scope.ack.remarks) && !$scope.ack[testWords[j].type] && !$scope.ack.project[testWords[j].type]) {
-				throw new TypeError(testWords[j].message);
+				//throw new TypeError(testWords[j].message);
+			}
+		}
+
+		if ($scope.ack.room) {
+			if (!$scope.ack.project) {
+				throw new TypeError('Missing a project for the room.');
 			}
 		}
 		
