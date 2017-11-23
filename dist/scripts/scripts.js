@@ -12699,7 +12699,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	};
 
 	$scope.addSupply = function (supply) {
-		$scope.supplies.push(angular.copy(supply));
+		console.log(supply);
+		$scope.supplies.push(angular.copy(supply || {}));
 		$scope.selectedSupply = null;
 		$scope.supplySearchText = '';
 	}
