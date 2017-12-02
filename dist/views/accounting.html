@@ -8,6 +8,9 @@
         <nav>
             <ul class="list">
                 <li ng-show="currentUser.hasPermission('can_view_transactions')">
+                    <a ng-href="#/accounting/account">Chart of Accounts</a>
+                </li>
+                <li ng-show="currentUser.hasPermission('can_view_transactions')">
                     <a ng-href="#/accounting/transaction">Transactions</a>
                 </li>
             </ul>

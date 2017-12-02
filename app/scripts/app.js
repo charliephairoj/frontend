@@ -169,6 +169,11 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
       .when('/accounting/transaction/:id', {
         templateUrl: 'views/accounting/transaction/details.html',
         controller: 'AccountingTransactionDetailsCtrl'
+  })
+  .when('/accounting/account', {
+        templateUrl: 'views/accounting/account/view.html',
+        controller: 'AccountingAccountViewCtrl'
+        
 	})
       .when('/order/acknowledgement/:id', {
         templateUrl: 'views/order/acknowledgement/details.html',

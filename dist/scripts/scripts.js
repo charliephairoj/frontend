@@ -169,6 +169,11 @@ angular.module('employeeApp', ['ngRoute', 'ngResource', 'ngCookies', 'ngMessages
       .when('/accounting/transaction/:id', {
         templateUrl: 'views/accounting/transaction/details.html',
         controller: 'AccountingTransactionDetailsCtrl'
+  })
+  .when('/accounting/account', {
+        templateUrl: 'views/accounting/account/view.html',
+        controller: 'AccountingAccountViewCtrl'
+        
 	})
       .when('/order/acknowledgement/:id', {
         templateUrl: 'views/order/acknowledgement/details.html',
@@ -779,6 +784,99 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 		}
 	});
 	*/
+}]);
+
+
+angular.module('employeeApp')
+.controller('AccountingAccountViewCtrl', ['$scope', 'Account', '$mdDialog', 'Notification', '$log', '$timeout',
+function ($scope, Account, $mdDialog, Notification, $log, $timeout) {
+	$scope.accounts = Account.query();
+    var fetching = false;
+
+    //Loads the next set of data
+	$scope.loadNext = function () {
+		if (!fetching) {
+            fetching = true;
+            Notification.display("Loading more accounts...", false);
+			
+			Account.query({
+				limit: 50, 
+				offset: $scope.accounts.length
+			}, function (resources) {
+                Notification.hide();
+                
+				for (var i = 0; i < resources.length; i++) {
+					$scope.accounts.push(resources[i]);
+                }
+                
+                fetching = false;
+                
+			});
+		}
+    };
+    
+
+    /**
+     * Update the account when there is a change
+     */
+    $scope.update = function(account) {
+        $timeout.cancel(account.$$temporaryUpdate);
+        account.$$temporaryUpdate = $timeout(function () {
+            Notification.display("Updating account " + this.code + '...');
+            
+            this.$update(function(){
+                Notification.display("Updated account " + this.code + '.');
+            }.bind(this));
+        }.bind(account), 5000);
+    }
+
+
+    /**
+	 * Shows the dialog to add a new deal
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.showAddAccount = function () {
+		
+		$mdDialog.show({
+			templateUrl: 'views/templates/add-account.html',
+			controllerAs: 'ctrl',
+			locals: {
+                accounts: $scope.accounts
+			},
+			controller: ['$scope', '$mdDialog', 'accounts', function ($scope, $mdDialog, accounts) {
+                $scope.account = new Account();
+                
+				/**
+				 * Save the acknowledgement
+				 * 
+				 * @public
+				 * @param {Object} acknowledgement - The acknowledgement to be saved
+				 */
+				$scope.add = function () {
+					
+					Notification.display("Adding a new Account to the Chart of Accounts");
+					
+					$scope.account.$create(function (resp) {
+                        Notification.display("Account " + resp.code + ": " + resp.name_en);
+                        accounts.push(angular.copy(resp));
+                        $scope.cancel();
+					}, function (e) {
+                        $log.error(e);
+                    });
+				};
+				
+				
+				$scope.cancel = function () {
+                    $scope.account = new Account();
+					$mdDialog.hide();
+				}
+			}],
+			clickOutsideToClose: true
+		});
+	};
 }]);
 
 
@@ -7114,7 +7212,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 			fetching = true;
 			var moreAckToast = $mdToast.show($mdToast
 					.simple()
-					.position('top right')
+					.position('bottom right')
 					.hideDelay(0)
 					.content('Loading more quotations...'));
 			Estimate.query({
@@ -15695,6 +15793,22 @@ angular.module('employeeApp')
 
 
 angular.module('employeeApp')
+.directive('ecFocus', [function () {
+	return {
+		restrict: 'A',
+		replace: false,
+		link: function (scope, element, attrs) {
+			element.bind('focus', function () {
+				scope.$eval(attrs.ecFocus);
+			});
+       
+           
+		}
+	};
+}]);
+
+
+angular.module('employeeApp')
 .directive('employee', ['$rootScope', '$timeout', 'Notification', 'Attendance', '$log',
 function ($rootScope, $timeout, Notification, Attendance, $log) {
     return {
@@ -21852,6 +21966,19 @@ angular.module('employeeApp.services')
     }
     
     return MarkerFactory;
+}]);
+
+
+angular.module('employeeApp.services')
+.factory('Account', ['$resource', '$http', function($resource, $http) {
+	return $resource('/api/v1/account/:id/', {id:'@id'}, {
+		update: {
+			method: 'PUT'
+		},
+		create: {
+			method: 'POST'
+		}
+	});   
 }]);
 
 

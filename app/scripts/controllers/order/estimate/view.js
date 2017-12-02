@@ -57,7 +57,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 			fetching = true;
 			var moreAckToast = $mdToast.show($mdToast
 					.simple()
-					.position('top right')
+					.position('bottom right')
 					.hideDelay(0)
 					.content('Loading more quotations...'));
 			Estimate.query({
