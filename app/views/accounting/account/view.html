@@ -1,0 +1,65 @@
+<div class="chart-of-accounts">
+        
+        
+        <!--
+            Workspace
+        -->
+        
+        <div class="workspace" ng-class="{'map': map}">
+            
+            
+            <md-toolbar layout="column" layout-align="center center" md-scroll-shrink="true">
+                <div class="container" layout="row" layout-align="center center">
+                    <h3><span>Chart of Accounts</span></h3>
+                    <div flex></div>
+                    
+                    <md-button class="md-icon-button md-accent md-raised" ng-click="showAddAccount()">
+                        <md-tooltip>
+                            Add New Account
+                        </md-tooltip>
+                        <i class="material-icons">add</i>
+                    </md-button>
+                    <!--
+                    <md-button class="md-icon-button md-primary" ng-click="download()" ng-disabled="!currentUser.hasPermission('view_estimate')">
+                        <md-tooltip>Download</md-tooltip>
+                        <i class="material-icons">file_download</i>
+                    </md-button>
+                        -->
+                    <input class="search" type="text" ng-model="query.$.$" />
+                </div>			
+                
+                <div class="title-bar">
+                    <div class="id">ID</div>
+                    <div class="code">ACCOUNT CODE</div>
+                    <div class="name-en">DESCRIPTION</div>
+                    <div class="name-th">DESCRIPTION</div>
+                </div>
+                
+                
+                
+            </md-toolbar>
+            <md-content on-scroll-end="loadNext()">
+                                
+                <md-card class="quotation" ng-repeat="account in accounts | filter:query | orderBy: 'code' track by $index" >
+                    <md-card-content>
+                        <div class="item-preview-container">	
+                            <div class="item" >
+                                <div class="id">{{account.id}}</div>
+                                <div class="code">
+                                    <input type="text" ng-model="account.code" ec-focus="update(account)" />
+                                </div>
+                                <div class="name-en" ng-click="active=true">
+                                    <input type="text" ng-model="account.name_en" ec-focus="update(account)" />
+                                </div>
+                                <div class="name-th" ng-click="active=true">
+                                    <input type="text" ng-model="account.name_th" ec-focus="update(account)" />
+                                </div>
+                        
+                            </div>
+                            
+                        </div>
+                    </md-card-content>
+                </md-card>                       
+            </md-content>
+        </div>
+    </div>

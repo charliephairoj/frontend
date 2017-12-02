@@ -1,0 +1,48 @@
+
+<md-card class="add-account">
+    <md-card-title>
+        <md-card-title-text>
+            Add New Account
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <table>
+           
+            <tbody>
+                    <tr>
+                        <td>
+                            <md-input-container>
+                                <label>Account Code</label>
+                                <input type="text" ng-model="account.code" />
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <label>Description English</label>
+                                <input type="text" ng-model="account.name_en" />
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <label>Description Thai</label>
+                                <input type="text" ng-model="account.name_th" />
+                            </md-input-container>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+
+        <div class="action">
+            <md-button class="md-raised md-accent" ng-click="add()">
+                Add
+            </md-button>
+            <md-button class="md-raised md-accent" ng-click="cancel()">
+                Cancel
+            </md-button>
+        </div>
+    </md-card-content>
+</md-card>
+
+
+
+
