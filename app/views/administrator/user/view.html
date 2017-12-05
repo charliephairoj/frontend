@@ -84,6 +84,11 @@
 						<md-tooltip>Save User</md-tooltip>
 						<i class="material-icons">save</i>
 					</md-button>
+					<md-button class="add md-accent md-raised md-icon-button" ng-click="showChangePassword(user)"
+						ng-disabled="!currentUser.hasPermission('change_user')">
+						<md-tooltip>Reset Password</md-tooltip>
+						<i class="material-icons">lock</i>
+					</md-button>
 	            	<md-button class="md-icon-button md-warn md-raised" ng-click="remove(user, $index)"
 						ng-disabled="!currentUser.hasPermission('delete_user')">
 						<md-tooltip>

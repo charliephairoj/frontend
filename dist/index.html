@@ -52,15 +52,15 @@
 					</md-button>
 					<span>Contacts</span>
 				</a>
-				<a class="menu-item-container"  href="#/product">
-	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('products')">
+				<a class="menu-item-container"  href="#/product" ng-show="currentUser.hasModule('products')">
+	                <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Products</md-tooltip>
 						<i class="material-icons">weekend</i>
 					</md-button>
 					<span>Products</span>
 				</a>
-				<a class="menu-item-container" href="#/supply">
-	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('supplies')">
+				<a class="menu-item-container" href="#/supply" ng-show="currentUser.hasModule('supplies')">
+	                <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Supplies</md-tooltip>
 						<i class="material-icons">build</i>
 					</md-button>
@@ -81,22 +81,22 @@
 					<span>Sales Deals</span>
 				</a>			
 				<md-button href="#/equipment" class="menu-item md-icon-button" ng-show="currentUser.hasModule('equipment')">Equipment</md-button>
-				<a class="menu-item-container" href="#/order">
-				    <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
+				<a class="menu-item-container" href="#/order" ng-show="currentUser.hasModule('acknowledgements') || currentUser.hasModule('shipping') || currentUser.hasModule('po')">
+				    <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Orders</md-tooltip>
 						<i class="material-icons">shopping_cart</i>
 					</md-button>
 					<span>Orders</span>
 				</a>
-				<a class="menu-item-container" href="#/order/shipping">
-	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('shipping')">
+				<a class="menu-item-container" href="#/order/shipping" ng-show="currentUser.hasModule('shipping')">
+	                <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Shipping</md-tooltip>
 						<i class="material-icons">local_shipping</i>
 					</md-button>
 					<span>Shipping</span>
 				</a>
-				<a class="menu-item-container" href="#/accounting">
-	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('accounting')">
+				<a class="menu-item-container" href="#/accounting" ng-show="currentUser.hasModule('accounting')">
+	                <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Accounting</md-tooltip>
 						<i class="material-icons">account_balance_wallet</i>
 					</md-button>
@@ -109,15 +109,15 @@
 					</md-button>
 					<span>Project</span>
 				</a>
-				<a class="menu-item-container" href="#/administrator">
-					<md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('administrator')">
+				<a class="menu-item-container" href="#/administrator" ng-show="currentUser.hasModule('administrator')">
+					<md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Administrator</md-tooltip>
 						<i class="material-icons">vpn_key</i>
 					</md-button>
 					<span>Administrator</span>
 				</a>
-				<a class="menu-item-container" href="#/hr">
-	                <md-button class="menu-item md-icon-button" ng-show="currentUser.hasModule('hr')">
+				<a class="menu-item-container" href="#/hr" ng-show="currentUser.hasModule('hr')">
+	                <md-button class="menu-item md-icon-button" >
 						<md-tooltip md-direction="right">Human Resources</md-tooltip>
 						<i class="material-icons">supervisor_account</i>
 					</md-button>

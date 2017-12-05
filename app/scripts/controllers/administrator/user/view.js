@@ -1,6 +1,7 @@
 
 angular.module('employeeApp')
-.controller('AdministratorUserViewCtrl', ['$scope', 'User', 'Group', 'Notification', function ($scope, User, Group, Notification) {
+.controller('AdministratorUserViewCtrl', ['$scope', 'User', 'Group', 'Notification', '$mdDialog', '$http',
+function ($scope, User, Group, Notification, $mdDialog, $http) {
 
 	//Request users from the server
 	$scope.users = User.query({limit: 0});
@@ -18,6 +19,55 @@ angular.module('employeeApp')
 		return groups;
 	};
 	
+	/**
+	 * Show Change Password Dialog
+	 * @param {*} user 
+	 */
+	$scope.showChangePassword = function (user) {
+		$mdDialog.show({
+			templateUrl: 'views/templates/change-password.html',
+			controllerAs: 'ctrl',
+			locals: {
+				'user':user
+			},
+			controller: function ($scope, $mdDialog, user) {
+				$scope.user = user;
+				$scope.requireOldPassword = false;
+
+
+				$scope.valid = function () {
+					try{
+						return (($scope.new_password === $scope.repeat_password) && $scope.new_password && $scope.new_password.length >= 6) ? true : false;						
+					} catch (e) {
+						return false;
+					}
+					
+				};
+
+
+				$scope.changePassword = function () {
+					$http.post('/api/v1/change_password/', {
+						'new_password': $scope.new_password,
+						'repeat_new_password': $scope.repeat_password,
+						'user_id': $scope.user.id
+					}).success(function (resp) {
+						Notification.display('Password changed for ' + $scope.user.first_name);
+						$scope.cancel();
+					}).error(function (e) {
+						console.log(e);
+					});
+				};
+
+				$scope.cancel = function () {
+					$mdDialog.hide();
+				};
+
+			},
+			clickOutsideToClose: true
+		});
+	}
+
+
 	$scope.save = function (user) {
 		if ($scope.currentUser.hasPermission('change_user')) {
 		
