@@ -535,26 +535,27 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	$scope.retrieveAttendances = function (start_date, end_date, employee) {
 		var options = {};
 		
-		if (start_date) {
+		if (start_date && end_date) {
 			options.start_date = start_date;
-		}
-		
-		if (end_date) {
 			options.end_date = end_date;
+
+			options.employee_id = employee.id;
+			
+			Attendance.query(options, function (resp) {
+				for (var i = 0; i < resp.length; i++) {
+					if (resp[i].overtime_request){
+						resp[i].overtime_request = new Date(resp[i].overtime_request);
+					}
+				}
+				employee.attendances = resp;
+				
+				
+			});
 		}
 		
-		options.employee_id = employee.id;
 		
-		Attendance.query(options, function (resp) {
-			for (var i = 0; i < resp.length; i++) {
-				if (resp[i].overtime_request){
-					resp[i].overtime_request = new Date(resp[i].overtime_request);
-				}
-			}
-			employee.attendances = resp;
-			
-			
-		});
+		
+		
 	}
 	
 	/**
