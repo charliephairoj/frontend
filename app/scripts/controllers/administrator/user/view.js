@@ -49,6 +49,7 @@ function ($scope, User, Group, Notification, $mdDialog, $http) {
 					$http.post('/api/v1/change_password/', {
 						'new_password': $scope.new_password,
 						'repeat_new_password': $scope.repeat_password,
+						'reset_password': $scope.reset_password || false,
 						'user_id': $scope.user.id
 					}).success(function (resp) {
 						Notification.display('Password changed for ' + $scope.user.first_name);
