@@ -279,8 +279,8 @@
 									<h5 class="col clockout">{{::a.end_time | date:'hh:mm:ss a'}}</h5>
 									<div class="col ot-request">
 										
-										<md-select ng-model="a.overtime_request" ng-change="updateAttendance(a)" ng-model-options="{trackBy: '$value.getUTCHours() + $value.getUTCMinutes()'}" ng-disabled="!a.enable_overtime">
-											<md-option ng-value="overtime" ng-repeat="overtime in ::overtimes">{{::overtime | date:'hh:mm:ss a'}}</md-option>
+										<md-select ng-model="a.overtime_request" ng-model-options="{trackBy: '$index'}" ng-disabled="!a.enable_overtime">
+											<md-option ng-value="overtime" ng-repeat="overtime in ::getStandardOvertimes(a)">{{::overtime | date:'hh:mm:ss a'}}</md-option>
 										</md-select>
 									</div>
 									<h5 class="col regular-time">{{a.regular_time}}</h5>

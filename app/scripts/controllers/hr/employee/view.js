@@ -118,7 +118,50 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	
 	$scope.shifts = Shift.query();
 	
+	$scope.getStandardOvertimes = function (a) {
+		var overtimes = [];
+		var hour = 17;
+		var minute = 0;
+		
+		
+		for (var i = 1; i < 25; i++) {
+			
+			// Advance to the next hour
+			if (i % 2 > 0 && i > 0) {
+				hour += 1;
+				minute = 0;
+			
+			// Advance to the next half hour
+			} else {
+				minute = 30;
+				
+				if (hour === 24) {
+					hour = 0;
+				}
+			}
+			console.log(a.date);
+
+			var d = a.date
+
+			
+
+			try{
+				var time = new Date(2016, 2, 17, hour, minute, 0);
+			} catch (e) {
+				console.log(e);
+			}
+			
+			overtimes.push(time);
+		
+		}
+		
+		console.log(overtimes);
+
+		return overtimes
+	}
+
 	$scope.overtimes = [];
+	/** 
 	var hour = 17;
 	var minute = 0;
 	
@@ -142,6 +185,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 
 		$scope.overtimes.push(time);
 	}
+	*/
     
 	// Convert all number strings into numbers
 	var re = /^(?!0+[1-9])\d+?(\,d+)(\.\d+)?$/;

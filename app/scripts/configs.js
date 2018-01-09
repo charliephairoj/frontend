@@ -87,7 +87,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide, $mdDat
      * Takes out the objects from the data 
      */
     $httpProvider.defaults.transformResponse.push(function (data, headers) {
-		if (typeof(data) == 'object') {
+		if (typeof(data) == 'object' && data) {
 			if (data.hasOwnProperty('results')) {
 				return data.results;
 			}

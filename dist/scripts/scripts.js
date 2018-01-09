@@ -464,7 +464,7 @@ function ($httpProvider, $resourceProvider, $mdThemingProvider, $provide, $mdDat
      * Takes out the objects from the data 
      */
     $httpProvider.defaults.transformResponse.push(function (data, headers) {
-		if (typeof(data) == 'object') {
+		if (typeof(data) == 'object' && data) {
 			if (data.hasOwnProperty('results')) {
 				return data.results;
 			}
@@ -3291,7 +3291,50 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	
 	$scope.shifts = Shift.query();
 	
+	$scope.getStandardOvertimes = function (a) {
+		var overtimes = [];
+		var hour = 17;
+		var minute = 0;
+		
+		
+		for (var i = 1; i < 25; i++) {
+			
+			// Advance to the next hour
+			if (i % 2 > 0 && i > 0) {
+				hour += 1;
+				minute = 0;
+			
+			// Advance to the next half hour
+			} else {
+				minute = 30;
+				
+				if (hour === 24) {
+					hour = 0;
+				}
+			}
+			console.log(a.date);
+
+			var d = a.date
+
+			
+
+			try{
+				var time = new Date(2016, 2, 17, hour, minute, 0);
+			} catch (e) {
+				console.log(e);
+			}
+			
+			overtimes.push(time);
+		
+		}
+		
+		console.log(overtimes);
+
+		return overtimes
+	}
+
 	$scope.overtimes = [];
+	/** 
 	var hour = 17;
 	var minute = 0;
 	
@@ -3315,6 +3358,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 
 		$scope.overtimes.push(time);
 	}
+	*/
     
 	// Convert all number strings into numbers
 	var re = /^(?!0+[1-9])\d+?(\,d+)(\.\d+)?$/;
@@ -21636,16 +21680,28 @@ angular.module('employeeApp.services')
 		'occurred_at',
 		'employment_date',
 		'receive_date',
-		'order_date'
+		'order_date',
+		'start_time',
+		'end_time',
+		'overtime_request'
 	]
 	
 	function parseObj(data) {
 		for (var i in data) {
+
+			
 			if (typeof(data[i]) === 'object') {
 				parseObj(data[i]);
 			} else if (typeof(data[i]) === 'string') {
 				if (attrs.indexOf(i) > -1) {
-					data[i] = new Date(data[i]);
+					
+					var d = new Date(data[i]);
+					if (typeof(d) != 'string') {
+						data[i] = d;						
+					} else {
+						console.log(d);
+						console.log(data[i]);
+					}
 				}
 			}
 		}
