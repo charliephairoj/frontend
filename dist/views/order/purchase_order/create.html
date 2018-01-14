@@ -52,13 +52,35 @@
 						<md-card class="order">
 							<md-card-content>
 								<div class="company">
-								<md-input-container>
-									<label>{{labels.company[lang]}}</label>
-									<md-select ng-model="po.company">
-										<md-option value="Alinea Group">Alinea Group</md-option>
-										<md-option value="Dellarobbia Thailand">Dellarobbia Thailand</md-option>
-									</md-select>
-								</md-input-container>
+									<md-input-container>
+										<label>{{labels.company[lang]}}</label>
+										<md-select ng-model="po.company">
+											<md-option value="Alinea Group">Alinea Group</md-option>
+											<md-option value="Dellarobbia Thailand">Dellarobbia Thailand</md-option>
+										</md-select>
+									</md-input-container>
+								</div>
+								<div class="acknowledgement">
+									<div class="name">
+										<md-autocomplete flex="noshrink" required 
+											name='acknowledgement'
+											md-items="ack in searchAcks(ackSearchText)" 
+											md-selected-item="selectedAck"
+											md-selected-item-change="addAck(selectedAck)"
+											md-search-text="ackSearchText"
+											md-search-text-change="retrieveAcks(ackSearchText)"
+											md-item-text="ack.id"
+											md-floating-label="Acknowledgement"
+											md-no-cache="true"
+											md-min-length="0">
+											<md-item-template>
+												<span md-highlight-text="ackSearchText">{{ack.id + ' ' + ack.customer.name}}</span>
+											</md-item-template>
+											<div ng-messages="poForm.acknowledgement.$error">
+												<div class="hint" ng-message="true">Starting typing to search or just type the name...</div>
+											</div>
+										</md-autocomplete>
+									</div>
 								</div>
 								<div class="supplier">	
 									<div class="name">

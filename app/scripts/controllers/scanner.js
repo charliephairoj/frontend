@@ -39,7 +39,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.tempUrl = "http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png";
 	
 	keyboardNav.onenter = function (e) {
-		e.preventDefault();
+		//e.preventDefault();
 	};
 
 	//Disable the global scanner
@@ -255,7 +255,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the supply code regex
 	 */
-	$scope.scanner.register(/^DRS-\d+$/, function (code) {
+	$scope.scanner.register(/DRS-\d+/, function (code) {
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
@@ -281,7 +281,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the upc regex
 	 */
-	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
+	$scope.scanner.register(/\d+(\-\d+)*/, function (code) {
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
@@ -289,7 +289,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		}
 	
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
-			if (reponse.length > 0){
+			if (response.length > 0){
 				response[0].$$action = 'subtract';
 				$scope.supplies.push(response[0]);
 				Notification.display('Added ' + response.description + ' to checkout.', 2000);
@@ -308,7 +308,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the Purchase Order regex
 	 */
-	$scope.scanner.register(/^PO-\d+$/, function (code) {
+	$scope.scanner.register(/PO-\d+/, function (code) {
 		try {
 			Notification.display('Looking up Purchase Order...', false);
 		} catch (e) {
@@ -332,7 +332,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 *  Regiester the equipment code
 	 */ 
-	$scope.scanner.register(/^DRE-\d+$/, function (code) {
+	$scope.scanner.register(/DRE-\d+/, function (code) {
 		Notification.display('Looking up Equipment...', false);
 	
 		Equipment.get({id: code.split('-')[1]}, function (response) {
@@ -350,7 +350,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 *  Regiester the employee code
 	 */ 
-	$scope.scanner.register(/^DREM-\d+$/, function (code) {
+	$scope.scanner.register(/DREM-\d+$/, function (code) {
 		//Notifiy the user of action
 		Notification.display("Looking up employee...", false);
 	

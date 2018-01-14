@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope',
-function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope', 'Acknowledgement',
+function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope, Acknowledgement) {
 
 	/**
 	 * Titles 
@@ -412,6 +412,60 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		//Retrieve known supplies for this supplier
 		$scope.retrieveSupplies();
 	};
+
+	
+	/**
+	 * ACKNOWLEDGEMENT SECTION
+	 *
+	 * Describes the projects, room and phases
+	 */
+
+	$scope.acknowledgements = Acknowledgement.query({page_size:100, limit:0});
+	
+	// Watch on supplierSearchText to get products from the server
+	$scope.retrieveAcks = function (query) {
+		if (query) {
+			Acknowledgement.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.acknowledgements.indexOfById(responses[i]) === -1) {
+						$scope.acknowledgements.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searchAcks = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var acks = [];
+		/** 
+		for (var i = 0; i < $scope.acknowledgements.length; i++) {
+			if (angular.lowercase($scope.acknowledgements[i].id).indexOf(lowercaseQuery) !== -1) {
+				acks.push($scope.acknowledgements[i]);
+			}
+		}
+		*/
+
+		var acks = $filter('filter')($scope.acknowledgements, query);
+		console.log(acks);
+		return acks;
+	};
+
+	$scope.addAck = function (acknowledgement) {
+		if (acknowledgement) {
+			console.log(acknowledgement);
+			$scope.po.acknowledgement = acknowledgement;
+		}
+		
+	};
+	
+		
 
 
 	/**

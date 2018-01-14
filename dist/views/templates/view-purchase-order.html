@@ -45,6 +45,10 @@
                                     <td>Website</td>
                                     <td>{{po.supplier.website}}</td>
                                 </tr>
+                                <tr ng-if="::po.acknowledgement">
+                                    <td>Acknowledgement</td>
+                                    <td><a ng-href="#/order/acknowledgement/{{po.acknowledgement.id}}" target="_blank">{{po.acknowledgement.id}}</a></td>
+                                </tr>
                                 <tr>
                                     <td>Acknowledged By</td>
                                     <td>{{po.employee.name}}</td>

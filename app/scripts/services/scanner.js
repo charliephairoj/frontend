@@ -15,7 +15,8 @@ angular.module('employeeApp.services')
 		parseStandardCodes = true,
 		timeoutVar = 0,
 		re = /^METROLOGICK07[A-Z]\-\d+$/,
-		codeRe = /[A-Z]\-\d+$/;
+		codeRe = /[A-Z]\-\d+$/,
+		stream = '';
 		
 		
 	var check = function (evt) {
@@ -23,6 +24,7 @@ angular.module('employeeApp.services')
 	};
     
     function Scanner(identity) {
+		this.stream = '';
 		this._identity = identity;
 		this._activeParse = false;
 		this._timeoutParse = null;
@@ -83,6 +85,46 @@ angular.module('employeeApp.services')
 		 */
 		this.stringCheck(evt);
 		
+		startCode = /]C0$/
+		barcode = /]C0(.+)(\r)?/
+		safetyCode1 = /](.)?(.)?$/
+		safetyCode2 = /]C0.+$/
+		
+		/**
+		 * Add the new read charatcter to the stream
+		 */
+
+		switch (evt.keyCode){
+			case 189:
+				this.stream = this.stream + '-';
+				break;
+			case 221:
+				this.stream = this.stream + ']';
+				break;
+			default:
+				var letter =  String.fromCharCode(evt.keyCode);
+				this.stream = this.stream + letter;
+				break;
+		}
+
+		console.log(startCode.test(this.stream));
+		console.log(barcode.test(this.stream));
+		console.log(this.stream);
+
+		if (!safetyCode1.test(this.stream) && !safetyCode2.test(this.stream) && this.stream.length > 30) {
+				this.stream = '';
+		} else if (startCode.test(this.stream)) {
+			this._activeParse = true;
+		} else if (this._activeParse && evt.keyCode === 13) {
+			// Extract the code from the stream
+			var code = barcode.exec(this.stream)[1];
+			this._dispatch(code);
+			this.stream = '';
+			this._activeParse = false;
+		}
+
+
+
 		/*
 		 * Checks if the character is the start code for the 
 		 * scanner. If it is the start code, then turn on the parse

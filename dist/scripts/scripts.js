@@ -7736,8 +7736,8 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope',
-function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope) {
+.controller('OrderPurchaseOrderCreateCtrl', ['$scope', 'PurchaseOrder', 'Supplier', 'Supply', 'Notification', '$filter', '$timeout', '$window', 'Project', 'Room', 'Phase', '$mdDialog', '$log', '$location', 'Label', '$rootScope', 'Acknowledgement',
+function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeout, $window, Project, Room, Phase, $mdDialog, $log, $location, Label, $rootScope, Acknowledgement) {
 
 	/**
 	 * Titles 
@@ -8148,6 +8148,60 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		//Retrieve known supplies for this supplier
 		$scope.retrieveSupplies();
 	};
+
+	
+	/**
+	 * ACKNOWLEDGEMENT SECTION
+	 *
+	 * Describes the projects, room and phases
+	 */
+
+	$scope.acknowledgements = Acknowledgement.query({page_size:100, limit:0});
+	
+	// Watch on supplierSearchText to get products from the server
+	$scope.retrieveAcks = function (query) {
+		if (query) {
+			Acknowledgement.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.acknowledgements.indexOfById(responses[i]) === -1) {
+						$scope.acknowledgements.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searchAcks = function (query) {
+		var lowercaseQuery = angular.lowercase(query);
+		var acks = [];
+		/** 
+		for (var i = 0; i < $scope.acknowledgements.length; i++) {
+			if (angular.lowercase($scope.acknowledgements[i].id).indexOf(lowercaseQuery) !== -1) {
+				acks.push($scope.acknowledgements[i]);
+			}
+		}
+		*/
+
+		var acks = $filter('filter')($scope.acknowledgements, query);
+		console.log(acks);
+		return acks;
+	};
+
+	$scope.addAck = function (acknowledgement) {
+		if (acknowledgement) {
+			console.log(acknowledgement);
+			$scope.po.acknowledgement = acknowledgement;
+		}
+		
+	};
+	
+		
 
 
 	/**
@@ -12833,7 +12887,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.tempUrl = "http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png";
 	
 	keyboardNav.onenter = function (e) {
-		e.preventDefault();
+		//e.preventDefault();
 	};
 
 	//Disable the global scanner
@@ -13049,7 +13103,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the supply code regex
 	 */
-	$scope.scanner.register(/^DRS-\d+$/, function (code) {
+	$scope.scanner.register(/DRS-\d+/, function (code) {
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
@@ -13075,7 +13129,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the upc regex
 	 */
-	$scope.scanner.register(/^\d+(\-\d+)*$/, function (code) {
+	$scope.scanner.register(/\d+(\-\d+)*/, function (code) {
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
@@ -13083,7 +13137,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		}
 	
 		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
-			if (reponse.length > 0){
+			if (response.length > 0){
 				response[0].$$action = 'subtract';
 				$scope.supplies.push(response[0]);
 				Notification.display('Added ' + response.description + ' to checkout.', 2000);
@@ -13102,7 +13156,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 * Register the Purchase Order regex
 	 */
-	$scope.scanner.register(/^PO-\d+$/, function (code) {
+	$scope.scanner.register(/PO-\d+/, function (code) {
 		try {
 			Notification.display('Looking up Purchase Order...', false);
 		} catch (e) {
@@ -13126,7 +13180,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 *  Regiester the equipment code
 	 */ 
-	$scope.scanner.register(/^DRE-\d+$/, function (code) {
+	$scope.scanner.register(/DRE-\d+/, function (code) {
 		Notification.display('Looking up Equipment...', false);
 	
 		Equipment.get({id: code.split('-')[1]}, function (response) {
@@ -13144,7 +13198,7 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	/*
 	 *  Regiester the employee code
 	 */ 
-	$scope.scanner.register(/^DREM-\d+$/, function (code) {
+	$scope.scanner.register(/DREM-\d+$/, function (code) {
 		//Notifiy the user of action
 		Notification.display("Looking up employee...", false);
 	
@@ -23134,7 +23188,8 @@ angular.module('employeeApp.services')
 		parseStandardCodes = true,
 		timeoutVar = 0,
 		re = /^METROLOGICK07[A-Z]\-\d+$/,
-		codeRe = /[A-Z]\-\d+$/;
+		codeRe = /[A-Z]\-\d+$/,
+		stream = '';
 		
 		
 	var check = function (evt) {
@@ -23142,6 +23197,7 @@ angular.module('employeeApp.services')
 	};
     
     function Scanner(identity) {
+		this.stream = '';
 		this._identity = identity;
 		this._activeParse = false;
 		this._timeoutParse = null;
@@ -23202,6 +23258,46 @@ angular.module('employeeApp.services')
 		 */
 		this.stringCheck(evt);
 		
+		startCode = /]C0$/
+		barcode = /]C0(.+)(\r)?/
+		safetyCode1 = /](.)?(.)?$/
+		safetyCode2 = /]C0.+$/
+		
+		/**
+		 * Add the new read charatcter to the stream
+		 */
+
+		switch (evt.keyCode){
+			case 189:
+				this.stream = this.stream + '-';
+				break;
+			case 221:
+				this.stream = this.stream + ']';
+				break;
+			default:
+				var letter =  String.fromCharCode(evt.keyCode);
+				this.stream = this.stream + letter;
+				break;
+		}
+
+		console.log(startCode.test(this.stream));
+		console.log(barcode.test(this.stream));
+		console.log(this.stream);
+
+		if (!safetyCode1.test(this.stream) && !safetyCode2.test(this.stream) && this.stream.length > 30) {
+				this.stream = '';
+		} else if (startCode.test(this.stream)) {
+			this._activeParse = true;
+		} else if (this._activeParse && evt.keyCode === 13) {
+			// Extract the code from the stream
+			var code = barcode.exec(this.stream)[1];
+			this._dispatch(code);
+			this.stream = '';
+			this._activeParse = false;
+		}
+
+
+
 		/*
 		 * Checks if the character is the start code for the 
 		 * scanner. If it is the start code, then turn on the parse
