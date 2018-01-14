@@ -19,7 +19,7 @@ angular.module('employeeApp.services')
 	function parseObj(data) {
 		for (var i in data) {
 
-			
+			console.log(i);
 			if (typeof(data[i]) === 'object') {
 				parseObj(data[i]);
 			} else if (typeof(data[i]) === 'string') {

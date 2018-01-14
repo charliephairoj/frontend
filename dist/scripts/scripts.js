@@ -3289,8 +3289,9 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		}
 	});
 	
-	$scope.shifts = Shift.query();
-	
+	//$scope.shifts = Shift.query();
+	$scope.shifts = [{"id":1,"start_time":"08:00:00","end_time":"17:00:00"}];
+
 	$scope.getStandardOvertimes = function (a) {
 		var overtimes = [];
 		var hour = 17;
@@ -21743,7 +21744,7 @@ angular.module('employeeApp.services')
 	function parseObj(data) {
 		for (var i in data) {
 
-			
+			console.log(i);
 			if (typeof(data[i]) === 'object') {
 				parseObj(data[i]);
 			} else if (typeof(data[i]) === 'string') {

@@ -116,8 +116,9 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		}
 	});
 	
-	$scope.shifts = Shift.query();
-	
+	//$scope.shifts = Shift.query();
+	$scope.shifts = [{"id":1,"start_time":"08:00:00","end_time":"17:00:00"}];
+
 	$scope.getStandardOvertimes = function (a) {
 		var overtimes = [];
 		var hour = 17;
