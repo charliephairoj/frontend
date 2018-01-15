@@ -463,6 +463,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		acknowledgement.$create(function (resp) {
 			Notification.display('Acknowledgement #' + resp.id + ' created from quotation #' + quotation.id, 2000);
 			quotation.status = 'ordered';
+			quotation.acknowledgement = resp;
 			quotation.$update();
 			
 			$scope.safeApply(function () {
