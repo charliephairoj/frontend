@@ -1,9 +1,10 @@
 
 angular.module('employeeApp')
-.controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', '$mdDialog', 'FileUploader', '$log', 'Shift', 'Attendance',
-function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, Attendance) {
+.controller('HrEmployeeViewCtrl', ['$scope', 'Employee', 'Notification', '$mdDialog', 'FileUploader', '$log', 'Shift', 'Attendance', '$q', '$timeout',
+function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, Attendance, $q, $timeout) {
     
 	var fetching = false;
+	$scope.selected_date = null;
 	$scope.departments = {
 			'tufting': {'en': 'Tufting',
 						'th': 'tufting'},
@@ -101,67 +102,51 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 					       'th': 'เวียตนาม'}
 		}, 
 	$scope.lang = 'th';
-	$scope.employees = Employee.query(function() {
-		for (var i = 0; i < $scope.employees.length; i++) {
-			if ($scope.employees[i].attendances) {
-				for (var h = 0; h < $scope.employees[i].attendances.length; h++) {
-					if ($scope.employees[i].attendances[h].overtime_request){
-						console.log($scope.employees[i].attendances[h]);
-						$scope.employees[i].attendances[h].overtime_request = new Date($scope.employees[i].attendances[h].overtime_request);
-					}
-				}
-				
-			}
-			
+	$scope.searchMonths = [
+		
+	]
+
+	var today = new Date();	
+	for (var i = 0; i < 36; i++) {
+		var d = new Date();
+		if (d.getMonth() - 1 >= 0) {
+			d.setMonth(d.getMonth() - i);
+		} else {
+			d.setMonth(Math.abs(d.getMonth() - i));
+			d.setFullYear(d.getFullYear() - 1);
 		}
+		$scope.searchMonths.push(d);
+	}
+
+	console.log($scope.searchMonths);
+
+	$scope.overtimes = {};	
+	$scope.employees = Employee.query(function() {
+		
+		//Testing
+		var index = $scope.employees.indexOfById(11000060);
+		$scope.retrieveAttendances(new Date(2016, 8, 1), new Date(2016, 8, 10), $scope.employees[index]);
 	});
 	
 	//$scope.shifts = Shift.query();
 	$scope.shifts = [{"id":1,"start_time":"08:00:00","end_time":"17:00:00"}];
 
 	$scope.getStandardOvertimes = function (a) {
-		var overtimes = [];
-		var hour = 17;
-		var minute = 0;
-		
-		
-		for (var i = 1; i < 25; i++) {
-			
-			// Advance to the next hour
-			if (i % 2 > 0 && i > 0) {
-				hour += 1;
-				minute = 0;
-			
-			// Advance to the next half hour
-			} else {
-				minute = 30;
-				
-				if (hour === 24) {
-					hour = 0;
-				}
-			}
-			console.log(a.date);
 
-			var d = a.date
+		var deferred = $q.defer();
 
+		/*
+		$timeout(function () {
 			
 
-			try{
-				var time = new Date(2016, 2, 17, hour, minute, 0);
-			} catch (e) {
-				console.log(e);
-			}
-			
-			overtimes.push(time);
-		
-		}
-		
-		console.log(overtimes);
+			deferred.resolve([]);
+		}, 10);
+		*/
+		deferred.resolve([]);
 
-		return overtimes
+		return deferred.promise;
 	}
 
-	$scope.overtimes = [];
 	/** 
 	var hour = 17;
 	var minute = 0;
@@ -569,6 +554,16 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 		});
 	};
 	
+
+	/**
+	 * Retreive attendances from the server by month
+	 */
+	$scope.retrieveAttendancesbyMonth = function (date, employee) {
+		console.log(date);
+		var start_date = new Date(date.getFullYear(), date.getMonth() - 1 >= 0 ? date.getMonth() - 1 : 11, 26);
+		var end_date = new Date(date.getFullYear(), date.getMonth(), 25);
+		$scope.retrieveAttendances(start_date, end_date, employee);
+	}
 	/**
 	 * Retrieve attendances from the server
 	 * @private
@@ -587,12 +582,40 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			options.employee_id = employee.id;
 			
 			Attendance.query(options, function (resp) {
-				for (var i = 0; i < resp.length; i++) {
-					if (resp[i].overtime_request){
-						resp[i].overtime_request = new Date(resp[i].overtime_request);
+				
+				employee.attendances = resp;
+
+				for (var i = 0; i < employee.attendances.length; i++) {
+					var d = employee.attendances[i].date
+					$scope.overtimes[d] = [];
+
+					
+					var hour = 17;
+					var minute = 0;
+					
+					for (var h = 1; h < 25; h++) {
+						
+						// Advance to the next hour
+						if (h % 2 > 0 && h > 0) {
+							hour += 1;
+							minute = 0;
+						
+						// Advance to the next half hour
+						} else {
+							minute = 30;
+							
+							if (hour === 24) {
+								hour = 0;
+							}
+						}
+						
+						var time = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, minute, 0);
+				
+						$scope.overtimes[d].push(time);
 					}
 				}
-				employee.attendances = resp;
+
+				console.log($scope.overtimes);
 				
 				
 			});

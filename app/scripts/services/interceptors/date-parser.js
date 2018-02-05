@@ -13,13 +13,13 @@ angular.module('employeeApp.services')
 		'order_date',
 		'start_time',
 		'end_time',
-		'overtime_request'
+		'overtime_request',
+		'date'
 	]
 	
 	function parseObj(data) {
 		for (var i in data) {
 
-			console.log(i);
 			if (typeof(data[i]) === 'object') {
 				parseObj(data[i]);
 			} else if (typeof(data[i]) === 'string') {

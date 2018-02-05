@@ -353,7 +353,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 		$scope.po.currency = supplier.currency;
 
 
-		Supply.query({supplier_id: supplier.id, limit: 0, page_size: 99999}, function (response) {
+		Supply.query({supplier_id: supplier.id, limit: 0, page_size: 50}, function (response) {
 			$scope.supplies = $filter('filter')(response, supplier.name);
 		});
 

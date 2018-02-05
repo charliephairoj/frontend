@@ -248,13 +248,22 @@
 						<md-card flex>
 							<md-card-content>
 								<div layout="row">
+									<!--
 									<md-datepicker ng-model="start_date" md-placeholder="FROM" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
 									<md-datepicker ng-model="end_date" md-placeholder="TO" ng-change="retrieveAttendances(start_date, end_date, employee)"></md-datepicker>
 									<div flex></div>
+									-->
+									<md-input-container>
+										<label>Please Select a Month</label>
+										<md-select ng-model="employee.$$selectedMonth" placehoder="Select Month"
+											md-on-close="retrieveAttendancesbyMonth(employee.$$selectedMonth, employee)">
+											<md-option ng-value="d" ng-repeat="d in searchMonths">{{::d | date:'MMMM yyyy'}}</md-option>
+										</md-select>
+									</md-input-container>
+									<div flex></div>
 									<md-button class="md-raised md-accent" ng-click="addAttendance(employee)">
 										Add Attendance
-									</md-button>
-								</div>
+=								</div>
 							</md-card-content>
 						</md-card>	
 						
@@ -280,7 +289,7 @@
 									<div class="col ot-request">
 										
 										<md-select ng-model="a.overtime_request" ng-model-options="{trackBy: '$index'}" ng-disabled="!a.enable_overtime">
-											<md-option ng-value="overtime" ng-repeat="overtime in ::getStandardOvertimes(a)">{{::overtime | date:'hh:mm:ss a'}}</md-option>
+											<md-option ng-value="overtime" ng-repeat="overtime in overtimes[a.date]">{{::overtime | date:'hh:mm:ss a'}}</md-option>
 										</md-select>
 									</div>
 									<h5 class="col regular-time">{{a.regular_time}}</h5>
