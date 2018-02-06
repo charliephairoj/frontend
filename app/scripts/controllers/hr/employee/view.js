@@ -122,10 +122,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 
 	$scope.overtimes = {};	
 	$scope.employees = Employee.query(function() {
-		
-		//Testing
-		var index = $scope.employees.indexOfById(11000060);
-		$scope.retrieveAttendances(new Date(2016, 8, 1), new Date(2016, 8, 10), $scope.employees[index]);
+
 	});
 	
 	//$scope.shifts = Shift.query();
@@ -485,13 +482,12 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 			templateUrl: 'views/templates/add-attendance.html',
       	  	clickOutsideToClose:true,
 			locals: {
-				overtimes: $scope.overtimes,
 				shifts: $scope.shifts,
-				employee: employee
+				employee: employee,
+				mainOvertimes: $scope.overtimes
 			},
-			controller: function ($scope, $mdDialog, overtimes, shifts) {
+			controller: function ($scope, $mdDialog, shifts, employee, mainOvertimes) {
 				
-				$scope.overtimes = overtimes;
 				$scope.shifts = shifts;
 				
 				// Set up default attributes
@@ -501,9 +497,36 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 				$scope.a.start_time = new Date(2016, 2, 18, 8, 0);
 				$scope.a.end_time = new Date(2016, 2, 18, 17, 0);
 				$scope.a.shift = $scope.shifts[0];
+
+				$scope.overtimes = [];
+				$scope.mainOvertimes = mainOvertimes;
+				
+				var hour = 17;
+				var minute = 0;
+				
+				for (var h = 1; h < 25; h++) {
+					
+					// Advance to the next hour
+					if (h % 2 > 0 && h > 0) {
+						hour += 1;
+						minute = 0;
+					
+					// Advance to the next half hour
+					} else {
+						minute = 30;
+						
+						if (hour === 24) {
+							hour = 0;
+						}
+					}
+					
+					var time = new Date($scope.a.date.getFullYear(), $scope.a.date.getMonth(), $scope.a.date.getDate(), hour, minute, 0);
+			
+					$scope.overtimes.push(time);
+				}
 				
 				$scope.create = function () {
-					Notification.display("Creating attendance for " + employee.name + "...", 2000);
+					Notification.display("Creating attendance for " + $scope.a.employee.name + "...", 2000);
 					
 					// Prepare for POST request
 					$scope.a.shift = $scope.a.shift.id;
@@ -513,11 +536,54 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 						Notification.display('Attendance created for ' + resp.employee.name, 2000);
 						
 						// Add to employee attendances
-						employee.attendances = employee.attendances || [];
-						employee.attendances.push(resp);
+						$scope.employee.attendances = employee.attendances || [];
+						$scope.employee.attendances.push(resp);
+
+						$scope.mainOvertimes[getDateCode(resp.date)] = [];
+	
+						
+						var hour = 17;
+						var minute = 0;
+						
+						for (var h = 1; h < 25; h++) {
+							
+							// Advance to the next hour
+							if (h % 2 > 0 && h > 0) {
+								hour += 1;
+								minute = 0;
+							
+							// Advance to the next half hour
+							} else {
+								minute = 30;
+								
+								if (hour === 24) {
+									hour = 0;
+								}
+							}
+							
+							var time = new Date(resp.date.getFullYear(), resp.date.getMonth(), resp.date.getDate(), hour, minute, 0);
+					
+							$scope.mainOvertimes[getDateCode(resp.date)].push(time);
+						}
 						
 					}, function (e) {
-						Notification.display("There was an error creating an attendance for " + employee.name, 0);
+						// Default error message
+						var message = "There was an error creating an attendance for " + $scope.a.employee.name;
+
+						if (e.status === 400) {
+							if ("data" in e) {
+								if ("non_field_errors" in e.data) {
+									if ("The fields date, employee must make a unique set." === e.data.non_field_errors[0]) {
+										var message = "An Attendance for " + $scope.employee.name;
+										message += " on " + $scope.a.date + " already exists";
+									}
+								}
+							}
+						} else {
+							
+						}
+						console.log(e);
+						Notification.display(message, 0);
 						$log.error(e);
 					});
 					$mdDialog.hide();
@@ -572,6 +638,20 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 	 * @type String|Object|Array|Boolean|Number
 	 */
 	
+	var getDateCode = function (d) {
+		if (typeof(d) === "string") {
+			var d = Date.parse(d);
+		}
+		var dateCode = d.getFullYear();
+		dateCode += "-";
+		dateCode += d.getMonth();
+		dateCode += "-";
+		dateCode += d.getDate();
+
+		return dateCode;
+	};
+	$scope.getDateCode = getDateCode;
+
 	$scope.retrieveAttendances = function (start_date, end_date, employee) {
 		var options = {};
 		
@@ -586,8 +666,8 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 				employee.attendances = resp;
 
 				for (var i = 0; i < employee.attendances.length; i++) {
-					var d = employee.attendances[i].date
-					$scope.overtimes[d] = [];
+					var d = employee.attendances[i].date;
+					$scope.overtimes[$scope.getDateCode(d)] = [];
 
 					
 					var hour = 17;
@@ -611,7 +691,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 						
 						var time = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, minute, 0);
 				
-						$scope.overtimes[d].push(time);
+						$scope.overtimes[$scope.getDateCode(d)].push(time);
 					}
 				}
 
