@@ -3706,11 +3706,11 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 					$scope.a.employee = $scope.a.employee.id;
 					
 					$scope.a.$create(function (resp) {
-						Notification.display('Attendance created for ' + resp.employee.name, 2000);
+						Notification.display('Attendance created for ' + $scope.a.employee.name, 2000);
 						
 						// Add to employee attendances
-						$scope.employee.attendances = employee.attendances || [];
-						$scope.employee.attendances.push(resp);
+						$scope.a.employee.attendances = employee.attendances || [];
+						$scope.a.employee.attendances.push(resp);
 
 						$scope.mainOvertimes[getDateCode(resp.date)] = [];
 	
@@ -3747,7 +3747,7 @@ function ($scope, Employee, Notification, $mdDialog, FileUploader, $log, Shift, 
 							if ("data" in e) {
 								if ("non_field_errors" in e.data) {
 									if ("The fields date, employee must make a unique set." === e.data.non_field_errors[0]) {
-										var message = "An Attendance for " + $scope.employee.name;
+										var message = "An Attendance for " + $scope.a.employee.name;
 										message += " on " + $scope.a.date + " already exists";
 									}
 								}
