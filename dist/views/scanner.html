@@ -1,7 +1,14 @@
 <div class="scanner-page">	
 	<form name="form">
 		<md-action>
-			<select ng-options="po.id for po in poList" ng-model="po"></select>
+			<md-input-container>
+				<label>Select Purchase Order</label>
+				<md-select ng-model="po">
+					<md-option ng-value="opt" ng-repeat="opt in poList">
+						{{opt.id + "  " + opt.supplier.name}}
+					</md-option>
+				</md-select>
+			</md-input-container>
 
 			<div flex></div>
 			<div class="search-container">
@@ -18,14 +25,15 @@
 						<span md-highlight-text="supplySearchText">{{supply.description}}</span>
 					</md-item-template>
 				</md-autocomplete>
-				<md-button class="md-icon-button md-raised md-accent" ng-click="addSupply(selectedSupply)">
-					<i class="material-icons">add</i>
+				<md-button class="md-raised md-accent" ng-click="addSupply(selectedSupply)">
+						เพิ่มวัสดุ/Add Supply
+					
 				</md-button>
 			</div>
 
 
 			<div class="btn-container">
-				<md-button class="md-accent md-raised" ng-click="showAddEquipment()">เพิ่มอุปกรณ์/Add Equipment</md-button>
+				<md-button class="md-accent md-raised" ng-click="showAddEquipment()">เพิ่มเครื่องมือ/Add Equipment</md-button>
 			 	<md-button class="md-accent md-raised" ng-show="po" ng-click="checkout()">เช็คอิน/Check In</md-button>
 	
 				<md-button class="md-accent md-raised" ng-hide="po" ng-disabled="form.$invalid"  ng-click="checkout()">เช็คเอาท์/Checkout</md-button>
@@ -43,8 +51,22 @@
 		<div class="main-container">
 			<div class="employee-container">
 			
+
 				<div class="employee-drop-down-selector">
+					<md-input-container>
+						<label>Select an Employee</label>
+						<md-select ng-model="employee" ng-model-options="{trackBy: '$value.id'}" md-selected-text="employee.name">
+								<md-option ng-value="emp" ng-repeat="emp in employees" style="height:100px;width:300px;">
+									<img ng-src="{{emp.image.url}}" style="max-height:100px;max-width:100px;margin-right:2em;min-width:50px;" />
+									<label style="position:absolute;font-size:16px;left:12em;top:42px;">{{emp.name}}</label>
+								</md-option>
+							
+						</md-select>
+					</md-input-container>
+					
+					<!--
 					<select ng-options="employee.name for employee in employees" ng-model="employee"></select>
+					-->
 				</div>
 			
 				<div ng-hide="employee" class="employee-placeholder">

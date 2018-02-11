@@ -12986,7 +12986,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
 	$scope.supplyTypes = Label.query({'type': 'supply type'});
-	$scope.employees = Employee.query({limit:0, page_size:99999});
+	$scope.employees = Employee.query({limit:0, page_size:99999, status:'active'});
+	$scope.employee = null;
 	$scope.scanner.enable();
 	$scope.scanner.disableStandard();
 	$scope.tempUrl = "http://mineolalionsclub.org/wp-content/uploads/2014/02/employee_placeholder.png";
@@ -13364,6 +13365,44 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 					} else if (supplies[i].$$action == 'add') {
 						supplies[i].quantity += supplies[i].$$quantity;
 					}
+				}
+
+				/**
+				 * Create a new supply
+				 */
+				
+				for (var g = 0; g < supplies.length; g++) {
+					try{
+						if (!supplies[g].hasOwnProperty('id')) {
+							var qty = supplies[g].$$quantity;
+							var supply = angular.copy(supplies[g]);
+
+							//Remove supply from the array
+							supplies.splice(g);
+							// Create new supply resource
+							var supply = new Supply(supply);
+							// Set new quantity
+							supply.quantity = qty;
+
+							// Remove empty employee
+							delete supply.employee;
+							supply.$create(function () {
+								var msg = "Created new supply: " + supply.description;
+								Notification.display(msg);
+	
+								$scope.supplies = [];
+	
+								console.log($scope.supplies);
+	
+								$scope.postCheckout();
+							}, function (e) {
+								$scope.checkoutError(e);
+							});
+						}
+					} catch (e) {
+						$log.warn(e);
+					}
+					
 				}
 	
 				//Do supply PUT
