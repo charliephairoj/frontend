@@ -1,4 +1,461 @@
-.add-model-page{
-	.add-page;
-	left:200px;
+
+
+.create-model-page{
+    .addPage;
+    left:0;
+	
+	&.page-drag-active{
+		.ack{
+			.workspace{
+				md-content{
+					
+					.files{
+						.drag-placeholder{
+							.flex;
+						}
+						
+						md-card-content{
+							pointer-events: none;
+							display:none;
+							
+							table{
+								pointer-events:none;
+							}
+							div{
+								pointer-events: none;
+							}
+							
+							md-card{
+								pointer-events: none;
+							}
+						}
+					}
+					
+					.item{
+						.drag-placeholder{
+							.flex;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	
+    .model{
+	    position:absolute;
+	    top:0;
+	    bottom:0;
+	    left:0;
+	    right:0;
+	    background:rgba(255, 255, 255, 1);
+		
+		&.success{
+			background:#C8E6C9;
+			
+			.workspace{
+				md-toolbar{
+					background:#4CAF50;
+					
+					.create{
+						display:none;
+					}
+				}
+				md-content{
+					background:#C8E6C9;
+				}
+			}
+		}
+		
+        .workspace{
+	        height:100%;
+	        width:100%;
+	        padding-bottom:50px;
+			position:absolute;
+			top:0;
+			left:0;
+			
+			md-toolbar{
+				padding:0 5%;
+				.transition(all, 250ms);
+			}
+			
+			md-content{
+				height:100%;
+				padding-bottom:10em;
+				.flex;
+				flex-direction:column;
+				align-items:center;
+				.transition(all, 250ms);
+				
+				md-input-container{
+				
+					.hint{
+						/* Position the hint */
+					    //position: absolute;
+					    //left: 2px;
+					    //right: auto;
+					    //bottom: 7px;
+					    /* Copy styles from ng-messages */
+						margin-top:2px;
+					    font-size: 12px;
+					    line-height: 14px;
+					    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+					    /* Set our own color */
+					    color: rgba(0, 0, 0, 0.35);
+					}
+				}
+			
+				md-section{
+					width:100%;
+					
+					
+					
+					md-card{
+						width:90%;
+						margin:0 5%;
+					}
+				}
+				
+				md-card{
+					display:block;
+					min-height:initial;
+					
+					
+					
+					&.order-details{
+						width:90%;
+						
+			            .customer{
+			                position:relative;
+							width:100%;
+			                margin-top:2em;
+			                color:rgba(0, 0, 0, 1);
+                
+				          	.info{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+								/* Bug workaround for http://crbug.com/546034 - flex issues on Chrome 48 */
+								min-width: 0;
+								min-height: 0;
+						
+								md-autocomplete{
+									.hint{
+										color: rgba(0, 0, 0, 0.35);
+									}
+						
+									input{
+										color:rgb(0,0,0);
+									}
+								}
+				          	}
+				
+							.address{
+								.info;
+							}
+							
+							.contact{
+								.info;
+							}
+				
+							md-input-container{
+								margin-right:1em;
+							}
+		  	  
+						}
+			
+						
+			
+			            .order{
+			                .customer;
+            	
+							.details{
+				          		.flex;
+								justify-content:flex-start;
+								align-items:flex-start;
+					
+								.date-container{
+									md-datepicker{
+										margin-right:1em;							
+									}
+						
+									.hint{
+										/* Position the hint */
+									    //position: absolute;
+									    //left: 2px;
+									    //right: auto;
+									    //bottom: 7px;
+									    /* Copy styles from ng-messages */
+										margin-left:64px;
+									    font-size: 12px;
+									    line-height: 14px;
+									    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+									    /* Set our own color */
+									    color: rgba(0, 0, 0, 0.35);
+									}
+								}
+					
+					
+								md-input-container{
+									margin:3px 1em 18px 0;
+								}
+							}
+					
+			            }
+					}
+					
+					
+					
+					
+				
+					
+					&.files{
+						position:relative;
+						width:90%;
+						min-height:20em;
+						
+						&.file-drag-active{
+						
+							.drag-placeholder{
+								.flex;
+								pointer-events: none;
+							}
+						
+							md-card-content{
+								pointer-events: none;
+								display:none;
+							
+								md-card{
+									pointer-events: none;
+								}
+							}
+						}
+					
+						.drag-placeholder{
+							display:none;
+							position:static;
+							pointer-events:none;
+							margin:1em;
+							min-height:10em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							&.no-files{
+								.flex;
+								
+								min-height:18em;
+							}
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
+					
+						md-card-content{
+							.flex;
+							flex-direction:row;
+												
+							md-card{
+								width:20%;
+							
+								md-card-title{
+									overflow:hidden;
+								}
+							}
+						}			
+					}
+					
+					&.add-product{
+						width:90%;
+						.flex;
+						min-height:10em;
+						
+						md-card-content{
+							width:60%;
+					
+							.hint{
+								color:rgba(0, 0, 0, 0.35);
+							}
+							
+							md-autocomplete{
+								width:20em;
+								
+								md-autocomplete-wrap{
+									width:30em;
+								}
+							}
+						}
+					}
+					
+					&.item{
+		            	width:90%;
+						position:relative;
+					
+						&.item-drag-active{
+							.drag-placeholder{
+								.flex;
+								pointer-events: none;
+							}
+						
+							md-card-content{
+								pointer-events: none;
+							
+								table{
+									pointer-events:none;
+								}
+								div{
+									pointer-events: none;
+								}
+							
+								md-card-title-media{
+									pointer-events: none;
+							
+									.card-media{
+										pointer-events: none;
+									
+									}
+								}
+							}
+						}
+					
+						.drag-placeholder{
+							display:none;
+							position:absolute;
+							pointer-events:none;
+							top:1em;
+							left:1em;
+							right:1em;
+							bottom:1em;
+							display:none;
+							z-index:2;
+							background:white;
+							border:2px dashed rgba(0, 0, 0, 0.35);
+							align-items:center;
+							justify-content:center;
+						
+							h3{
+								font-size:2em;
+								color:rgba(0, 0, 0, 0.35);
+							}
+						
+						}
+					
+						md-card-content{
+												
+							.product-details{
+								max-width:40%;
+							
+								tr{
+							
+									&.fabric{
+								
+										td{
+									
+											&:last-child{
+												padding-left:1em;
+										
+												img{
+													max-height:5em;
+												}
+											}
+									
+											.hint{
+												margin-top:4px;
+											}
+										}
+									}
+
+
+									
+									&.remarks{
+										td{
+											md-input-container{
+												width:100%;
+											}
+										}
+									}
+									
+									&.components{
+										width:100%;
+
+										td{
+
+											.add-component-container{
+												.flex;
+												.flex-direction(row);
+
+												md-input-container{
+													&.quantity{
+														width:5em;
+													}
+
+													&.description{
+														width:20em;
+													}
+													
+												}
+												
+											}
+
+											.components-list{
+												.flex;
+												.flex-direction(column);
+
+												.component{
+													md-input-container{
+														&.description{
+															input{
+																width:20em;
+															}
+														}
+
+														&.quantity{
+															input{
+																width:5em;
+															}
+														}
+													}
+												}
+											}
+										}
+										
+									}
+								}
+							}
+					
+							md-card-title-media{
+								pointer-events: none;
+								max-width:40%;
+							
+								.card-media{
+									pointer-events: none;
+									max-width:100%;
+					
+									img{
+										max-height:20em;
+										max-width:100%;
+									}
+								}
+							}
+											
+						}
+					
+		            }
+				}
+				
+			}
+			
+        }
+    }
+    //Page States
+    &.fadeIn{
+        opacity:1;
+    }
 }
