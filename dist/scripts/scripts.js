@@ -12840,12 +12840,12 @@ function ($scope, Room, $routeParams, Notification, $mdDialog, RoomItem, FileUpl
 
 
 angular.module('employeeApp')
-.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location', '$mdDialog', '$mdToast', '$log',
-function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast, $log) {
+.controller('ProjectViewCtrl', ['$scope', 'Project', 'Notification', 'Customer', '$location', '$mdDialog', '$mdToast', '$log', '$filter',
+function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToast, $log, $filter) {
     
     //Controlling attributes
     $scope.showAddProject = false;
-    
+    $scope.query = {};
     //Query the server for projects continouosly
     $scope.projects = Project.query();
     $scope.customers = Customer.query();
@@ -12880,7 +12880,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 	};
 	
 	
-	$scope.$watch('query', function (q) {
+	$scope.$watch('query.$.$', function (q) {
+		console.log(q);
 		if (q) {
 			Project.query({limit: q.length, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
@@ -12890,6 +12891,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 				}
 				//index = 0;
 				//changeSelection(index);
+
+				console.log($filter('filter')($scope.projects, q));
 			});
 		}
 	});
@@ -12904,6 +12907,7 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 	/*
 	 * Watch for changes in the status of the project
 	 */
+	/*
 	$scope.$watch('projects', function (newVal, oldVal) {
 		
 		// Callback to when the acknowledgement is finished updating
@@ -12935,7 +12939,24 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 		}
 		
 	}, true);
+	*/
+	function postUpdate (resp) {
+		$mdToast.show($mdToast
+					.simple()
+					.position('bottom right')
+					.hideDelay(2000)
+					.content('Project: ' + resp.codename + " status updated to '" + resp.status.toLowerCase() + "'"));
+	}
 	
+	$scope.update = function (project) {
+		$mdToast.show($mdToast
+				.simple()
+				.position('bottom right')
+				.hideDelay(0)
+				.content('Updating Project: ' + project.codename + ' status...'));
+		project.$update(postUpdate);
+	};
+
     //Create new project
     $scope.create = function () {
         Notification.display('Creating new project...', false);
