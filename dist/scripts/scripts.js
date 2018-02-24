@@ -11500,12 +11500,13 @@ function ($scope, Model, Notification, $location, FileUploader) {
         });
     };
    
-    $scope.addFiles = function (image) {
+    $scope.addFiles = function (filelist) {
+        console.log(filelist)
 		//Notify of uploading image
 		Notification.display('Uploading Image...', false);
 		
         //Notify of uploading image        
-		var promise = FileUploader.upload(image, "/api/v1/upholstery/image/");
+		var promise = FileUploader.upload(filelist[0], "/api/v1/upholstery/image/");
 			promise.then(function (dataObj) {
 				Notification.display('Image Uploaded');
                 $scope.model.images = $scope.model.images || [];
