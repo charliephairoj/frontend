@@ -50,7 +50,7 @@
                                             <label>Type</label>
                                             <md-select ng-model="model.type">
                                                 <md-option value="upholstery">Upholstery</md-option>
-                                                <md-option value="bed">bed</md-option>
+                                                <md-option value="bed">Bed</md-option>
                                                 <md-option value="chair">Chair</md-option>
                                             </md-select>
     
@@ -108,19 +108,13 @@
                         <div class="drag-placeholder" ng-class="{'no-files': ack.files.length===0 || !ack.files}">
                             <h2>Drop Files Here</h2>
                         </div>
-                        <md-card-content ng-show="ack.files && ack.files.length > 0">
-                            <md-card ng-repeat="file in ack.files">
-                                <md-card-title>
-                                      <md-card-title-text>
-                                        <span class="md-headline">{{file.filename}}</span>
-                                      </md-card-title-text>
-                                </md-card-title>
-                                <md-card-actions layout="row" layout-align="end center">
-                                      <md-button class="md-raised md-icon-button" ng-href="{{file.url}}" target="_blank" ng-disabled="!file.id">
-                                        <md-tooltip>Open in a New Window</md-tooltip>
-                                        <i class="material-icons">open_in_browser</i>
-                                    </md-button>
-                                </md-card-actions>
+                        <md-card-content ng-show="model.images && model.images.length > 0">
+                            <md-card ng-repeat="image in model.images">
+                                
+                                <md-card-content>
+                                    <img ng-src="{{image.url}}" />
+                                </md-card-content>
+
                             </md-card>
                         </md-card-content>
                     </md-card>

@@ -194,8 +194,8 @@ angular.module('employeeApp.directives')
 		scope: {
 			onSave: '&',
 			onLoad: '&',
-			image: '=',
-			cropper: '='
+			image: '=?',
+			cropper: '=?'
 		},
         link: function postLink(scope, element, attrs) {
             var cubes = [];

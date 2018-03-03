@@ -11,7 +11,7 @@ angular.module('employeeApp')
 
     });
     
-    $scope.$watch('query.$.$', function (q) {
+    $scope.$watch('query.$', function (q) {
 		if (q) {
 			Model.query({q: q, limit: 10}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
