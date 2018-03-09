@@ -7113,7 +7113,7 @@ function ($scope, Estimate, Customer, $filter, $window, Project, Notification, F
 		];
 		for (var j = 0; j < testWords.length; j++) {
 			if (testWords[j].re.test($scope.estimate.remarks) && !$scope.estimate[testWords[j].type]) {
-				throw new TypeError(testWords[j].message);
+				//throw new TypeError(testWords[j].message);
 			}
 		}
 
