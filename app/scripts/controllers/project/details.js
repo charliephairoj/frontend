@@ -256,6 +256,29 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 		}
 	};
 
+
+	/*
+		Make Primary Image
+	
+		Set all the images in the set primary:false and then set the image supplied in the 
+		argument as primary:true
+	*/
+	$scope.makePrimaryImage = function (image) {
+		
+		// Set all images as primary:false
+		for (var i = $scope.project.files.length; i--;) {
+			$scope.project.files[i].primary = false;
+		}
+	
+		// Set argument image as primary:true
+		image.primary = true;
+	
+		$scope.update();
+	
+		
+		
+	};
+
 	
 	/**
 	 * Describe what this method does

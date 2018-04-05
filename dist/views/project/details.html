@@ -158,13 +158,7 @@
 								</md-tooltip>
 								<i class="material-icons primary-icon">star_rate</i>	
 							</md-button>
-							<md-button class="md-icon-button configuration" ng-click="image.configuration = !image.configuration; update()">
-								<md-tooltip>
-									Set Configuration
-								</md-tooltip>
-								<i ng-if="!image.configuration" class="material-icons">check_box_outline_blank</i>
-								<i ng-if="image.configuration" class="material-icons">check_box</i>
-							</md-button>
+							
 							<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()">
 								
 							</md-switch>		
