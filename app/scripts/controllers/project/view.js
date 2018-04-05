@@ -8,7 +8,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
     $scope.query = {};
     //Query the server for projects continouosly
     $scope.projects = Project.query();
-    $scope.customers = Customer.query();
+	$scope.customers = Customer.query();
+	var fetching = false;
     
 	$scope.showAddProject = function () {
 		$scope.project = new Project();
@@ -34,6 +35,30 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 			
 		});
 	};
+
+	$scope.loadNext = function () {
+		console.log('scroll end');
+		if (!fetching) {
+			Notification.display('Loading more projects...', false);
+			fetching = true;
+			Project.query({
+				limit: 50,
+				offset: $scope.projects.length
+			}, function (resources) {
+				for (var i = 0; i < resources.length; i++) {
+					if ($scope.projects.indexOfById(resources[i].id) == -1) {
+						$scope.projects.push(resources[i]);
+					}
+				}
+				$mdToast.hide();
+				fetching = false;
+			}, function (e) {
+				Notification.display('Unable to load more projects...', false);
+				$log.error(e);
+				fetching = false;
+			});
+		}
+	};
 	
 	$scope.cancelAddProject = function  () {
 		$mdDialog.hide();
@@ -43,7 +68,7 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 	$scope.$watch('query.$.$', function (q) {
 		console.log(q);
 		if (q) {
-			Project.query({limit: q.length, q: q}, function (resources) {
+			Project.query({limit: q.length * 2, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.projects.indexOfById(resources[i].id) == -1) {
 						$scope.projects.push(resources[i]);
@@ -114,7 +139,16 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 				.position('bottom right')
 				.hideDelay(0)
 				.content('Updating Project: ' + project.codename + ' status...'));
-		project.$update(postUpdate);
+		project.$update(postUpdate, function (e) {
+
+			var message = e;
+			$log.error(e);
+			$mdToast.show($mdToast
+				.simple()
+				.position('bottom right')
+				.hideDelay(2000)
+				.content(message));
+		});
 	};
 
     //Create new project

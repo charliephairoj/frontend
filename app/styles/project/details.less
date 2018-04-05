@@ -150,7 +150,8 @@
 		right:0;
 		padding:15em 0 1em 0;
 		background:#FFF;
-		
+		width:auto;
+		height:auto;
         .details{
 			position:absolute;
 			width:100%;
@@ -167,10 +168,18 @@
 				&:last-child{
 					margin-left:2em;
 				}
+
+				tr{
+					td{
+						//.flex;
+						//.flex-direction(row);
+						//.align-items(center);
+						padding:0.25em 0.25em;
+					}
+				}
 			}
 			
 			.due-date{
-				cursor:pointer;
 			}
 			
 			.customer{
@@ -180,7 +189,7 @@
 		
         md-tabs{
         	position:absolute;
-			top:9em;
+			top:10em;
 			left:5%;
 			width:90%;
         }
@@ -190,6 +199,49 @@
 			height:100%;
 			width:100%;
 			
+			.gallery-panel{
+				height:100%;
+				overflow-y: scroll;
+				width: 100%;
+				.flex;
+				.flex-direction(row);
+				.flex-wrap(wrap);
+				
+				md-card{
+					max-height:50%;
+					max-width:30%;
+
+					.card-media{
+						height:100%;
+						width:100%;
+						position: relative;
+
+						img{
+							max-height:100%;
+							max-width:100%;
+						}
+					}
+
+					&.primary{
+						.primary-icon{
+							color:yellow;
+						}
+						
+					}
+					
+					md-button{
+						
+						&.configuration{
+							
+						}
+					}
+					
+					.primary-icon{
+						color:#313131;
+					}
+				}
+			}
+
 			.po-panel{
 				display:flex;
 				flex-direction:column;

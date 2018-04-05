@@ -43,9 +43,11 @@
     -->
         <div class="outer-container" on-scroll-end="loadNext()"> 
 	    	<div class="inner-container" >
-	    		<div class="item-container" ng-repeat="project in projects | filter:query.$.$ | orderBy:'-id' track by project.id">
+	    		<div class="item-container" ng-repeat="project in projects | filter:query.$.$ | orderBy:'-id' track by $index">
 	    			<div class="item" ng-class="{'selected':project.$selected}">
-						<div class="id item-section" ng-click="navigate(project.id)">{{project.id}}</div>
+						<div class="id item-section" ng-click="navigate(project.id)">
+							{{project.id}}
+						</div>
 						<div class="codename item-section" ng-click="navigate(project.id)">
 							<span>{{project.codename}}</span>
 						</div>
@@ -53,7 +55,7 @@
 							<span>{{project.customer.name}}</span>
 						</div>
 						<div class="website item-section">
-							<md-switch ng-model="project.website"></md-switch>
+							<md-switch ng-model="project.website" ng-change="update(project)"></md-switch>
 						</div>
 						<div class="status item-section">
 							<md-select ng-model="project.status" md-on-close="update(project)">

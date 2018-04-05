@@ -212,56 +212,62 @@ angular.module('employeeApp.directives')
             var image;
             var mousedown = false;
 
+            var setImage = function (image) {
+                fileReader.onload = function (evt) {
+                    parent.removeClass('drag-drop-active');
+                    //Create Image
+                    image = new Image();
+                    image.onload = function (e) {
+                        //Display Notification
+                        Notification.display('Image Rendered');
+                        //Set canvas dimensions
+                        
+                       
+                        var height = canvasContainer.outerHeight();
+                        var width = canvasContainer.outerWidth();
+                        var ratio1 = height / width;
+                        var ratio2 = image.height / image.width;
+                        if (ratio1 > ratio2) {
+                            canvas.width = width;
+                            canvas.height = (image.height * width) / image.width;
+                        } else { 
+                            canvas.height = height;
+                            canvas.width = (image.width * height) / image.height;
+                        }
+                        //Position the canvas relative to parent
+                        angular.element(canvas).css('top', (height - canvas.height) / 2);
+                        angular.element(canvas).css('left', (width - canvas.width) / 2);
+                        //Create and Draw new Scene
+                        scene = new Scene(canvas, ctx, image);
+                        scene.drawImage();
+                        
+                        /*
+                         * Try running the onload function that is 
+                         * attached to the scope directive
+                         */
+                        try {
+                            scope.onLoad();
+                        } catch (evt) {
+                            $log.warn(evt);
+                        }
+                        
+                        scope.$apply();
+                    };
+                    image.src = evt.target.result;
+                    
+                };
+
+                fileReader.readAsDataURL(image);
+            };
+
             //Set Canvas to parent width and height
             canvas.width = canvasContainer.outerWidth();
             canvas.height = canvasContainer.outerHeight();
             
-            fileReader.onload = function (evt) {
-                parent.removeClass('drag-drop-active');
-                //Create Image
-                image = new Image();
-                image.onload = function (e) {
-                    //Display Notification
-                    Notification.display('Image Rendered');
-                    //Set canvas dimensions
-                    
-                   
-                    var height = canvasContainer.outerHeight();
-                    var width = canvasContainer.outerWidth();
-                    var ratio1 = height / width;
-                    var ratio2 = image.height / image.width;
-                    if (ratio1 > ratio2) {
-                        canvas.width = width;
-                        canvas.height = (image.height * width) / image.width;
-                    } else { 
-                        canvas.height = height;
-                        canvas.width = (image.width * height) / image.height;
-                    }
-                    //Position the canvas relative to parent
-                    angular.element(canvas).css('top', (height - canvas.height) / 2);
-                    angular.element(canvas).css('left', (width - canvas.width) / 2);
-                    //Create and Draw new Scene
-                    scene = new Scene(canvas, ctx, image);
-                    scene.drawImage();
-                    
-                    /*
-                     * Try running the onload function that is 
-                     * attached to the scope directive
-                     */
-                    try {
-						scope.onLoad();
-                    } catch (evt) {
-						$log.warn(evt);
-                    }
-                    
-                    scope.$apply();
-                };
-                image.src = evt.target.result;
-                
-            };
+            
 			
 			if (scope.image) {
-				fileReader.readAsDataURL(scope.image);
+				setImage(scope.image);
 			}
             
             //Drag Enter
@@ -449,6 +455,10 @@ angular.module('employeeApp.directives')
                 
             };
             
+            scope.cropper.setImage = function (image) {
+                setImage(image);
+            };
+
             scope.cropper.getImage = function () {
                 return scene ? scene.getImageAsBlob() : null;
             };

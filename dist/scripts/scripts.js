@@ -12522,8 +12522,8 @@ function ($scope, Upholstery, Notification, $filter, $location) {
 
 
 angular.module('employeeApp')
-.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement', '$mdDialog', 'Phase',
-function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog, Phase) {
+.controller('ProjectDetailsCtrl', ['$scope', 'Project', '$routeParams', 'Room', 'Notification', 'FileUploader', '$http', '$timeout', "PurchaseOrder", 'Acknowledgement', '$mdDialog', 'Phase', '$q', '$rootScope',
+function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http, $timeout, PurchaseOrder, Acknowledgement, $mdDialog, Phase, $q, $rootScope) {
     
 	var timeoutPromise;
     $scope.showAddRoom = false;
@@ -12546,6 +12546,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 		'Master Bedroom',
 		'Pantry'
     ];
+	$scope.updateVars = {};
 	
 	$scope.addCustomer = function (customer) {
 		$scope.showCustomers = false;
@@ -12638,17 +12639,163 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 		$scope.project.supplies.splice($index, 1);
 	};
 	
-    $scope.addImage = function (image) {
-        var promise = FileUploader.upload(image, 'project/room/image');
-        promise.then(function (response) {
-            $scope.room.image = response;
-            $scope.cropper.reset();
-        });
-    };
+    $scope.addImage = function (files) {
+        /**
+		 * Upload image
+		 * @private
+		 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+		 * @returns Describe what it returns
+		 * @type String|Object|Array|Boolean|Number
+		 */
+		function uploadImage (image, fn) {
+	        //display notification
+	        Notification.display('Uploading Project Image...', false);
+
+	        //Notify of uploading image        
+			var promise = FileUploader.upload(image, "/api/v1/project/image/");
+			promise.then(function (dataObj) {
+				$scope.project.files.push(dataObj.data);
+		
+					//$scope.update();
+		
+					//$scope.images = null;
+		
+				(fn || angular.noop)();
+			}, function () {
+		        Notification.display('Error uploading image', false);
+	
+			});
+		}
+
+		function setDataURL(f) {
+			var reader = new FileReader();
+		
+			// Closure to capture the file information.
+			reader.onload = function (e) {
+				$rootScope.safeApply(function () {
+					f.url = e.target.result;
+				});
+			}
+		
+			// Read in the image file as a data URL.
+			reader.readAsDataURL(f);			
+
+		}
+		
+		// Create image attribute if does not exist
+		$scope.project.files = $scope.project.files || [];
+
+		if (files[0].type === 'image/jpeg') {
+			$mdDialog.show({
+				templateUrl: 'views/templates/edit-image.html',
+				locals: {'update': $scope.update},  
+				controller: ['$scope', '$mdDialog', 'update', function ($scope, $mdDialog, update) {
+					var sizeVar;
+					var placeholder = {size: 'Calculating size'};
+
+					$scope.images = [];
+					for (var i=0; i < files.length; i++) {
+						$scope.images.push(files[i]);
+						setDataURL($scope.images[i]);
+					}
+
+					$scope.imageToEdit = $scope.images[0];
+					$scope.currentIndex = 0;
+					$scope.fileSize = 0;
+					$scope.saveProgress = {};
+					$scope.update = update;
+									
+					
+
+					$scope.setImage = function ($index) {
+						var img = $scope.cropper.getImage();
+
+						angular.copy(img, $scope.images[$scope.currentIndex]);
+						setDataURL(img);
+						img.name = $scope.images[$scope.currentIndex].name;
+						$scope.images[$scope.currentIndex] = img;						
+						$scope.imageToEdit = $scope.images[$index];
+						$scope.currentIndex = $index;
+						$scope.cropper.setImage($scope.imageToEdit);
+					};
+					
+					$scope.$watch('cropper.scale', function () {
+						clearTimeout(sizeVar);
+						sizeVar = setTimeout(function () {
+							$scope.fileSize = $scope.cropper.image.size;
+							$scope.$apply();
+						}, 500);
+					});
+				
+		            $scope.preview = function (url) {
+		                if (url) {
+		                    window.open(url);
+		                }
+		            };
+				
+					$scope.cancel = function () {
+						$mdDialog.hide();
+					}
+				
+					$scope.save = function (image) {
+						//Set current image in list of images
+						image.name = $scope.images[$scope.currentIndex].name;
+						$scope.images[$scope.currentIndex] = image;
+
+						for (var h=0; h<$scope.images.length; h++) {
+							$timeout(function () {
+								$scope.saveProgress[this.index] = false;
+								
+								uploadImage($scope.images[this.index], function () {
+									$scope.saveProgress[this.k] = true;
+	
+									if (Object.values($scope.saveProgress).indexOf(false) == -1) {
+										Notification.display('Images uploaded');
+										$scope.images = null;
+										$scope.saveProgress = {};
+										$scope.update();
+										$mdDialog.hide();
+										
+									} 
+								}.bind({'k':this.index}));
+							}.bind({'index':h}), 100 * h);
+							
+						}
+						
+					}
+
+					
+					
+						  
+
+				}]
+		   	});
+			
+		} else {
+			uploadImage(files[0], function () {
+				
+			});
+		}
+	};
+
+	
+	/**
+	 * Describe what this method does
+	 * @private
+	 * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+	 * @returns Describe what it returns
+	 * @type String|Object|Array|Boolean|Number
+	 */
+	$scope.removeImage = function ($index) {
+		$scope.project.files.splice($index, 1);
+		
+		$scope.update();
+	}
+
     
     $scope.addSchematic = function (files) {
         var file = angular.isArray(files) ? files[0] : files;
-        var promise = FileUploader.upload(file, 'project/room/schematic');
+        var promise = FileUploader.upload(file, '/api/v1/project/image/');
         promise.then(function (response) {
             $scope.room.schematic = response; 
         });
@@ -12683,7 +12830,7 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 	
 	/*
 	 * Watches the project for changes in order to autosave
-	 */
+	 *
     $scope.$watch('project.supplies', function (newVal, oldVal) {
     	
 		if (oldVal) {
@@ -12698,7 +12845,36 @@ function ($scope, Project, $routeParams, Room, Notification, FileUploader, $http
 			}, 750);
 		}
 		
-    }, true);
+	}, true);
+	*/
+	
+	$scope.update = function () {
+		
+		function updateProject () {
+	        Notification.display('Saving Project...', false);
+			var project = angular.copy($scope.project);
+			
+	        project.$update(function (resp) {
+				Notification.display('Project Updated');
+				//var images = resp['files'];
+				//delete resp['images'];
+
+				angular.extend($scope.project, resp);
+
+				
+	        }, function (e) {
+	        	Notification.display('Unable to update project because ' + e);
+	        });
+		}
+		
+		$timeout.cancel($scope.updateVar); 
+		$scope.updateVar = $timeout(updateProject, 1500);
+        
+    };
+	
+	$scope.$on('$destroy', function () {
+        $scope.update();
+	});
 	
 }]);
 
@@ -12906,7 +13082,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
     $scope.query = {};
     //Query the server for projects continouosly
     $scope.projects = Project.query();
-    $scope.customers = Customer.query();
+	$scope.customers = Customer.query();
+	var fetching = false;
     
 	$scope.showAddProject = function () {
 		$scope.project = new Project();
@@ -12932,6 +13109,30 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 			
 		});
 	};
+
+	$scope.loadNext = function () {
+		console.log('scroll end');
+		if (!fetching) {
+			Notification.display('Loading more projects...', false);
+			fetching = true;
+			Project.query({
+				limit: 50,
+				offset: $scope.projects.length
+			}, function (resources) {
+				for (var i = 0; i < resources.length; i++) {
+					if ($scope.projects.indexOfById(resources[i].id) == -1) {
+						$scope.projects.push(resources[i]);
+					}
+				}
+				$mdToast.hide();
+				fetching = false;
+			}, function (e) {
+				Notification.display('Unable to load more projects...', false);
+				$log.error(e);
+				fetching = false;
+			});
+		}
+	};
 	
 	$scope.cancelAddProject = function  () {
 		$mdDialog.hide();
@@ -12941,7 +13142,7 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 	$scope.$watch('query.$.$', function (q) {
 		console.log(q);
 		if (q) {
-			Project.query({limit: q.length, q: q}, function (resources) {
+			Project.query({limit: q.length * 2, q: q}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.projects.indexOfById(resources[i].id) == -1) {
 						$scope.projects.push(resources[i]);
@@ -13012,7 +13213,16 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
 				.position('bottom right')
 				.hideDelay(0)
 				.content('Updating Project: ' + project.codename + ' status...'));
-		project.$update(postUpdate);
+		project.$update(postUpdate, function (e) {
+
+			var message = e;
+			$log.error(e);
+			$mdToast.show($mdToast
+				.simple()
+				.position('bottom right')
+				.hideDelay(2000)
+				.content(message));
+		});
 	};
 
     //Create new project
@@ -17143,56 +17353,62 @@ angular.module('employeeApp.directives')
             var image;
             var mousedown = false;
 
+            var setImage = function (image) {
+                fileReader.onload = function (evt) {
+                    parent.removeClass('drag-drop-active');
+                    //Create Image
+                    image = new Image();
+                    image.onload = function (e) {
+                        //Display Notification
+                        Notification.display('Image Rendered');
+                        //Set canvas dimensions
+                        
+                       
+                        var height = canvasContainer.outerHeight();
+                        var width = canvasContainer.outerWidth();
+                        var ratio1 = height / width;
+                        var ratio2 = image.height / image.width;
+                        if (ratio1 > ratio2) {
+                            canvas.width = width;
+                            canvas.height = (image.height * width) / image.width;
+                        } else { 
+                            canvas.height = height;
+                            canvas.width = (image.width * height) / image.height;
+                        }
+                        //Position the canvas relative to parent
+                        angular.element(canvas).css('top', (height - canvas.height) / 2);
+                        angular.element(canvas).css('left', (width - canvas.width) / 2);
+                        //Create and Draw new Scene
+                        scene = new Scene(canvas, ctx, image);
+                        scene.drawImage();
+                        
+                        /*
+                         * Try running the onload function that is 
+                         * attached to the scope directive
+                         */
+                        try {
+                            scope.onLoad();
+                        } catch (evt) {
+                            $log.warn(evt);
+                        }
+                        
+                        scope.$apply();
+                    };
+                    image.src = evt.target.result;
+                    
+                };
+
+                fileReader.readAsDataURL(image);
+            };
+
             //Set Canvas to parent width and height
             canvas.width = canvasContainer.outerWidth();
             canvas.height = canvasContainer.outerHeight();
             
-            fileReader.onload = function (evt) {
-                parent.removeClass('drag-drop-active');
-                //Create Image
-                image = new Image();
-                image.onload = function (e) {
-                    //Display Notification
-                    Notification.display('Image Rendered');
-                    //Set canvas dimensions
-                    
-                   
-                    var height = canvasContainer.outerHeight();
-                    var width = canvasContainer.outerWidth();
-                    var ratio1 = height / width;
-                    var ratio2 = image.height / image.width;
-                    if (ratio1 > ratio2) {
-                        canvas.width = width;
-                        canvas.height = (image.height * width) / image.width;
-                    } else { 
-                        canvas.height = height;
-                        canvas.width = (image.width * height) / image.height;
-                    }
-                    //Position the canvas relative to parent
-                    angular.element(canvas).css('top', (height - canvas.height) / 2);
-                    angular.element(canvas).css('left', (width - canvas.width) / 2);
-                    //Create and Draw new Scene
-                    scene = new Scene(canvas, ctx, image);
-                    scene.drawImage();
-                    
-                    /*
-                     * Try running the onload function that is 
-                     * attached to the scope directive
-                     */
-                    try {
-						scope.onLoad();
-                    } catch (evt) {
-						$log.warn(evt);
-                    }
-                    
-                    scope.$apply();
-                };
-                image.src = evt.target.result;
-                
-            };
+            
 			
 			if (scope.image) {
-				fileReader.readAsDataURL(scope.image);
+				setImage(scope.image);
 			}
             
             //Drag Enter
@@ -17380,6 +17596,10 @@ angular.module('employeeApp.directives')
                 
             };
             
+            scope.cropper.setImage = function (image) {
+                setImage(image);
+            };
+
             scope.cropper.getImage = function () {
                 return scene ? scene.getImageAsBlob() : null;
             };

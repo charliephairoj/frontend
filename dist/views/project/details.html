@@ -1,4 +1,4 @@
-<div class="project-details-page">
+<div class="project-details-page" file-drop="addImage($files)">
     
     <!--
         Modals
@@ -24,7 +24,15 @@
         </header>
         <nav>
             <ul class="list">
-                <li>
+					<li>
+							<!--
+							<button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
+							-->
+							<div ng-click="update()">
+								<span>Save</span>
+							</div>
+						</li>
+                	<li>
 					<!--
                     <button ng-show="currentUser.hasPermission('add_room')" ng-click="showAddRoom()">Add a Room</button>
 					-->
@@ -73,59 +81,110 @@
         <div class="details">
             <table>
                 <tr>
-                    <td>Project: </td>
-                    <td>{{project.codename}}</td>
-                </tr>
-                <tr class="customer">
-                    <td ng-click="showCustomers=true">Customer: </td>
-                    <td ng-click="showCustomers=true">{{project.customer.name}}</td>
-                </tr>
-                <tr class="due-date">
-                    <td ng-click="showCal=true">Due Date: </td>
-                    <td ng-click="showCal=true">{{project.due_date | date:"MMMM d, yyyy"}}</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td>Quantity: </td>
-                    <td>{{project.quantity}}</td>
-                </tr>
-                <tr>
-                    <td>Status: </td>
                     <td>
-						<select ng-model="project.status">
-							<option value="planning">Planning</option>
-							<option value="in production">In Production</option>
-							<option value="completed">Completed</option>
-						</select>
+						<md-input-container>
+							<label>Project Name</label>
+							<input ng-model="project.codename" type="text" />
+						</md-input-container>
+						 
+					</td>
+					<td>
+							<md-input-container>
+								<label>Website</label>
+								<md-switch ng-model="project.website" ng-change="update()"></md-switch>
+							</md-input-container>
+							 
+						</td>
+                    <td>
+							<md-datepicker name="dateField" ng-model="ack.due_date" md-placeholder="Delivery Date" required>
+							</md-datepicker>
+					</td>
+					<td>
+						<md-input-container>
+							<label>Due Date</label>
+							<md-select ng-model="project.status">
+									<md-option value="planning">Planning</md-option>
+									<md-option value="in production">In Production</md-option>
+									<md-option value="completed">Completed</md-option>
+							</md-select>
+						</md-input-container>
 					</td>
                 </tr>
             </table>
         </div>
 		
 		<md-tabs md-selected="selectedIndex">
+			<md-tab label="Gallery">
+						
+			</md-tab>
 			<md-tab label="Phases">
 			
 			</md-tab>
 			<md-tab label="Rooms">
 			
 			</md-tab>
+			<!--
 			<md-tab label="Items">
 				
 			</md-tab>
+		-->
 			<md-tab label="Purchase Orders">
 				
 			</md-tab>
 			<md-tab label="Acknowledgements">
 				
 			</md-tab>
+			<!--
 			<md-tab label="Supplies">
 				
 			</md-tab>
+		-->
 		</md-tabs>
 		<div class="panel-container">
 			<ng-switch on="selectedIndex">
-				<div ng-switch-when="0" class="phase-panel">
+				<div ng-switch-when="0" class="gallery-panel">
+					<md-card ng-repeat="image in project.files" ng-class="{'primary': image.primary}">
+						<md-card-title>
+							<md-card-title-media>
+								<div class="md-media-xl card-media">
+									<img ng-src="{{image.url}}" />
+								</div>
+							</md-card-title-media>
+						</md-card-title>
+						<md-card-actions layout="row" layout-align="end center">
+							<md-button class="md-icon-button" ng-click="makePrimaryImage(image)">
+								<md-tooltip>
+									Make Primary Image
+								</md-tooltip>
+								<i class="material-icons primary-icon">star_rate</i>	
+							</md-button>
+							<md-button class="md-icon-button configuration" ng-click="image.configuration = !image.configuration; update()">
+								<md-tooltip>
+									Set Configuration
+								</md-tooltip>
+								<i ng-if="!image.configuration" class="material-icons">check_box_outline_blank</i>
+								<i ng-if="image.configuration" class="material-icons">check_box</i>
+							</md-button>
+							<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()">
+								
+							</md-switch>		
+							<md-button class="md-icon-button md-warn" ng-click="removeImage($index)">
+								<md-tooltip>
+									Delete
+								</md-tooltip>
+								<i class="material-icons">delete</i>
+							</md-button>          
+						</md-card-actions>
+					</md-card>
+					<!--
+					<div class="img-container" ng-class="{primary: image.primary, configuration: image.configuration}" ng-repeat="image in model.images">
+						<img ng-src="{{image.url}}" ng-click="makePrimaryImage(image)"/>
+						
+						<md-switch class="web-switch" ng-model="image.web_active" ng-change="update()"></md-switch>
+					</div>
+						-->
+				</div>
+				<div ng-switch-when="1" class="phase-panel">
 				
 					<div class="title-bar">
 						<div class="description">DESCRIPTION</div>
@@ -167,7 +226,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="1" class="items-panel">
+				<div ng-switch-when="2" class="items-panel">
 				
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
@@ -212,7 +271,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="2" class="items-panel">
+				<div ng-switch-when="3" class="items-panel">
 					
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
@@ -243,7 +302,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="3" class="po-panel">
+				<div ng-switch-when="4" class="po-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>
@@ -270,7 +329,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="4" class="acknowledgement-panel">
+				<div ng-switch-when="5" class="acknowledgement-panel">
 					<div class="title-bar">
 						<div class="id">ORDER ID</div>
 						<div class="order-date">DATE</div>
@@ -297,7 +356,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-switch-when="5" class="supplies-panel">
+				<div ng-switch-when="6" class="supplies-panel">
 				
 					<div class="title-bar">
 						<div class="preview">PREVIEW</div>
