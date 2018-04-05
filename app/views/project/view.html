@@ -45,15 +45,15 @@
 	    	<div class="inner-container" >
 	    		<div class="item-container" ng-repeat="project in projects | filter:query.$.$ | orderBy:'-id' track by $index">
 	    			<div class="item" ng-class="{'selected':project.$selected}">
-						<div class="id item-section" ng-click="navigate(project.id)">
+						<a class="id item-section" ng-href="#/project/{{project.id}}">
 							{{project.id}}
-						</div>
-						<div class="codename item-section" ng-click="navigate(project.id)">
+						</a>
+						<a class="codename item-section" ng-href="#/project/{{project.id}}">
 							<span>{{project.codename}}</span>
-						</div>
-						<div class="customer item-section" ng-click="navigate(project.id)">
+						</a>
+						<a class="customer item-section" ng-href="#/project/{{project.id}}">
 							<span>{{project.customer.name}}</span>
-						</div>
+						</a>
 						<div class="website item-section">
 							<md-switch ng-model="project.website" ng-change="update(project)"></md-switch>
 						</div>
