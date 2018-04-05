@@ -268,6 +268,7 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	//Set initial country
 	$rootScope.country = 'TH';
 	
+	
 	if ('geolocation' in navigator) {
 		navigator.geolocation.getCurrentPosition(function (position) {
 			if (Geocoder.initialized) {
@@ -275,17 +276,22 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 				var promise = Geocoder.reverseGeocode(position.coords.latitude, position.coords.longitude);
 				//Set the success and error callbacks for the promise
 				promise.then(function (results) {
-					//Cycle through componenets to look for country
-					for (var i in results[0].address_components) {
-						var component = results[0].address_components[i];
-						if (typeof(component.types) == 'object') {
-							if (component.types.indexOf('country') != -1) {
-								//Set country to main scope, to be called later
-								//$rootScope.country = 'KH';
-								$rootScope.country = component.short_name;
+					try{
+						//Cycle through componenets to look for country
+						for (var i in results[0].address_components) {
+							var component = results[0].address_components[i];
+							if (typeof(component.types) == 'object') {
+								if (component.types.indexOf('country') != -1) {
+									//Set country to main scope, to be called later
+									//$rootScope.country = 'KH';
+									$rootScope.country = component.short_name;
+								}
 							}
 						}
+					} catch (e) {
+						$log.log(e);
 					}
+					
 				}, function () {
 					$log.error('Getting the position failed');
 				});

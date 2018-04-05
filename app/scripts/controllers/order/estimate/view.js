@@ -15,7 +15,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		
 	var loadingToast = $mdToast.show($mdToast
 			.simple()
-			.position('top right')
+			.position('bottom right')
 			.content('Loading estimates...')
 			.hideDelay(0));
 
@@ -36,9 +36,8 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	 * resources;
 	 */
 	$scope.$watch('query.$.$', function (q) {
-		
 		if (q) {
-			Estimate.query({q: q, limit: q ? q.length : 5}, function (resources) {
+			Estimate.query({q: q, limit: q ? q.length*q.length : 5}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.estimates.indexOfById(resources[i].id) == -1) {
 						$scope.estimates.push(resources[i]);

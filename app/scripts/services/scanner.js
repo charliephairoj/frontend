@@ -107,10 +107,6 @@ angular.module('employeeApp.services')
 				break;
 		}
 
-		console.log(startCode.test(this.stream));
-		console.log(barcode.test(this.stream));
-		console.log(this.stream);
-
 		if (!safetyCode1.test(this.stream) && !safetyCode2.test(this.stream) && this.stream.length > 30) {
 				this.stream = '';
 		} else if (startCode.test(this.stream)) {
