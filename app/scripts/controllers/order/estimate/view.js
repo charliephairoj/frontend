@@ -52,6 +52,8 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 
 	//Loads the next set of data
 	$scope.loadNext = function () {
+		console.log('ok');
+		console.log(fetching);
 		if (!fetching) {
 			fetching = true;
 			var moreAckToast = $mdToast.show($mdToast
