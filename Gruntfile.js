@@ -104,32 +104,34 @@ module.exports = function (grunt) {
 			proxies: [
 				{
 					context: '/api',
-                    host: 'employee.alineagroup.co',
+										host: '54.251.114.6',
 					https: false,
-                    changeOrigin: true,
+                    changeOrigin: false,
                     xforward: false
 				},
 				{
 					context: '/login',
-                    host: 'employee.alineagroup.co',
-					https: false,
-                    changeOrigin: true,
-                    xforward: false
+										host: '54.251.114.6',
+					https: true,
+                    changeOrigin: false,
+										forward: false,
+					rewriteHost: true
 				},
 				{
 					context: '/logout',
-                    host: 'employee.alineagroup.co',
+										host: '54.251.114.6',
 					https: false,
-                    changeOrigin: true,
+                    changeOrigin: false,
                     xforward: false
 				},
 				{
 					context: '/oauth2callback',
-                    host: 'employee.alineagroup.co',
+										host: '54.251.114.6',
 					https: false,
-                    changeOrigin: true,
+                    changeOrigin: false,
                     xforward: false
-				}
+				},
+				
 			],
 	      	livereload: {
 	      	  	options: {

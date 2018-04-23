@@ -7923,6 +7923,7 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	$scope.po.items = [];
 	$scope.listView = true;
 	$scope.creating = false;
+	$scope.supplyQuery = false;
 	/**
 	 *	MAPS SECTION
 	 *
@@ -8439,24 +8440,32 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	// Watch on productSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
 		$scope.supplies = $scope.supplies || [];
-		var options = {};
-		if (query) {
-			options.q = query;
-		}
 
-		if ($scope.po.supplier) {
-			if ($scope.po.supplier.id) {
-				options.supplier_id = $scope.po.supplier.id;
+		if (query && !$scope.supplyQuery) {
+			$scope.supplyQuery = true;
+			var options = {};
+			if (query) {
+				options.q = query;
 			}
-		}
-
-		Supply.query(options, function (responses) {
-			for (var i = 0; i < responses.length; i++) {
-				if ($scope.supplies.indexOfById(responses[i]) === -1) {
-					$scope.supplies.push(responses[i]);
+	
+			if ($scope.po.supplier) {
+				if ($scope.po.supplier.id) {
+					options.supplier_id = $scope.po.supplier.id;
 				}
 			}
-		});
+	
+			Supply.query(options, function (responses) {
+				$scope.supplyQuery = false;
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.supplies.indexOfById(responses[i]) === -1) {
+						$scope.supplies.push(responses[i]);
+					}
+				}
+			}, function () {
+				$scope.supplyQuery = false;
+			});
+		}
+		
 	};
 
 	/**
