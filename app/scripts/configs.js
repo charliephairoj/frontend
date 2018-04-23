@@ -118,9 +118,9 @@ function ($rootScope, CurrentUser, scanner, $http, Geocoder, $q, $cookies, $inte
 	/*
 	 * Set the token 
 	 */
-	$http.defaults.headers.common['X-CSRFToken'] = $cookies.get('csrftoken');
+	$http.defaults.headers.common['X-CSRFTOKEN'] = $cookies.get('csrftoken');
 	$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-	  jqXHR.setRequestHeader('X-CSRFToken', $cookies.get('csrftoken'));
+	  jqXHR.setRequestHeader('X-CSRFTOKEN', $cookies.get('csrftoken'));
 	});
 
 	/**

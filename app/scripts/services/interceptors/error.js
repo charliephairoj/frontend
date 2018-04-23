@@ -32,7 +32,7 @@ angular.module('employeeApp.services')
 				}
 				
 				
-				$window.location.href = url;
+				//$window.location.href = url;
 			}
 
 			return $q.reject(rejection);

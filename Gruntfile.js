@@ -104,32 +104,28 @@ module.exports = function (grunt) {
 			proxies: [
 				{
 					context: '/api',
-                    host: 'localhost',
-                    port: 8000,
+                    host: 'employee.alineagroup.co',
 					https: false,
                     changeOrigin: true,
                     xforward: false
 				},
 				{
 					context: '/login',
-                    host: 'localhost',
-                    port: 8000,
+                    host: 'employee.alineagroup.co',
 					https: false,
                     changeOrigin: true,
                     xforward: false
 				},
 				{
 					context: '/logout',
-                    host: 'localhost',
-                    port: 8000,
+                    host: 'employee.alineagroup.co',
 					https: false,
                     changeOrigin: true,
                     xforward: false
 				},
 				{
 					context: '/oauth2callback',
-                    host: 'localhost',
-                    port: 8000,
+                    host: 'employee.alineagroup.co',
 					https: false,
                     changeOrigin: true,
                     xforward: false
