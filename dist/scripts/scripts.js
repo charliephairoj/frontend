@@ -8440,7 +8440,6 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 	// Watch on productSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
 		$scope.supplies = $scope.supplies || [];
-
 		if (query && !$scope.supplyQuery) {
 			$scope.supplyQuery = true;
 			var options = {};
