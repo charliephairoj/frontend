@@ -72,7 +72,8 @@
 											md-item-text="ack.id"
 											md-floating-label="Acknowledgement"
 											md-no-cache="true"
-											md-min-length="0">
+											md-min-length="0"
+											ng-model-options="{ debounce: 500 }">
 											<md-item-template>
 												<span md-highlight-text="ackSearchText">{{ack.id + ' ' + ack.customer.name}}</span>
 											</md-item-template>
@@ -94,7 +95,8 @@
 											md-item-text="supplier.name"
 											md-floating-label="ชื่อผู้ผลิต"
 											md-no-cache="true"
-											md-min-length="0">
+											md-min-length="0"
+											ng-model-options="{ debounce: 500 }">
 											<md-item-template>
 												<span md-highlight-text="supplierSearchText">{{supplier.name}}</span>
 											</md-item-template>
@@ -241,7 +243,8 @@
 												md-search-text-change="updateProjectName(projectSearchText)"
 												md-item-text="project.codename"
 												md-floating-label="โครงการ"
-												md-min-length="0">
+												md-min-length="0"
+												ng-model-options="{ debounce: 500 }">
 												<md-item-template>
 													<span md-highlight-text="projectSearchText">{{project.codename}}</span>
 												</md-item-template>
@@ -364,7 +367,8 @@
 								md-item-text="supply.description"
 								md-no-cache="true"
 								md-floating-label="Supply Description"
-								md-min-length="0">
+								md-min-length="0"
+								ng-model-options="{ debounce: 500 }">
 							    <md-item-template>
 							    	<span md-highlight-text="supplySearchText">{{supply.description}}</span>
 							    </md-item-template>
