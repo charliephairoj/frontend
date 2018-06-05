@@ -9598,7 +9598,14 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 				'acknowledgements': $scope.acknowledgements
 			},
 			controller: ['$scope', '$mdDialog', 'suppliers', 'po', 'supplies', 'acknowledgements', function ($scope, $mdDialog, suppliers, po, supplies, acknowledgements) {
-				$scope.po = PurchaseOrder.get({'id':po.id});
+				$scope.po = PurchaseOrder.get({'id':po.id}, function (resp) {
+					if ($scope.po.acknowledgement) {
+						if ($scope.acknowledgements.indexOfById($scope.po.acknowledgement) === -1) {
+							$scope.acknowledgements.push($scope.po.acknowledgement);
+						}
+					}
+					
+				});
 				$scope.suppliers = suppliers;
 				$scope.supplies = supplies;
 				$scope.acknowledgements = acknowledgements;
