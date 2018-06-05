@@ -7,7 +7,7 @@
  * # deal
  */
 angular.module('employeeApp.directives')
-.directive('purchaseOrder', [function () {
+.directive('purchaseOrder', ['$filter', 'Acknowledgement', function ($filter, Acknowledgement) {
 	return {
 		templateUrl: 'views/templates/purchase-order.html',
 		restrict: 'E',
@@ -24,6 +24,8 @@ angular.module('employeeApp.directives')
 			scope.getCurrencySign = function (currency) {
 				return currencySigns[currency];
 			}
+
+			
 
 		}
 	};

@@ -1,7 +1,7 @@
 
 angular.module('employeeApp')
-.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'KeyboardNavigation', '$location', 'Notification', 'Supply', 'Supplier', '$log', '$mdDialog',
-function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notification, Supply, Supplier, $log, $mdDialog) {
+.controller('OrderPurchaseOrderViewCtrl', ['$scope', 'PurchaseOrder', '$filter', 'KeyboardNavigation', '$location', 'Notification', 'Supply', 'Supplier', '$log', '$mdDialog', 'Acknowledgement',
+function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notification, Supply, Supplier, $log, $mdDialog, Acknowledgement) {
 	
 	//Flags and variables
 	var fetching = true,
@@ -28,6 +28,7 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 	});
 
 	$scope.supplies = [];
+	$scope.acknowledgements = Acknowledgement.query({page_size:10, limit:0});
 	
 	$scope.openAttachment = function (link) {
 		window.open(link);
@@ -84,17 +85,69 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 			locals: {
 				'suppliers': $scope.suppliers,
 				'po': po,
-				'supplies': $scope.supplies
+				'supplies': $scope.supplies,
+				'acknowledgements': $scope.acknowledgements
 			},
-			controller: function ($scope, $mdDialog, suppliers, po, supplies) {
+			controller: function ($scope, $mdDialog, suppliers, po, supplies, acknowledgements) {
 				$scope.po = PurchaseOrder.get({'id':po.id});
 				$scope.suppliers = suppliers;
 				$scope.supplies = supplies;
+				$scope.acknowledgements = acknowledgements;
 				$scope.tempComponent = {};
 				$scope.openAttachment = function (link) {
 					window.open(link);
 				};
 				
+				/**
+				 * ACKNOWLEDGEMENT SECTION
+				 *
+				 * Describes the projects, room and phases
+				 */
+				
+				// Watch on supplierSearchText to get products from the server
+				$scope.retrieveAcks = function (query) {
+					console.log(query);
+					if (query) {
+						Acknowledgement.query({q:query}, function (responses) {
+							for (var i = 0; i < responses.length; i++) {
+								if ($scope.acknowledgements.indexOfById(responses[i]) === -1) {
+									$scope.acknowledgements.push(responses[i]);
+								}
+							}
+						});
+					}
+				};
+
+				/**
+				 * Returns a list of projects whose codename matches the search term
+				 * @public
+				 * @param {String} query - Search term to apply against project.codename
+				 * @returns {Array} - An array of projects whose codename matches the search term
+				 */
+				$scope.searchAcks = function (query) {
+					console.log(query);
+					var lowercaseQuery = angular.lowercase(query);
+					var acks = [];
+					
+					/*
+					for (var i = 0; i < scope.acknowledgements.length; i++) {
+						if (angular.lowercase(scope.acknowledgements[i].id).indexOf(lowercaseQuery) !== -1) {
+							acks.push(scope.acknowledgements[i]);
+						}
+					}
+					*/
+
+					var acks = $filter('filter')($scope.acknowledgements, query);
+					return acks;
+				};
+
+				$scope.addAck = function (acknowledgement) {
+					if (acknowledgement) {
+						$scope.po.acknowledgement = acknowledgement;
+					}
+					
+				};
+
 				/**
 				 * FILES SECTIONs
 				 *
