@@ -104,14 +104,18 @@ module.exports = function (grunt) {
 			proxies: [
 				{
 					context: '/api',
-										host: '54.251.114.6',
+					host: '127.0.0.1',
+					port: '8000',
+					//host: '54.251.114.6',
 					https: false,
                     changeOrigin: false,
-                    xforward: false
+                    forward: false
 				},
 				{
 					context: '/login',
-										host: '54.251.114.6',
+					host: '127.0.0.1',
+					port: '8000',
+					//host: '54.251.114.6',
 					https: true,
                     changeOrigin: false,
 										forward: false,
@@ -119,17 +123,21 @@ module.exports = function (grunt) {
 				},
 				{
 					context: '/logout',
-										host: '54.251.114.6',
+					host: '127.0.0.1',
+					port: '8000',
+					//host: '54.251.114.6',
 					https: false,
                     changeOrigin: false,
-                    xforward: false
+                    forward: false
 				},
 				{
 					context: '/oauth2callback',
-										host: '54.251.114.6',
+					host: '127.0.0.1',
+					port: '8000',
+					//host: '54.251.114.6',
 					https: false,
                     changeOrigin: false,
-                    xforward: false
+                    forward: false
 				},
 				
 			],
