@@ -310,6 +310,13 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 			
 				};
 
+				/**
+				 * Remove item
+				 */
+
+				 $scope.removeItem = function ($index) {
+					 $scope.po.items.splice($index, 1);
+				 }
 
 				/**
 				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.

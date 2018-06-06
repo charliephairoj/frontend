@@ -9819,6 +9819,13 @@ function ($scope, PurchaseOrder, $filter, KeyboardNavigation, $location, Notific
 			
 				};
 
+				/**
+				 * Remove item
+				 */
+
+				 $scope.removeItem = function ($index) {
+					 $scope.po.items.splice($index, 1);
+				 }
 
 				/**
 				 * Add files to the file uploader. On callback the files are then associated with the acknowledgement.
@@ -13343,8 +13350,8 @@ function ($scope, Project, Notification, Customer, $location, $mdDialog, $mdToas
  * Controller of the frontendApp
  */
 angular.module('employeeApp')
-.controller('ScannerCtrl', ['$scope', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log', 'Label',
-function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log, Label) {
+.controller('ScannerCtrl', ['$scope', 'Acknowledgement', '$filter', '$mdDialog', 'scanner', "$timeout", 'Supply', 'Notification', 'Employee', '$http', '$rootScope', 'Equipment', 'PurchaseOrder', 'KeyboardNavigation', 'FileUploader', '$log', 'Label',
+function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply, Notification, Employee, $http, $rootScope, Equipment, PurchaseOrder, KeyboardNavigation, FileUploader, $log, Label) {
     /*
 	Equipment.get({'id': 116}, function (resp) {
 		$scope.equipmentList.push(resp);
@@ -13364,7 +13371,8 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 		supplyList = [];
 	$scope.scanner = new scanner('supply-scanner-modal'); //jshint ignore: line
 	$scope.interfaceType = 'equipment';
-
+	$scope.acknowledgements = Acknowledgement.query({limit:10});
+	$scope.acknowledgement = null;
 	$scope.supplies = [];
 	$scope.equipmentList = [];
 	$scope.poList = PurchaseOrder.query();
@@ -13388,6 +13396,57 @@ function ($scope, $mdDialog, scanner, $timeout, Supply, Notification, Employee, 
 
 	$scope.fractSize = function () {
 		return $scope.supply ? $scope.supply.units == 'pc' ? 0 : 2 : 2;
+	};
+
+
+	/**
+	 * ACKNOWLEDGEMENT SECTION
+	 *
+	 * Describes the projects, room and phases
+	 */
+	
+	// Watch on supplierSearchText to get products from the server
+	$scope.retrieveAcks = function (query) {
+		console.log(query);
+		if (query) {
+			Acknowledgement.query({q:query}, function (responses) {
+				for (var i = 0; i < responses.length; i++) {
+					if ($scope.acknowledgements.indexOfById(responses[i]) === -1) {
+						$scope.acknowledgements.push(responses[i]);
+					}
+				}
+			});
+		}
+	};
+
+	/**
+	 * Returns a list of projects whose codename matches the search term
+	 * @public
+	 * @param {String} query - Search term to apply against project.codename
+	 * @returns {Array} - An array of projects whose codename matches the search term
+	 */
+	$scope.searchAcks = function (query) {
+		console.log(query);
+		var lowercaseQuery = angular.lowercase(query);
+		var acks = [];
+		
+		/*
+		for (var i = 0; i < scope.acknowledgements.length; i++) {
+			if (angular.lowercase(scope.acknowledgements[i].id).indexOf(lowercaseQuery) !== -1) {
+				acks.push(scope.acknowledgements[i]);
+			}
+		}
+		*/
+
+		var acks = $filter('filter')($scope.acknowledgements, query);
+		return acks;
+	};
+
+	$scope.addAck = function (acknowledgement) {
+		if (acknowledgement) {
+			$scope.acknowledgement = acknowledgement;
+		}
+		
 	};
 
 

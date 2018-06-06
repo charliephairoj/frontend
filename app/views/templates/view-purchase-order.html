@@ -206,6 +206,9 @@
                         <md-card-title>
                             <md-card-title-text>
                                 <span class="md-headline">{{::item.description}}</span>
+                                <md-button class="md-warn md-icon-button md-raised" ng-click="removeItem($index)">
+                                    <i class="material-icons">remove</i>
+                                </md-button>
                             </md-card-title-text>
                         </md-card-title>
                         <md-card-content layout="row">

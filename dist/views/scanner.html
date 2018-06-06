@@ -49,48 +49,72 @@
 			Primary container for scanner page
 		-->
 		<div class="main-container">
-			<div class="employee-container">
-			
-
-				<div class="employee-drop-down-selector">
-					<md-input-container>
-						<label>Select an Employee</label>
-						<md-select ng-model="employee" ng-model-options="{trackBy: '$value.id'}" md-selected-text="employee.name">
-								<md-option ng-value="emp" ng-repeat="emp in employees" style="height:100px;width:300px;">
-									<img ng-src="{{emp.image.url}}" style="max-height:100px;max-width:100px;margin-right:2em;min-width:50px;" />
-									<label style="position:absolute;font-size:16px;left:12em;top:42px;">{{emp.name}}</label>
-								</md-option>
+			<div class="details-container">
+					<div class="ack-container">
+						<md-autocomplete flex="noshrink" 
+							name='acknowledgement'
+							md-items="ack in searchAcks(ackSearchText)" 
+							md-selected-item="selectedAck"
+							md-selected-item-change="addAck(selectedAck)"
+							md-search-text="ackSearchText"
+							md-search-text-change="retrieveAcks(ackSearchText)"
+							md-item-text="ack.id"
+							md-floating-label="Acknowledgement"							
+							md-no-cache="true"
+							md-min-length="0"
+							ng-model-options="{ debounce: 500 }">
+							<md-item-template>
+								<span md-highlight-text="ackSearchText">{{ack.id + ' ' + ack.customer.name}}</span>
+							</md-item-template>
+						   
+						</md-autocomplete>
+					</div>
+					<div class="employee-container">
 							
-						</md-select>
-					</md-input-container>
-					
-					<!--
-					<select ng-options="employee.name for employee in employees" ng-model="employee"></select>
-					-->
-				</div>
-			
-				<div ng-hide="employee" class="employee-placeholder">
-					<h2>Employee</h2>
-				</div>
-				<div ng-show="employee" class="employee">
-			
-					<div class="img-container">
-						<img ng-src="{{employee.image.url || tempUrl}}" />
-					</div>
-					<h3>{{employee.name}}</h3>
-					<h2>{{employee.department}}</h2>
-					<div class="equipment-container">
-						<md-card ng-repeat="equipment in employee.equipments">
-							<md-card-content>
-								{{equipment.description}}<br />
-								{{equipment.brand}}
-							</md-card-content>
-						</md-card>
-					</div>
-				</div>
-			
 				
+						<div class="employee-drop-down-selector">
+							<md-input-container>
+								<label>Select an Employee</label>
+								<md-select ng-model="employee" ng-model-options="{trackBy: '$value.id'}" md-selected-text="employee.name">
+										<md-option ng-value="emp" ng-repeat="emp in employees" style="height:100px;width:300px;margin:0.25em 0;">
+											<div class="employee-img-container" style="max-height:100px;max-width:100px;border-radius:50%;overflow:hidden">
+												<img ng-src="{{emp.image.url}}" style="width:100%;height:auto;" />
+											</div>
+											<label style="position:absolute;font-size:16px;left:160px;top:42px;">{{emp.name}}</label>
+										</md-option>
+									
+								</md-select>
+							</md-input-container>
+							
+							<!--
+							<select ng-options="employee.name for employee in employees" ng-model="employee"></select>
+							-->
+						</div>
+					
+						<div ng-hide="employee" class="employee-placeholder">
+							<h2>Employee</h2>
+						</div>
+						<div ng-show="employee" class="employee">
+					
+							<div class="img-container">
+								<img ng-src="{{employee.image.url || tempUrl}}" />
+							</div>
+							<h3>{{employee.name}}</h3>
+							<h2>{{employee.department}}</h2>
+							<div class="equipment-container">
+								<md-card ng-repeat="equipment in employee.equipments">
+									<md-card-content>
+										{{equipment.description}}<br />
+										{{equipment.brand}}
+									</md-card-content>
+								</md-card>
+							</div>
+						</div>
+					
+						
+					</div>
 			</div>
+			
 
 
 			<!--
