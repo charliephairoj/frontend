@@ -217,6 +217,14 @@ md-card.view-acknowledgement-component{
                             max-height:none;
                             position:relative;
                             
+                            .item-title{
+                                .item-title-text{
+                                    .flex;
+                                    .flex-direction(row);
+                                    .justify-content(space-between);
+                                }
+                            }
+
                             &.item-drag-active{
                                 .drag-placeholder{
                                     .flex;
@@ -267,13 +275,7 @@ md-card.view-acknowledgement-component{
             
                             }
 
-                            md-card-title{
-                                md-card-title-text{
-                                    .flex;
-                                    .flex-direction(row);
-                                    .justify-content(space-between);
-                                }
-                            }
+                            
                     
                             md-card-content{
                                 padding:1em;
