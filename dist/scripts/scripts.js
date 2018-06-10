@@ -13799,7 +13799,13 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 				 * new quantity based on the supply action
 				 */				
 				for (var i = 0; i < supplies.length; i++) {
+					//Assign employee
 					supplies[i].employee = angular.copy($scope.employee);
+
+					//Assign acknowledgement
+					if ($scope.acknowledgement) {
+						supplies[i].acknowledgement = angular.copy($scope.acknowledgement);
+					}
 				
 					//Add or subtract quantity based on user selected action
 					if (supplies[i].$$action == 'subtract') {
@@ -13828,6 +13834,8 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 
 							// Remove empty employee
 							delete supply.employee;
+							delete supply.acknowledgement;
+
 							supply.$create(function () {
 								var msg = "Created new supply: " + supply.description;
 								Notification.display(msg);
@@ -13860,8 +13868,12 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 						//Update supplies in the supply list
 						for (var h=0; h < resp.length; h++) {
 							var index = supplyList.indexOfById(resp[h].id);
-
-							supplyList[index] = angular.copy(resp[h]);
+							
+							if (index > -1) {
+								supplyList[index] = angular.copy(resp[h]);
+							} else {
+								supplyList.push(angular.copy(resp[h]));
+							}
 						}
 						$scope.postCheckout();
 					}).error(function (e) {
@@ -13921,6 +13933,10 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 		
 			//Reset employee
 			$scope.employee = undefined;
+
+			// Reset acknowledgement
+			$scope.acknowledgement = undefined;
+
 			Notification.display('Checkout complete.', 2000);
 		}
 	};
