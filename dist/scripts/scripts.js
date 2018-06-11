@@ -13538,6 +13538,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 	 */ 
 	$scope.removeItem = function ($index) {
 		$scope.po.items[$index].$$action = false;
+		$scope.po.items.splice($index, 1);
 	};
 	
 	/**
