@@ -963,8 +963,13 @@ function ($scope, PurchaseOrder, Supplier, Supply, Notification, $filter, $timeo
 			delete supply.id;
 
 			//Add price
-			supply.unit_cost = supply.suppliers[0].cost;
-			supply.cost = supply.suppliers[0].cost;
+			try {
+				supply.unit_cost = supply.suppliers[0].cost;
+				supply.cost = supply.suppliers[0].cost;
+			} catch (e) {
+				$log.error(e)
+			}
+			
 
 			// Check the progress
 			progress[supply.description] = true;
