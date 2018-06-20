@@ -398,7 +398,7 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	$scope.$watch('query.$.$', function (q) {
 		if (q) {
 			$location.search('q', q);
-			Acknowledgement.query({q: q, limit: q ? q.length : 5}, function (resources) {
+			Acknowledgement.query({q: q, limit: q ? q.length * q.length : 5}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.acknowledgements.indexOfById(resources[i].id) == -1) {
 						$scope.acknowledgements.push(resources[i]);
@@ -414,30 +414,54 @@ function ($scope, Acknowledgement, $location, $filter, KeyboardNavigation, Notif
 	//Loads the next set of data
 	$scope.loadNext = function () {
 		if (!fetching) {
+			// prevents duplicate loading next requests
 			fetching = true;
 			
-			var notification = Notification.display('Retrieving more acknowledgements...', false);
+			// Notify User
+			var moreAN = Notification.display('Retrieving more acknowledgements...', false);
 	
 			//Determine parameters for the GET call	
 			var params = {
-				limit: 50, 
+				limit: 50,
 				offset: $scope.acknowledgements.length
 			};
 			if ($scope.query.status) {
 				params.status = $scope.query.status;
 			}
+			//Set q if searching field filled
+			try{
+				if ($scope.query.$.$) {
+					params.q = $scope.query.$.$;
+				}
+			} catch (e) {
+
+			}
 			
 			//Make a GET request to the server
 			Acknowledgement.query(params, function (resources) {
-				fetching = false;
-				notification.hide();
-				for (var i = 0; i < resources.length; i++) {
-					if ($scope.acknowledgements.indexOfById(resources[i]) === -1) {
-						$scope.acknowledgements.push(resources[i]);
+				
+				try {
+					for (var i = 0; i < resources.length; i++) {
+						if ($scope.acknowledgements.indexOfById(resources[i]) === -1) {
+							$scope.acknowledgements.push(resources[i]);
+						}
 					}
+				} catch (e) {
+
 				}
 				
-				//createAcknowledgementMarkers();
+				fetching = false;
+				moreAN.hide();
+			}, function (e) {
+				// Register Error
+				$log.error(e);
+				moreAN.hide();
+				
+				// Notify User
+				Notification.display('There was an error in retrieving acknowledgements.', 3000);
+
+				// Resume ability to load more quotations
+				fetching = false;
 			});
 		}
 	};

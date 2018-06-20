@@ -11,17 +11,24 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	 */
 	var fetching = true,
 		index = 0,
-		currentSelection;
+		currentSelection,
+		search = $location.search(),	
+		notification = Notification.display('Retrieving quotations...', false);
 		
-	var loadingToast = $mdToast.show($mdToast
-			.simple()
-			.position('bottom right')
-			.content('Loading estimates...')
-			.hideDelay(0));
+	$scope.query = {};
+		
+	/* 
+	 * Set default search from search url
+	 */
+	if (search.q) {
+		$scope.safeApply(function () {
+			$scope.query = {$: {$: search.q}};
+		});
+	}
 
 	//Poll the server for acknowledgements
 	$scope.estimates = Estimate.query({limit: 20}, function (e) {
-		$mdToast.hide();
+		notification.hide();
 		fetching = false;
 		changeSelection(index);
 	});
@@ -37,6 +44,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 	 */
 	$scope.$watch('query.$.$', function (q) {
 		if (q) {
+			$location.search('q', q);			
 			Estimate.query({q: q, limit: q ? q.length*q.length : 5}, function (resources) {
 				for (var i = 0; i < resources.length; i++) {
 					if ($scope.estimates.indexOfById(resources[i].id) == -1) {
@@ -52,24 +60,53 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 
 	//Loads the next set of data
 	$scope.loadNext = function () {
-		console.log('ok');
-		console.log(fetching);
+
 		if (!fetching) {
+			// prevents duplicate loading next requests
 			fetching = true;
-			var moreAckToast = $mdToast.show($mdToast
-					.simple()
-					.position('bottom right')
-					.hideDelay(0)
-					.content('Loading more quotations...'));
-			Estimate.query({
+
+			// Notify User
+			var moreQN = Notification.display('Retrieving more quotations...', false);
+
+			// Set Request Config
+			var params = {
 				limit: 50, 
 				offset: $scope.estimates.length
-			}, function (resources) {
-				fetching = false;
-				$mdToast.hide();
-				for (var i = 0; i < resources.length; i++) {
-					$scope.estimates.push(resources[i]);
+			}
+			
+			try{
+				if ($scope.query.$.$) {
+					params['q'] = $scope.query.$.$;
 				}
+			} catch (e) {
+
+			}
+			
+			Estimate.query(params, function (resources) {
+				
+				try {
+					for (var i = 0; i < resources.length; i++) {
+						if ($scope.estimates.indexOfById(resources[i].id) == -1) {
+							$scope.estimates.push(resources[i]);
+						}
+					}
+				} catch (e) {
+					$log.error(e);
+				}
+
+				fetching = false;
+				moreQN.hide();
+			// If unable to retrieve, notify user and resume normal operations
+			}, function (e) {
+				// Register Error
+				$log.error(e);
+				moreQN.hide();
+				
+				// Notify User
+				Notification.display('There was an error in retrieving quotations.', 3000);
+
+				// Resume ability to load more quotations
+				fetching = false;
 			});
 		}
 	};
@@ -140,9 +177,6 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 
 		estimate.$$product = null;
 		estimate.$$searchText = '';
-
-		console.log(estimate.$$product)
-		console.log(estimate.$$searchText)
 
     };
     
@@ -463,9 +497,12 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		
 		acknowledgement.$create(function (resp) {
 			Notification.display('Acknowledgement #' + resp.id + ' created from quotation #' + quotation.id, 2000);
-			quotation.status = 'ordered';
+			quotation.status = 'acknowledged';
 			quotation.acknowledgement = resp;
-			quotation.$update();
+			quotation.remarks += " [Ack #:" + resp.id + "]";
+			quotation.$update(function (resp) {}, function (e) {
+				$log.error(e);
+			});
 			
 			$scope.safeApply(function () {
 				$location.path('/order/acknowledgement/' + resp.id);
@@ -473,7 +510,7 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 			
 		}, function (e) {
 			Notification.display('Error creating new acknowledgement from quotation #' + quotation.id, 0);
-			console.error(e);
+			$log.error(e);
 		});
 		
 	}

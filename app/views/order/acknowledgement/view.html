@@ -35,7 +35,7 @@
 					</md-tooltip>
 					<i class="material-icons">map</i>
 				</md-button>
-				<input class="search" type="text" ng-model="query.$.$" />
+				<input class="search" type="text" ng-model="query.$.$" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" />
 			</div>
 
 			<acknowledgement-summary on-click="setCategory($category)" acknowledgements="acknowledgements"></acknowledgement-summary>

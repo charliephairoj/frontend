@@ -25,7 +25,7 @@
 					<i class="material-icons">file_download</i>
 				</md-button>
 					-->
-				<input class="search" type="text" ng-model="query.$.$" />
+				<input class="search" type="text" ng-model="query.$.$" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" />
 			</div>			
 			
 			<div class="title-bar">
@@ -74,11 +74,11 @@
 							<div class="status" ng-class="ack.status.toLowerCase()">
 								<h4 class="md-warn" ng-if="ack.status === 'cancelled'">Cancelled</h4>
 								<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('add_acknowledgement')"
-									ng-if="ack.status != 'cancelled' && ack.status != 'ordered'" ng-click="createAcknowledgement(ack)">Order</md-button>
+									ng-if="ack.status != 'cancelled' && ack.status != ('acknowledged' || 'ordered')" ng-click="createAcknowledgement(ack)">Order</md-button>
 								<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('change_estimate')" 
-									ng-click="ack.status='cancelled'; update(ack)" ng-if="ack.status != 'cancelled' && ack.status != 'ordered'">Cancel</md-button>
+									ng-click="ack.status='cancelled'; update(ack)" ng-if="ack.status != 'cancelled' && ack.status != ('acknowledged' || 'ordered')">Cancel</md-button>
 								<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('view_acknowledgement')" 
-									ng-href="#/order/acknowledgement/{{ack.acknowledgement.id}}" ng-if="ack.status == 'ordered'">View Acknowledgement</md-button>	
+									ng-href="#/order/acknowledgement/{{ack.acknowledgement.id}}" ng-if="ack.status == ('acknowledged' || 'ordered')">View Acknowledgement</md-button>	
 								
 							</div>
 							<div class="remarks" ng-click="active=true">
