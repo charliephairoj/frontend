@@ -13986,7 +13986,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 					delete $scope.po;
 					$scope.postCheckout();
 				}, function (e) {
-					$log.error(JSON.stringify(e));
+					$scope.checkoutError(e);
 				});
 			}
 		}
@@ -14003,6 +14003,8 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 
 			// Reset acknowledgement
 			$scope.acknowledgement = undefined;
+			$scope.selectedAck = undefined;
+			$scope.ackSearchText = '';
 
 			Notification.display('Checkout complete.', 2000);
 		}
@@ -14011,6 +14013,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 	$scope.checkoutError = function (e) {
 		$log.error(JSON.stringify(e));
 		Notification.display("There was a checkout error", false);
+		checkoutActive = false;
 	};
 	
 	/*
