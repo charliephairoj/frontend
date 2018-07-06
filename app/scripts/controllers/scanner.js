@@ -119,7 +119,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
 		if (query) {
-			Supply.query({q:query}, function (responses) {
+			Supply.query({q:query, bulk:true}, function (responses) {
 				for (var i = 0; i < responses.length; i++) {
 					if (supplyList.indexOfById(responses[i]) === -1) {
 						supplyList.push(responses[i]);
@@ -313,10 +313,10 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
-		
+			$log.warn(e);
 		}
 				
-		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
+		Supply.get({id: code.split('-')[1], 'country': $rootScope.country, 'bulk': true}, function (response) {
 			if ($scope.supplies.indexOfById(response) == -1) {
 				response.$$action = 'subtract';
 				$scope.supplies.push(response);
@@ -342,7 +342,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 		
 		}
 	
-		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
+		Supply.query({upc: code, 'country': $rootScope.country, bulk: true}, function (response) {
 			if (response.length > 0){
 				response[0].$$action = 'subtract';
 				$scope.supplies.push(response[0]);

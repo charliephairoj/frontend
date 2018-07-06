@@ -13528,7 +13528,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 	// Watch on customerSearchText to get products from the server
 	$scope.retrieveSupplies = function (query) {
 		if (query) {
-			Supply.query({q:query}, function (responses) {
+			Supply.query({q:query, bulk:true}, function (responses) {
 				for (var i = 0; i < responses.length; i++) {
 					if (supplyList.indexOfById(responses[i]) === -1) {
 						supplyList.push(responses[i]);
@@ -13722,10 +13722,10 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 		try {
 			Notification.display('Looking up supply...', false);
 		} catch (e) {
-		
+			$log.warn(e);
 		}
 				
-		Supply.get({id: code.split('-')[1], 'country': $rootScope.country}, function (response) {
+		Supply.get({id: code.split('-')[1], 'country': $rootScope.country, 'bulk': true}, function (response) {
 			if ($scope.supplies.indexOfById(response) == -1) {
 				response.$$action = 'subtract';
 				$scope.supplies.push(response);
@@ -13751,7 +13751,7 @@ function ($scope, Acknowledgement, $filter, $mdDialog, scanner, $timeout, Supply
 		
 		}
 	
-		Supply.query({upc: code, 'country': $rootScope.country}, function (response) {
+		Supply.query({upc: code, 'country': $rootScope.country, bulk: true}, function (response) {
 			if (response.length > 0){
 				response[0].$$action = 'subtract';
 				$scope.supplies.push(response[0]);
@@ -23856,7 +23856,12 @@ angular.module('employeeApp')
 
 angular.module('employeeApp.services')
 .factory('scanner', ['$location', '$rootScope', '$timeout', function ($location, $rootScope, $timeout) {
-		
+	/**
+	 * Scanner module
+	 * 
+	 * Var 'code' is the primary string of characters to test again when a barcode is scanned.
+	 */
+
 	var code = '',
 		codes = '',
 		unparsedStr = '',
@@ -23968,20 +23973,22 @@ angular.module('employeeApp.services')
 			this._activeParse = true;
 		} else if (this._activeParse && evt.keyCode === 13) {
 			// Extract the code from the stream
-			var code = barcode.exec(this.stream)[1];
+			var code = barcode.exec(this.stream)[1] || '';
+			console.debug(code);
 			this._dispatch(code);
 			this.stream = '';
 			this._activeParse = false;
 		}
-
-
-
+		console.debug(evt.keyCode, evt.altKey);
+		console.debug(this.stream);
+		console.debug(code);
 		/*
 		 * Checks if the character is the start code for the 
 		 * scanner. If it is the start code, then turn on the parse
 		 * switch to get the successive characters
 		 */
 		if (evt.keyCode === 76 && evt.altKey) {
+			console.debug("Start code detected for scanner.");
 			evt.preventDefault();
 			this._activeParse = true;
 
@@ -23992,13 +23999,14 @@ angular.module('employeeApp.services')
 			}.bind(this), 1000, false);
 
 			console.debug("scanner " + this._identity + " activated.");
-		
+
 		/*
 		 * Checks if the character is the end code for the scanner.
 		 * If it is, then turn off the parse switch, send the code to dispatch,
 		 * and reset the code variable
 		 */
 		} else if (evt.altKey && evt.keyCode == 71) {
+			console.debug("End code detected for scanner.");
 			$timeout.cancel(this._timeoutParse);
 			evt.preventDefault();
 			this._activeParse = false;
@@ -24030,32 +24038,37 @@ angular.module('employeeApp.services')
     
 	Scanner.prototype._parse = function (evt) {
 		var key = evt.keyCode;
+		console.debug(key);
 		if ((96 <= key && key <= 105) || (48 <= key && key <= 90)) {
 			var letter = String.fromCharCode((96 <= key && key <= 105) ? key - 48 : key);
 			code += letter;
 		} else if (key === 189) {
 			code += '-';
 		}
+		console.debug(code);
 	};
 
 	Scanner.prototype._dispatch = function (code) {
-		codes = code.split('-');
-		if (parseStandardCodes) {
-			for (var i=0; i<standardCodes.length; i++) {
-				if (standardCodes[i][0].test(code)) {
-					codes = code.split('-');
-					/* jshint ignore:start */
-					$rootScope.safeApply(function () {
-						$location.path(standardCodes[i][1]+codes[1]);
-					});
-					/* jshint ignore:end */
+		console.debug(code);
+		if (code) {
+			codes = code.split('-');
+			if (parseStandardCodes) {
+				for (var i=0; i<standardCodes.length; i++) {
+					if (standardCodes[i][0].test(code)) {
+						codes = code.split('-');
+						/* jshint ignore:start */
+						$rootScope.safeApply(function () {
+							$location.path(standardCodes[i][1]+codes[1]);
+						});
+						/* jshint ignore:end */
+					}
 				}
 			}
-		}
-
-		for (var h=0; h<customCodes.length; h++) {
-			if (customCodes[h][0].test(code)) {
-				customCodes[h][1](code);
+			console.log(customCodes);
+			for (var h=0; h<customCodes.length; h++) {
+				if (customCodes[h][0].test(code)) {
+					customCodes[h][1](code);
+				}
 			}
 		}
 	};

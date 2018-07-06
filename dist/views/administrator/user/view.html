@@ -46,7 +46,7 @@
     	</div>
 			-->
 		<md-content>
-			<md-card ng-repeat="user in users | filter:query">
+			<md-card class="user" ng-repeat="user in users | filter:query">
 				<md-card-title>
 		          	<md-card-title-text layout="row">
 						<md-input-container>
@@ -62,20 +62,33 @@
 		          	</md-card-title-text>
 		        </md-card-title>
 				<md-card-content>
-					<md-input-container>
-						<input type="text" ng-model="user.username" />
-					</md-input-container>
-
-					<md-input-container flex="100">
-						<label>Email</label>
-						<input type="email" ng-model="user.email" />
-					</md-input-container>
-					<md-contact-chips 
-						ng-model="user.groups" 
-						md-contact-name="name"
-						md-contacts="searchGroups($query)">
+					<div class="row-1">
+						<md-input-container>
+							<label>Username</label>
+							<input type="text" ng-model="user.username" />
+						</md-input-container>
+	
+						<md-input-container class="email">
+							<label>Email</label>
+							<input type="email" ng-model="user.email" />
+						</md-input-container>
+						<md-input-container>
+							<label>Web Interface Version</label>
+							<md-select ng-model="user.web_ui_version">
+								<md-option value="V1">Version 1</md-option>
+								<md-option value="V2">Version 2</md-option>
+							</md-select>
+						</md-input-container>
+					</div>
+					<div class="row-2">
+						<md-contact-chips 
+							ng-model="user.groups" 
+							md-contact-name="name"
+							md-contacts="searchGroups($query)">
+						
+						</md-contact-chips>
+					</div>
 					
-					</md-contact-chips>
 			
 				</md-card-content>
 				<md-card-actions layout="row" layout-align="end center">
