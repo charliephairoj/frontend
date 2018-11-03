@@ -70,7 +70,7 @@
 							<div class="project-id" ng-click="active=true">{{ack.project.id}}</div>
 							<div class="project" ng-click="active=true">{{ack.project.codename}}</div>
 							<div class="delivery-date" ng-click="active=true">{{ack.delivery_date | date: "MMM d, yyyy"}}</div>
-							<div class="total" ng-click="active=true">{{ack.total}}</div>
+							<div class="total" ng-click="active=true">{{ack.grand_total}}</div>
 							<div class="status" ng-class="ack.status.toLowerCase()">
 								<h4 class="md-warn" ng-if="ack.status === 'cancelled'">Cancelled</h4>
 								<md-button class="md-accent" ng-disabled="!currentUser.hasPermission('add_acknowledgement')"
