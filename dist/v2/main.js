@@ -8,41 +8,41 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./acknowledgement/acknowledgement.module": [
-		"./src/app/orders/acknowledgement/acknowledgement.module.ts",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module",
-		"acknowledgement-acknowledgement-module"
+	'./acknowledgement/acknowledgement.module': [
+		'./src/app/orders/acknowledgement/acknowledgement.module.ts',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module',
+		'v2/acknowledgement-acknowledgement-module',
 	],
-	"./administrator/administrator.module": [
-		"./src/app/administrator/administrator.module.ts",
-		"administrator-administrator-module"
+	'./administrator/administrator.module': [
+		'./src/app/administrator/administrator.module.ts',
+		'v2/administrator-administrator-module',
 	],
-	"./orders/orders.module": [
-		"./src/app/orders/orders.module.ts",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module",
-		"orders-orders-module"
+	'./orders/orders.module': [
+		'./src/app/orders/orders.module.ts',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module',
+		'v2/orders-orders-module',
 	],
-	"./purchase-order/purchase-order.module": [
-		"./src/app/orders/purchase-order/purchase-order.module.ts",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e",
-		"purchase-order-purchase-order-module"
+	'./purchase-order/purchase-order.module': [
+		'./src/app/orders/purchase-order/purchase-order.module.ts',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e',
+		'v2/purchase-order-purchase-order-module',
 	],
-	"./quotation/quotation.module": [
-		"./src/app/orders/quotation/quotation.module.ts",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e",
-		"default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module",
-		"quotation-quotation-module"
+	'./quotation/quotation.module': [
+		'./src/app/orders/quotation/quotation.module.ts',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~purchase-order-purchase-order-mo~733e779e',
+		'v2/default~acknowledgement-acknowledgement-module~orders-orders-module~quotation-quotation-module',
+		'v2/quotation-quotation-module',
 	],
-	"./shipping/shipping.module": [
-		"./src/app/orders/shipping/shipping.module.ts",
-		"shipping-shipping-module"
+	'./shipping/shipping.module': [
+		'./src/app/orders/shipping/shipping.module.ts',
+		'v2/shipping-shipping-module',
 	],
-	"./user/user.module": [
-		"./src/app/administrator/user/user.module.ts",
-		"user-user-module"
-	]
+	'./user/user.module': [
+		'./src/app/administrator/user/user.module.ts',
+		'v2/user-user-module',
+	],
 };
 function webpackAsyncContext(req) {
 	var ids = map[req];
