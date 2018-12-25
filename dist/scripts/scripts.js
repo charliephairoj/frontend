@@ -7845,14 +7845,18 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
 		
 		var acknowledgement = new Acknowledgement();
 		
-		// Assign order details
-		acknowledgement.customer = quotation.customer;
-		acknowledgement.delivery_date = quotation.delivery_date || 0;
+        // Assign order details
+        
+        acknowledgement.customer = quotation.customer;
+        backup_dd = new Date();
+        backup_dd = backup_dd.setDate(backup_dd.getDate() + 30);
+		acknowledgement.delivery_date = quotation.delivery_date || backup_dd;
 		acknowledgement.discount = quotation.discount || 0;
 		acknowledgement.vat = quotation.vat || 0;
 		acknowledgement.terms = quotation.terms || 0;
 		acknowledgement.po_id = quotation.po_id || 'NA';
-		
+        acknowledgement.files = [];
+        
 		// Assign project
 		if (quotation.project) {
 			acknowledgement.project = quotation.project;
