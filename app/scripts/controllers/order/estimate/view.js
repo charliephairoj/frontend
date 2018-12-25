@@ -402,11 +402,6 @@ function ($scope, Estimate, $location, $filter, KeyboardNavigation, $mdToast, Fa
             }
         }
 
-        //Validate Delivery Date
-        if (!quotation.delivery_date) {
-            throw new TypeError("Please select a preliminary delivery date.");
-        }
-
         //Validate vat
         if (quotation.vat === undefined || quotation.vat === null) {
             throw new TypeError("Please set the vat.");
